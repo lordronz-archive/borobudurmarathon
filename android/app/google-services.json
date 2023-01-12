@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "342957496715",
+    "project_id": "borobudur-marathon-d96d1",
+    "storage_bucket": "borobudur-marathon-d96d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342957496715:android:075a59ac76cfd78df7b78e",
+        "android_client_info": {
+          "package_name": "com.borobudurmarathon.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342957496715-ca8bfmspm7dui3ua44tdotr4rsg86fu7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.borobudurmarathon.app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "342957496715-kql4vkhh8rhib7npn59k9a11n46kqof9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl8umrkT7CGcQUJCA2HlrU9Bii_O4hIaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342957496715-kql4vkhh8rhib7npn59k9a11n46kqof9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

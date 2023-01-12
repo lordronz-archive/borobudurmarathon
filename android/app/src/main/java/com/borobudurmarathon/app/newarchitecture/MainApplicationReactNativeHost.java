@@ -1,4 +1,4 @@
-package com.borobudurmarathon.newarchitecture;
+package com.borobudurmarathon.app.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.borobudurmarathon.BuildConfig;
-import com.borobudurmarathon.newarchitecture.components.MainComponentsRegistry;
-import com.borobudurmarathon.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.borobudurmarathon.app.BuildConfig;
+import com.borobudurmarathon.app.newarchitecture.components.MainComponentsRegistry;
+import com.borobudurmarathon.app.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

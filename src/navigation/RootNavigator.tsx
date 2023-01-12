@@ -5,12 +5,13 @@ import HomeScreen from '../screens/Home';
 import SignInWithKompas from '../screens/Auth/SignInWithKompas';
 import InitialScreen from '../screens/Initial';
 import AuthScreen from '../screens/Auth';
+import {linking} from './linking';
 
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator initialRouteName="Initial">
         <Stack.Screen
           name="Initial"

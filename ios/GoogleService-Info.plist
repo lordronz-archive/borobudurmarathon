@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>342957496715-oqk2u4vkjpcpp1s1ke43megdmn5n8198.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.342957496715-oqk2u4vkjpcpp1s1ke43megdmn5n8198</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>342957496715-ca8bfmspm7dui3ua44tdotr4rsg86fu7.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBB3Yy7EKji5CQedVKBln3quWXq1IUi3Kw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>342957496715</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.borobudurmarathon.app</string>
+	<key>PROJECT_ID</key>
+	<string>borobudur-marathon-d96d1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>borobudur-marathon-d96d1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:342957496715:ios:9614fd67f2fde894f7b78e</string>
+</dict>
+</plist>

@@ -1,4 +1,4 @@
-package com.borobudurmarathon;
+package com.borobudurmarathon.app;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

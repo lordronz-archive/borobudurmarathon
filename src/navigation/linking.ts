@@ -43,7 +43,7 @@ export const linking = {
     // Listen to incoming links from deep linking
     const linkingSubscription = Linking.addEventListener('url', ({url}) => {
       console.info('rnavigate url', url);
-      
+
       listener(url);
     });
 

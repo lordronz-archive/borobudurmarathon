@@ -1,18 +1,19 @@
+import config from '../config';
 import ApiService from './api.service';
 // import qs from "qs";
 
-function qs(obj, prefix) {
+function qs(obj: any, prefix: any) {
   const str: string[] = [];
   for (const p in obj) {
     const k = prefix ? prefix + '[' + p + ']' : p,
       v = obj[p];
     // str.push(typeof(v) == 'object' ? qs(v, k) : (k) + "=" + encodeURIComponent(v));
-    str.push(typeof v == 'object' ? qs(v, k) : k + '=' + v);
+    str.push(typeof v === 'object' ? qs(v, k) : k + '=' + v);
   }
   return str.join('&');
 }
 
-console.log('CONFIG: ', ApiService.config);
+console.log('CONFIG: ', config);
 
 class ResponseError extends Error {
   errorCode: any;
@@ -28,14 +29,18 @@ class ResponseError extends Error {
 }
 
 const EventService = {
-  getVRRecords: async function (data) {
+  getVRRecords: async function (data: any) {
     // console.log('VR Data : ', data);
     let transactionId;
-    if (data.mrvrTrnsId) transactionId = data.mrvrTrnsId;
-    if (data.mregTrnsId) transactionId = data.mregTrnsId;
+    if (data.mrvrTrnsId) {
+      transactionId = data.mrvrTrnsId;
+    }
+    if (data.mregTrnsId) {
+      transactionId = data.mregTrnsId;
+    }
     try {
       return ApiService.get(
-        ApiService.config.apiUrl.apis.member.getVRRecords.path +
+        config.apiUrl.apis.member.getVRRecords.path +
           '?' +
           qs({pageSize: 100, filter: {vrdhTrnsId: transactionId}}, false),
       );
@@ -45,13 +50,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getTransaction: async function (transactionId) {
+  getTransaction: async function (transactionId: string) {
     console.log('Transaction id to get : ', transactionId);
     try {
       return ApiService.get(
-        ApiService.config.apiUrl.apis.member.getTransaction.path +
-          '/' +
-          transactionId,
+        config.apiUrl.apis.member.getTransaction.path + '/' + transactionId,
       );
     } catch (error) {
       console.log('E : ', error);
@@ -62,14 +65,14 @@ const EventService = {
   getGarminAuthLink: async function () {
     console.log('Authenticate garmin now...');
     try {
-      return ApiService.get(ApiService.config.apiUrl.apis.vr.authGarmin.path);
+      return ApiService.get(config.apiUrl.apis.vr.authGarmin.path);
     } catch (error) {
       console.log('E : ', error);
       const msg = error as any;
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getGarminActivities: async function (memberId) {
+  getGarminActivities: async function (memberId: string) {
     console.log('Get garmin activities now...', memberId);
     const parameter = {
       filter: {
@@ -81,7 +84,7 @@ const EventService = {
     };
     try {
       return ApiService.get(
-        ApiService.config.apiUrl.apis.vr.garminActivities.path +
+        config.apiUrl.apis.vr.garminActivities.path +
           '?' +
           qs(parameter, false),
       );
@@ -91,14 +94,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getVRBIB: async function (participantId) {
+  getVRBIB: async function (participantId: string) {
     console.log('Get BIB of ... ', participantId);
     try {
       const fileResponse = await fetch(
-        ApiService.config.files.href +
-          ApiService.config.files.apis.bib.path +
-          '/' +
-          participantId,
+        config.files.href + config.files.apis.bib.path + '/' + participantId,
       );
       const fileBlob = await fileResponse.blob();
       return fileBlob;
@@ -108,12 +108,12 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getVRCertificate: async function (certificateURL) {
+  getVRCertificate: async function (certificateURL: string) {
     console.log('Get Certificate ... ', certificateURL);
     try {
       const fileResponse = await fetch(
-        ApiService.config.files.href +
-          ApiService.config.files.apis.certificate.path +
+        config.files.href +
+          config.files.apis.certificate.path +
           '/' +
           certificateURL,
       );
@@ -125,11 +125,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getEvent: async function (eventId) {
+  getEvent: async function (eventId: string) {
     console.log('Event id to get : ', eventId);
     try {
       return ApiService.get(
-        ApiService.config.apiUrl.apis.event.detail.path + '/' + eventId,
+        config.apiUrl.apis.event.detail.path + '/' + eventId,
       );
     } catch (error) {
       console.log('E : ', error);
@@ -137,11 +137,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  confirmVRRecord: async function (transactionId, data) {
+  confirmVRRecord: async function (transactionId: string, data: any) {
     console.log('D : ', data, transactionId);
     try {
       return ApiService.get(
-        ApiService.config.apiUrl.apis.member.confirmVRRecord.path +
+        config.apiUrl.apis.member.confirmVRRecord.path +
           data.id +
           '/' +
           transactionId,
@@ -163,8 +163,8 @@ const EventService = {
       },
       sort: '-evnhStartDate',
     };
-    if (process.env.VUE_APP_ISDEV === 'true') {
-      console.log('Developing.....', process.env);
+    if (config.isDev) {
+      console.log('Developing.....');
       parameter.filter.evnhEmail = 'dev@borobudurmarathon.com';
     }
     try {
@@ -174,11 +174,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  registerVREvent: async function (data) {
+  registerVREvent: async function (data: any) {
     console.log('Do register VR : ', data);
     try {
       return ApiService.post(
-        ApiService.config.apiUrl.apis.member.registerVR.path + data.evpaEvnhId,
+        config.apiUrl.apis.member.registerVR.path + data.evpaEvnhId,
         {data: [data]},
       );
     } catch (error) {
@@ -187,12 +187,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  registerEvent: async function (data) {
+  registerEvent: async function (data: any) {
     console.log('Do register Event : ', data);
     try {
       return ApiService.post(
-        ApiService.config.apiUrl.apis.member.registerEvent.path +
-          data.evpaEvnhId,
+        config.apiUrl.apis.member.registerEvent.path + data.evpaEvnhId,
         {data: [data]},
       );
     } catch (error) {
@@ -201,11 +200,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  submitVRActivity: async function (transactionId, data) {
+  submitVRActivity: async function (transactionId: string, data: any) {
     console.log('Do submit VR data : ', data);
     try {
       return ApiService.post(
-        ApiService.config.apiUrl.apis.member.addVRRecord.path + transactionId,
+        config.apiUrl.apis.member.addVRRecord.path + transactionId,
         {data: data},
       );
     } catch (error) {
@@ -214,17 +213,17 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  generateBillingID: async function (data) {
+  generateBillingID: async function (data: any) {
     console.log('Generate billing ID : ', data);
     try {
-      // return ApiService.post(ApiService.config.apiUrl.apis.member.addVRRecord.path + transactionId, {data: data});
+      // return ApiService.post(config.apiUrl.apis.member.addVRRecord.path + transactionId, {data: data});
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
       const msg = error as any;
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  logVRActivity: async function (id, data) {
+  logVRActivity: async function (id: string, data: any) {
     console.log('Do LOG VR data : ', data);
     try {
       return ApiService.post('lumbini/log_myborobudur/' + id, {data: data});
@@ -234,11 +233,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  checkoutTransaction: async function (data) {
+  checkoutTransaction: async function (data: any) {
     console.log('Data to checkout : ', data);
     try {
       return ApiService.get(
-        ApiService.config.apiUrl.apis.member.checkout.path +
+        config.apiUrl.apis.member.checkout.path +
           data.transactionId +
           '/' +
           data.paymentType,
@@ -252,12 +251,11 @@ const EventService = {
       // );
     }
   },
-  applyCoupon: async function (data) {
+  applyCoupon: async function (data: any) {
     console.log('Data to checkout : ', data);
     try {
       return ApiService.postExternal(
-        ApiService.config.couponApiUrl.href +
-          ApiService.config.couponApiUrl.apis.apply.path,
+        config.couponApiUrl.href + config.couponApiUrl.apis.apply.path,
         {data: data},
       );
     } catch (error) {

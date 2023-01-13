@@ -19,10 +19,10 @@ export default function AuthScreen() {
   const [uri, setUri] = useState<string>();
 
   useEffect(() => {
-    AuthService.bindMemberToKompas().then(res => {
-      console.info('res.url', res.url);
-      setUri(res.url);
-    });
+    // AuthService.bindMemberToKompas().then(res => {
+    //   console.info('res.url', res.url);
+    //   setUri(res.url);
+    // });
   }, []);
 
   useEffect(() => {

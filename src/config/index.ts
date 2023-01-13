@@ -1,6 +1,7 @@
 import apiUrl from './api';
 
 export default {
+  isDev: true,
   debug: true,
   // isProduction: process.env.NODE_ENV === 'production',
   jobApiUrl: {

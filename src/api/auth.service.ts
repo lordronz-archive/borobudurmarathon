@@ -322,19 +322,19 @@ const AuthService = {
     }
   },
 
-  bindMemberToKompas: async function (): Promise<IBindMemberToKompas> {
-    try {
-      const res = await httpRequest.get(
-        config.ssoKompasUrl.apis.existingBorobudurMember.path,
-      );
+  // bindMemberToKompas: async function (): Promise<IBindMemberToKompas> {
+  //   try {
+  //     const res = await httpRequest.get(
+  //       config.ssoKompasUrl.apis.existingBorobudurMember.path,
+  //     );
 
-      return res.data;
-    } catch (error) {
-      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
-    }
-  },
+  //     return res.data;
+  //   } catch (error) {
+  //     console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+  //     const msg = error as any;
+  //     throw new AuthenticationError(msg.status, msg.data.status.error.message);
+  //   }
+  // },
 
   // signup: async function(email: any, password: any, name: any) {
   //   const signupData: AxiosRequestConfig = {
@@ -355,21 +355,21 @@ const AuthService = {
   //   }
   // },
 
-  catchError: function (error: any) {
-    let status;
-    let description;
-    console.log('Olah error di sini : ', error);
+  // catchError: function (error: any) {
+  //   let status;
+  //   let description;
+  //   console.log('Olah error di sini : ', error);
 
-    if (error.response === undefined) {
-      status = error.message;
-      description = error.message;
-    } else {
-      status = error.response.data.status.error.message;
-      description = error.response.data.status.error.errors.message;
-    }
+  //   if (error.response === undefined) {
+  //     status = error.message;
+  //     description = error.message;
+  //   } else {
+  //     status = error.response.data.status.error.message;
+  //     description = error.response.data.status.error.errors.message;
+  //   }
 
-    throw new AuthenticationError(status, description);
-  },
+  //   throw new AuthenticationError(status, description);
+  // },
 };
 
 export {AuthService, AuthenticationError};

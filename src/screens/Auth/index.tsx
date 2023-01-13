@@ -29,7 +29,7 @@ export default function AuthScreen() {
     if (params && params.authorization_code) {
       httpRequest
         .get(
-          'https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth?authorization_code' +
+          'https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth?authorization_code=' +
             params.authorization_code,
         )
         .then(res => {

@@ -1,5 +1,7 @@
 import config from '../config';
-import ApiService from './api.service';
+import httpRequest from '../helpers/httpRequest';
+import {IMemberDetailResponse} from '../types/profile.type';
+
 function qs(obj: any, prefix: boolean | string) {
   const str: string[] = [];
   for (const p in obj) {
@@ -25,12 +27,12 @@ class ResponseError extends Error {
 }
 
 const ProfileService = {
-  getMemberDetail: async function () {
+  getMemberDetail: async function (): Promise<IMemberDetailResponse> {
     try {
-      const memberDetail = await ApiService.get('/member_resource/member/');
+      const res = await httpRequest.get('/member_resource/member/');
       //   await ApiService.getCookies();
-      // console.log('Member detail plus cookies : ', memberDetail, cookies);
-      return memberDetail;
+      // console.log('Member detail plus cookies : ', res, cookies);
+      return res.data;
     } catch (error) {
       console.log('Error getting member detail : ', error);
       const msg = error as any;
@@ -39,7 +41,7 @@ const ProfileService = {
   },
   secretArea: async function () {
     try {
-      return ApiService.get('/member_resource/member/');
+      return httpRequest.get('/member_resource/member/');
     } catch (error) {
       const msg = error as any;
       throw new ResponseError(msg.status, msg.data.status.error.message);
@@ -47,7 +49,7 @@ const ProfileService = {
   },
   getKabupaten: async function (parameter: any) {
     try {
-      return await ApiService.fetch(
+      return await httpRequest.get(
         config.apiUrl.resources.masterKabupaten.path +
           '?' +
           qs(parameter, false),

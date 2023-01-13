@@ -47,6 +47,12 @@ export default {
   apiUrl: {
     href: apiUrl.steelytoeUrl,
     apis: {
+      kompas: {
+        authorize_code: {
+          path: '/kompasid/login/auth',
+          method: 'GET',
+        },
+      },
       vr: {
         authGarmin: {
           path: '/garmin/login',

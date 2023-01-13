@@ -6,6 +6,7 @@ import SignInWithKompas from '../screens/Auth/SignInWithKompas';
 import InitialScreen from '../screens/Initial';
 import AuthScreen from '../screens/Auth';
 import {linking} from './linking';
+import MainTabNavigator from './MainTabNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,8 +30,8 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
+          name="Main"
+          component={MainTabNavigator}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

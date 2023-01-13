@@ -5,7 +5,16 @@ import httpRequest from '../helpers/httpRequest';
 import config from '../config';
 import base64 from 'react-native-base64';
 import Config from 'react-native-config';
-import {IBindMemberToKompas} from '../types/auth.type';
+
+type AuthorizeKompasResponse = {
+  code: 200;
+  data: {
+    email: 'aditia.prasetio12@gmail.com';
+    id: '170163';
+    key: 'c8fd60e4d1835f9b296adf50dfdddde10c0def74d9bb37cf8a36b6f53e2766e299762aab0ef689de2f1228f7db72b2b5';
+    member: '39050';
+  };
+};
 
 class AuthenticationError extends Error {
   errorCode: any;
@@ -72,6 +81,25 @@ const AuthService = {
   //     throw new AuthenticationError(msg.status, msg.data.status.error.message);
   //   }
   // },
+  authorizeKompas: async function (
+    authorization_code: string,
+  ): Promise<AuthorizeKompasResponse> {
+    try {
+      return await httpRequest.get(
+        config.apiUrl.apis.kompas.authorize_code.path,
+        {
+          params: {
+            authorization_code,
+            // encodeURIComponent(authorization_code),
+          },
+        },
+      );
+    } catch (error) {
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      const msg = error as any;
+      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+    }
+  },
   checkEmail: async function (emailForm: any) {
     try {
       return await httpRequest.post(config.apiUrl.apis.member.checkEmail.path, {

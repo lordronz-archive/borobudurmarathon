@@ -1,17 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {Box, Button} from 'native-base';
+import {Box, Button, useToast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Alert, Linking} from 'react-native';
 import {AuthService} from '../../api/auth.service';
+import {ProfileService} from '../../api/profile.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
-import httpRequest from '../../helpers/httpRequest';
 
 export default function AuthScreen() {
   // const _resDLI = useDeeplinkInit();
   console.info('render AuthScreen');
   const route = useRoute();
-  const params: {authorization_code: string} = route.params;
+  const toast = useToast();
+  const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
 
   const navigation = useNavigation();
@@ -27,16 +28,33 @@ export default function AuthScreen() {
 
   useEffect(() => {
     if (params && params.authorization_code) {
-      httpRequest
-        .get(
-          'https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth?authorization_code=' +
-            params.authorization_code,
-        )
+      AuthService.authorizeKompas(params.authorization_code)
         .then(res => {
-          console.info('res.data', res.data);
+          console.info('### res.data', res.data);
+
+          ProfileService.getMemberDetail()
+            .then(resProfile => {
+              console.info('resProfile', resProfile);
+              console.info('resProfile', JSON.stringify(resProfile));
+              toast.show({
+                description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+              });
+            })
+            .catch(err => {
+              console.info('### error resProfile', err);
+              toast.show({
+                title: 'Failed to get profile',
+                variant: 'subtle',
+                description: getErrorMessage(err),
+              });
+            });
         })
         .catch(err => {
-          console.info('error', err);
+          toast.show({
+            title: 'Failed to authorize',
+            variant: 'subtle',
+            description: getErrorMessage(err),
+          });
         });
     }
   }, [route.params]);

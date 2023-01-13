@@ -53,9 +53,16 @@ export default function AuthScreen() {
               console.info('resProfile', resProfile);
               console.info('resProfile', JSON.stringify(resProfile));
               navigation.navigate('DataConfirmation');
-              toast.show({
-                description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-              });
+
+              if (resProfile.data && resProfile.data.length > 0) {
+                toast.show({
+                  description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+                });
+              } else {
+                toast.show({
+                  description: 'Welcome, New Runner',
+                });
+              }
             })
             .catch(err => {
               console.info('### error resProfile', err);

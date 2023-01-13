@@ -11,7 +11,7 @@
 import {extendTheme, NativeBaseProvider} from 'native-base';
 import React from 'react';
 import {StatusBar, useColorScheme} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import RootNavigator from './src/navigation/RootNavigator';
@@ -23,6 +23,51 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const fontConfig = {
+    Poppins: {
+      100: {
+        normal: 'Poppins-Light',
+        italic: 'Poppins-LightItalic',
+      },
+      200: {
+        normal: 'Poppins-Light',
+        italic: 'Poppins-LightItalic',
+      },
+      300: {
+        normal: 'Poppins-Light',
+        italic: 'Poppins-LightItalic',
+      },
+      400: {
+        normal: 'Poppins-Regular',
+        italic: 'Poppins-Italic',
+      },
+      500: {
+        normal: 'Poppins-Medium',
+      },
+      600: {
+        normal: 'Poppins-Medium',
+        italic: 'Poppins-MediumItalic',
+      },
+      700: {
+        normal: 'Poppins-Bold',
+      },
+      800: {
+        normal: 'Poppins-Bold',
+        italic: 'Poppins-BoldItalic',
+      },
+      900: {
+        normal: 'Poppins-Bold',
+        italic: 'Poppins-BoldItalic',
+      },
+    },
+  };
+
+  const fonts = {
+    heading: 'Poppins',
+    body: 'Poppins',
+    mono: 'Poppins',
+  };
+
   const newColorTheme = {
     brand: {
       900: '#8287af',
@@ -30,7 +75,7 @@ const App = () => {
       700: '#b3bef6',
     },
   };
-  const theme = extendTheme({colors: newColorTheme});
+  const theme = extendTheme({colors: newColorTheme, fontConfig, fonts});
   // 3. Pass the `theme` prop to the `NativeBaseProvider`
 
   return (

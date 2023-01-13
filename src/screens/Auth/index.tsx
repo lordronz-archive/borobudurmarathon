@@ -1,11 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {Box, Button, useToast} from 'native-base';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {
+  Box,
+  Button,
+  Center,
+  HStack,
+  Image,
+  Link,
+  Text,
+  VStack,
+  Box, Button, useToast,
+} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Alert, Linking} from 'react-native';
 import {AuthService} from '../../api/auth.service';
-import {ProfileService} from '../../api/profile.service';
+import KompasIcon from '../../components/icons/KompasIcon';
+import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
+import httpRequest from '../../helpers/httpRequest';
+import {RootStackParamList} from '../../navigation/RootNavigator';
+import {ProfileService} from '../../api/profile.service';
 
 export default function AuthScreen() {
   // const _resDLI = useDeeplinkInit();
@@ -15,7 +30,8 @@ export default function AuthScreen() {
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
 
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [uri, setUri] = useState<string>();
 
@@ -36,6 +52,7 @@ export default function AuthScreen() {
             .then(resProfile => {
               console.info('resProfile', resProfile);
               console.info('resProfile', JSON.stringify(resProfile));
+              navigation.navigate('DataConfirmation');
               toast.show({
                 description: 'Welcome, ' + resProfile.data[0].zmemFullName,
               });
@@ -76,15 +93,55 @@ export default function AuthScreen() {
   };
 
   return (
-    <Box>
-      <Button
-        onPress={() => {
-          openLink();
-          // authorizeMe();
-          // navigation.navigate('SignInWithKompas');
-        }}>
-        Sign In With Kompas
-      </Button>
+    <Box px="4" flex="1">
+      <HStack justifyContent="center" flex="5">
+        <VStack space="3" alignItems="center" justifyContent="center">
+          <Image
+            source={require('../../assets/images/logo.png')}
+            alt="Alternate Text"
+            width={221.17}
+            height={100}
+            mb="10"
+          />
+          <Heading textAlign={'center'}>Welcome to Borobudur Marathon</Heading>
+          <Text fontWeight={400} textAlign={'center'} color="#768499">
+            Ayo bergabung menjadi bagian dari komunitas Borobudur Marathon.
+            Event lari terbesar di Jawa Tengah, Indonesia.
+          </Text>
+        </VStack>
+      </HStack>
+      <VStack flex="1" justifyContent={'center'} space="5">
+        <Button
+          backgroundColor={'#00559A'}
+          rounded="sm"
+          onPress={() => {
+            openLink();
+          }}
+          startIcon={<KompasIcon size="lg" px="6" />}>
+          <Text color="white" px="12">
+            Masuk dengan Kompas.id
+          </Text>
+        </Button>
+        <Center>
+          <HStack>
+            <Text
+              justifyContent={'center'}
+              alignItems="center"
+              fontWeight={400}>
+              Didn't Have an Account?{' '}
+            </Text>
+            <Link
+              href="https://nativebase.io"
+              isExternal
+              _text={{
+                color: 'blue.600',
+                fontWeight: 600,
+              }}>
+              Register
+            </Link>
+          </HStack>
+        </Center>
+      </VStack>
     </Box>
   );
 }

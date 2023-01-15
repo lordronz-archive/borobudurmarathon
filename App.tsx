@@ -14,6 +14,7 @@ import {StatusBar, useColorScheme} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {AuthUserProvider} from './src/context/auth.context';
 import RootNavigator from './src/navigation/RootNavigator';
 
 const App = () => {
@@ -85,9 +86,11 @@ const App = () => {
         backgroundColor={backgroundStyle.backgroundColor}
       />
 
-      <SafeAreaView style={{...backgroundStyle, flex: 1}}>
-        <RootNavigator />
-      </SafeAreaView>
+      <AuthUserProvider>
+        <SafeAreaView style={{...backgroundStyle, flex: 1}}>
+          <RootNavigator />
+        </SafeAreaView>
+      </AuthUserProvider>
     </NativeBaseProvider>
   );
 };

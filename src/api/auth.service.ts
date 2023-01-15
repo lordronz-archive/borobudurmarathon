@@ -7,12 +7,12 @@ import base64 from 'react-native-base64';
 import Config from 'react-native-config';
 
 type AuthorizeKompasResponse = {
-  code: 200;
+  code: number;
   data: {
-    email: 'aditia.prasetio12@gmail.com';
-    id: '170163';
-    key: 'c8fd60e4d1835f9b296adf50dfdddde10c0def74d9bb37cf8a36b6f53e2766e299762aab0ef689de2f1228f7db72b2b5';
-    member: '39050';
+    email: string;
+    id: string;
+    key: string;
+    member: string;
   };
 };
 
@@ -258,6 +258,7 @@ const AuthService = {
   // },
 
   refreshToken: async function () {
+    console.info('AuthService.refreshToken');
     const refreshToken = TokenService.getRefreshToken();
 
     const requestData: AxiosRequestConfig = {
@@ -277,6 +278,7 @@ const AuthService = {
 
     try {
       const response = await httpRequest(requestData);
+      console.info('AuthService.refreshToken - response', response.data);
 
       TokenService.saveToken(response.data.access_token);
       TokenService.saveRefreshToken(response.data.refresh_token);
@@ -284,6 +286,7 @@ const AuthService = {
 
       return response.data.access_token;
     } catch (error) {
+      console.info('AuthService.refreshToken - error', error);
       const msg = error as any;
       throw new AuthenticationError(msg.status, msg.data.status.error.message);
     }

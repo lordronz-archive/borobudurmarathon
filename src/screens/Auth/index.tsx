@@ -20,7 +20,8 @@ import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {ProfileService} from '../../api/profile.service';
-import I18n from '../../i18n';
+import I18n from '../../lib/i18n';
+import {useAuthUser} from '../../context/auth.context';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -28,9 +29,11 @@ export default function AuthScreen() {
   const toast = useToast();
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const {state} = useAuthUser();
+  console.info('#Auth -- state', state);
 
   useEffect(() => {
     if (params && params.authorization_code) {
@@ -42,7 +45,6 @@ export default function AuthScreen() {
             .then(resProfile => {
               console.info('resProfile', resProfile);
               console.info('resProfile', JSON.stringify(resProfile));
-              navigation.navigate('DataConfirmation');
 
               if (resProfile.data && resProfile.data.length > 0) {
                 toast.show({
@@ -53,6 +55,9 @@ export default function AuthScreen() {
                   description: 'Welcome, New Runner',
                 });
               }
+
+              AuthService.refreshToken();
+              navigation.navigate('DataConfirmation');
             })
             .catch(err => {
               console.info('### error resProfile', err);

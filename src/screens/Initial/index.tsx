@@ -13,7 +13,7 @@ export default function InitialScreen() {
 
   return (
     <Box>
-      <Center>{isLoading ? <Spinner /> : <Text>Initial Screen</Text>}</Center>
+      <Center>{isLoading ? <Spinner /> : <Text>...</Text>}</Center>
     </Box>
   );
 }

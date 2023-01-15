@@ -413,13 +413,15 @@ PODS:
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
     - RNFBApp
+  - RNI18n (2.0.15):
+    - React
   - RNInAppBrowser (3.7.0):
     - React-Core
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSVG (12.1.1):
-    - React
+  - RNSVG (12.4.1):
+    - React-Core
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -465,6 +467,7 @@ DEPENDENCIES:
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
+  - RNI18n (from `../node_modules/react-native-i18n`)
   - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -566,6 +569,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBDynamicLinks:
     :path: "../node_modules/@react-native-firebase/dynamic-links"
+  RNI18n:
+    :path: "../node_modules/react-native-i18n"
   RNInAppBrowser:
     :path: "../node_modules/react-native-inappbrowser-reborn"
   RNScreens:
@@ -628,11 +633,12 @@ SPEC CHECKSUMS:
   RNFBAnalytics: ecfc88d832496f624d1bc9c84bc8d23b194994f2
   RNFBApp: 2b3e57f4eecd9cfe8a5dd2ea8ed27a87fbc6eada
   RNFBDynamicLinks: f5ce579405932828dd668d4217597e633f73d270
+  RNI18n: e2f7e76389fcc6e84f2c8733ea89b92502351fd8
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
+  RNSVG: f2bbcdece1e7d8e5f2f94536ed2a2dcf8f95ea4f
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
 
-PODFILE CHECKSUM: 814c2aa036d09f33c2b7b44fb6e7b457f97329e9
+PODFILE CHECKSUM: 37911c43edcca985f07daacb23d93d6f36e671d0
 
 COCOAPODS: 1.11.3

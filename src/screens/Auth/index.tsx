@@ -10,20 +10,19 @@ import {
   Link,
   Text,
   VStack,
-  Box, Button, useToast,
+  useToast,
 } from 'native-base';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Alert, Linking} from 'react-native';
 import {AuthService} from '../../api/auth.service';
 import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
-import httpRequest from '../../helpers/httpRequest';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {ProfileService} from '../../api/profile.service';
+import I18n from '../../i18n';
 
 export default function AuthScreen() {
-  // const _resDLI = useDeeplinkInit();
   console.info('render AuthScreen');
   const route = useRoute();
   const toast = useToast();
@@ -32,15 +31,6 @@ export default function AuthScreen() {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  const [uri, setUri] = useState<string>();
-
-  useEffect(() => {
-    // AuthService.bindMemberToKompas().then(res => {
-    //   console.info('res.url', res.url);
-    //   setUri(res.url);
-    // });
-  }, []);
 
   useEffect(() => {
     if (params && params.authorization_code) {
@@ -90,7 +80,7 @@ export default function AuthScreen() {
   console.info('redirect_uri', redirect_uri);
   console.info('url', url);
 
-  const openLink = async () => {
+  const openAuthLink = async () => {
     try {
       Linking.openURL(url);
       return;
@@ -110,10 +100,11 @@ export default function AuthScreen() {
             height={100}
             mb="10"
           />
-          <Heading textAlign={'center'}>Welcome to Borobudur Marathon</Heading>
+          <Heading textAlign={'center'}>
+            {I18n.t('welcomeTo') + ' Borobudur Marathon'}
+          </Heading>
           <Text fontWeight={400} textAlign={'center'} color="#768499">
-            Ayo bergabung menjadi bagian dari komunitas Borobudur Marathon.
-            Event lari terbesar di Jawa Tengah, Indonesia.
+            {I18n.t('auth.description')}
           </Text>
         </VStack>
       </HStack>
@@ -122,11 +113,11 @@ export default function AuthScreen() {
           backgroundColor={'#00559A'}
           rounded="sm"
           onPress={() => {
-            openLink();
+            openAuthLink();
           }}
           startIcon={<KompasIcon size="lg" px="6" />}>
           <Text color="white" px="12">
-            Masuk dengan Kompas.id
+            {I18n.t('auth.signInWith') + ' Kompas.id'}
           </Text>
         </Button>
         <Center>
@@ -135,16 +126,17 @@ export default function AuthScreen() {
               justifyContent={'center'}
               alignItems="center"
               fontWeight={400}>
-              Didn't Have an Account?{' '}
+              {I18n.t('auth.dontHaveAccount')}{' '}
             </Text>
             <Link
-              href="https://nativebase.io"
-              isExternal
+              onPress={() => {
+                openAuthLink();
+              }}
               _text={{
                 color: 'blue.600',
                 fontWeight: 600,
               }}>
-              Register
+              {I18n.t('auth.register')}
             </Link>
           </HStack>
         </Center>

@@ -24,6 +24,7 @@
     "react-native": "0.70.6",
     "react-native-base64": "^0.2.1",
     "react-native-config": "^1.4.11",
+    "react-native-i18n": "^2.0.15",
     "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "^3.18.2",

@@ -3,7 +3,6 @@ import {clearAuth} from '../helpers/auth';
 import config from '../config';
 // import {getErrorMessage} from './errorHandler';
 // import RNRestart from 'react-native-restart';
-import CookieManager from '@react-native-cookies/cookies';
 import {getCookiesString} from '../api/cookies';
 
 // Immediately reload the React Native Bundle
@@ -31,16 +30,7 @@ console.info('config.apiUrl.href.href', config.apiUrl.href.href);
 
 // this will check if cookies are there for every request and send request
 httpRequest.interceptors.request.use(async (axiosConfig: any) => {
-  const resCookie = await CookieManager.getAll();
-  const myBorMarCookie = Object.values(resCookie).find(
-    item => item.domain === 'my.borobudurmarathon.com',
-  );
-  console.info('#AXIOS myBorMarCookie', myBorMarCookie);
-
   const cookieString = await getCookiesString();
-
-  // const cookieString =
-  //   'PHPSESSID=6afkdqsvd6rflqi7bsofp8grbc; _ga=GA1.2.637971587.1673856684; _gid=GA1.2.393060825.1673856684';
 
   if (cookieString) {
     axiosConfig.headers.Cookie = cookieString;

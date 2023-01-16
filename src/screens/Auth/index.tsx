@@ -21,7 +21,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {ProfileService} from '../../api/profile.service';
 import I18n from '../../lib/i18n';
-import {useAuthUser} from '../../context/auth.context';
+import {EAuthUserAction, useAuthUser} from '../../context/auth.context';
 import WebView from 'react-native-webview';
 import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
@@ -35,7 +35,7 @@ export default function AuthScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const {state} = useAuthUser();
+  const {state, dispatch} = useAuthUser();
   console.info('#Auth -- state', state);
 
   // useEffect(() => {
@@ -120,7 +120,10 @@ export default function AuthScreen() {
             description: 'Welcome, New Runner',
           });
         }
-        // AuthService.refreshToken();
+        dispatch({
+          type: EAuthUserAction.LOGIN,
+          payload: {user: resProfile.data[0]},
+        });
         navigation.navigate('DataConfirmation');
       })
       .catch(err => {

@@ -1,5 +1,9 @@
-import {Box, FormControl, Select, WarningOutlineIcon} from 'native-base';
+import {Box, FormControl, Input, Select, WarningOutlineIcon} from 'native-base';
 import React from 'react';
+import {
+  type NativeSyntheticEvent,
+  type TextInputEndEditingEventData,
+} from 'react-native';
 
 type SelectInputProps = {
   isInvalid?: boolean;
@@ -16,6 +20,16 @@ type SelectInputProps = {
 };
 
 export default function SelectInput(props: SelectInputProps) {
+  const [searchValue, setSearchValue] = React.useState<string>('');
+
+  const handleInputSubmit = React.useCallback(
+    (ev: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
+      const input = ev.nativeEvent.text;
+      setSearchValue(input);
+    },
+    [setSearchValue],
+  );
+
   return (
     <FormControl isInvalid={props.isInvalid}>
       <Box borderWidth={1} borderColor="#C5CDDB" borderRadius={5} px={3} pb={0}>
@@ -25,10 +39,31 @@ export default function SelectInput(props: SelectInputProps) {
           variant="unstyled"
           ml={-3}
           selectedValue={props.value}
-          onValueChange={props.onValueChange}>
-          {props.items.map(({label, value}, i) => (
-            <Select.Item label={label} value={value} key={`${value}-${i}`} />
-          ))}
+          onValueChange={props.onValueChange}
+          _actionSheetBody={{
+            ListHeaderComponent: (
+              <FormControl px={3} mb={3}>
+                <Input
+                  px={15}
+                  py={2}
+                  fontSize={16}
+                  placeholder=""
+                  _focus={{bg: 'white', borderColor: 'darkBlue.600'}}
+                  type="text"
+                  onEndEditing={handleInputSubmit}
+                />
+              </FormControl>
+            ),
+          }}>
+          {props.items
+            .filter(
+              ({value, label}) =>
+                value.toLowerCase().includes(searchValue.toLowerCase()) ||
+                label.toLowerCase().includes(searchValue.toLowerCase()),
+            )
+            .map(({label, value}, i) => (
+              <Select.Item label={label} value={value} key={`${value}-${i}`} />
+            ))}
         </Select>
       </Box>
       <FormControl.HelperText>{props.helperText}</FormControl.HelperText>

@@ -7,6 +7,8 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {TokenService} from '../../api/token.service';
 import {ProfileService} from '../../api/profile.service';
 import {AuthService} from '../../api/auth.service';
+import CookieManager from '@react-native-community/cookies';
+import config from '../../config';
 
 export default function InitialScreen() {
   const navigation =
@@ -15,8 +17,14 @@ export default function InitialScreen() {
   const {dispatch} = useAuthUser();
 
   const checkLogin = async () => {
-    const token = await TokenService.getToken();
-    if (token) {
+    const resCookie = await CookieManager.getAll(true);
+    console.info('resCookie cookies', resCookie);
+    const myBorMarCookie = Object.values(resCookie).find(
+      item => item.domain === 'my.borobudurmarathon.com',
+    );
+    console.info('myBorMarCookie', myBorMarCookie);
+
+    if (myBorMarCookie) {
       // get profile
       ProfileService.getMemberDetail()
         .then(res => {
@@ -25,7 +33,6 @@ export default function InitialScreen() {
               type: EAuthUserAction.LOGIN,
               payload: {user: res.data[0]},
             });
-            AuthService.refreshToken();
             navigation.navigate('Main');
           } else {
             navigation.navigate('Auth');
@@ -34,7 +41,30 @@ export default function InitialScreen() {
         })
         .catch(err => {
           setIsLoading(false);
+          CookieManager.clearAll();
+          navigation.navigate('Auth');
         });
+
+      // fetch(config.apiUrl.href.href + 'member_resource/member/', {
+      //   method: 'GET',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json',
+      //   },
+      //   // body: JSON.stringify({
+      //   //   firstParam: 'yourValue',
+      //   //   secondParam: 'yourOtherValue',
+      //   // }),
+      //   credentials: 'omit',
+      // })
+      //   .then(response => response.json())
+      //   .then(json => {
+      //     console.info('json', json);
+      //     // return json.movies;
+      //   })
+      //   .catch(error => {
+      //     console.error('error fetch', error);
+      //   });
     } else {
       navigation.navigate('Auth');
       setIsLoading(false);

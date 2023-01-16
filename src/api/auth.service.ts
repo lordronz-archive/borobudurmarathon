@@ -5,6 +5,7 @@ import httpRequest from '../helpers/httpRequest';
 import config from '../config';
 import base64 from 'react-native-base64';
 import Config from 'react-native-config';
+import {IBindMemberToKompas} from '../types/auth.type';
 
 type AuthorizeKompasResponse = {
   code: number;
@@ -353,19 +354,19 @@ const AuthService = {
     }
   },
 
-  // bindMemberToKompas: async function (): Promise<IBindMemberToKompas> {
-  //   try {
-  //     const res = await httpRequest.get(
-  //       config.ssoKompasUrl.apis.existingBorobudurMember.path,
-  //     );
+  bindMemberToKompas: async function (): Promise<IBindMemberToKompas> {
+    try {
+      const res = await httpRequest.get(
+        config.ssoKompasUrl.apis.existingBorobudurMember.path,
+      );
 
-  //     return res.data;
-  //   } catch (error) {
-  //     console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-  //     const msg = error as any;
-  //     throw new AuthenticationError(msg.status, msg.data.status.error.message);
-  //   }
-  // },
+      return res.data;
+    } catch (error) {
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      const msg = error as any;
+      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+    }
+  },
 
   // signup: async function(email: any, password: any, name: any) {
   //   const signupData: AxiosRequestConfig = {

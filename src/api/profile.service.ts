@@ -29,7 +29,9 @@ class ResponseError extends Error {
 const ProfileService = {
   getMemberDetail: async function (): Promise<IMemberDetailResponse> {
     try {
-      const res = await httpRequest.get('/member_resource/member/');
+      const res = await httpRequest.get('/member_resource/member/', {
+        withCredentials: true,
+      });
       //   await ApiService.getCookies();
       // console.log('Member detail plus cookies : ', res, cookies);
       return res.data;

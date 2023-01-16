@@ -1,3 +1,4 @@
+import CookieManager from '@react-native-community/cookies';
 import {AxiosRequestConfig} from 'axios';
 import config from '../config';
 import httpRequest from '../helpers/httpRequest';

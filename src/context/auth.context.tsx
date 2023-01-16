@@ -2,9 +2,10 @@ import React from 'react';
 
 export enum EAuthUserAction {
   LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
 }
 type State = {user: any};
-type Action = {type: EAuthUserAction; payload: State};
+type Action = {type: EAuthUserAction; payload?: State};
 type Dispatch = (action: Action) => void;
 
 const AuthUserContext = React.createContext<
@@ -14,7 +15,10 @@ const AuthUserContext = React.createContext<
 function authUserReducer(state: State, action: Action) {
   switch (action.type) {
     case EAuthUserAction.LOGIN: {
-      return {...state, user: action.payload.user};
+      return {...state, user: action.payload?.user};
+    }
+    case EAuthUserAction.LOGOUT: {
+      return {...state, user: undefined};
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);

@@ -13,9 +13,8 @@ import {
   useToast,
   Spinner,
 } from 'native-base';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Alert, Linking} from 'react-native';
-import {AuthService} from '../../api/auth.service';
 import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
@@ -25,7 +24,7 @@ import I18n from '../../lib/i18n';
 import {useAuthUser} from '../../context/auth.context';
 import WebView from 'react-native-webview';
 import config from '../../config';
-import CookieManager from '@react-native-community/cookies';
+import {getCookiesString} from '../../api/cookies';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -132,7 +131,7 @@ export default function AuthScreen() {
           description: getErrorMessage(err),
         });
       });
-  }
+  };
 
   if (params && params.authorization_code) {
     let uri =
@@ -143,151 +142,41 @@ export default function AuthScreen() {
     console.info('uri', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
     return (
-      <Box>
-        <HStack
-          space={2}
-          justifyContent="center"
-          style={{position: 'absolute', width: '100%', height: '100%'}}>
-          <Spinner accessibilityLabel="Loading posts" />
-          <Heading color="primary.500" fontSize="md">
-            Loading
-          </Heading>
-        </HStack>
+      <Box flex={1}>
         <WebView
           source={{
             uri,
           }}
           thirdPartyCookiesEnabled={true}
-          onNavigationStateChange={event => {
-            console.info('event', event);
-            CookieManager.getAll(true).then(resCookie => {
-              console.info('resCookie cookies', resCookie);
-              const myBorMarCookie = Object.values(resCookie).find(
-                item => item.domain === 'my.borobudurmarathon.com',
-              );
-              console.info('myBorMarCookie', myBorMarCookie);
-
-              if (myBorMarCookie) {
-                getProfile();
-              }
-              // const resCookie = {
-              //   NID: {
-              //     domain: '.google.com',
-              //     expires: '2023-07-12T19:48:51.000+07:00',
-              //     httpOnly: true,
-              //     name: 'NID',
-              //     path: '/',
-              //     secure: true,
-              //     value:
-              //       '511=Q0yvommVbLoLw771lcBA-UyI3yYrNUKHrg5syjItvh1-jx5LJWQQrdZbv8xU7YjmBApMYAxl8uEjfek-Vywc3-VbPJV_-cZUL8rDk96QcihBIE0qsaEBI55TjsmZAGot-YfCHQAJ2-Qos0FUZs3C_Ye3-f96PfkOF09GuPGfnW4',
-              //     version: '1',
-              //   },
-              //   PHPSESSID: {
-              //     domain: 'my.borobudurmarathon.com',
-              //     expires: '2024-01-16T13:56:30.000+07:00',
-              //     httpOnly: false,
-              //     name: 'PHPSESSID',
-              //     path: '/',
-              //     secure: false,
-              //     value: '6afkdqsvd6rflqi7bsofp8grbc',
-              //     version: '1',
-              //   },
-              //   USER_DATA: {
-              //     domain: '.kompas.id',
-              //     expires: '2023-01-17T19:52:11.000+07:00',
-              //     httpOnly: false,
-              //     name: 'USER_DATA',
-              //     path: '/',
-              //     secure: true,
-              //     value:
-              //       '%7B%22attributes%22%3A%5B%5D%2C%22subscribedToOldSdk%22%3Afalse%2C%22deviceUuid%22%3A%2227f856a4-85a9-4b86-ba75-0f6012890815%22%2C%22deviceAdded%22%3Atrue%7D',
-              //     version: '1',
-              //   },
-              //   '__Host-GAPS': {
-              //     domain: 'accounts.google.com',
-              //     expires: '2025-01-09T19:48:47.000+07:00',
-              //     httpOnly: true,
-              //     name: '__Host-GAPS',
-              //     path: '/',
-              //     secure: true,
-              //     value: '1:p6jZ85yJC-9JuaLd_QEp9QTmT4gGYA:gZGDdUGEgM62rT3d',
-              //     version: '1',
-              //   },
-              //   _ga: {
-              //     domain: '.kompas.id',
-              //     expires: '2023-01-17T19:52:13.000+07:00',
-              //     httpOnly: false,
-              //     name: '_ga',
-              //     path: '/',
-              //     secure: false,
-              //     value: 'GA1.2.82693122.1673354908',
-              //     version: '1',
-              //   },
-              //   _ga_8NH8NE9VN9: {
-              //     domain: '.kompas.id',
-              //     expires: '2023-01-17T19:52:17.000+07:00',
-              //     httpOnly: false,
-              //     name: '_ga_8NH8NE9VN9',
-              //     path: '/',
-              //     secure: false,
-              //     value: 'GS1.1.1673354907.1.1.1673355137.39.0.0',
-              //     version: '1',
-              //   },
-              //   datr: {
-              //     domain: '.facebook.com',
-              //     expires: '2025-01-09T19:52:04.000+07:00',
-              //     httpOnly: true,
-              //     name: 'datr',
-              //     path: '/',
-              //     secure: true,
-              //     value: 'c1-9Y72QMSl5Fm8V_yO9p09q',
-              //     version: '1',
-              //   },
-              //   fr: {
-              //     domain: '.facebook.com',
-              //     expires: '2023-04-10T19:52:06.000+07:00',
-              //     httpOnly: true,
-              //     name: 'fr',
-              //     path: '/',
-              //     secure: true,
-              //     value:
-              //       '0bkrnATWITSE2pMFK..BjvV90.tN.AAA.0.0.BjvV93.AWUUhWhfXPI',
-              //     version: '1',
-              //   },
-              //   m_pixel_ratio: {
-              //     domain: '.facebook.com',
-              //     expires: '2023-01-17T19:52:06.000+07:00',
-              //     httpOnly: false,
-              //     name: 'm_pixel_ratio',
-              //     path: '/',
-              //     secure: true,
-              //     value: '3',
-              //     version: '1',
-              //   },
-              //   sb: {
-              //     domain: '.facebook.com',
-              //     expires: '2025-01-09T19:52:04.000+07:00',
-              //     httpOnly: true,
-              //     name: 'sb',
-              //     path: '/',
-              //     secure: true,
-              //     value: 'dF-9Yy7CXbPZH-6LJGTe0m_H',
-              //     version: '1',
-              //   },
-              //   wd: {
-              //     domain: '.facebook.com',
-              //     expires: '2023-01-17T19:52:06.000+07:00',
-              //     httpOnly: false,
-              //     name: 'wd',
-              //     path: '/',
-              //     secure: true,
-              //     value: '390x844',
-              //     version: '1',
-              //   },
-              // };
-            });
+          onLoadEnd={async () => {
+            const cookiesString = await getCookiesString();
+            if (cookiesString) {
+              getProfile();
+            }
           }}
+          // onNavigationStateChange={async event => {
+          //   console.info('event', event);
+          //   const cookiesString = await getCookiesString();
+          //   if (cookiesString) {
+          //     getProfile();
+          //   }
+          // }}
         />
+
+        <Box
+          justifyContent="center"
+          alignItems="center"
+          flex={1}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#ffffff',
+          }}>
+          <Center>
+            <Spinner size="lg" />
+          </Center>
+        </Box>
       </Box>
     );
   }

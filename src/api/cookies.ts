@@ -1,19 +1,36 @@
-import CookieManager from '@react-native-community/cookies';
+import CookieManager from '@react-native-cookies/cookies';
+import {Platform} from 'react-native';
 
 export async function getCookiesString() {
-  // PHPSESSID=rk1kg7l9vt83an3hu7skrl89su; _ga=GA1.2.637971587.1673856684; _gid=GA1.2.393060825.1673856684
-  const resCookie = await CookieManager.getAll(true);
-  console.info('resCookie cookies', resCookie);
-
   const cookies: {key: string; value: string}[] = [];
-  Object.keys(resCookie).forEach(key => {
-    if (resCookie[key].domain === 'my.borobudurmarathon.com') {
+
+  if (Platform.OS === 'ios') {
+    // PHPSESSID=rk1kg7l9vt83an3hu7skrl89su; _ga=GA1.2.637971587.1673856684; _gid=GA1.2.393060825.1673856684
+    const resCookie = await CookieManager.getAll(true);
+    console.info('IOS resCookie cookies', resCookie);
+
+    Object.keys(resCookie).forEach(key => {
+      if (resCookie[key].domain === 'my.borobudurmarathon.com') {
+        cookies.push({
+          key,
+          value: resCookie[key].value,
+        });
+      }
+    });
+  } else {
+    const resCookie = await CookieManager.get(
+      'https://my.borobudurmarathon.com',
+    );
+    console.info('ANDROID resCookie cookies', resCookie);
+
+    Object.keys(resCookie).forEach(key => {
       cookies.push({
         key,
         value: resCookie[key].value,
       });
-    }
-  });
+    });
+  }
+
   // const myBorMarCookie = Object.values(resCookie).find(
   //   item => item.domain === 'my.borobudurmarathon.com',
   // );

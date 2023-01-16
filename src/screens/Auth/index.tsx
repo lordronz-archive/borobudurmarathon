@@ -153,6 +153,7 @@ export default function AuthScreen() {
           thirdPartyCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
+            console.info('cookesString', cookiesString);
             if (cookiesString) {
               getProfile();
             }

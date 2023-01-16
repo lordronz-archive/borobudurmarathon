@@ -3,7 +3,7 @@ import {clearAuth} from '../helpers/auth';
 import config from '../config';
 // import {getErrorMessage} from './errorHandler';
 // import RNRestart from 'react-native-restart';
-import CookieManager from '@react-native-community/cookies';
+import CookieManager from '@react-native-cookies/cookies';
 import {getCookiesString} from '../api/cookies';
 
 // Immediately reload the React Native Bundle

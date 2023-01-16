@@ -1,14 +1,18 @@
 import {useNavigation} from '@react-navigation/native';
 import {Box, Checkbox, Text, VStack, ScrollView} from 'native-base';
-import React from 'react';
+import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
 import BMButton from '../../components/buttons/Button';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
+import DateInput from '../../components/form/DateInput';
+import countries from '../../helpers/countries';
 
 export default function InputProfileScreen() {
   const navigation = useNavigation();
+
+  const [birthDate, setBirthDate] = useState<Date>();
 
   return (
     <ScrollView>
@@ -50,6 +54,12 @@ export default function InputProfileScreen() {
               placeholder="Enter your place of birth"
               label="Place of birth"
             />
+            <DateInput
+              placeholder="DD MMM YYYY"
+              label="Date of birth"
+              date={birthDate}
+              setDate={setBirthDate}
+            />
             <SelectInput
               items={[
                 {
@@ -73,46 +83,18 @@ export default function InputProfileScreen() {
               label="Blood Type"
             />
             <SelectInput
-              items={[
-                {
-                  label: 'A',
-                  value: 'A',
-                },
-                {
-                  label: 'B',
-                  value: 'B',
-                },
-                {
-                  label: 'O',
-                  value: 'O',
-                },
-                {
-                  label: 'AB',
-                  value: 'AB',
-                },
-              ]}
+              items={countries.map(({en_short_name}) => ({
+                label: en_short_name,
+                value: en_short_name,
+              }))}
               placeholder="Choose country"
               label="Country"
             />
             <SelectInput
-              items={[
-                {
-                  label: 'A',
-                  value: 'A',
-                },
-                {
-                  label: 'B',
-                  value: 'B',
-                },
-                {
-                  label: 'O',
-                  value: 'O',
-                },
-                {
-                  label: 'AB',
-                  value: 'AB',
-                },
-              ]}
+              items={countries.map(({nationality}) => ({
+                label: nationality,
+                value: nationality,
+              }))}
               placeholder="Choose nationality"
               label="Nationality"
             />

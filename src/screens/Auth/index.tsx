@@ -198,7 +198,7 @@ export default function AuthScreen() {
         }
         dispatch({
           type: EAuthUserAction.LOGIN,
-          payload: {user: resProfile.data[0]},
+          payload: {user: resProfile},
         });
         navigation.navigate('Main', {screen: 'Home'});
         // navigation.navigate('DataConfirmation');

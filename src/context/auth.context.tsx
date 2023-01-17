@@ -1,10 +1,11 @@
 import React from 'react';
+import {IMemberDetailResponse} from '../types/profile.type';
 
 export enum EAuthUserAction {
   LOGIN = 'LOGIN',
   LOGOUT = 'LOGOUT',
 }
-type State = {user: any};
+type State = {user?: IMemberDetailResponse};
 type Action = {type: EAuthUserAction; payload?: State};
 type Dispatch = (action: Action) => void;
 

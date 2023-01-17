@@ -17,7 +17,12 @@ export type RootStackParamList = {
   DataConfirmation: undefined;
   InputProfile: undefined;
   PhoneNumberValidation?: {phoneNumber?: string};
-  Main: undefined;
+  Main: undefined | {screen: string};
+
+  EditProfile: undefined;
+  FAQ: undefined;
+  TermsConditions: undefined;
+  AboutUs: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

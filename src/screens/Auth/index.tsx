@@ -27,6 +27,7 @@ import WebView from 'react-native-webview';
 import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import { SessionService } from '../../api/session.service';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -189,10 +190,12 @@ export default function AuthScreen() {
         console.info('resProfile', JSON.stringify(resProfile));
         if (resProfile.data && resProfile.data.length > 0) {
           toast.show({
+            id: 'welcome',
             description: 'Welcome, ' + resProfile.data[0].zmemFullName,
           });
         } else {
           toast.show({
+            id: 'welcome',
             description: 'Welcome, New Runner',
           });
         }
@@ -200,6 +203,7 @@ export default function AuthScreen() {
           type: EAuthUserAction.LOGIN,
           payload: {user: resProfile},
         });
+        SessionService.saveSession();
         navigation.navigate('Main', {screen: 'Home'});
         // navigation.navigate('DataConfirmation');
       })

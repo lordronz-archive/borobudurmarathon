@@ -26,6 +26,7 @@ import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
 import {getShortCodeName} from '../../helpers/name';
+import { SessionService } from '../../api/session.service';
 
 export default function MyProfile() {
   const navigation =
@@ -73,6 +74,7 @@ export default function MyProfile() {
     await CookieManager.clearAll();
 
     dispatch({type: EAuthUserAction.LOGOUT});
+    SessionService.removeSession();
 
     navigation.navigate('Initial');
   };

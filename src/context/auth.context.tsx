@@ -47,7 +47,11 @@ function useAuthUser() {
     throw new Error('useAuthUser must be used within a AuthUserProvider');
   }
 
-  return {...context, isLoggedIn: context.state.user, user: context.state.user};
+  return {
+    ...context,
+    isLoggedIn: context.state.user ? true : false,
+    user: context.state.user,
+  };
 }
 
 export {AuthUserProvider, useAuthUser};

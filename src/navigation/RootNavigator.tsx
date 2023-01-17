@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <NavigationContainer linking={linking}>
-      <Stack.Navigator initialRouteName="Initial">
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Initial"
           component={InitialScreen}

@@ -8,11 +8,76 @@ import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
 import countries from '../../helpers/countries';
+import {AuthService} from '../../api/auth.service';
 
 export default function InputProfileScreen() {
   const navigation = useNavigation();
 
   const [birthDate, setBirthDate] = useState<Date>();
+  const [mbsdIDNumber, setIDNumber] = useState<string>();
+  const [mbsdBirthPlace, setBirthPlace] = useState<string>();
+  const [mbsdBirthDate, setMbsdBirthDate] = useState<string>();
+  const [mbsdBloodType, setBloodType] = useState<string>();
+  const [mbsdNationality, setNationality] = useState<string>();
+  const [mbsdCountry, setCountry] = useState<string>();
+  const [mbsdAddress, setAddress] = useState<string>();
+  const [mbsdCity, setCity] = useState<string>();
+  const [mbsdProvinces, setProvinces] = useState<string>();
+
+  const setProfile = async () => {
+    const payload = {
+      mbsdIDNumber,
+      mbsdBirthDate,
+      mbsdBirthPlace,
+      mbsdBloodType,
+      mbsdNationality,
+      mbsdCountry,
+      mbsdCity,
+      mbsdProvinces,
+      mbsdAddress,
+      mbsdRawAddress: '-',
+      mbsdIDNumberType: 0,
+      mbsdFile: 0,
+      mmedEducation: '-',
+      mmedOccupation: '-',
+      mmedIncome: '-',
+    };
+    let valid = true;
+    if (!mbsdIDNumber) {
+      valid = false;
+    }
+    if (!mbsdBirthDate) {
+      valid = false;
+    }
+    if (!mbsdBirthPlace) {
+      valid = false;
+    }
+    if (!mbsdBloodType) {
+      valid = false;
+    }
+    if (!mbsdNationality) {
+      valid = false;
+    }
+    if (!mbsdCountry) {
+      valid = false;
+    }
+    if (!mbsdCity) {
+      valid = false;
+    }
+    if (!mbsdProvinces) {
+      valid = false;
+    }
+    if (!mbsdAddress) {
+      valid = false;
+    }
+
+    if (!valid) {
+      return;
+    }
+    console.info(payload);
+    const res = await AuthService.setprofile(payload);
+    console.info('Setprofile result: ', res);
+  };
 
   return (
     <ScrollView>
@@ -48,39 +113,76 @@ export default function InputProfileScreen() {
               placeholder="Enter your identity number"
               label="Identity number"
               helperText="Enter your KTP/SIM/Passport ID number"
-            />
-            <TextInput placeholder="DD MMM YYYY" label="Date of birth" />
-            <TextInput
-              placeholder="Enter your place of birth"
-              label="Place of birth"
+              onChangeText={setIDNumber}
             />
             <DateInput
               placeholder="DD MMM YYYY"
               label="Date of birth"
               date={birthDate}
-              setDate={setBirthDate}
+              setDate={date => {
+                setBirthDate(date);
+                setMbsdBirthDate(date.toJSON().slice(0, 10));
+              }}
+            />
+            <TextInput
+              placeholder="Enter your place of birth"
+              label="Place of birth"
+              onChangeText={setBirthPlace}
             />
             <SelectInput
               items={[
                 {
+                  label: 'O',
+                  value: '0',
+                },
+                {
+                  label: 'O+',
+                  value: '1',
+                },
+                {
+                  label: 'O-',
+                  value: '2',
+                },
+                {
                   label: 'A',
-                  value: 'A',
+                  value: '3',
+                },
+                {
+                  label: 'A+',
+                  value: '4',
+                },
+                {
+                  label: 'A-',
+                  value: '5',
                 },
                 {
                   label: 'B',
-                  value: 'B',
+                  value: '6',
                 },
                 {
-                  label: 'O',
-                  value: 'O',
+                  label: 'B+',
+                  value: '7',
+                },
+                {
+                  label: 'B-',
+                  value: '8',
                 },
                 {
                   label: 'AB',
-                  value: 'AB',
+                  value: '9',
+                },
+                {
+                  label: 'AB+',
+                  value: '10',
+                },
+                {
+                  label: 'AB-',
+                  value: '11',
                 },
               ]}
               placeholder="Choose blood type"
               label="Blood Type"
+              onValueChange={setBloodType}
             />
             <SelectInput
               items={countries.map(({en_short_name}) => ({
@@ -89,6 +191,7 @@ export default function InputProfileScreen() {
               }))}
               placeholder="Choose country"
               label="Country"
+              onValueChange={setCountry}
             />
             <SelectInput
               items={countries.map(({nationality}) => ({
@@ -97,6 +200,7 @@ export default function InputProfileScreen() {
               }))}
               placeholder="Choose nationality"
               label="Nationality"
+              onValueChange={setNationality}
             />
           </VStack>
         </VStack>
@@ -105,12 +209,21 @@ export default function InputProfileScreen() {
             Address Information
           </Text>
           <VStack space="1.5">
-            <TextInput placeholder="Enter province name" label="Province" />
+            <TextInput
+              placeholder="Enter province name"
+              label="Province"
+              onChangeText={setProvinces}
+            />
             <TextInput
               placeholder="Enter city or district name"
               label="City/District"
+              onChangeText={setCity}
             />
-            <TextInput placeholder="Enter your address" label="Address" />
+            <TextInput
+              placeholder="Enter your address"
+              label="Address"
+              onChangeText={setAddress}
+            />
           </VStack>
         </VStack>
         <Box backgroundColor={'#F4F6F9'} py="3" px="4">
@@ -120,7 +233,9 @@ export default function InputProfileScreen() {
           </Checkbox>
         </Box>
         <Box px="4">
-          <BMButton h="12">Continue</BMButton>
+          <BMButton h="12" onPress={setProfile}>
+            Continue
+          </BMButton>
         </Box>
       </VStack>
     </ScrollView>

@@ -13,7 +13,7 @@ import {
   useToast,
   Spinner,
 } from 'native-base';
-import React from 'react';
+import React, {useState} from 'react';
 import {Alert, Linking} from 'react-native';
 import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
@@ -36,6 +36,7 @@ export default function AuthScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const {state, dispatch} = useAuthUser();
+  const [isNotRegistered, setIsNotRegistered] = useState(false);
   console.info('#Auth -- state', state);
 
   // useEffect(() => {
@@ -136,6 +137,46 @@ export default function AuthScreen() {
       });
   };
 
+  if (params && params.authorization_code && isNotRegistered) {
+    let uri =
+      config.apiUrl.href.href +
+      config.ssoKompasUrl.apis.newBorobudurMember.path +
+      '?authorization_code=' +
+      encodeURIComponent(params.authorization_code);
+    console.info('uri', uri);
+    uri = uri.replace('//kompasid/', '/kompasid/');
+    return (
+      <Box flex={1}>
+        <WebView
+          source={{
+            uri,
+          }}
+          thirdPartyCookiesEnabled={true}
+          onLoadEnd={async () => {
+            const cookiesString = await getCookiesString();
+            console.info('cookiesString', cookiesString);
+            navigation.navigate('InputProfile');
+          }}
+        />
+
+        <Box
+          justifyContent="center"
+          alignItems="center"
+          flex={1}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#ffffff',
+          }}>
+          <Center>
+            <Spinner size="lg" />
+          </Center>
+        </Box>
+      </Box>
+    );
+  }
+
   if (params && params.authorization_code) {
     let uri =
       config.apiUrl.href.href +
@@ -153,9 +194,11 @@ export default function AuthScreen() {
           thirdPartyCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
-            console.info('cookesString', cookiesString);
+            console.info('cookiesString', cookiesString);
             if (cookiesString) {
               getProfile();
+            } else {
+              setIsNotRegistered(true);
             }
           }}
           // onNavigationStateChange={async event => {

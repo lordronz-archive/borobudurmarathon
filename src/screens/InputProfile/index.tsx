@@ -31,7 +31,11 @@ export default function DataConfirmationScreen() {
         </Box>
       </Box>
       <Button.Group flex="1">
-        <BMButton variant="outline" flex="1" h="12">
+        <BMButton
+          variant="outline"
+          flex="1"
+          h="12"
+          onPress={() => navigation.navigate('InputProfile')}>
           No, Add New Profile
         </BMButton>
         <BMButton

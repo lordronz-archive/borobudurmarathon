@@ -27,7 +27,7 @@ export default function InitialScreen() {
                 type: EAuthUserAction.LOGIN,
                 payload: {user: res.data[0]},
               });
-              navigation.navigate('Main');
+              navigation.navigate('Main', {screen: 'Home'});
             } else {
               navigation.navigate('Auth');
             }

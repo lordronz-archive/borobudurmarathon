@@ -200,7 +200,7 @@ export default function AuthScreen() {
           type: EAuthUserAction.LOGIN,
           payload: {user: resProfile.data[0]},
         });
-        navigation.navigate('Main');
+        navigation.navigate('Main', {screen: 'Home'});
         // navigation.navigate('DataConfirmation');
       })
       .catch(err => {
@@ -330,8 +330,8 @@ export default function AuthScreen() {
           backgroundColor={'#00559A'}
           rounded="sm"
           onPress={() => {
-            // openAuthLink();
-            openAuthLinkInApp();
+            openAuthLink();
+            // openAuthLinkInApp();
           }}
           startIcon={<KompasIcon size="lg" px="6" />}>
           <Text color="white" px="12">

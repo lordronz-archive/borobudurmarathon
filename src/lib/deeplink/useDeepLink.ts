@@ -86,7 +86,7 @@ export default function useInitialURL() {
               }
             */
 
-            navigation.navigate('Main');
+            navigation.navigate('Main', {screen: 'Home'});
             // navigation.navigate('PaymentCallback', {
             //   params: {...initParams},
             // });
@@ -125,7 +125,7 @@ export default function useInitialURL() {
               }
             */
 
-            navigation.navigate('Main');
+            navigation.navigate('Main', {screen: 'Home'});
             navigation.navigate('PaymentCallback', {
               params: {...initParams}
             });
@@ -137,7 +137,7 @@ export default function useInitialURL() {
       if (initialUrl.includes('/news/')) {
         const id = getDynamicUrlParams(initialUrl, '/news/');
         console.info('id', id);
-        navigation.navigate('Main');
+        navigation.navigate('Main', {screen: 'Home'});
         navigation.navigate('NewsDetail', {
           id: id,
           // newsType: ENewsType.NEWS,

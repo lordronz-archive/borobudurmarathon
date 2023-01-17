@@ -9,11 +9,15 @@ import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
 import countries from '../../helpers/countries';
 import {AuthService} from '../../api/auth.service';
+import {RootStackParamList} from '../../navigation/RootNavigator';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export default function InputProfileScreen() {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [birthDate, setBirthDate] = useState<Date>();
+  const [phoneNumber, setPhoneNumber] = useState<string>();
   const [mbsdIDNumber, setIDNumber] = useState<string>();
   const [mbsdBirthPlace, setBirthPlace] = useState<string>();
   const [mbsdBirthDate, setMbsdBirthDate] = useState<string>();
@@ -23,6 +27,8 @@ export default function InputProfileScreen() {
   const [mbsdAddress, setAddress] = useState<string>();
   const [mbsdCity, setCity] = useState<string>();
   const [mbsdProvinces, setProvinces] = useState<string>();
+
+  const [checkbox, setCheckbox] = useState<string[]>([]);
 
   const setProfile = async () => {
     const payload = {
@@ -74,9 +80,11 @@ export default function InputProfileScreen() {
     if (!valid) {
       return;
     }
-    console.info(payload);
     const res = await AuthService.setprofile(payload);
     console.info('Setprofile result: ', res);
+    navigation.navigate('PhoneNumberValidation', {
+      phoneNumber,
+    });
   };
 
   return (
@@ -101,6 +109,7 @@ export default function InputProfileScreen() {
               placeholder="Enter your phone number"
               label="Phone number"
               helperText="We will send verification code to this number for validation"
+              onChangeText={setPhoneNumber}
             />
           </VStack>
         </VStack>
@@ -227,10 +236,15 @@ export default function InputProfileScreen() {
           </VStack>
         </VStack>
         <Box backgroundColor={'#F4F6F9'} py="3" px="4">
-          <Checkbox value="agreed" _text={{fontSize: 12}}>
-            Dengan melanjutkan saya mengerti, mengetahui, dan bersedia tunduk
-            untuk segala persyaratan & ketentuan borobudur marathon.
-          </Checkbox>
+          <Checkbox.Group
+            onChange={setCheckbox}
+            value={checkbox}
+            accessibilityLabel="Agree to terms">
+            <Checkbox value="agreed" _text={{fontSize: 12}}>
+              Dengan melanjutkan saya mengerti, mengetahui, dan bersedia tunduk
+              untuk segala persyaratan & ketentuan borobudur marathon.
+            </Checkbox>
+          </Checkbox.Group>
         </Box>
         <Box px="4">
           <BMButton h="12" onPress={setProfile}>

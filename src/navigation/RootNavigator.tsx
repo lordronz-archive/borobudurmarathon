@@ -8,6 +8,7 @@ import {linking} from './linking';
 import MainTabNavigator from './MainTabNavigator';
 import DataConfirmationScreen from '../screens/InputProfile';
 import InputProfileScreen from '../screens/InputProfile/InputProfile';
+import PhoneNumberValidationScreen from '../screens/InputProfile/PhoneNumberValidation';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   SignInWithKompas: undefined;
   DataConfirmation: undefined;
   InputProfile: undefined;
+  PhoneNumberValidation?: {phoneNumber?: string};
   Main: undefined;
 };
 
@@ -48,6 +50,11 @@ function RootNavigator() {
           <Stack.Screen
             name="InputProfile"
             component={InputProfileScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PhoneNumberValidation"
+            component={PhoneNumberValidationScreen}
             options={{headerShown: false}}
           />
         </Stack.Group>

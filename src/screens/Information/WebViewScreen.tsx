@@ -8,9 +8,9 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 const urls: any = {
   // faq: 'https://borobudurmarathon.com',
-  faq: 'https://google.com',
+  faq: 'https://borobudurmarathon.com/id/tanya-jawab/',
   about: 'https://google.com',
-  tnc: 'https://google.com',
+  tnc: 'https://borobudurmarathon.com/id/ketentuan-myborobudur/',
   default: 'https://google.com',
 };
 export default function WebViewScreen() {
@@ -18,7 +18,9 @@ export default function WebViewScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
   const params = route.params as RootStackParamList['WebView'];
-
+  const url = params.customUrl
+    ? params.customUrl
+    : urls[params?.page || 'default'];
   const {colors} = useTheme();
 
   return (
@@ -44,9 +46,7 @@ export default function WebViewScreen() {
           }}
         />
       </Box>
-      <WebView
-        source={{uri: urls[params?.page || 'default'] || urls.default}}
-      />
+      <WebView source={{uri: url}} />
     </View>
   );
 }

@@ -10,6 +10,7 @@ import DataConfirmationScreen from '../screens/InputProfile';
 import InputProfileScreen from '../screens/InputProfile/InputProfile';
 import PhoneNumberValidationScreen from '../screens/InputProfile/PhoneNumberValidation';
 import WebViewScreen from '../screens/Information/WebViewScreen';
+import FAQScreen from '../screens/Information/FAQScreen';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -22,7 +23,8 @@ export type RootStackParamList = {
 
   EditProfile: undefined;
 
-  WebView: {page: 'faq' | 'about' | 'tnc'};
+  FAQ: undefined;
+  WebView: {page?: 'faq' | 'about' | 'tnc', customUrl?: string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -69,6 +71,11 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
 
+        <Stack.Screen
+          name="FAQ"
+          component={FAQScreen}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="WebView"
           component={WebViewScreen}

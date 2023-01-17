@@ -51,8 +51,7 @@ export default function MyProfile() {
       key: 'faqs',
       icon: <IconInfo color={colors.black} size={6} />,
       name: 'FAQs',
-      route: 'WebView',
-      params: {page: 'faq'},
+      route: 'FAQ',
     },
     {
       key: 'tnc',

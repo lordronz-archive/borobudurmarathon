@@ -125,7 +125,8 @@ export default function AuthScreen() {
           type: EAuthUserAction.LOGIN,
           payload: {user: resProfile.data[0]},
         });
-        navigation.navigate('DataConfirmation');
+        navigation.navigate('Main');
+        // navigation.navigate('DataConfirmation');
       })
       .catch(err => {
         console.info('### error resProfile', err);
@@ -134,6 +135,7 @@ export default function AuthScreen() {
           variant: 'subtle',
           description: getErrorMessage(err),
         });
+        navigation.navigate('Initial');
       });
   };
 
@@ -192,6 +194,7 @@ export default function AuthScreen() {
             uri,
           }}
           thirdPartyCookiesEnabled={true}
+          sharedCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
             console.info('cookiesString', cookiesString);

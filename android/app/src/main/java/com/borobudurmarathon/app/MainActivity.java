@@ -4,6 +4,7 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import android.os.Bundle;
+import com.proyecto26.inappbrowser.RNInAppBrowserModule;
 
 public class MainActivity extends ReactActivity {
   @Override
@@ -18,6 +19,12 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "borobudurmarathon";
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    RNInAppBrowserModule.onStart(this);
   }
 
   /**

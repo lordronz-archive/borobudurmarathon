@@ -70,6 +70,9 @@ const App = () => {
   };
 
   const newColorTheme = {
+    primary: {
+      900: '#e91e63',
+    },
     brand: {
       900: '#8287af',
       800: '#7c83db',

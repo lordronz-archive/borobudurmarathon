@@ -12,8 +12,9 @@ import {
   VStack,
   useToast,
   Spinner,
+  useTheme,
 } from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, Linking} from 'react-native';
 import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
@@ -25,11 +26,13 @@ import {EAuthUserAction, useAuthUser} from '../../context/auth.context';
 import WebView from 'react-native-webview';
 import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
   const route = useRoute();
   const toast = useToast();
+  const {colors} = useTheme();
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
   const navigation =
@@ -38,6 +41,16 @@ export default function AuthScreen() {
   const {state, dispatch} = useAuthUser();
   const [isNotRegistered, setIsNotRegistered] = useState(false);
   console.info('#Auth -- state', state);
+
+  const [authorizationCode, setAuthorizationCode] = useState<string>(
+    params?.authorization_code,
+  );
+
+  useEffect(() => {
+    if (params && params.authorization_code) {
+      setAuthorizationCode(params.authorization_code);
+    }
+  }, [params?.authorization_code]);
 
   // useEffect(() => {
   //   if (params && params.authorization_code) {
@@ -91,6 +104,15 @@ export default function AuthScreen() {
   console.info('redirect_uri', redirect_uri);
   console.info('url', url);
 
+  // Do not call this every time the component render
+  useEffect(() => {
+    InAppBrowser.mayLaunchUrl(url, []);
+  }, []);
+
+  const sleep = (timeout: number) => {
+    return new Promise((resolve: any) => setTimeout(resolve, timeout));
+  };
+
   const openAuthLink = async () => {
     try {
       // AuthService.bindMemberToKompas()
@@ -104,6 +126,59 @@ export default function AuthScreen() {
       return;
     } catch (error) {
       Alert.alert(getErrorMessage(error));
+    }
+  };
+
+  const openAuthLinkInApp = async () => {
+    try {
+      if (await InAppBrowser.isAvailable()) {
+        InAppBrowser.closeAuth();
+        const result = await InAppBrowser.openAuth(url, redirect_uri, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: colors.primary[900],
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: true,
+          enableBarCollapsing: false,
+          // Android Properties
+          showTitle: true,
+          toolbarColor: colors.primary[900],
+          secondaryToolbarColor: 'black',
+          navigationBarColor: 'black',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: false,
+          enableDefaultShare: false,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          },
+        });
+        await sleep(800);
+
+        if (result.type === 'success') {
+          setAuthorizationCode(
+            result.url.replace(redirect_uri + '?authorization_code=', ''),
+          );
+        }
+        // Alert.alert(JSON.stringify(result));
+      } else {
+        Linking.openURL(url);
+      }
+    } catch (error) {
+      // Alert.alert(error.message)
+      toast.show({
+        title: 'Failed to open authentication URL',
+        description: getErrorMessage(error),
+      });
     }
   };
 
@@ -139,12 +214,12 @@ export default function AuthScreen() {
       });
   };
 
-  if (params && params.authorization_code && isNotRegistered) {
+  if (authorizationCode && isNotRegistered) {
     let uri =
       config.apiUrl.href.href +
       config.ssoKompasUrl.apis.newBorobudurMember.path +
       '?authorization_code=' +
-      encodeURIComponent(params.authorization_code);
+      encodeURIComponent(authorizationCode);
     console.info('uri', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
     return (
@@ -179,12 +254,12 @@ export default function AuthScreen() {
     );
   }
 
-  if (params && params.authorization_code) {
+  if (authorizationCode) {
     let uri =
       config.apiUrl.href.href +
       config.apiUrl.apis.kompas.authorize_code.path +
       '?authorization_code=' +
-      encodeURIComponent(params.authorization_code);
+      encodeURIComponent(authorizationCode);
     console.info('uri', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
     return (
@@ -255,7 +330,8 @@ export default function AuthScreen() {
           backgroundColor={'#00559A'}
           rounded="sm"
           onPress={() => {
-            openAuthLink();
+            // openAuthLink();
+            openAuthLinkInApp();
           }}
           startIcon={<KompasIcon size="lg" px="6" />}>
           <Text color="white" px="12">

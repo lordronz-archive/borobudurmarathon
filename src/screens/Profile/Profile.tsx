@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {EAuthUserAction, useAuthUser} from '../../context/auth.context';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 export default function MyProfile() {
   const navigation =
@@ -27,6 +28,7 @@ export default function MyProfile() {
       <Button
         onPress={() => {
           logout();
+          InAppBrowser.closeAuth();
         }}>
         Logout
       </Button>

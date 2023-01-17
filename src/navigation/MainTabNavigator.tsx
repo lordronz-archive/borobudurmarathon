@@ -1,3 +1,4 @@
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import IconCalendar from '../assets/icons/IconCalendar';
 import IconHome from '../assets/icons/IconHome';
@@ -7,12 +8,17 @@ import IconChart from '../assets/icons/IconChart';
 import HomeScreen from '../screens/Home';
 import MyProfile from '../screens/Profile/Profile';
 import MyRecords from '../screens/Record/MyRecords';
+import {useTheme} from 'native-base';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
+  const {colors} = useTheme();
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: colors.primary[900],
+      }}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}

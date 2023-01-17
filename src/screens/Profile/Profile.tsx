@@ -12,7 +12,6 @@ import {
   ScrollView,
   IconButton,
   ChevronRightIcon,
-  Container,
   Center,
   Pressable,
 } from 'native-base';
@@ -26,7 +25,7 @@ import IconBadge from '../../assets/icons/IconBadge';
 import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
-import { getShortCodeName } from '../../helpers/name';
+import {getShortCodeName} from '../../helpers/name';
 
 export default function MyProfile() {
   const navigation =
@@ -40,6 +39,7 @@ export default function MyProfile() {
     icon: JSX.Element;
     name: string;
     route: keyof RootStackParamList;
+    params?: any;
   }[] = [
     {
       key: 'edit-profile',
@@ -51,19 +51,22 @@ export default function MyProfile() {
       key: 'faqs',
       icon: <IconInfo color={colors.black} size={6} />,
       name: 'FAQs',
-      route: 'FAQ',
+      route: 'WebView',
+      params: {page: 'faq'},
     },
     {
       key: 'tnc',
       icon: <IconFileDocument color={colors.black} size={6} />,
       name: 'Terms Conditions',
-      route: 'TermsConditions',
+      route: 'WebView',
+      params: {page: 'tnc'},
     },
     {
       key: 'about',
       icon: <IconInfo color={colors.black} size={6} />,
       name: 'About Us',
-      route: 'AboutUs',
+      route: 'WebView',
+      params: {page: 'about'},
     },
   ];
 
@@ -102,11 +105,7 @@ export default function MyProfile() {
             }}
           />
         </Box>
-        {/* <Pressable onPress={() => navigation.navigate('Main', {screen: 'Home'})}>
-        <Box padding={5}>
-          <ArrowBackIcon />
-        </Box>
-      </Pressable> */}
+
         <HStack space={2} paddingLeft={3} paddingRight={3} alignItems="center">
           <Avatar
             size="lg"
@@ -124,6 +123,7 @@ export default function MyProfile() {
             </Text>
           </VStack>
         </HStack>
+
         <Box
           marginX={3}
           marginTop={5}
@@ -161,7 +161,7 @@ export default function MyProfile() {
             <Pressable
               onPress={() => {
                 if (menu.route) {
-                  navigation.navigate(menu.route);
+                  navigation.navigate(menu.route, menu.params);
                 }
               }}>
               <HStack
@@ -189,13 +189,7 @@ export default function MyProfile() {
         </Box>
       </ScrollView>
 
-      <Box
-        // width="100%"
-        // justifyContent="center"
-        // position="absolute"
-        // bottom={0}
-        padding={3}
-        backgroundColor={colors.white}>
+      <Box padding={3} backgroundColor={colors.white}>
         <Button
           width="100%"
           backgroundColor={colors.white}

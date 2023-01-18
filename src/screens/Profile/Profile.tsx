@@ -26,7 +26,7 @@ import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
 import {getShortCodeName} from '../../helpers/name';
-import { SessionService } from '../../api/session.service';
+import {SessionService} from '../../api/session.service';
 
 export default function MyProfile() {
   const navigation =
@@ -111,7 +111,7 @@ export default function MyProfile() {
           <Avatar
             size="lg"
             source={{
-              uri: '',
+              uri: 'https://robohash.org/bormar?set=set4',
             }}>
             {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
           </Avatar>
@@ -164,7 +164,8 @@ export default function MyProfile() {
                 if (menu.route) {
                   navigation.navigate(menu.route, menu.params);
                 }
-              }}>
+              }}
+              key={`${menu.key}-${index}`}>
               <HStack
                 key={menu.key}
                 justifyContent="space-between"

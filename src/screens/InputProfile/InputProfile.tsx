@@ -76,12 +76,17 @@ export default function InputProfileScreen() {
     if (!mbsdAddress) {
       valid = false;
     }
+    if (!phoneNumber) {
+      valid = false;
+    }
 
     if (!valid) {
       return;
     }
     const res = await AuthService.setprofile(payload);
+    const sendOtpRes = await AuthService.sendOTP({phoneNumber});
     console.info('Setprofile result: ', res);
+    console.info('SendOTP result: ', sendOtpRes);
     navigation.navigate('PhoneNumberValidation', {
       phoneNumber,
     });

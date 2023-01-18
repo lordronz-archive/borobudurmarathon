@@ -11,6 +11,7 @@ import InputProfileScreen from '../screens/InputProfile/InputProfile';
 import PhoneNumberValidationScreen from '../screens/InputProfile/PhoneNumberValidation';
 import WebViewScreen from '../screens/Information/WebViewScreen';
 import FAQScreen from '../screens/Information/FAQScreen';
+import WelcomeScreen from '../screens/Welcome/Welcome';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -22,9 +23,10 @@ export type RootStackParamList = {
   Main: undefined | {screen: string};
 
   EditProfile: undefined;
+  Welcome: undefined;
 
   FAQ: undefined;
-  WebView: {page?: 'faq' | 'about' | 'tnc', customUrl?: string};
+  WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -65,6 +67,11 @@ function RootNavigator() {
             options={{headerShown: false}}
           />
         </Stack.Group>
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Main"
           component={MainTabNavigator}

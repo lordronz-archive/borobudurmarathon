@@ -33,8 +33,10 @@ export default function UpdateProfileScreen() {
   const [fullName, setFullName] = useState<string>(
     user?.data[0].zmemFullName || '',
   );
-  const [birthDate, setBirthDate] = useState<Date>(
-    new Date(user?.linked.mbsdZmemId[0].mbsdBirthDate) || '',
+  const [birthDate, setBirthDate] = useState<Date | undefined>(
+    user?.linked.mbsdZmemId[0].mbsdBirthDate
+      ? new Date(user?.linked.mbsdZmemId[0].mbsdBirthDate)
+      : undefined,
   );
   const [email] = useState<string>(user?.linked.zmemAuusId[0].auusEmail || '');
   const [phoneNumber, setPhoneNumber] = useState<string>(
@@ -46,12 +48,24 @@ export default function UpdateProfileScreen() {
   const [mbsdBirthPlace, setBirthPlace] = useState<string>(
     user?.linked.mbsdZmemId[0].mbsdBirthPlace || '',
   );
-  const [mbsdBloodType, setBloodType] = useState<string>();
-  const [mbsdNationality, setNationality] = useState<string>();
-  const [mbsdCountry, setCountry] = useState<string>();
-  const [mbsdAddress, setAddress] = useState<string>();
-  const [mbsdCity, setCity] = useState<string>();
-  const [mbsdProvinces, setProvinces] = useState<string>();
+  const [mbsdBloodType, setBloodType] = useState<string>(
+    user?.linked.mbsdZmemId[0].mbsdBloodType || '',
+  );
+  const [mbsdNationality, setNationality] = useState<string>(
+    user?.linked.mbsdZmemId[0].mbsdNationality || '',
+  );
+  const [mbsdCountry, setCountry] = useState<string>(
+    user?.linked.mbsdZmemId[0].mbsdCountry || '',
+  );
+  const [mbsdAddress, setAddress] = useState<string>(
+    user?.linked.mbsdZmemId[0].mbsdAddress || '',
+  );
+  const [mbsdCity, setCity] = useState<string>(
+    user?.linked.mbsdZmemId[0].mbsdCity || '',
+  );
+  const [mbsdProvinces, setProvinces] = useState<string>(
+    user?.linked.mbsdZmemId[0].mbsdProvinces || '',
+  );
 
   const setProfile = async () => {
     const payload = {

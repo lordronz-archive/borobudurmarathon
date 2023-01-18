@@ -120,7 +120,7 @@ export default function MyProfile() {
           <Avatar
             size="lg"
             source={{
-              uri: '',
+              uri: 'https://robohash.org/bormar?set=set4',
             }}>
             {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
           </Avatar>
@@ -173,7 +173,8 @@ export default function MyProfile() {
                 if (menu.route) {
                   navigation.navigate(menu.route, menu.params);
                 }
-              }}>
+              }}
+              key={`${menu.key}-${index}`}>
               <HStack
                 key={menu.key}
                 justifyContent="space-between"

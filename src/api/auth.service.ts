@@ -62,26 +62,23 @@ const AuthService = {
   //     throw new AuthenticationError(msg.status, msg.data.status.error.message);
   //   }
   // },
-  // sendOTP: async function (phoneData: any) {
-  //   if (!phoneData.countryCode) {
-  //     phoneData.countryCode = 62;
-  //   }
-  //   try {
-  //     return await httpRequest.post(
-  //       config.apiUrl.apis.member.addPhone.path,
-  //       {
-  //         data: {
-  //           mbspCountryCode: phoneData.countryCode,
-  //           mbspNumber: parseInt(phoneData.phoneNumber.replace(/\D/g, '')),
-  //         },
-  //       },
-  //     );
-  //   } catch (error) {
-  //     console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-  //     const msg = error as any;
-  //     throw new AuthenticationError(msg.status, msg.data.status.error.message);
-  //   }
-  // },
+  sendOTP: async function (phoneData: any) {
+    if (!phoneData.countryCode) {
+      phoneData.countryCode = 62;
+    }
+    try {
+      return await httpRequest.post(config.apiUrl.apis.member.addPhone.path, {
+        data: {
+          mbspCountryCode: phoneData.countryCode,
+          mbspNumber: parseInt(phoneData.phoneNumber.replace(/\D/g, ''), 10),
+        },
+      });
+    } catch (error) {
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      const msg = error as any;
+      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+    }
+  },
   authorizeKompas: async function (
     authorization_code: string,
   ): Promise<AuthorizeKompasResponse> {

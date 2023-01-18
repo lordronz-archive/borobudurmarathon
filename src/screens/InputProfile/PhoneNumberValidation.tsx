@@ -6,7 +6,10 @@ import {Heading} from '../../components/text/Heading';
 import BMButton from '../../components/buttons/Button';
 import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 
 type Props = NativeStackScreenProps<
@@ -15,7 +18,8 @@ type Props = NativeStackScreenProps<
 >;
 
 export default function PhoneNumberValidationScreen({route}: Props) {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {phoneNumber} = route.params as {phoneNumber?: string};
   const [otpCode, setOtpCode] = useState<string>();
   const [seconds, setSeconds] = useState(30);
@@ -55,10 +59,13 @@ export default function PhoneNumberValidationScreen({route}: Props) {
     }
     const res = await AuthService.confirmOTP(payload);
     console.info('Confirm OTP result: ', res);
+    navigation.navigate('Welcome');
   };
 
-  const resendOTP = () => {
+  const resendOTP = async () => {
     setSeconds(30);
+    const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+    console.info('SendOTP result: ', sendOtpRes);
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Box,
   Text,
@@ -26,14 +26,15 @@ import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
 import {getShortCodeName} from '../../helpers/name';
-import { SessionService } from '../../api/session.service';
+import {SessionService} from '../../api/session.service';
+import Logout from './Logout';
 
 export default function MyProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   const {dispatch, user} = useAuthUser();
-  // const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const menus: {
     key: string;
@@ -79,9 +80,17 @@ export default function MyProfile() {
     navigation.navigate('Initial');
   };
 
-  // if (isLoggingOut) {
-  //   return <Logout />;
-  // }
+  if (isLoggingOut) {
+    return (
+      <Logout
+        onLoadEnd={() => {
+          logout();
+          InAppBrowser.closeAuth();
+          setIsLoggingOut(false);
+        }}
+      />
+    );
+  }
 
   return (
     <>
@@ -198,11 +207,10 @@ export default function MyProfile() {
           borderWidth="0.5"
           _text={{color: colors.black, fontWeight: 600}}
           onPress={() => {
-            InAppBrowser.closeAuth();
-            logout();
-            // setIsLoggingOut(true);
+            setIsLoggingOut(true);
             // setTimeout(() => {
             //   logout();
+            //   InAppBrowser.closeAuth();
             //   setIsLoggingOut(false);
             // }, 1000);
           }}>

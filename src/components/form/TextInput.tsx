@@ -1,4 +1,5 @@
 import {Box, FormControl, Input, WarningOutlineIcon} from 'native-base';
+import {IInputProps} from 'native-base/lib/typescript/components/primitives/Input/types';
 import React from 'react';
 
 type TextInputProps = {
@@ -8,6 +9,7 @@ type TextInputProps = {
   placeholder?: string;
   label?: string;
   value?: string;
+  _inputProps?: IInputProps;
   onChangeText?: (text: string) => void;
 };
 
@@ -22,6 +24,7 @@ export default function TextInput(props: TextInputProps) {
           _input={{paddingX: 0, paddingY: 0}}
           value={props.value}
           onChangeText={props.onChangeText}
+          {...(props._inputProps || {})}
         />
       </Box>
       <FormControl.HelperText>{props.helperText}</FormControl.HelperText>

@@ -7,15 +7,11 @@ import {
   ScrollView,
   ChevronRightIcon,
   Pressable,
-  VStack,
-  Heading,
-  ArrowBackIcon,
-  IconButton,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import BackHeader from '../../components/header/BackHeader';
+import Header from '../../components/header/Header';
 
 export default function FAQScreen() {
   const navigation =
@@ -84,28 +80,7 @@ export default function FAQScreen() {
 
   return (
     <ScrollView backgroundColor={colors.white}>
-      <HStack justifyContent="space-between" alignItems="center" paddingX={1}>
-        <IconButton
-          onPress={() => navigation.navigate('Main', {screen: 'Home'})}
-          icon={<ArrowBackIcon />}
-          borderRadius="full"
-          _icon={{
-            color: colors.black,
-            size: 'md',
-          }}
-          _hover={{
-            bg: colors.primary[900] + ':alpha.20',
-          }}
-          _pressed={{
-            bg: colors.primary[900] + ':alpha.20',
-            _icon: {
-              name: 'emoji-flirt',
-            },
-          }}
-        />
-        <Heading size="sm">FAQ</Heading>
-        <Box paddingX={3} />
-      </HStack>
+      <Header title="FAQs" left="back" />
       <Box borderTopColor={colors.gray[500]}>
         {menus.map((menu, index) => (
           <Pressable

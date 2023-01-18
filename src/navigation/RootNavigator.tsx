@@ -12,6 +12,7 @@ import PhoneNumberValidationScreen from '../screens/InputProfile/PhoneNumberVali
 import WebViewScreen from '../screens/Information/WebViewScreen';
 import FAQScreen from '../screens/Information/FAQScreen';
 import WelcomeScreen from '../screens/Welcome/Welcome';
+import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -22,7 +23,7 @@ export type RootStackParamList = {
   PhoneNumberValidation?: {phoneNumber?: string};
   Main: undefined | {screen: string};
 
-  EditProfile: undefined;
+  UpdateProfile: undefined;
   Welcome: undefined;
 
   FAQ: undefined;
@@ -75,6 +76,11 @@ function RootNavigator() {
         <Stack.Screen
           name="Main"
           component={MainTabNavigator}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UpdateProfile"
+          component={UpdateProfileScreen}
           options={{headerShown: false}}
         />
 

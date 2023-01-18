@@ -7,4 +7,8 @@ export default {
     dontHaveAccount: "Didn't have an account?",
     register: 'Register',
   },
+  label: {
+    accountInformation: 'Account Information',
+    addressInformation: 'Address Information',
+  },
 };

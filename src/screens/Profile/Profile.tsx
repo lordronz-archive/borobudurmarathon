@@ -28,6 +28,7 @@ import IconFileDocument from '../../assets/icons/IconFileDocument';
 import {getShortCodeName} from '../../helpers/name';
 import {SessionService} from '../../api/session.service';
 import Logout from './Logout';
+import {TouchableOpacity} from 'react-native';
 
 export default function MyProfile() {
   const navigation =
@@ -47,7 +48,7 @@ export default function MyProfile() {
       key: 'edit-profile',
       icon: <IconSingleUser color={colors.black} size={6} />,
       name: 'Edit Profile',
-      route: 'EditProfile',
+      route: 'UpdateProfile',
     },
     {
       key: 'faqs',
@@ -116,23 +117,30 @@ export default function MyProfile() {
           />
         </Box>
 
-        <HStack space={2} paddingLeft={3} paddingRight={3} alignItems="center">
-          <Avatar
-            size="lg"
-            source={{
-              uri: 'https://robohash.org/bormar?set=set4',
-            }}>
-            {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
-          </Avatar>
-          <VStack paddingLeft={2}>
-            <Text fontWeight="bold" fontSize="md">
-              {user?.data[0].zmemFullName}
-            </Text>
-            <Text color={colors.gray[500]} fontSize="sm">
-              {user?.linked.zmemAuusId[0].auusEmail}
-            </Text>
-          </VStack>
-        </HStack>
+        <Pressable onPress={() => navigation.navigate('UpdateProfile')}>
+          <HStack
+            space={2}
+            paddingLeft={3}
+            paddingRight={3}
+            alignItems="center">
+            <Avatar
+              size="lg"
+              source={{
+                // uri: 'https://robohash.org/bormar?set=set4',
+                uri: '',
+              }}>
+              {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
+            </Avatar>
+            <VStack paddingLeft={2}>
+              <Text fontWeight="bold" fontSize="md">
+                {user?.data[0].zmemFullName}
+              </Text>
+              <Text color={colors.gray[500]} fontSize="sm">
+                {user?.linked.zmemAuusId[0].auusEmail}
+              </Text>
+            </VStack>
+          </HStack>
+        </Pressable>
 
         <Box
           marginX={3}
@@ -168,7 +176,7 @@ export default function MyProfile() {
 
         <Box borderTopColor={colors.gray[500]}>
           {menus.map((menu, index) => (
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
                 if (menu.route) {
                   navigation.navigate(menu.route, menu.params);
@@ -195,7 +203,7 @@ export default function MyProfile() {
                 </HStack>
                 <ChevronRightIcon />
               </HStack>
-            </Pressable>
+            </TouchableOpacity>
           ))}
         </Box>
       </ScrollView>

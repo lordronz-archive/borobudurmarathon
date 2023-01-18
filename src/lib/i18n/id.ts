@@ -7,4 +7,8 @@ export default {
     dontHaveAccount: 'Belum punya akun?',
     register: 'Daftar',
   },
+  label: {
+    accountInformation: 'Informasi Akun',
+    addressInformation: 'Informasi Alamat',
+  },
 };

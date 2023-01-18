@@ -70,7 +70,7 @@ export default function UpdateProfileScreen() {
   const setProfile = async () => {
     const payload = {
       mbsdIDNumber,
-      mbsdBirthDate: birthDate,
+      mbsdBirthDate: birthDate ? birthDate.toJSON().slice(0, 10) : undefined,
       mbsdBirthPlace,
       mbsdBloodType,
       mbsdNationality,
@@ -202,7 +202,6 @@ export default function UpdateProfileScreen() {
                 date={birthDate}
                 setDate={date => {
                   setBirthDate(date);
-                  setMbsdBirthDate(date.toJSON().slice(0, 10));
                 }}
               />
               <TextInput

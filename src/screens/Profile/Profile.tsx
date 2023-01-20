@@ -85,6 +85,7 @@ export default function MyProfile() {
     return (
       <Logout
         onLoadEnd={() => {
+          //navigation.navigate('Register');
           logout();
           InAppBrowser.closeAuth();
           setIsLoggingOut(false);

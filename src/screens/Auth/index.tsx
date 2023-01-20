@@ -27,7 +27,7 @@ import WebView from 'react-native-webview';
 import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import { SessionService } from '../../api/session.service';
+import {SessionService} from '../../api/session.service';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -256,9 +256,7 @@ export default function AuthScreen() {
         </Box>
       </Box>
     );
-  }
-
-  if (authorizationCode) {
+  } else if (authorizationCode) {
     let uri =
       config.apiUrl.href.href +
       config.apiUrl.apis.kompas.authorize_code.path +
@@ -273,7 +271,6 @@ export default function AuthScreen() {
             uri,
           }}
           thirdPartyCookiesEnabled={true}
-          sharedCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
             console.info('cookiesString', cookiesString);

@@ -1,12 +1,16 @@
-import {Box, Divider, Flex, Text, VStack} from 'native-base';
+import {Box, Divider, Flex, List, Radio, Text, VStack} from 'native-base';
 import React from 'react';
+import CategoryButton from '../../components/buttons/CategoryButton';
+import EventCard from '../../components/card/EventCard';
+import EventPricingCard from '../../components/card/EventPricingCard';
+import Section from '../../components/section/Section';
 import useInit from '../../hooks/useInit';
 
 export default function HomeScreen() {
-  const _init = useInit();
+  // const _init = useInit();
 
   return (
-    <Box>
+    <Box backgroundColor={'#fff'}>
       <Flex mx="3" direction="row" justify="space-evenly" alignItems={'center'}>
         <VStack alignItems="center">
           <Text py="2" color={'#768499'} fontSize={12}>
@@ -70,6 +74,25 @@ export default function HomeScreen() {
           bg: 'muted.50',
         }}
       />
+      <Section title="Featured Events" mx="4">
+        {/* <Radio.Group name="exampleGroup">
+          <EventPricingCard title="Event 1" subtitle="Subtitle 1" value="1" />
+          <EventPricingCard title="Event 1" subtitle="Subtitle 1" value="2" />
+
+        </Radio.Group> */}
+      </Section>
+      <Section title="Our Events" mx="4" mr="-4">
+        <CategoryButton
+          categories={['All Event', 'Offline', 'Race', 'V', 'Other']}
+        />
+        <EventCard
+          title="Event 1"
+          place="Place 1"
+          date="Date 1"
+          image={require('../../assets/images/FeaturedEventImage.png')}
+          isAvailable={false}
+        />
+      </Section>
     </Box>
   );
 }

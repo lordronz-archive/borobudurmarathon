@@ -142,8 +142,8 @@ export default function DetailEvent() {
         mx={4}
         my={3}>
         <Radio.Group name="exampleGroup">
-          {(event?.prices || [{}, {}, {}])
-            .filter(price => price)
+          {[{}, {}, {}]
+            // .filter(price => price)
             .map(price => (
               <EventPricingCard
                 title="Event 1"

@@ -10,3 +10,119 @@ export interface Event {
   payments: {[key: string]: null | string}[];
   prices: any[];
 }
+
+export interface GetEventResponse {
+  data?: EventProperties[] | null;
+  linked: Linked;
+  fields?: FieldsEntity[] | null;
+  status: Status;
+}
+
+export interface EventProperties {
+  id: number;
+  evnhId: number;
+  evnhType: number;
+  evnhName: string;
+  evnhQuotaRegistration: number;
+  evnhDescription?: null;
+  evnhPlace?: null;
+  evnhNote?: null;
+  evnhThumbnail?: null;
+  evnhQuotaConfirmation: number;
+  evnhTimeLimitRegistration: string;
+  evnhTimeLimitConfirmation: string;
+  evnhStartDate: string;
+  evnhEndDate: string;
+  evnhRegistrationStart: string;
+  evnhRegistrationEnd: string;
+  evnhStatusPublish: number;
+  evnhRegistrationStatus: number;
+  evnhTransactionExpired: number;
+  evnhStatus: number;
+  links: Links;
+}
+interface Links {
+  evncEvnhId?: number[] | null;
+  evpaEvnhId?: (number | null)[] | null;
+  evhfEvnhId?: number[] | null;
+  evptEvnhId?: (number | null)[] | null;
+  ehaiEvnhId?: null[] | null;
+  ehhdEvnhId?: null[] | null;
+  ehtdEvnhId?: null[] | null;
+}
+interface Linked {
+  evncEvnhId?: EvncEvnhIdEntity[] | null;
+  evpaEvnhId?: EvpaEvnhIdEntity[] | null;
+  evhfEvnhId?: EvhfEvnhIdEntity[] | null;
+  evptEvnhId?: EvptEvnhIdEntity[] | null;
+  ehaiEvnhId?: null[] | null;
+  ehhdEvnhId?: null[] | null;
+  ehtdEvnhId?: null[] | null;
+}
+interface EvncEvnhIdEntity {
+  id: number;
+  evncId: number;
+  evncEvnhId: number;
+  evncName: string;
+  evncDesc?: string | null;
+  evncBenefit?: null;
+  evncQuotaRegistration: number;
+  evncQuotaConfirmation: number;
+  evncVrStartDate?: string | null;
+  evncVrEndDate?: string | null;
+  evncVrReps?: number | null;
+  evncStartDate: string;
+  evncPrice: string;
+  evncMaxDistance?: number | null;
+  evncMaxDistancePoint?: number | null;
+  evncStatus: number;
+}
+interface EvpaEvnhIdEntity {
+  id: number;
+  evpaId: number;
+  evpaEvnhId: number;
+  evpaEvncId: number;
+  evpaName: string;
+  evpaGender: number;
+  evpaBIBNo?: number | null;
+  evpaCreatedTime: string;
+}
+interface EvhfEvnhIdEntity {
+  id: number;
+  evhfId: number;
+  evhfEvnhId: number;
+  evhfMsflId: number;
+  evhfName: string;
+  evhfType: string;
+  evhfLabel: string;
+  evhfIsAttribute: number;
+  evhfIsRequired: number;
+  evhfExternalData?: string | null;
+}
+interface EvptEvnhIdEntity {
+  id: number;
+  evptId: number;
+  evptEvnhId: number;
+  evptMsptId: number;
+  evptMsptName: string;
+  evptLabel: string;
+  evptIsEnabled: number;
+  evptAmountFee: string;
+  evptPercentFee: string;
+  evptUseFee: number;
+  evptCreatedTime: string;
+  evptIsPublic: number;
+  evptBank?: null;
+  evptAccountOwner?: null;
+  evptAccountNumber?: null;
+}
+interface FieldsEntity {
+  name: string;
+  label: string;
+  size: number;
+  type: string;
+}
+interface Status {
+  page: number;
+  totalRecords: number;
+}

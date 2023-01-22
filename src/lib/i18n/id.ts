@@ -1,5 +1,6 @@
 export default {
   welcomeTo: 'Selamat datang di',
+  Hello: 'Halo',
   auth: {
     description:
       'Ayo bergabung menjadi bagian dari komunitas Borobudur Marathon. Event lari terbesar di Jawa Tengah, Indonesia.',

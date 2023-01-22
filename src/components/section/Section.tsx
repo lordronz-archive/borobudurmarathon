@@ -19,9 +19,11 @@ export default function Section({
       <Text fontSize="lg" fontWeight={600}>
         {title}
       </Text>
-      <Text fontSize="sm" color={'#768499'} mb="2">
-        {subtitle}
-      </Text>
+      {subtitle && (
+        <Text fontSize="sm" color={'#768499'} mb="2">
+          {subtitle}
+        </Text>
+      )}
       {children}
     </VStack>
   );

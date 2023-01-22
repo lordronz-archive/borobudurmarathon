@@ -34,6 +34,7 @@
     "react-native-screens": "^3.18.2",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "12.4.1",
+    "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "^11.26.0"
   },
   "devDependencies": {

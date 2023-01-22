@@ -14,6 +14,7 @@ import FAQScreen from '../screens/Information/FAQScreen';
 import WelcomeScreen from '../screens/Welcome/Welcome';
 import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import RegisterScreen from '../screens/Event/Register';
+import DetailEvent from '../screens/Event/DetailEvent';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -23,6 +24,8 @@ export type RootStackParamList = {
   InputProfile: undefined;
   PhoneNumberValidation?: {phoneNumber?: string};
   Main: undefined | {screen: string};
+
+  EventDetail: {id: number};
 
   UpdateProfile: undefined;
   Welcome: undefined;
@@ -79,6 +82,11 @@ function RootNavigator() {
         <Stack.Screen
           name="Main"
           component={MainTabNavigator}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EventDetail"
+          component={DetailEvent}
           options={{headerShown: false}}
         />
         <Stack.Screen

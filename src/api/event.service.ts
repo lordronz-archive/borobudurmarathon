@@ -127,12 +127,13 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getEvent: async function (eventId: string) {
+  getEvent: async function (eventId: number): Promise<GetEventResponse> {
     console.log('Event id to get : ', eventId);
     try {
-      return ApiService.get(
+      const res = await httpRequest.get(
         config.apiUrl.apis.event.detail.path + '/' + eventId,
       );
+      return res.data;
     } catch (error) {
       console.log('E : ', error);
       const msg = error as any;

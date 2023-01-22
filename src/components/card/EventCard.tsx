@@ -30,7 +30,13 @@ export default function CardEvent({
     <Box alignItems="flex-start" my={3}>
       <HStack>
         <AspectRatio w="20%" ratio={1 / 1}>
-          <Image source={image} w="100%" h="100%" borderRadius={5} />
+          <Image
+            source={image}
+            w="100%"
+            h="100%"
+            borderRadius={5}
+            alt={title}
+          />
         </AspectRatio>
         <Stack pl={3}>
           {!isAvailable && <Badge style={styles}>Expired Event</Badge>}

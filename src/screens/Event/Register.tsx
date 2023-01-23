@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   Box,
   Checkbox,
@@ -11,72 +11,71 @@ import {
 } from 'native-base';
 import React, {useState} from 'react';
 import BMButton from '../../components/buttons/Button';
-import TextInput from '../../components/form/TextInput';
-import SelectInput from '../../components/form/SelectInput';
-import countries from '../../helpers/countries';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import IconCircleCheck from '../../assets/icons/IconCircleCheck';
-import {EventService} from '../../api/event.service';
+import RegistrationForm from './components/RegistrationForm';
 
 export default function EventRegisterScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const route = useRoute();
+  const params = route.params as RootStackParamList['EventRegister'];
+
+  const fields = params.event.fields;
+  console.info('fields', fields);
+
   const [isOpen, setIsOpen] = React.useState(false);
+  const [fieldsData, setFieldsData] = React.useState<any>({});
 
   const onClose = () => setIsOpen(false);
 
   const cancelRef = React.useRef(null);
 
-  const [mbsdIDNumber, setIDNumber] = useState<string>();
-  const [mbsdBirthPlace, setBirthPlace] = useState<string>();
-  const [mbsdBloodType, setBloodType] = useState<string>();
+  // const [mbsdIDNumber, setIDNumber] = useState<string>();
+  // const [mbsdBirthPlace, setBirthPlace] = useState<string>();
+  // const [mbsdBloodType, setBloodType] = useState<string>();
 
-  const [evpaEmergencyContactName, setEmergencyContactName] =
-    useState<string>();
-  const [evpaEmergencyContactNumber, setEmergencyContactNumber] =
-    useState<string>();
+  // const [evpaEmergencyContactName, setEmergencyContactName] =
+  //   useState<string>();
+  // const [evpaEmergencyContactNumber, setEmergencyContactNumber] =
+  //   useState<string>();
 
   const [checkbox, setCheckbox] = useState<string[]>([]);
 
   const register = async () => {
-    const payload = {
-      evpaEmergencyContactName,
-      evpaEmergencyContactNumber,
-      mbsdIDNumber,
-      mbsdBirthPlace,
-      mbsdBloodType,
-      mbsdRawAddress: '-',
-      mbsdIDNumberType: 0,
-      mbsdFile: 0,
-      mmedEducation: '-',
-      mmedOccupation: '-',
-      mmedIncome: '-',
-    };
-    let valid = true;
-    if (!evpaEmergencyContactName) {
-      valid = false;
-    }
-    if (!evpaEmergencyContactNumber) {
-      valid = false;
-    }
+    // const payload = {
+    //   evpaEmergencyContactName,
+    //   evpaEmergencyContactNumber,
+    //   mbsdIDNumber,
+    //   mbsdBirthPlace,
+    //   mbsdBloodType,
+    //   mbsdRawAddress: '-',
+    //   mbsdIDNumberType: 0,
+    //   mbsdFile: 0,
+    //   mmedEducation: '-',
+    //   mmedOccupation: '-',
+    //   mmedIncome: '-',
+    // };
+    // let valid = true;
+    // if (!evpaEmergencyContactName) {
+    //   valid = false;
+    // }
+    // if (!evpaEmergencyContactNumber) {
+    //   valid = false;
+    // }
 
-    if (!valid) {
-      return;
-    }
+    // if (!valid) {
+    //   return;
+    // }
 
-    navigation.navigate('Main', {screen: 'My Events'});
+    // call api submit registration form
+
+    // if success
+    setIsOpen(true);
   };
-
-  React.useEffect(() => {
-    (async () => {
-      const res = await EventService.getEvent('4935');
-      console.info(JSON.stringify(res));
-      // console.info('get events: ', res);
-    })();
-  }, []);
 
   return (
     <ScrollView>
@@ -96,7 +95,15 @@ export default function EventRegisterScreen() {
             Registration Information
           </Text>
           <VStack space="1.5">
-            <TextInput placeholder="Enter time" label="Estimated Time" />
+            {fields?.map(field => (
+              <RegistrationForm
+                {...field}
+                onValueChange={val => {
+                  setFieldsData({...fieldsData, [field.evhfName]: val});
+                }}
+              />
+            ))}
+            {/* <TextInput placeholder="Enter time" label="Estimated Time" />
             <TextInput
               placeholder="Enter name"
               label="Emergency Contact Name"
@@ -145,10 +152,10 @@ export default function EventRegisterScreen() {
               placeholder="Choose Jersey Size"
               label="Jersey Size Chart"
               onValueChange={setBloodType}
-            />
+            /> */}
           </VStack>
         </VStack>
-        <VStack space="2.5" px="4">
+        {/* <VStack space="2.5" px="4">
           <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
             Questionnaire
           </Text>
@@ -236,7 +243,7 @@ export default function EventRegisterScreen() {
               label="Nationality"
             />
           </VStack>
-        </VStack>
+        </VStack> */}
         <Box backgroundColor={'#F4F6F9'} py="3" px="4">
           <Checkbox.Group
             onChange={setCheckbox}
@@ -252,8 +259,7 @@ export default function EventRegisterScreen() {
           <BMButton
             h="12"
             onPress={() => {
-              // register();
-              setIsOpen(true);
+              register();
             }}>
             Register Now
           </BMButton>
@@ -280,6 +286,7 @@ export default function EventRegisterScreen() {
                   width="full"
                   onPress={() => {
                     setIsOpen(false);
+                    navigation.navigate('Main', {screen: 'My Events'});
                   }}>
                   Check My Event
                 </BMButton>

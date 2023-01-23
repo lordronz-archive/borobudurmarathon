@@ -171,7 +171,14 @@ export interface EventFieldsEntity {
   evhfLabel: string;
   evhfMsflId: string;
   evhfName: string;
-  evhfType: string;
+  evhfType:
+    | 'Number'
+    | 'Text'
+    | 'Email'
+    | 'Phone'
+    | 'Option'
+    | 'Date'
+    | 'Hidden';
 }
 export interface PaymentsEntity {
   evptAccountNumber?: null;

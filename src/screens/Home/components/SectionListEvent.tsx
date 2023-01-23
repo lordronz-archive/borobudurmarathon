@@ -66,6 +66,7 @@ export default function SectionListEvent() {
         categories={['All Event', 'Offline', 'Race', 'Vace', 'Other']}
         selected={selectedCategory}
         style={{px: 4, pb: 2}}
+        onSelect={cat => setSelectedCategory(cat)}
       />
 
       <FlatList

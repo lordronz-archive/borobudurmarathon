@@ -6,12 +6,14 @@ type CategoryButtonType = {
   categories: string[];
   selected?: string;
   style?: any;
+  onSelect: (cat: string) => void;
 };
 
 export default function CategoryButton({
   categories,
   selected,
   style,
+  onSelect,
 }: CategoryButtonType) {
   return (
     <FlatList
@@ -21,7 +23,7 @@ export default function CategoryButton({
       _contentContainerStyle={{pr: '8', ...style}}
       renderItem={({item, index}) => {
         return (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onSelect(item)}>
             <Box bg="white" shadow="0.5" mr={2}>
               <Box
                 {...(selected === item

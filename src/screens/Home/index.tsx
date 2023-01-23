@@ -1,15 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Divider,
-  Flex,
-  Icon,
-  InfoOutlineIcon,
-  ScrollView,
-  Text,
-} from 'native-base';
+import {Avatar, Box, Divider, Flex, Icon, ScrollView, Text} from 'native-base';
 import React from 'react';
-import Section from '../../components/section/Section';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 

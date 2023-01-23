@@ -2,9 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
-import EventCard from '../../../components/card/EventCard';
 import BannerNew from '../../../components/carousel/BannerNew';
 import Section from '../../../components/section/Section';
 import {getErrorMessage} from '../../../helpers/errorHandler';
@@ -40,38 +38,20 @@ export default function SectionFeaturedEvents() {
     fetchList();
   }, []);
 
-  const _renderItem = ({item}: {item: EventProperties}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('EventDetail', {id: item.evnhId})}>
-        <EventCard
-          title={item.evnhName}
-          place={item.evnhPlace || '-'}
-          date={item.evnhStartDate + ' ' + item.evnhEndDate}
-          image={
-            item.evnhThumbnail
-              ? {uri: item.evnhThumbnail}
-              : require('../../../assets/images/FeaturedEventImage.png')
-          }
-          isAvailable={false}
-        />
-      </TouchableOpacity>
-    );
-  };
-
   if (data.length === 0) {
     return <></>;
   }
 
   return (
     <Section title="Featured Events" _title={{py: 2, px: 4}}>
-      <BannerNew entries={[{}, {}, {}]} />
-      {/* <FlatList
-        refreshing={isLoading}
-        data={data}
-        renderItem={_renderItem}
-        keyExtractor={item => item.evnhId.toString()}
-      /> */}
+      <BannerNew
+        entries={data.map(item => ({
+          title: item.evnhName,
+          eventType: item.evnhType === 1 ? 'Online' : 'Offline',
+          date: item.evnhStartDate + ' - ' + item.evnhEndDate,
+          imageUrl: item.evnhThumbnail,
+        }))}
+      />
     </Section>
   );
 }

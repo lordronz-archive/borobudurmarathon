@@ -1,15 +1,9 @@
 import React, {useRef, useState} from 'react';
-import {
-  View,
-  Dimensions,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import {View, Dimensions, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 // import {EActionType, any} from '../../helpers/api/content/banner';
 import Carousel from 'react-native-reanimated-carousel';
+import {Image, VStack, Text, Box} from 'native-base';
 
 const defaultImage = require('../../assets/images/FeaturedEventImage.png');
 // const imageLoading = require('../../assets/image-loading.png');
@@ -18,7 +12,12 @@ const defaultImage = require('../../assets/images/FeaturedEventImage.png');
 const {width} = Dimensions.get('window');
 
 type IProps = {
-  entries: any[];
+  entries: {
+    title: string;
+    imageUrl?: string;
+    eventType: string;
+    date: string;
+  }[];
 };
 
 export default function BannerNew(props: IProps) {
@@ -30,98 +29,43 @@ export default function BannerNew(props: IProps) {
 
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const _renderItem = ({item, index}: {item: any; index: number}) => {
-    const itemNews: any = {
-      newsId: item.bannerId,
-      title: item.title as string,
-      // status: EStatusNews.PUBLISHED,
-      content: item.content || '',
-      imageLink: item.imageLink,
-      // newsType:
-      //   item.actionType === EActionType.EXISTING_NEWS
-      //     ? ENewsType.NEWS
-      //     : ENewsType.PROMOTION,
-      tags: [],
-      updatedAt: item.updatedAt,
-      createdAt: item.createdAt,
-    };
-
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          // if (item.actionType === EActionType.NEW_CONTENT) {
-          //   navigation.navigate('ContentDetail', {
-          //     ...itemNews,
-          //     newsType: 'new-content',
-          //   });
-          // } else if (
-          //   item.actionType === EActionType.EXISTING_NEWS ||
-          //   item.actionType === EActionType.EXISTING_PROMOTION
-          // ) {
-          //   navigation.navigate('ContentDetail', {
-          //     ...itemNews,
-          //     actionType: item.actionType,
-          //     contentId: item.contentId,
-          //   });
-          // } else if (item.actionType === EActionType.EXISTING_PRODUCT) {
-          //   navigation.navigate('ProductDetail', {
-          //     productId: item.contentId,
-          //   });
-          // }
-        }}>
-        <Image
-          key={index}
-          source={item.imageLink ? {uri: item.imageLink} : defaultImage}
-          style={styles.image}
-          resizeMode="cover"
-          onLoad={() => {
-            setImageLoaded(true);
-          }}
-        />
-        {/* {item.youtubeLink ? (
-          <View style={styles.iconPlayContainer}>
-            <Image
-              key={index}
-              source={playIcon}
-              style={styles.iconPlay}
-              resizeMode="contain"
-            />
-          </View>
-        ) : (
-          false
-        )} */}
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <View>
       <Carousel
         loop
         width={width}
-        height={width / 2}
+        height={width / 1.8}
         autoPlay={true}
         data={props.entries}
-        scrollAnimationDuration={1000}
+        scrollAnimationDuration={3000}
         // onSnapToItem={index => console.log('current index:', index)}
         renderItem={({item, index}) => (
-          // <View
-          //   style={{
-          //     flex: 1,
-          //     borderWidth: 1,
-          //     justifyContent: 'center',
-          //   }}>
-          //   <Text style={{textAlign: 'center', fontSize: 30}}>{index}</Text>
-          // </View>
-          <Image
-            key={index}
-            source={item.imageLink ? {uri: item.imageLink} : defaultImage}
-            style={styles.image}
-            resizeMode="cover"
-            onLoad={() => {
-              setImageLoaded(true);
-            }}
-          />
+          <Box shadow="2" bg="white" mx={4}>
+            <VStack>
+              <Image
+                key={index}
+                source={item.imageUrl ? {uri: item.imageUrl} : defaultImage}
+                alt={item.title || 'image'}
+                resizeMode="cover"
+                width="100%"
+                onLoad={() => {
+                  setImageLoaded(true);
+                }}
+              />
+              <VStack py="3" px="3">
+                <Text
+                  fontFamily="Poppins-Medium"
+                  fontWeight="600"
+                  fontSize="md">
+                  {item.title}
+                </Text>
+                {/* <Text color="gray.500">Offline · Oct 10 - Oct 21 2023</Text> */}
+                <Text color="gray.500">
+                  {item.eventType} · {item.date}
+                </Text>
+              </VStack>
+            </VStack>
+          </Box>
         )}
       />
     </View>
@@ -145,7 +89,6 @@ const styles = StyleSheet.create({
   inactiveDotStyle: {
     backgroundColor: 'grey',
   },
-  image: {width: '100%', height: (2 / 3) * width},
   iconPlayContainer: {
     width: '100%',
     height: (2 / 3) * width,

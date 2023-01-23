@@ -1,13 +1,10 @@
 import React, {useRef, useState} from 'react';
 import {View, Dimensions, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-// import {EActionType, any} from '../../helpers/api/content/banner';
 import Carousel from 'react-native-reanimated-carousel';
 import {Image, VStack, Text, Box} from 'native-base';
 
 const defaultImage = require('../../assets/images/FeaturedEventImage.png');
-// const imageLoading = require('../../assets/image-loading.png');
-// const playIcon = require('../../assets/play-icon.png');
 
 const {width} = Dimensions.get('window');
 
@@ -34,7 +31,7 @@ export default function BannerNew(props: IProps) {
       <Carousel
         loop
         width={width}
-        height={width / 1.8}
+        height={width / 1.5}
         autoPlay={true}
         data={props.entries}
         scrollAnimationDuration={3000}
@@ -48,6 +45,7 @@ export default function BannerNew(props: IProps) {
                 alt={item.title || 'image'}
                 resizeMode="cover"
                 width="100%"
+                height="180"
                 onLoad={() => {
                   setImageLoaded(true);
                 }}
@@ -71,33 +69,3 @@ export default function BannerNew(props: IProps) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  containerStyle: {
-    position: 'absolute',
-    bottom: -16,
-    left: -12,
-    marginHorizontal: 0,
-  },
-  dotStyle: {
-    width: 8,
-    height: 8,
-    borderRadius: 5,
-    backgroundColor: 'black',
-    marginHorizontal: 0,
-  },
-  inactiveDotStyle: {
-    backgroundColor: 'grey',
-  },
-  iconPlayContainer: {
-    width: '100%',
-    height: (2 / 3) * width,
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconPlay: {
-    width: 100,
-  },
-});

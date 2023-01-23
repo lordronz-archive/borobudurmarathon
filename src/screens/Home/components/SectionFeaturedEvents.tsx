@@ -5,6 +5,7 @@ import React, {useEffect, useState} from 'react';
 import {EventService} from '../../../api/event.service';
 import BannerNew from '../../../components/carousel/BannerNew';
 import Section from '../../../components/section/Section';
+import datetime from '../../../helpers/datetime';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {EventProperties} from '../../../types/event.type';
@@ -48,7 +49,9 @@ export default function SectionFeaturedEvents() {
         entries={data.map(item => ({
           title: item.evnhName,
           eventType: item.evnhType === 1 ? 'Online' : 'Offline',
-          date: item.evnhStartDate + ' - ' + item.evnhEndDate,
+          date: datetime.getDateRangeString(
+            item.evnhStartDate, item.evnhEndDate, 'short', 'short'
+          ),
           imageUrl: item.evnhThumbnail,
         }))}
       />

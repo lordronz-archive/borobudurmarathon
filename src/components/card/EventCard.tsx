@@ -28,7 +28,7 @@ export default function CardEvent({
 }: CardEventProps) {
   return (
     <Box alignItems="flex-start" my={3} width="100%">
-      <HStack>
+      <HStack flex={1}>
         <AspectRatio w="20%" ratio={1 / 1}>
           <Image
             source={image}
@@ -38,31 +38,49 @@ export default function CardEvent({
             alt={title}
           />
         </AspectRatio>
-        <Stack pl={3} width="100%">
-          {!isAvailable && <Badge style={styles}>Expired Event</Badge>}
-          <Text fontSize="md" fontWeight="600" fontFamily="Poppins-Medium">
+        <Stack pl={3} flexGrow={1}>
+          {!isAvailable && (
+            <Badge
+              backgroundColor="gray.200"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: 'gray.500',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              Expired Event
+            </Badge>
+          )}
+          <Text
+            fontSize="md"
+            mt="1"
+            fontWeight="600"
+            fontFamily="Poppins-Medium">
             {title}
           </Text>
           <HStack space={2}>
             <VStack w={'50%'}>
-              <Text fontSize="sm" color="coolGray.500">
-                Date
+              <Text fontSize="xs" color="coolGray.500">
+                Registration Date
               </Text>
             </VStack>
             <VStack>
-              <Text fontSize="sm" color="coolGray.500">
+              <Text fontSize="xs" color="coolGray.500">
                 Place
               </Text>
             </VStack>
           </HStack>
           <HStack space={2}>
             <VStack w={'50%'}>
-              <Text fontSize="sm" color="coolGray.500">
+              <Text fontSize="xs" color="coolGray.800">
                 {date}
               </Text>
             </VStack>
             <VStack>
-              <Text fontSize="sm" color="coolGray.500">
+              <Text fontSize="xs" color="coolGray.800">
                 {place.length > 15 ? place.substring(0, 15) + '...' : place}
               </Text>
             </VStack>

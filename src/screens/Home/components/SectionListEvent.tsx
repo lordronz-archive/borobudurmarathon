@@ -7,6 +7,7 @@ import {EventService} from '../../../api/event.service';
 import CategoryButton from '../../../components/buttons/CategoryButton';
 import EventCard from '../../../components/card/EventCard';
 import Section from '../../../components/section/Section';
+import datetime from '../../../helpers/datetime';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {EventProperties} from '../../../types/event.type';
@@ -48,7 +49,12 @@ export default function SectionListEvent() {
         <EventCard
           title={item.evnhName}
           place={item.evnhPlace || '-'}
-          date={item.evnhStartDate + ' ' + item.evnhEndDate}
+          date={datetime.getDateRangeString(
+            item.evnhStartDate,
+            item.evnhEndDate,
+            'short',
+            'short',
+          )}
           image={
             item.evnhThumbnail
               ? {uri: item.evnhThumbnail}
@@ -65,7 +71,7 @@ export default function SectionListEvent() {
       <CategoryButton
         categories={['All Event', 'Offline', 'Race', 'Vace', 'Other']}
         selected={selectedCategory}
-        style={{px: 4, pb: 2}}
+        style={{px: 4}}
         onSelect={cat => setSelectedCategory(cat)}
       />
 
@@ -74,7 +80,7 @@ export default function SectionListEvent() {
         data={data}
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}
-        _contentContainerStyle={{px: 4}}
+        _contentContainerStyle={{px: 4, py: 3}}
       />
     </Section>
   );

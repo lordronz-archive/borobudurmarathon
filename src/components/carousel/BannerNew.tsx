@@ -11,7 +11,7 @@ const {width} = Dimensions.get('window');
 type IProps = {
   entries: {
     title: string;
-    imageUrl?: string;
+    imageUrl?: string | null;
     eventType: string;
     date: string;
   }[];

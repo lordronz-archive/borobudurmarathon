@@ -97,6 +97,12 @@ const App = () => {
           fontFamily: 'Poppins',
         },
       },
+      Spinner: {
+        defaultProps: {
+          size: 'lg',
+          color: 'primary.900',
+        },
+      },
     },
   });
 

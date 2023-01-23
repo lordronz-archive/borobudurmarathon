@@ -121,7 +121,9 @@ function getDateRangeString(
         return (
           dateStartAtDate +
           ' ' +
-          LIST_MONTH[dateStartAtMonth] +
+          (formatMonth === 'long'
+            ? LIST_MONTH[dateStartAtMonth]
+            : LIST_MONTH_SHORT[dateStartAtMonth]) +
           ' - ' +
           getDateString(endAt, format, formatMonth)
         );

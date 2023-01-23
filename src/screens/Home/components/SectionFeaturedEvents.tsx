@@ -50,7 +50,10 @@ export default function SectionFeaturedEvents() {
           title: item.evnhName,
           eventType: item.evnhType === 1 ? 'Online' : 'Offline',
           date: datetime.getDateRangeString(
-            item.evnhStartDate, item.evnhEndDate, 'short', 'short'
+            item.evnhStartDate,
+            item.evnhEndDate,
+            'short',
+            'short',
           ),
           imageUrl: item.evnhThumbnail,
         }))}

@@ -16,9 +16,10 @@ import {
   View,
   VStack,
   Button,
+  Center,
+  Spinner,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../api/event.service';
 import IconCalendar from '../../assets/icons/IconCalendar';
 import IconRun from '../../assets/icons/IconRun';
@@ -26,6 +27,7 @@ import IconTag from '../../assets/icons/IconTag';
 import EventPricingCard from '../../components/card/EventPricingCard';
 import Header from '../../components/header/Header';
 import Section from '../../components/section/Section';
+import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {GetEventResponse} from '../../types/event.type';
@@ -33,6 +35,7 @@ import {GetEventResponse} from '../../types/event.type';
 type Price = {
   id: string;
   name: string;
+  description: string;
   originalPrice: number;
   finalPrice: number;
   benefits: string[];
@@ -45,6 +48,7 @@ export default function DetailEvent() {
 
   const [event, setEvent] = useState<GetEventResponse>();
   const [selected, setSelected] = useState<Price>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const informations: {icon: any; label: string; description: string}[] = [
     {
@@ -57,21 +61,48 @@ export default function DetailEvent() {
     {
       icon: <IconCalendar size="5" mt="0.5" color="gray.500" />,
       label: 'Registration Date',
-      description:
-        event?.data.evnhRegistrationStart +
-        ' - ' +
+      description: datetime.getDateRangeString(
+        event?.data.evnhRegistrationStart,
         event?.data.evnhRegistrationEnd,
+        'short',
+        'short',
+      ),
     },
     {
       icon: <IconRun size="5" mt="0.5" color="gray.500" />,
       label: 'Running Date',
-      description: event?.data.evnhStartDate + ' - ' + event?.data.evnhEndDate,
+      description: datetime.getDateRangeString(
+        event?.data.evnhStartDate,
+        event?.data.evnhEndDate,
+        'short',
+        'short',
+      ),
     },
   ];
 
   const prices: Price[] = (event?.categories || []).map(cat => ({
     id: cat.evncId,
     name: cat.evncName,
+    description: [
+      cat.evncMaxDistance,
+      cat.evncMaxDistancePoint
+        ? cat.evncMaxDistancePoint + ' point'
+        : undefined,
+      cat.evncVrReps,
+      'Quota: ' +
+        (cat.evncQuotaRegistration != cat.evncUseQuota
+          ? Number(cat.evncQuotaRegistration) -
+            Number(cat.evncUseQuota) +
+            '/' +
+            cat.evncQuotaRegistration
+          : cat.evncQuotaRegistration),
+      datetime.getDateRangeString(
+        cat.evncStartDate,
+        cat.evncVrEndDate || undefined,
+      ),
+    ]
+      .filter(item => item)
+      .join(', '),
     originalPrice: Number(cat.evncPrice),
     finalPrice: Number(cat.evncPrice),
     benefits: [
@@ -101,16 +132,19 @@ export default function DetailEvent() {
   // ];
 
   useEffect(() => {
+    setIsLoading(true);
     EventService.getEvent(params.id)
       .then(res => {
         console.info('res getEvent', res);
         setEvent(res);
+        setIsLoading(false);
       })
       .catch(err => {
         Toast.show({
           title: 'Failed to get event',
           description: getErrorMessage(err),
         });
+        setIsLoading(false);
       });
   }, []);
 
@@ -185,8 +219,6 @@ export default function DetailEvent() {
           ))}
         </Flex>
 
-        <Text>Selected: {JSON.stringify(selected)}</Text>
-
         <Section
           title="Event Pricing"
           subtitle="Choose suitable category & pricing"
@@ -198,7 +230,7 @@ export default function DetailEvent() {
               .map(price => (
                 <EventPricingCard
                   title={price.name}
-                  subtitle="Subtitle 1"
+                  subtitle={price.description}
                   originalPrice={price.originalPrice}
                   finalPrice={price.finalPrice}
                   benefits={price.benefits}
@@ -210,6 +242,28 @@ export default function DetailEvent() {
         </Section>
         <View py={100} />
       </ScrollView>
+
+      {isLoading && (
+        <Box
+          position="absolute"
+          width="100%"
+          height="100%"
+          justifyContent="center"
+          alignItems="center"
+          flex={1}>
+          <Box
+            bg="gray.300"
+            opacity="0.9"
+            width="100%"
+            height="100%"
+            position="absolute"
+          />
+          <Center>
+            <Spinner size="lg" />
+          </Center>
+        </Box>
+      )}
+
       {event && selected ? (
         <Box
           position="absolute"

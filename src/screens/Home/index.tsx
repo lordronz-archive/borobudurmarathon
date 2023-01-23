@@ -43,7 +43,7 @@ export default function HomeScreen() {
 
         <Divider
           mt="2"
-          mb="5"
+          mb="2"
           _light={{
             bg: 'muted.300',
           }}

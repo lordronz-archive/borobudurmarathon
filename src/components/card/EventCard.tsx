@@ -27,7 +27,7 @@ export default function CardEvent({
   isAvailable = true,
 }: CardEventProps) {
   return (
-    <Box alignItems="flex-start" my={3}>
+    <Box alignItems="flex-start" my={3} width="100%">
       <HStack>
         <AspectRatio w="20%" ratio={1 / 1}>
           <Image
@@ -38,9 +38,9 @@ export default function CardEvent({
             alt={title}
           />
         </AspectRatio>
-        <Stack pl={3}>
+        <Stack pl={3} width="100%">
           {!isAvailable && <Badge style={styles}>Expired Event</Badge>}
-          <Text fontSize="md" fontWeight="500">
+          <Text fontSize="md" fontWeight="600" fontFamily="Poppins-Medium">
             {title}
           </Text>
           <HStack space={2}>

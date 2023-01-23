@@ -37,7 +37,7 @@ export default function HomeScreen() {
             <Avatar bg="gray.400" mx={2}>
               {getShortCodeName(user?.data[0].zmemFullName || '')}
             </Avatar>
-            <Text fontSize={'lg'} mx={2} fontWeight={600}>
+            <Text fontSize={'lg'} mx={2} fontWeight={700}>
               {I18n.t('Hello')}, {user?.data[0].zmemFullName}
             </Text>
           </Flex>
@@ -52,7 +52,8 @@ export default function HomeScreen() {
         {/* <SummaryRecord /> */}
 
         <Divider
-          my="2"
+          mt="2"
+          mb="5"
           _light={{
             bg: 'muted.300',
           }}

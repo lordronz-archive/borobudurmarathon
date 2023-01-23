@@ -5,6 +5,7 @@ type SectionProps = {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
+  _title?: any;
   rest?: any;
 };
 
@@ -12,11 +13,12 @@ export default function Section({
   title,
   subtitle = '',
   children,
+  _title,
   ...rest
 }: SectionProps) {
   return (
     <VStack {...rest}>
-      <Text fontSize="lg" fontWeight={700}>
+      <Text fontSize="lg" fontWeight={700} {..._title}>
         {title}
       </Text>
       {subtitle && (

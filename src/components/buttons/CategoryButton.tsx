@@ -4,19 +4,21 @@ import {TouchableOpacity} from 'react-native';
 
 type CategoryButtonType = {
   categories: string[];
-  selected: string;
+  selected?: string;
+  style?: any;
 };
 
 export default function CategoryButton({
   categories,
   selected,
+  style,
 }: CategoryButtonType) {
   return (
     <FlatList
       horizontal
       data={categories}
       showsHorizontalScrollIndicator={false}
-      _contentContainerStyle={{pr: '8'}}
+      _contentContainerStyle={{pr: '8', ...style}}
       renderItem={({item, index}) => {
         return (
           <TouchableOpacity>

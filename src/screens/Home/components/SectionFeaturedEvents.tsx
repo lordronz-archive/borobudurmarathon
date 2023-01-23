@@ -64,7 +64,7 @@ export default function SectionFeaturedEvents() {
   }
 
   return (
-    <Section title="Featured Events" mx="4" mr="-4">
+    <Section title="Featured Events" _title={{py: 2, px: 4}}>
       <BannerNew entries={[{}, {}, {}]} />
       {/* <FlatList
         refreshing={isLoading}

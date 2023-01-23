@@ -98,21 +98,30 @@ export default function BannerNew(props: IProps) {
     <View>
       <Carousel
         loop
-        width={0.9 * width}
-        height={0.9 * width / 2}
+        width={width}
+        height={width / 2}
         autoPlay={true}
-        data={[...new Array(6).keys()]}
+        data={props.entries}
         scrollAnimationDuration={1000}
-        onSnapToItem={index => console.log('current index:', index)}
-        renderItem={({index}) => (
-          <View
-            style={{
-              flex: 1,
-              borderWidth: 1,
-              justifyContent: 'center',
-            }}>
-            <Text style={{textAlign: 'center', fontSize: 30}}>{index}</Text>
-          </View>
+        // onSnapToItem={index => console.log('current index:', index)}
+        renderItem={({item, index}) => (
+          // <View
+          //   style={{
+          //     flex: 1,
+          //     borderWidth: 1,
+          //     justifyContent: 'center',
+          //   }}>
+          //   <Text style={{textAlign: 'center', fontSize: 30}}>{index}</Text>
+          // </View>
+          <Image
+            key={index}
+            source={item.imageLink ? {uri: item.imageLink} : defaultImage}
+            style={styles.image}
+            resizeMode="cover"
+            onLoad={() => {
+              setImageLoaded(true);
+            }}
+          />
         )}
       />
     </View>

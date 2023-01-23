@@ -16,7 +16,7 @@ export default function SectionListEvent() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<EventProperties[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>();
+  const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
 
   const fetchList = () => {
     setIsLoading(true);
@@ -61,9 +61,11 @@ export default function SectionListEvent() {
   };
 
   return (
-    <Section title="Our Events" mx="4" mr="-4">
+    <Section title="Our Events" mt="5" _title={{py: 2, px: 4}}>
       <CategoryButton
         categories={['All Event', 'Offline', 'Race', 'Vace', 'Other']}
+        selected={selectedCategory}
+        style={{px: 4, pb: 2}}
       />
 
       <FlatList
@@ -71,6 +73,7 @@ export default function SectionListEvent() {
         data={data}
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}
+        _contentContainerStyle={{px: 4}}
       />
     </Section>
   );

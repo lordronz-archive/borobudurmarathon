@@ -1,5 +1,5 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   ShareIcon,
   Box,
@@ -208,21 +208,27 @@ export default function DetailEvent() {
               ))}
           </Radio.Group>
         </Section>
-        <View py={50} />
+        <View py={100} />
       </ScrollView>
-      {selected ? (
-        <TouchableOpacity onPress={() => navigation.navigate('EventRegister')}>
-          <Box
-            position="absolute"
-            bottom="0"
-            width="100%"
-            px="3"
-            py="3"
-            background="white"
-            shadow="3">
-            <Button>{'Continue with ' + selected?.name}</Button>
-          </Box>
-        </TouchableOpacity>
+      {event && selected ? (
+        <Box
+          position="absolute"
+          bottom="0"
+          width="100%"
+          px="3"
+          py="3"
+          background="white"
+          shadow="3">
+          <Button
+            onPress={() =>
+              navigation.navigate('EventRegister', {
+                event,
+                selectedCategoryId: selected.id,
+              })
+            }>
+            {'Continue with ' + selected?.name}
+          </Button>
+        </Box>
       ) : (
         false
       )}

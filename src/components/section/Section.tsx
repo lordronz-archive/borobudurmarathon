@@ -16,7 +16,7 @@ export default function Section({
 }: SectionProps) {
   return (
     <VStack {...rest}>
-      <Text fontSize="lg" fontWeight={600}>
+      <Text fontSize="lg" fontWeight={700}>
         {title}
       </Text>
       {subtitle && (

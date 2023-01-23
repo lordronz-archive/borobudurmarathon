@@ -4,26 +4,32 @@ import {TouchableOpacity} from 'react-native';
 
 type CategoryButtonType = {
   categories: string[];
+  selected: string;
 };
 
-export default function CategoryButton({categories}: CategoryButtonType) {
+export default function CategoryButton({
+  categories,
+  selected,
+}: CategoryButtonType) {
   return (
     <FlatList
       horizontal
       data={categories}
       showsHorizontalScrollIndicator={false}
+      _contentContainerStyle={{pr: '8'}}
       renderItem={({item, index}) => {
         return (
           <TouchableOpacity>
-            <Box
-              bg="rgba(235, 28, 35, 0.08)"
-              borderColor={'red.400'}
-              borderWidth={1}
-              px={4}
-              py={2}
-              borderRadius={7}
-              mr={2}>
-              <Text color="black">{item}</Text>
+            <Box bg="white" shadow="0.5" mr={2}>
+              <Box
+                {...(selected === item
+                  ? {bg: '#FDEBEB', borderColor: 'red.400', borderWidth: 1}
+                  : {borderColor: 'gray.300', borderWidth: 1})}
+                px={4}
+                py={1}
+                borderRadius={7}>
+                <Text color="black">{item}</Text>
+              </Box>
             </Box>
           </TouchableOpacity>
         );

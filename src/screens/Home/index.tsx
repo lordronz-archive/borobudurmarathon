@@ -11,12 +11,14 @@ import {
 import React from 'react';
 import Section from '../../components/section/Section';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont();
 
 import useInit from '../../hooks/useInit';
 import {useAuthUser} from '../../context/auth.context';
 import {getShortCodeName} from '../../helpers/name';
 import SectionListEvent from './components/SectionListEvent';
 import I18n from '../../lib/i18n';
+import SectionFeaturedEvents from './components/SectionFeaturedEvents';
 
 export default function HomeScreen() {
   const _init = useInit();
@@ -25,7 +27,11 @@ export default function HomeScreen() {
   return (
     <ScrollView>
       <Box backgroundColor={'#fff'}>
-        <Flex mx="4" justify={'space-between'} direction="row" alignItems="center">
+        <Flex
+          mx="4"
+          justify={'space-between'}
+          direction="row"
+          alignItems="center">
           <Flex alignContent={'center'} direction="row" alignItems={'center'}>
             <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
             <Avatar bg="gray.400" mx={2}>
@@ -54,7 +60,9 @@ export default function HomeScreen() {
             bg: 'muted.50',
           }}
         />
-        <Section title="Featured Events" mx="4" my={3} />
+        {/* <Section title="Featured Events" mx="4" my={3} /> */}
+
+        <SectionFeaturedEvents />
 
         <SectionListEvent />
       </Box>

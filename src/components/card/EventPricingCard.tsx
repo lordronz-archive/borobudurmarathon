@@ -12,6 +12,7 @@ import {
 } from 'native-base';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
+import {numberWithCommas} from '../../helpers/currency';
 
 type EventPricingCardProps = {
   title: string;
@@ -38,11 +39,11 @@ export default function EventPricingCard({
 
   if (originalPrice === finalPrice) {
     textOriginalPrice;
-    textFinalPrice = String(finalPrice);
+    textFinalPrice = finalPrice.toLocaleString('id-ID');
   } else if (finalPrice < originalPrice) {
     // discount
-    textOriginalPrice = String(originalPrice);
-    textFinalPrice = String(finalPrice);
+    textOriginalPrice = originalPrice.toLocaleString('id-ID');
+    textFinalPrice = finalPrice.toLocaleString('id-ID');
     textDiscountPercentage = (
       ((originalPrice - finalPrice) / originalPrice) *
       100

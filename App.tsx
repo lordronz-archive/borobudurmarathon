@@ -7,7 +7,7 @@
  *
  * @format
  */
-
+import 'react-native-gesture-handler';
 import {extendTheme, NativeBaseProvider} from 'native-base';
 import React from 'react';
 import {StatusBar, useColorScheme} from 'react-native';

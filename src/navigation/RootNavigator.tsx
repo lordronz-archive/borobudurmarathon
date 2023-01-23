@@ -15,6 +15,7 @@ import WelcomeScreen from '../screens/Welcome/Welcome';
 import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
+import {GetEventResponse} from '../types/event.type';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -33,7 +34,7 @@ export type RootStackParamList = {
   FAQ: undefined;
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 
-  EventRegister: undefined;
+  EventRegister: {event: GetEventResponse; selectedCategoryId: string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

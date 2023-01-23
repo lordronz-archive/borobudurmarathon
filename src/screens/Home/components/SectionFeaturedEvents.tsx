@@ -1,22 +1,21 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {FlatList, Spinner, Toast} from 'native-base';
+import {Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
-import CategoryButton from '../../../components/buttons/CategoryButton';
 import EventCard from '../../../components/card/EventCard';
+import BannerNew from '../../../components/carousel/BannerNew';
 import Section from '../../../components/section/Section';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {EventProperties} from '../../../types/event.type';
 
-export default function SectionListEvent() {
+export default function SectionFeaturedEvents() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<EventProperties[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>();
 
   const fetchList = () => {
     setIsLoading(true);
@@ -30,7 +29,7 @@ export default function SectionListEvent() {
       })
       .catch(err => {
         Toast.show({
-          title: 'Failed to get events',
+          title: 'Failed to get featured events',
           description: getErrorMessage(err),
         });
         setIsLoading(false);
@@ -60,18 +59,19 @@ export default function SectionListEvent() {
     );
   };
 
-  return (
-    <Section title="Our Events" mx="4" mr="-4">
-      <CategoryButton
-        categories={['All Event', 'Offline', 'Race', 'Vace', 'Other']}
-      />
+  if (data.length === 0) {
+    return <></>;
+  }
 
-      <FlatList
+  return (
+    <Section title="Featured Events" mx="4" mr="-4">
+      <BannerNew entries={[{}, {}, {}]} />
+      {/* <FlatList
         refreshing={isLoading}
         data={data}
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}
-      />
+      /> */}
     </Section>
   );
 }

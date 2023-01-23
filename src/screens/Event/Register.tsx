@@ -20,7 +20,7 @@ import Header from '../../components/header/Header';
 import IconCircleCheck from '../../assets/icons/IconCircleCheck';
 import {EventService} from '../../api/event.service';
 
-export default function RegisterScreen() {
+export default function EventRegisterScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 

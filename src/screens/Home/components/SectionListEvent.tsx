@@ -14,21 +14,25 @@ import {EventProperties} from '../../../types/event.type';
 export default function SectionListEvent() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<EventProperties[]>([]);
 
   const fetchList = () => {
+    setIsLoading(true);
     EventService.getEvents()
       .then(res => {
         console.info('res getEvents', JSON.stringify(res));
         if (res.data) {
           setData(res.data);
         }
+        setIsLoading(false);
       })
       .catch(err => {
         Toast.show({
           title: 'Failed to get event',
           description: getErrorMessage(err),
         });
+        setIsLoading(false);
       });
   };
 
@@ -38,12 +42,17 @@ export default function SectionListEvent() {
 
   const _renderItem = ({item}: {item: EventProperties}) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('EventDetail', {id: item.evnhId})}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('EventDetail', {id: item.evnhId})}>
         <EventCard
           title={item.evnhName}
           place={item.evnhPlace || '-'}
           date={item.evnhStartDate + ' ' + item.evnhEndDate}
-          image={require('../../../assets/images/FeaturedEventImage.png')}
+          image={
+            item.evnhThumbnail
+              ? {uri: item.evnhThumbnail}
+              : require('../../../assets/images/FeaturedEventImage.png')
+          }
           isAvailable={false}
         />
       </TouchableOpacity>
@@ -57,6 +66,7 @@ export default function SectionListEvent() {
       />
 
       <FlatList
+        refreshing={isLoading}
         data={data}
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}

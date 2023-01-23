@@ -1,4 +1,13 @@
-import {Avatar, Box, Divider, Flex, Icon, ScrollView, Text} from 'native-base';
+import {
+  Avatar,
+  Box,
+  Divider,
+  Flex,
+  Icon,
+  InfoOutlineIcon,
+  ScrollView,
+  Text,
+} from 'native-base';
 import React from 'react';
 import Section from '../../components/section/Section';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -16,17 +25,22 @@ export default function HomeScreen() {
   return (
     <ScrollView>
       <Box backgroundColor={'#fff'}>
-        <Flex mx="4" mr="-4" justify={'space-between'} direction="row">
+        <Flex mx="4" justify={'space-between'} direction="row" alignItems="center">
           <Flex alignContent={'center'} direction="row" alignItems={'center'}>
             <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
-            <Avatar bg="gray.500" mx={2}>
+            <Avatar bg="gray.400" mx={2}>
               {getShortCodeName(user?.data[0].zmemFullName || '')}
             </Avatar>
             <Text fontSize={'lg'} mx={2} fontWeight={600}>
               {I18n.t('Hello')}, {user?.data[0].zmemFullName}
             </Text>
           </Flex>
-          <Icon as={Ionicons} name="notifications" color="black" />
+          <Icon
+            as={Ionicons}
+            name="help-circle-outline"
+            size="xl"
+            color="black"
+          />
         </Flex>
 
         {/* <SummaryRecord /> */}

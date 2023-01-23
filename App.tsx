@@ -71,7 +71,8 @@ const App = () => {
 
   const newColorTheme = {
     primary: {
-      900: '#e91e63',
+      900: '#EB1C23',
+      800: '#e91e63',
     },
     brand: {
       900: '#8287af',
@@ -79,8 +80,25 @@ const App = () => {
       700: '#b3bef6',
     },
   };
-  const theme = extendTheme({colors: newColorTheme, fontConfig, fonts});
-  // 3. Pass the `theme` prop to the `NativeBaseProvider`
+  const theme = extendTheme({
+    colors: newColorTheme,
+    fontConfig,
+    fonts,
+    components: {
+      Button: {
+        // Can simply pass default props to change default behaviour of components.
+        defaultProps: {
+          bgColor: '#EB1C23',
+          size: 'lg',
+        },
+      },
+      Text: {
+        defaultProps: {
+          fontFamily: 'Poppins',
+        },
+      },
+    },
+  });
 
   return (
     <NativeBaseProvider theme={theme}>

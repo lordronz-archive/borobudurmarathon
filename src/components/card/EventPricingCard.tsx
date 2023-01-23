@@ -4,30 +4,50 @@ import {
   Stack,
   Text,
   Flex,
-  Radio,
   VStack,
   CheckIcon,
   FlatList,
+  CheckCircleIcon,
+  View,
 } from 'native-base';
 import React from 'react';
+import {TouchableOpacity} from 'react-native';
 
 type EventPricingCardProps = {
   title: string;
   subtitle?: string;
-  value: string;
+  originalPrice: number;
+  finalPrice: number;
+  benefits: string[];
+  selected?: boolean;
+  onSelect?: () => void;
 };
 
 export default function EventPricingCard({
   title,
   subtitle = '',
-  value,
+  originalPrice,
+  finalPrice,
+  benefits,
+  selected,
+  onSelect,
 }: EventPricingCardProps) {
-  const benefitsData = [
-    'Medal*',
-    'Jersey (Merchandise)',
-    'Local UMKM Merchandise',
-    'Free Ongkir',
-  ];
+  let textOriginalPrice;
+  let textFinalPrice;
+  let textDiscountPercentage;
+
+  if (originalPrice === finalPrice) {
+    textOriginalPrice;
+    textFinalPrice = String(finalPrice);
+  } else if (finalPrice < originalPrice) {
+    // discount
+    textOriginalPrice = String(originalPrice);
+    textFinalPrice = String(finalPrice);
+    textDiscountPercentage = (
+      ((originalPrice - finalPrice) / originalPrice) *
+      100
+    ).toFixed(2);
+  }
 
   const _renderBenefitsItem = (item: string) => {
     return (
@@ -49,40 +69,60 @@ export default function EventPricingCard({
         borderColor="coolGray.200"
         borderWidth="1"
         p={4}>
-        <Flex direction="row" justify="space-between">
-          <Text color={'#EB1C23'} fontWeight={800} fontSize="lg">
-            {title}
+        <TouchableOpacity onPress={onSelect}>
+          <Flex direction="row" justify="space-between">
+            <Text color={'#EB1C23'} fontWeight={800} fontSize="lg">
+              {title}
+            </Text>
+
+            {selected ? (
+              <CheckCircleIcon size={30} color="primary.900" />
+            ) : (
+              <TouchableOpacity onPress={onSelect}>
+                {/* <CircleIcon size="xl" color="gray.300" /> */}
+                <View
+                  borderRadius="full"
+                  borderColor="gray.400"
+                  borderWidth="4"
+                  width={30}
+                  height={30}
+                />
+              </TouchableOpacity>
+            )}
+          </Flex>
+          <Text color={'#768499'} fontSize="sm" fontWeight={400}>
+            {subtitle}
           </Text>
-          <Radio value={value} />
-        </Flex>
-        <Text color={'#768499'} fontSize="sm" fontWeight={400}>
-          {subtitle}
-        </Text>
+        </TouchableOpacity>
         <Box mx={-4} mt={4} p={4} bgColor={'#E8ECF3'}>
           <Flex direction="row" justify="space-between">
             <VStack alignItems="flex-start">
-              <Text
-                color={'#768499'}
-                fontSize="sm"
-                fontWeight={400}
-                strikeThrough>
-                IDR 200000
-              </Text>
+              {!!textOriginalPrice && (
+                <Text
+                  color={'#768499'}
+                  fontSize="sm"
+                  fontWeight={400}
+                  strikeThrough>
+                  IDR {textOriginalPrice}
+                </Text>
+              )}
               <Text color={'black'} fontSize="lg" fontWeight={700}>
-                IDR 170000
+                IDR {textFinalPrice}
               </Text>
             </VStack>
-            <Box bgColor={'#FFE1E2'} px={2} pt={2} borderRadius={10}>
-              <Text color={'#EB1C23'} fontSize="lg" fontWeight={600}>
-                15% off
-              </Text>
-            </Box>
+            {!!textDiscountPercentage && (
+              <Box bgColor={'#FFE1E2'} px={2} pt={2} borderRadius={10}>
+                <Text color={'#EB1C23'} fontSize="lg" fontWeight={600}>
+                  {textDiscountPercentage}% off
+                </Text>
+              </Box>
+            )}
           </Flex>
         </Box>
         <Stack my={4}>
           <Text color={'#768499'}>Benefit :</Text>
           <FlatList
-            data={benefitsData}
+            data={benefits}
             renderItem={({item}) => _renderBenefitsItem(item)}
           />
         </Stack>

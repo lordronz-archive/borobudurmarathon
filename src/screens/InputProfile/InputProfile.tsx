@@ -110,26 +110,22 @@ export default function InputProfileScreen() {
       return;
     }
 
-    if (phoneNumber) {
-      try {
-        const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-        console.info('SendOTP result: ', sendOtpRes);
-        navigation.navigate('PhoneNumberValidation', {
-          phoneNumber,
-          onSuccess: () => {
-            setProfileAfterVerifyPhoneSuccess();
-          },
-        });
-        setIsLoading(false);
-      } catch (err) {
-        Toast.show({
-          title: 'Failed to send otp',
-          description: getErrorMessage(err),
-        });
-        setIsLoading(false);
-      }
-    } else {
-      setProfileAfterVerifyPhoneSuccess();
+    try {
+      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+      console.info('SendOTP result: ', sendOtpRes);
+      navigation.navigate('PhoneNumberValidation', {
+        phoneNumber,
+        onSuccess: () => {
+          setProfileAfterVerifyPhoneSuccess();
+        },
+      });
+      setIsLoading(false);
+    } catch (err) {
+      Toast.show({
+        title: 'Failed to send otp',
+        description: getErrorMessage(err),
+      });
+      setIsLoading(false);
     }
   };
 
@@ -360,7 +356,7 @@ export default function InputProfileScreen() {
           style={{paddingHorizontal: 20, paddingVertical: 5}}
           onPress={() => {
             setBirthDate(new Date('1995-11-29'));
-            // setPhoneNumber('083116872224');
+            setPhoneNumber('083116872224');
             setIDNumber('33181100000000');
             setBirthPlace('Pati');
             setMbsdBirthDate('1995-11-29');

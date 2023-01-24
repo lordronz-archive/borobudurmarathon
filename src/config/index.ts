@@ -1,6 +1,8 @@
 import apiUrl from './api';
 
 export default {
+  bypassPhoneVerification: true,
+  inAppBrowser: true,
   isDev: true,
   debug: true,
   // isProduction: process.env.NODE_ENV === 'production',

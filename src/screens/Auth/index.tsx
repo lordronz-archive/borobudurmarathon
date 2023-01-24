@@ -28,6 +28,8 @@ import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {SessionService} from '../../api/session.service';
+import { getParameterByName } from '../../helpers/url';
+import LoadingBlock from '../../components/loading/LoadingBlock';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -63,9 +65,9 @@ export default function AuthScreen() {
   console.info('url', url);
 
   // Do not call this every time the component render
-  useEffect(() => {
-    InAppBrowser.mayLaunchUrl(url, []);
-  }, []);
+  // useEffect(() => {
+  //   InAppBrowser.mayLaunchUrl(url, []);
+  // }, []);
 
   const sleep = (timeout: number) => {
     return new Promise((resolve: any) => setTimeout(resolve, timeout));
@@ -116,9 +118,13 @@ export default function AuthScreen() {
         await sleep(800);
 
         if (result.type === 'success') {
-          setAuthorizationCode(
-            result.url.replace(redirect_uri + '?authorization_code=', ''),
-          );
+          const authCode = getParameterByName('authorization_code', result.url);
+          console.info('authCode', authCode);
+          // let queryString = result.url.replace(redirect_uri + '?', '');
+          // const exp = queryString.split('&').map(item => item.split('='));
+          // console.info('exp---', exp);
+          // console.info('auth code', authCode);
+          // setAuthorizationCode(authCode);
         }
         // Alert.alert(JSON.stringify(result));
       } else {
@@ -195,7 +201,7 @@ export default function AuthScreen() {
     //   config.ssoKompasUrl.apis.newBorobudurMember.path +
     //   '?authorization_code=' +
     //   encodeURIComponent(authorizationCode);
-    console.info('uri registered', uri);
+    console.info('uri isNotRegistered === true', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
     return (
       <Box flex={1}>
@@ -212,20 +218,7 @@ export default function AuthScreen() {
           contentMode="mobile"
         />
 
-        <Box
-          justifyContent="center"
-          alignItems="center"
-          flex={1}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#ffffff',
-          }}>
-          <Center>
-            <Spinner size="lg" />
-          </Center>
-        </Box>
+        <LoadingBlock />
       </Box>
     );
   } else if (authorizationCode) {
@@ -272,20 +265,7 @@ export default function AuthScreen() {
           // }}
         />
 
-        <Box
-          justifyContent="center"
-          alignItems="center"
-          flex={1}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#ffffff',
-          }}>
-          <Center>
-            <Spinner size="lg" />
-          </Center>
-        </Box>
+        <LoadingBlock />
       </Box>
     );
   }
@@ -314,8 +294,11 @@ export default function AuthScreen() {
           backgroundColor={'#00559A'}
           rounded="sm"
           onPress={() => {
-            openAuthLink();
-            // openAuthLinkInApp();
+            if (config.inAppBrowser) {
+              openAuthLinkInApp();
+            } else {
+              openAuthLink();
+            }
           }}
           startIcon={<KompasIcon size="lg" px="6" />}>
           <Text color="white" px="12">

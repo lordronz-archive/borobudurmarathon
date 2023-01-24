@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import { getErrorMessage } from '../../helpers/errorHandler';
+import config from '../../config';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -71,6 +72,13 @@ export default function PhoneNumberValidationScreen({route}: Props) {
         // title: 'Failed to confirm OTP',
         description: getErrorMessage(err),
       });
+
+      if (config.bypassPhoneVerification) {
+        Toast.show({
+          description: 'BYPASS Phone Verification',
+        });
+        navigation.navigate('Welcome');
+      }
     }
   };
 

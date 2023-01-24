@@ -235,6 +235,7 @@ export default function DetailEvent() {
               // .filter(price => price)
               .map(price => (
                 <EventPricingCard
+                  key={price.id}
                   title={price.name}
                   subtitle={price.description}
                   originalPrice={price.originalPrice}

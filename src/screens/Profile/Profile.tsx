@@ -138,13 +138,20 @@ export default function MyProfile() {
               size="lg"
               source={{
                 // uri: 'https://robohash.org/bormar?set=set4',
-                uri: 'https://robohash.org/bormar?set=set4',
+                uri:
+                  user?.linked.mbsdZmemId[0].mbsdFile &&
+                  user?.linked.mbsdZmemId[0].mbsdFile !== '0'
+                    ? 'https://facepool.oss-ap-southeast-5.aliyuncs.com/' +
+                      user?.linked.mbsdZmemId[0].mbsdFile
+                    : 'https://robohash.org/bormar?set=set4',
               }}>
               {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
             </Avatar>
             <VStack paddingLeft={2}>
               <Text fontWeight="bold" fontSize="md">
-                {user?.data[0].zmemFullName}
+                {user?.data[0].zmemFullName}{' '}
+                {typeof user?.linked.mbsdZmemId[0].mbsdFile}{' '}
+                #{user?.linked.mbsdZmemId[0].mbsdFile}#
               </Text>
               <Text color={colors.gray[500]} fontSize="sm">
                 {user?.linked.zmemAuusId[0].auusEmail}

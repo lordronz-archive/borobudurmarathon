@@ -1,9 +1,11 @@
-import { Toast, useTheme } from 'native-base';
-import React, { useEffect } from 'react'
+import {Toast, useTheme} from 'native-base';
+import React, {useEffect} from 'react';
 import {Alert, Linking, View} from 'react-native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
-import { getErrorMessage } from '../../helpers/errorHandler';
+import LoadingBlock from '../../components/loading/LoadingBlock';
+import config from '../../config';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 type Props = {
   onLoadEnd: () => void;
@@ -37,8 +39,11 @@ export default function Logout(props: Props) {
     encodeURIComponent(redirect_uri);
 
   useEffect(() => {
-    // openLogoutLinkInApp();
-    openLogoutLink();
+    if (config.inAppBrowser) {
+      openLogoutLinkInApp();
+    } else {
+      openLogoutLink();
+    }
   }, []);
 
   const sleep = (timeout: number) => {
@@ -124,6 +129,7 @@ export default function Logout(props: Props) {
         // injectedJavaScript={jsCode}
         onLoadEnd={props.onLoadEnd}
       />
+      <LoadingBlock />
     </View>
   );
 }

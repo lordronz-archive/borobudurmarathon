@@ -14,6 +14,8 @@ import FAQScreen from '../screens/Information/FAQScreen';
 import WelcomeScreen from '../screens/Welcome/Welcome';
 import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import RegisterScreen from '../screens/Event/Register';
+import DetailEventScreen from '../screens/DetailEvent';
+import PaymentScreen from '../screens/Payment';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -31,6 +33,8 @@ export type RootStackParamList = {
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 
   Register: undefined;
+  DetailEvent: undefined;
+  Payment: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -99,6 +103,16 @@ function RootNavigator() {
         <Stack.Screen
           name="WebView"
           component={WebViewScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailEvent"
+          component={DetailEventScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Payment"
+          component={PaymentScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

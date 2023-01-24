@@ -34,37 +34,37 @@ export default function UpdateProfileScreen() {
     user?.data[0].zmemFullName || '',
   );
   const [birthDate, setBirthDate] = useState<Date | undefined>(
-    user?.linked.mbsdZmemId[0].mbsdBirthDate
-      ? new Date(user?.linked.mbsdZmemId[0].mbsdBirthDate)
+    user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate
+      ? new Date(user?.linked?.mbsdZmemId?.[0]?.mbsdBirthDate)
       : undefined,
   );
   const [email] = useState<string>(user?.linked.zmemAuusId[0].auusEmail || '');
   const [phoneNumber, setPhoneNumber] = useState<string>(
-    user?.linked.zmemAuusId[0].auusPhone || '',
+    user?.linked?.zmemAuusId?.[0]?.auusPhone || '',
   );
   const [mbsdIDNumber, setIDNumber] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdIDNumber || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumber || '',
   );
   const [mbsdBirthPlace, setBirthPlace] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdBirthPlace || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace || '',
   );
   const [mbsdBloodType, setBloodType] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdBloodType || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdBloodType || '',
   );
   const [mbsdNationality, setNationality] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdNationality || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdNationality || '',
   );
   const [mbsdCountry, setCountry] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdCountry || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdCountry || '',
   );
   const [mbsdAddress, setAddress] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdAddress || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdAddress || '',
   );
   const [mbsdCity, setCity] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdCity || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdCity || '',
   );
   const [mbsdProvinces, setProvinces] = useState<string>(
-    user?.linked.mbsdZmemId[0].mbsdProvinces || '',
+    user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces || '',
   );
 
   const setProfile = async () => {

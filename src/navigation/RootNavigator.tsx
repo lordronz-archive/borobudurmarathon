@@ -22,8 +22,26 @@ export type RootStackParamList = {
   Auth: undefined;
   SignInWithKompas: undefined;
   DataConfirmation: undefined;
-  InputProfile: undefined;
-  PhoneNumberValidation?: {phoneNumber?: string};
+  InputProfile:
+    | {
+        mbsdIDNumber: number;
+        mbsdBirthDate: Date;
+        mbsdBirthPlace: string;
+        mbsdBloodType: string;
+        mbsdNationality: string;
+        mbsdCountry: string;
+        mbsdCity: string;
+        mbsdProvinces: string;
+        mbsdAddress: string;
+        mbsdRawAddress: string;
+        mbsdIDNumberType: number;
+        mbsdFile: number;
+        mmedEducation: string;
+        mmedOccupation: string;
+        mmedIncome: string;
+      }
+    | undefined;
+  PhoneNumberValidation?: {phoneNumber?: string, onSuccess: () => void};
   Main: undefined | {screen: string};
 
   EventDetail: {id: number};

@@ -14,6 +14,7 @@ import {
   ChevronRightIcon,
   Center,
   Pressable,
+  AlertDialog,
 } from 'native-base';
 import CookieManager from '@react-native-cookies/cookies';
 import {useNavigation} from '@react-navigation/native';
@@ -36,6 +37,11 @@ export default function MyProfile() {
   const {colors} = useTheme();
   const {dispatch, user} = useAuthUser();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // logout
+  const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(true);
+  const onCloseModalLogout = () => setIsOpenModalLogout(false);
+  const cancelLogoutRef = React.useRef(null);
 
   const menus: {
     key: string;
@@ -73,11 +79,14 @@ export default function MyProfile() {
   ];
 
   const logout = async () => {
+    InAppBrowser.closeAuth();
     await CookieManager.clearAll();
 
     dispatch({type: EAuthUserAction.LOGOUT});
     SessionService.removeSession();
 
+    setIsLoggingOut(false);
+    onCloseModalLogout();
     navigation.navigate('Initial');
   };
 
@@ -87,8 +96,6 @@ export default function MyProfile() {
         onLoadEnd={() => {
           //navigation.navigate('Register');
           logout();
-          InAppBrowser.closeAuth();
-          setIsLoggingOut(false);
         }}
       />
     );
@@ -217,12 +224,8 @@ export default function MyProfile() {
           borderWidth="0.5"
           _text={{color: colors.black, fontWeight: 600}}
           onPress={() => {
-            setIsLoggingOut(true);
-            // setTimeout(() => {
-            //   logout();
-            //   InAppBrowser.closeAuth();
-            //   setIsLoggingOut(false);
-            // }, 1000);
+            setIsOpenModalLogout(true);
+            // setIsLoggingOut(true);
           }}>
           Sign Out
         </Button>
@@ -233,6 +236,37 @@ export default function MyProfile() {
           </Text>
         </Center>
       </Box>
+
+      <AlertDialog
+        leastDestructiveRef={cancelLogoutRef}
+        isOpen={isOpenModalLogout}
+        onClose={onCloseModalLogout}>
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Confirmation</AlertDialog.Header>
+          <AlertDialog.Body>Are you sure want to sign out?</AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="unstyled"
+                bg="white"
+                size="sm"
+                onPress={onCloseModalLogout}
+                ref={cancelLogoutRef}>
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                colorScheme="danger"
+                onPress={() => {
+                  setIsLoggingOut(true);
+                }}>
+                Yes, Sure
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
     </>
   );
 }

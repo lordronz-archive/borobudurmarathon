@@ -28,6 +28,7 @@ import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {SessionService} from '../../api/session.service';
+import {AuthService} from '../../api/auth.service';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -189,24 +190,33 @@ export default function AuthScreen() {
       .then(resProfile => {
         console.info('resProfile', resProfile);
         console.info('###resProfile###', JSON.stringify(resProfile));
-        if (resProfile.data && resProfile.data.length > 0) {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-          });
-        } else {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, New Runner',
-          });
-        }
         dispatch({
           type: EAuthUserAction.LOGIN,
           payload: {user: resProfile},
         });
         SessionService.saveSession();
-        navigation.navigate('Main', {screen: 'Home'});
-        // navigation.navigate('DataConfirmation');
+        if (resProfile.data && resProfile.data.length > 0) {
+          toast.show({
+            id: 'welcome',
+            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+          });
+          if (resProfile.linked.mbsdZmemId && resProfile.linked.mbsdZmemId[0]) {
+            // profile has been completed
+            // if (payload.data.linked.mbsdZmemId[0].mbsdStatus > 0) {
+            //   state.readyToRegister = true;
+            // }
+            navigation.navigate('Main', {screen: 'Home'});
+          } else {
+            // need to complete profile
+            navigation.navigate('InputProfile');
+          }
+        } else {
+          toast.show({
+            id: 'welcome',
+            description: 'Welcome, New Runner',
+          });
+          navigation.navigate('InputProfile');
+        }
       })
       .catch(err => {
         console.info('### error resProfile', err);
@@ -225,7 +235,7 @@ export default function AuthScreen() {
       config.ssoKompasUrl.apis.newBorobudurMember.path +
       '?authorization_code=' +
       encodeURIComponent(authorizationCode);
-    console.info('uri', uri);
+    console.info('uri registered', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
     return (
       <Box flex={1}>
@@ -261,7 +271,7 @@ export default function AuthScreen() {
   } else if (authorizationCode) {
     let uri =
       config.apiUrl.href.href +
-      config.apiUrl.apis.kompas.authorize_code.path +
+      '/kompasid/newmember/auth' +
       '?authorization_code=' +
       encodeURIComponent(authorizationCode);
     uri = uri.replace('//kompasid/', '/kompasid/');

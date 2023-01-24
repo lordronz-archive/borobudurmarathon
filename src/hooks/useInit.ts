@@ -2,7 +2,6 @@
 import {useEffect} from 'react';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useToast} from 'native-base';
 import {getCookiesString} from '../api/cookies';
 import {ProfileService} from '../api/profile.service';
 import {EAuthUserAction, useAuthUser} from '../context/auth.context';
@@ -27,18 +26,26 @@ export default function useInit() {
             if (resProfile && resProfile.data && resProfile.data.length > 0) {
               console.info('##resProfile', JSON.stringify(resProfile));
 
-              // if (resProfile.data[0].zmemStatus)
               dispatch({
                 type: EAuthUserAction.LOGIN,
                 payload: {user: resProfile},
               });
+              if (
+                resProfile.linked.mbsdZmemId &&
+                resProfile.linked.mbsdZmemId[0]
+              ) {
+                // profile has been completed
+                navigation.navigate('Main', {screen: 'Home'});
+              } else {
+                // need to complete profile
+                navigation.navigate('InputProfile');
+              }
               // if (!toast.isActive('welcome')) {
               //   toast.show({
               //     id: 'welcome',
               //     description: 'Welcome, ' + resProfile.data[0].zmemFullName,
               //   });
               // }
-              navigation.navigate('Main', {screen: 'Home'});
             } else {
               navigation.navigate('Auth');
             }

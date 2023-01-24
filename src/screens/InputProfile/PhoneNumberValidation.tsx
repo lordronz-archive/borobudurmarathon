@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, Text, VStack} from 'native-base';
+import {Box, Button, Text, Toast, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -11,6 +11,7 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
+import { getErrorMessage } from '../../helpers/errorHandler';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -55,17 +56,34 @@ export default function PhoneNumberValidationScreen({route}: Props) {
 
     if (!valid) {
       setIsValid(false);
+      Toast.show({
+        description: 'Enter the verification code',
+      });
       return;
     }
-    const res = await AuthService.confirmOTP(payload);
-    console.info('Confirm OTP result: ', res);
-    navigation.navigate('Welcome');
+
+    try {
+      const res = await AuthService.confirmOTP(payload);
+      console.info('Confirm OTP result: ', res);
+      navigation.navigate('Welcome');
+    } catch (err) {
+      Toast.show({
+        // title: 'Failed to confirm OTP',
+        description: getErrorMessage(err),
+      });
+    }
   };
 
   const resendOTP = async () => {
     setSeconds(30);
-    const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-    console.info('SendOTP result: ', sendOtpRes);
+    try {
+      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+      console.info('SendOTP result: ', sendOtpRes);
+    } catch (err) {
+      Toast.show({
+        description: getErrorMessage(err),
+      });
+    }
   };
 
   return (

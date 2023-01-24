@@ -89,16 +89,20 @@ export default function DetailEvent() {
         ? cat.evncMaxDistancePoint + ' point'
         : undefined,
       cat.evncVrReps,
-      'Quota: ' +
-        (cat.evncQuotaRegistration != cat.evncUseQuota
-          ? Number(cat.evncQuotaRegistration) -
-            Number(cat.evncUseQuota) +
+      'Sisa Kuota: ' +
+        (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
+        Number(cat.evncQuotaRegistration)
+          ? (
+              Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
+            ).toLocaleString('id-ID') +
             '/' +
-            cat.evncQuotaRegistration
-          : cat.evncQuotaRegistration),
+            Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
+          : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
       datetime.getDateRangeString(
         cat.evncStartDate,
         cat.evncVrEndDate || undefined,
+        'short',
+        'short',
       ),
     ]
       .filter(item => item)

@@ -24,7 +24,12 @@ export default function EventRegisterScreen() {
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
 
-  const fields = params.event.fields;
+  const fields =
+    params.event.fields && Array.isArray(params.event.fields)
+      ? params.event.fields
+      : params.event.fields && typeof params.event.fields === 'object'
+      ? (Object.values(params.event.fields) as any[])
+      : [];
   console.info('fields', fields);
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -95,8 +100,9 @@ export default function EventRegisterScreen() {
             Registration Information
           </Text>
           <VStack space="1.5">
-            {fields?.map(field => (
+            {fields.map(field => (
               <RegistrationForm
+                key={field.evhfId}
                 {...field}
                 onValueChange={val => {
                   setFieldsData({...fieldsData, [field.evhfName]: val});

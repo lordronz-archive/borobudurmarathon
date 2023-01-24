@@ -17,7 +17,17 @@ export default function SectionListEvent() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<EventProperties[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
+  // const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
+  const [selectedEventCategory, setSelectedEventCategory] = useState<{
+    id: number;
+    value: string;
+  }>();
+  let filteredEvents = [...data];
+  if (selectedEventCategory) {
+    filteredEvents = filteredEvents.filter(
+      item => item.evnhType == selectedEventCategory.id,
+    );
+  }
 
   const fetchList = () => {
     setIsLoading(true);
@@ -69,15 +79,36 @@ export default function SectionListEvent() {
   return (
     <Section title="Our Events" mt="1" _title={{py: 2, px: 4}}>
       <CategoryButton
-        categories={['All Event', 'Offline', 'Race', 'Vace', 'Other']}
-        selected={selectedCategory}
+        categories={[
+          {
+            id: null,
+            value: 'All',
+          },
+          {
+            id: 1,
+            value: 'Reguler',
+          },
+          {
+            id: 2,
+            value: 'Virtual',
+          },
+          {
+            id: 7,
+            value: 'Ballot',
+          },
+          // {
+          //   id: 0,
+          //   value: 'Other',
+          // },
+        ]}
+        selected={selectedEventCategory?.id}
         style={{px: 4}}
-        onSelect={cat => setSelectedCategory(cat)}
+        onSelect={cat => setSelectedEventCategory(cat)}
       />
 
       <FlatList
         refreshing={isLoading}
-        data={data}
+        data={filteredEvents}
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}
         _contentContainerStyle={{px: 4, py: 3}}

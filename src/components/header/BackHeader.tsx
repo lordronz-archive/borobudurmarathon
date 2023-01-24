@@ -9,7 +9,13 @@ export type BackHeaderProps = {
 export default function BackHeader({onPress}: BackHeaderProps) {
   return (
     <Box py="2" ml={-2.5}>
-      <Button onPress={onPress} variant="ghost" size="sm" w={10} h={10}>
+      <Button
+        onPress={onPress}
+        variant="ghost"
+        size="sm"
+        w={10}
+        h={10}
+        bgColor="transparent">
         <ArrowBackIcon size="md" color="text.900" />
       </Button>
     </Box>

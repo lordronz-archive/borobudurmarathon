@@ -13,17 +13,19 @@ export default function Button({
   onPress,
   children,
   variant = 'solid',
+  _text,
   ...rest
 }: ButtonProps) {
   return (
     <NBButton
       onPress={onPress}
       variant={variant}
-      borderColor={'#EB1C23'}
+      borderColor={'#C5CDDB'}
       borderRadius={8}
       bgColor={variant === 'solid' ? '#EB1C23' : 'white'}
       _text={{
         color: variant === 'solid' ? 'white' : '#EB1C23',
+        ..._text,
       }}
       {...rest}>
       {children}

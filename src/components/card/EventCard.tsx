@@ -9,7 +9,7 @@ import {
   Badge,
 } from 'native-base';
 import React from 'react';
-import {ImageSourcePropType, StyleSheet} from 'react-native';
+import {ImageSourcePropType} from 'react-native';
 
 type CardEventProps = {
   title: string;
@@ -90,17 +90,3 @@ export default function CardEvent({
     </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  badgeContainer: {
-    backgroundColor: '#A9A9A9',
-    padding: 4,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-  },
-  badgeText: {
-    color: '#333',
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
-});

@@ -1,34 +1,23 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import moment from 'moment';
-import {FlatList, Toast} from 'native-base';
-import React, {useEffect, useState} from 'react';
+import {Divider, FlatList, Toast} from 'native-base';
+import React, {ComponentType, useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
 import CategoryButton from '../../../components/buttons/CategoryButton';
-import EventCard from '../../../components/card/EventCard';
+import MyEventCard from '../../../components/card/MyEventCard';
 import Section from '../../../components/section/Section';
 import datetime from '../../../helpers/datetime';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {EventProperties} from '../../../types/event.type';
 
-export default function SectionListEvent() {
+export default function SectionListMyEvent() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<EventProperties[]>([]);
-  // const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
-  const [selectedEventCategory, setSelectedEventCategory] = useState<{
-    id: number;
-    value: string;
-  }>();
-  let filteredEvents = [...data];
-  if (selectedEventCategory) {
-    filteredEvents = filteredEvents.filter(
-      item => item.evnhType == selectedEventCategory.id,
-    );
-  }
+  const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
 
   const fetchList = () => {
     setIsLoading(true);
@@ -57,7 +46,7 @@ export default function SectionListEvent() {
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('EventDetail', {id: item.evnhId})}>
-        <EventCard
+        <MyEventCard
           title={item.evnhName}
           place={item.evnhPlace || '-'}
           date={datetime.getDateRangeString(
@@ -71,10 +60,7 @@ export default function SectionListEvent() {
               ? {uri: item.evnhThumbnail}
               : require('../../../assets/images/FeaturedEventImage.png')
           }
-          isAvailable={moment(
-            item.evnhRegistrationEnd,
-            'YYYY-MM-DD HH:mm:ss',
-          ).isBefore(moment())}
+          isAvailable={false}
         />
       </TouchableOpacity>
     );
@@ -84,38 +70,37 @@ export default function SectionListEvent() {
     <Section title="Our Events" mt="1" _title={{py: 2, px: 4}}>
       <CategoryButton
         categories={[
-          {
-            id: null,
-            value: 'All',
-          },
-          {
-            id: 1,
-            value: 'Reguler',
-          },
-          {
-            id: 2,
-            value: 'Virtual',
-          },
-          {
-            id: 7,
-            value: 'Ballot',
-          },
-          // {
-          //   id: 0,
-          //   value: 'Other',
-          // },
+          'All Event',
+          'Active Event',
+          'Past Event',
+          'Offline',
+          'Other',
         ]}
-        selected={selectedEventCategory?.id}
+        selected={selectedCategory}
         style={{px: 4}}
-        onSelect={cat => setSelectedEventCategory(cat)}
+        onSelect={cat => setSelectedCategory(cat)}
       />
 
       <FlatList
         refreshing={isLoading}
-        data={filteredEvents}
+        data={data}
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}
         _contentContainerStyle={{px: 4, py: 3}}
+        ItemSeparatorComponent={
+          (
+            <Divider
+              my="2"
+              _light={{
+                bg: '#E8ECF3',
+                height: '2px',
+              }}
+              _dark={{
+                bg: 'muted.50',
+              }}
+            />
+          ) as unknown as ComponentType<any>
+        }
       />
     </Section>
   );

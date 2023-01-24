@@ -15,6 +15,7 @@ import {
   Center,
   Pressable,
   AlertDialog,
+  Toast,
 } from 'native-base';
 import CookieManager from '@react-native-cookies/cookies';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +31,8 @@ import {getShortCodeName} from '../../helpers/name';
 import {SessionService} from '../../api/session.service';
 import Logout from './Logout';
 import {TouchableOpacity} from 'react-native';
+import {AuthService} from '../../api/auth.service';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function MyProfile() {
   const navigation =
@@ -228,6 +231,26 @@ export default function MyProfile() {
             // setIsLoggingOut(true);
           }}>
           Sign Out
+        </Button>
+
+        <Button
+          width="100%"
+          backgroundColor={colors.white}
+          borderColor={colors.gray[500]}
+          borderWidth="0.5"
+          _text={{color: colors.black, fontWeight: 600}}
+          onPress={() => {
+            AuthService.deleteprofile()
+              .then(res => {
+                navigation.navigate('Logout');
+              })
+              .catch(err => {
+                Toast.show({
+                  description: getErrorMessage(err),
+                });
+              });
+          }}>
+          Sign Out & Delete Profile
         </Button>
 
         <Center marginTop={5}>

@@ -111,6 +111,8 @@ export default function InputProfileScreen() {
     }
 
     try {
+      const res = await AuthService.setprofile(payload);
+      console.info('Setprofile result: ', res);
       const sendOtpRes = await AuthService.sendOTP({phoneNumber});
       console.info('SendOTP result: ', sendOtpRes);
       navigation.navigate('PhoneNumberValidation', {

@@ -16,6 +16,7 @@ import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
 import {GetEventResponse} from '../types/event.type';
+import LogoutScreen from '../screens/Profile/LogoutScreen';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -41,7 +42,7 @@ export type RootStackParamList = {
         mmedIncome: string;
       }
     | undefined;
-  PhoneNumberValidation?: {phoneNumber?: string, onSuccess: () => void};
+  PhoneNumberValidation?: {phoneNumber?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
 
   EventDetail: {id: number};
@@ -53,6 +54,8 @@ export type RootStackParamList = {
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};
+
+  Logout: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -127,6 +130,11 @@ function RootNavigator() {
         <Stack.Screen
           name="WebView"
           component={WebViewScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Logout"
+          component={LogoutScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

@@ -29,6 +29,7 @@
     "@types/react-native-snap-carousel": "^3.8.5",
     "axios": "^1.2.2",
     "deprecated-react-native-prop-types": "^4.0.0",
+    "moment": "^2.29.4",
     "native-base": "^3.4.25",
     "postinstall-postinstall": "^2.1.0",
     "qs": "^6.11.0",

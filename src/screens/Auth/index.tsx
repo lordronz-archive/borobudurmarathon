@@ -28,7 +28,6 @@ import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {SessionService} from '../../api/session.service';
-import {AuthService} from '../../api/auth.service';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -220,21 +219,32 @@ export default function AuthScreen() {
       })
       .catch(err => {
         console.info('### error resProfile', err);
-        toast.show({
-          title: 'Failed to get profile',
-          variant: 'subtle',
-          description: getErrorMessage(err),
-        });
-        navigation.navigate('Initial');
+        console.info('### error resProfile --- ', JSON.stringify(err));
+        if (err && err.errorCode === 409) {
+          navigation.navigate('Logout');
+          // setIsNotRegistered(true);
+        } else {
+          toast.show({
+            title: 'Failed to get profile',
+            variant: 'subtle',
+            description: getErrorMessage(err),
+          });
+          navigation.navigate('Initial');
+        }
       });
   };
 
   if (authorizationCode && isNotRegistered === true) {
     let uri =
       config.apiUrl.href.href +
-      config.ssoKompasUrl.apis.newBorobudurMember.path +
+      '/kompasid/newmember/auth' +
       '?authorization_code=' +
       encodeURIComponent(authorizationCode);
+    // let uri =
+    //   config.apiUrl.href.href +
+    //   config.ssoKompasUrl.apis.newBorobudurMember.path +
+    //   '?authorization_code=' +
+    //   encodeURIComponent(authorizationCode);
     console.info('uri registered', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
     return (
@@ -246,7 +256,7 @@ export default function AuthScreen() {
           thirdPartyCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
-            console.info('cookiesString', cookiesString);
+            console.info('cookiesString isNotRegistered true', cookiesString);
             navigation.navigate('InputProfile');
           }}
           contentMode="mobile"
@@ -271,7 +281,7 @@ export default function AuthScreen() {
   } else if (authorizationCode) {
     let uri =
       config.apiUrl.href.href +
-      '/kompasid/newmember/auth' +
+      config.apiUrl.apis.kompas.authorize_code.path +
       '?authorization_code=' +
       encodeURIComponent(authorizationCode);
     uri = uri.replace('//kompasid/', '/kompasid/');

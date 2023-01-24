@@ -155,7 +155,7 @@ const AuthService = {
   },
   deleteprofile: async function () {
     try {
-      return await httpRequest.post(
+      return await httpRequest.get(
         config.apiUrl.apis.member.deleteProfile.path,
       );
     } catch (error) {

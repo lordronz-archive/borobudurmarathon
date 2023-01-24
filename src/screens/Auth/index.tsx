@@ -53,49 +53,6 @@ export default function AuthScreen() {
     }
   }, [params?.authorization_code]);
 
-  // useEffect(() => {
-  //   if (params && params.authorization_code) {
-  //     AuthService.authorizeKompas(params.authorization_code)
-  //       .then(res => {
-  //         console.info('### res.data', res.data);
-
-  //         ProfileService.getMemberDetail()
-  //           .then(resProfile => {
-  //             console.info('resProfile', resProfile);
-  //             console.info('resProfile', JSON.stringify(resProfile));
-
-  //             if (resProfile.data && resProfile.data.length > 0) {
-  //               toast.show({
-  //                 description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-  //               });
-  //             } else {
-  //               toast.show({
-  //                 description: 'Welcome, New Runner',
-  //               });
-  //             }
-
-  //             // AuthService.refreshToken();
-  //             navigation.navigate('DataConfirmation');
-  //           })
-  //           .catch(err => {
-  //             console.info('### error resProfile', err);
-  //             toast.show({
-  //               title: 'Failed to get profile',
-  //               variant: 'subtle',
-  //               description: getErrorMessage(err),
-  //             });
-  //           });
-  //       })
-  //       .catch(err => {
-  //         toast.show({
-  //           title: 'Failed to authorize',
-  //           variant: 'subtle',
-  //           description: getErrorMessage(err),
-  //         });
-  //       });
-  //   }
-  // }, [route.params]);
-
   const redirect_uri = 'bormar://auth-me';
   // 'https://account.kompas.id/sso/check?redirect_uri=https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth&client_id=3&state=borobudur_marathon&scope=nama%20lengkap,%20alamat,%20Alamat%20email%20dan%20mengirimkan%20pesan&response_type=code';
 
@@ -116,13 +73,6 @@ export default function AuthScreen() {
 
   const openAuthLink = async () => {
     try {
-      // AuthService.bindMemberToKompas()
-      //   .then(res => {
-      //     console.info('res bindMemberToKompas', res);
-      //   })
-      //   .catch(err => {
-      //     console.info('err bindMemberToKompas', err);
-      //   });
       Linking.openURL(url);
       return;
     } catch (error) {

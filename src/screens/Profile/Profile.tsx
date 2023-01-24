@@ -39,7 +39,7 @@ export default function MyProfile() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // logout
-  const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(true);
+  const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
   const onCloseModalLogout = () => setIsOpenModalLogout(false);
   const cancelLogoutRef = React.useRef(null);
 

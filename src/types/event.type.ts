@@ -6,6 +6,13 @@ export interface GetEventsResponse {
   status: Status;
 }
 
+export interface EventFieldsExternalDatum {
+  id: number;
+  label: string;
+}
+
+export type EventFieldsExternalData = EventFieldsExternalDatum[];
+
 export interface EventProperties {
   id: number;
   evnhId: number;
@@ -14,7 +21,7 @@ export interface EventProperties {
   evnhQuotaRegistration: number;
   evnhDescription?: null;
   evnhPlace?: null;
-  evnhNote?: null;
+  evnhNote?: null | string;
   evnhThumbnail?: null;
   evnhQuotaConfirmation: number;
   evnhTimeLimitRegistration: string;

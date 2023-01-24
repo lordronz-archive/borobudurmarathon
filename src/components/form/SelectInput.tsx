@@ -1,11 +1,4 @@
-import {
-  Box,
-  FormControl,
-  Input,
-  Select,
-  Text,
-  WarningOutlineIcon,
-} from 'native-base';
+import {Box, FormControl, Input, Select, WarningOutlineIcon} from 'native-base';
 import React from 'react';
 import {
   type NativeSyntheticEvent,

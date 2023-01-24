@@ -1,15 +1,31 @@
 import {useNavigation} from '@react-navigation/native';
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Box, Text, VStack, Button} from 'native-base';
+import {Box, Text, VStack, Button, Toast} from 'native-base';
 import React from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
 import BMButton from '../../components/buttons/Button';
 import {RootStackParamList} from '../../navigation/RootNavigator';
+import {AuthService} from '../../api/auth.service';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function DataConfirmationScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const handleNoAddNewProfile = () => {
+    AuthService.deleteprofile()
+      .then(res => {
+        console.info('res deleteProfile', res);
+        navigation.navigate('InputProfile');
+      })
+      .catch(err => {
+        Toast.show({
+          title: 'Failed delete profile',
+          description: getErrorMessage(err),
+        });
+      });
+  };
 
   return (
     <VStack px="4" flex="1">
@@ -35,7 +51,7 @@ export default function DataConfirmationScreen() {
           variant="outline"
           flex="1"
           h="12"
-          onPress={() => navigation.navigate('InputProfile')}>
+          onPress={handleNoAddNewProfile}>
           No, Add New Profile
         </BMButton>
         <BMButton

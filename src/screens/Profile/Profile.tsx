@@ -128,7 +128,7 @@ export default function MyProfile() {
               size="lg"
               source={{
                 // uri: 'https://robohash.org/bormar?set=set4',
-                uri: '',
+                uri: 'https://robohash.org/bormar?set=set4',
               }}>
               {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
             </Avatar>

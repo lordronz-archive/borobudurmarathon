@@ -140,6 +140,14 @@ export default {
           path: 'member_zone/detail/',
           method: 'POST',
         },
+        setProfileAutoApprove: {
+          path: 'member_zone/detail_skip',
+          method: 'POST',
+        },
+        deleteProfile: {
+          path: 'member_zone/delete/detail',
+          method: 'POST',
+        },
         agreeNews: {
           path: 'member_zone/newsletter/',
           method: 'GET',

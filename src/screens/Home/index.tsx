@@ -9,8 +9,14 @@ import {getShortCodeName} from '../../helpers/name';
 import SectionListEvent from './components/SectionListEvent';
 import I18n from '../../lib/i18n';
 import SectionFeaturedEvents from './components/SectionFeaturedEvents';
+import {TouchableOpacity} from 'react-native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../navigation/RootNavigator';
 
 export default function HomeScreen() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const _init = useInit();
   const {user} = useAuthUser();
 
@@ -22,15 +28,18 @@ export default function HomeScreen() {
           justify={'space-between'}
           direction="row"
           alignItems="center">
-          <Flex alignContent={'center'} direction="row" alignItems={'center'}>
-            <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
-            <Avatar bg="gray.400" mx={2}>
-              {getShortCodeName(user?.data[0].zmemFullName || '')}
-            </Avatar>
-            <Text fontSize={'lg'} mx={2} fontWeight={700}>
-              {I18n.t('Hello')}, {user?.data[0].zmemFullName}
-            </Text>
-          </Flex>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Main', {screen: 'Profile'})}>
+            <Flex alignContent={'center'} direction="row" alignItems={'center'}>
+              <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
+              <Avatar bg="gray.400" mx={2}>
+                {getShortCodeName(user?.data[0].zmemFullName || '')}
+              </Avatar>
+              <Text fontSize={'lg'} mx={2} fontWeight={700}>
+                {I18n.t('Hello')}, {user?.data[0].zmemFullName}
+              </Text>
+            </Flex>
+          </TouchableOpacity>
           <Icon
             as={Ionicons}
             name="help-circle-outline"

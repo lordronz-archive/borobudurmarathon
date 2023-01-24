@@ -40,7 +40,7 @@ export default function AuthScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const {state, dispatch} = useAuthUser();
-  const [isNotRegistered, setIsNotRegistered] = useState(false);
+  const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   console.info('#Auth -- state', state);
 
   const [authorizationCode, setAuthorizationCode] = useState<string>(
@@ -172,7 +172,8 @@ export default function AuthScreen() {
         }
         // Alert.alert(JSON.stringify(result));
       } else {
-        Linking.openURL(url);
+        // Linking.openURL(url);
+        openAuthLink();
       }
     } catch (error) {
       // Alert.alert(error.message)
@@ -187,7 +188,7 @@ export default function AuthScreen() {
     ProfileService.getMemberDetail()
       .then(resProfile => {
         console.info('resProfile', resProfile);
-        console.info('resProfile', JSON.stringify(resProfile));
+        console.info('###resProfile###', JSON.stringify(resProfile));
         if (resProfile.data && resProfile.data.length > 0) {
           toast.show({
             id: 'welcome',
@@ -218,7 +219,7 @@ export default function AuthScreen() {
       });
   };
 
-  if (authorizationCode && isNotRegistered) {
+  if (authorizationCode && isNotRegistered === true) {
     let uri =
       config.apiUrl.href.href +
       config.ssoKompasUrl.apis.newBorobudurMember.path +
@@ -238,6 +239,7 @@ export default function AuthScreen() {
             console.info('cookiesString', cookiesString);
             navigation.navigate('InputProfile');
           }}
+          contentMode="mobile"
         />
 
         <Box
@@ -262,8 +264,12 @@ export default function AuthScreen() {
       config.apiUrl.apis.kompas.authorize_code.path +
       '?authorization_code=' +
       encodeURIComponent(authorizationCode);
-    console.info('uri', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
+    console.info('uri', uri);
+
+    // const jsCode =
+    //   "window.postMessage(document.getElementById('gb-main').innerHTML)";
+
     return (
       <Box flex={1}>
         <WebView
@@ -271,7 +277,9 @@ export default function AuthScreen() {
             uri,
           }}
           thirdPartyCookiesEnabled={true}
-          onLoadEnd={async () => {
+          onLoadEnd={async event => {
+            console.info('###event', event);
+            await sleep(1000);
             const cookiesString = await getCookiesString();
             console.info('cookiesString', cookiesString);
             if (cookiesString) {
@@ -280,6 +288,11 @@ export default function AuthScreen() {
               setIsNotRegistered(true);
             }
           }}
+          // javaScriptEnabled={true}
+          // injectedJavaScript={jsCode}
+          // onMessage={event =>
+          //   console.log('###Received: ', event.nativeEvent.data)
+          // }
           // onNavigationStateChange={async event => {
           //   console.info('event', event);
           //   const cookiesString = await getCookiesString();

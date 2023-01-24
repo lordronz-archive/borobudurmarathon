@@ -1,7 +1,11 @@
 import CookieManager from '@react-native-cookies/cookies';
 import {Platform} from 'react-native';
 
-export async function getCookiesString() {
+const maxIteration = 10;
+
+export async function getCookiesString(
+  iteration: number = 0,
+): Promise<string | undefined> {
   const cookies: {key: string; value: string}[] = [];
 
   if (Platform.OS === 'ios') {
@@ -44,6 +48,10 @@ export async function getCookiesString() {
     console.info('cookiesString', cookiesString);
     return cookiesString;
   } else {
+    if (iteration < maxIteration) {
+      await setTimeout(() => {}, 1000);
+      return getCookiesString(iteration + 1);
+    }
     return undefined;
   }
   // return 'PHPSESSID=rk1kg7l9vt83an3hu7skrl89su; _ga=GA1.2.637971587.1673856684; _gid=GA1.2.393060825.1673856684';

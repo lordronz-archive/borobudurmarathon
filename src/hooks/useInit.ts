@@ -10,7 +10,6 @@ import {RootStackParamList} from '../navigation/RootNavigator';
 import {SessionService} from '../api/session.service';
 
 export default function useInit() {
-  const toast = useToast();
   const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -26,16 +25,19 @@ export default function useInit() {
         ProfileService.getMemberDetail()
           .then(resProfile => {
             if (resProfile && resProfile.data && resProfile.data.length > 0) {
+              console.info('##resProfile', JSON.stringify(resProfile));
+
+              // if (resProfile.data[0].zmemStatus)
               dispatch({
                 type: EAuthUserAction.LOGIN,
                 payload: {user: resProfile},
               });
-              if (!toast.isActive('welcome')) {
-                toast.show({
-                  id: 'welcome',
-                  description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-                });
-              }
+              // if (!toast.isActive('welcome')) {
+              //   toast.show({
+              //     id: 'welcome',
+              //     description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+              //   });
+              // }
               navigation.navigate('Main', {screen: 'Home'});
             } else {
               navigation.navigate('Auth');

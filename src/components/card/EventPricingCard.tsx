@@ -12,7 +12,6 @@ import {
 } from 'native-base';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
-import {numberWithCommas} from '../../helpers/currency';
 
 type EventPricingCardProps = {
   title: string;
@@ -62,15 +61,15 @@ export default function EventPricingCard({
   };
 
   return (
-    <Box alignItems="center" w={'100%'} my={3}>
-      <Box
-        rounded="lg"
-        overflow="hidden"
-        w="100%"
-        borderColor="coolGray.200"
-        borderWidth="1"
-        p={4}>
-        <TouchableOpacity onPress={onSelect}>
+    <TouchableOpacity onPress={onSelect} style={{width:'100%'}}>
+      <Box alignItems="center" w={'100%'} my={3}>
+        <Box
+          rounded="lg"
+          overflow="hidden"
+          w="100%"
+          borderColor="coolGray.200"
+          borderWidth="1"
+          p={4}>
           <Flex direction="row" justify="space-between">
             <Text color={'#EB1C23'} fontWeight={800} fontSize="lg">
               {title}
@@ -94,40 +93,40 @@ export default function EventPricingCard({
           <Text color={'#768499'} fontSize="sm" fontWeight={400}>
             {subtitle}
           </Text>
-        </TouchableOpacity>
-        <Box mx={-4} mt={4} p={4} bgColor={'#E8ECF3'}>
-          <Flex direction="row" justify="space-between">
-            <VStack alignItems="flex-start">
-              {!!textOriginalPrice && (
-                <Text
-                  color={'#768499'}
-                  fontSize="sm"
-                  fontWeight={400}
-                  strikeThrough>
-                  IDR {textOriginalPrice}
+          <Box mx={-4} mt={4} p={4} bgColor={'#E8ECF3'}>
+            <Flex direction="row" justify="space-between">
+              <VStack alignItems="flex-start">
+                {!!textOriginalPrice && (
+                  <Text
+                    color={'#768499'}
+                    fontSize="sm"
+                    fontWeight={400}
+                    strikeThrough>
+                    IDR {textOriginalPrice}
+                  </Text>
+                )}
+                <Text color={'black'} fontSize="lg" fontWeight={700}>
+                  IDR {textFinalPrice}
                 </Text>
+              </VStack>
+              {!!textDiscountPercentage && (
+                <Box bgColor={'#FFE1E2'} px={2} pt={2} borderRadius={10}>
+                  <Text color={'#EB1C23'} fontSize="lg" fontWeight={600}>
+                    {textDiscountPercentage}% off
+                  </Text>
+                </Box>
               )}
-              <Text color={'black'} fontSize="lg" fontWeight={700}>
-                IDR {textFinalPrice}
-              </Text>
-            </VStack>
-            {!!textDiscountPercentage && (
-              <Box bgColor={'#FFE1E2'} px={2} pt={2} borderRadius={10}>
-                <Text color={'#EB1C23'} fontSize="lg" fontWeight={600}>
-                  {textDiscountPercentage}% off
-                </Text>
-              </Box>
-            )}
-          </Flex>
+            </Flex>
+          </Box>
+          <Stack my={4}>
+            <Text color={'#768499'}>Benefit :</Text>
+            <FlatList
+              data={benefits}
+              renderItem={({item}) => _renderBenefitsItem(item)}
+            />
+          </Stack>
         </Box>
-        <Stack my={4}>
-          <Text color={'#768499'}>Benefit :</Text>
-          <FlatList
-            data={benefits}
-            renderItem={({item}) => _renderBenefitsItem(item)}
-          />
-        </Stack>
       </Box>
-    </Box>
+    </TouchableOpacity>
   );
 }

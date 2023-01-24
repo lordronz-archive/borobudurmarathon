@@ -140,13 +140,13 @@ export default function InputProfileScreen() {
       console.info('Setprofile result: ', res);
 
       navigation.navigate('Welcome');
-      setIsLoading(true);
+      setIsLoading(false);
     } catch (err) {
       Toast.show({
         title: 'Failed to save',
         description: getErrorMessage(err),
       });
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
 
@@ -327,7 +327,11 @@ export default function InputProfileScreen() {
           </VStack>
         </VStack>
         <VStack space="2.5" px="4">
-          <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
+          <Text
+            fontWeight={600}
+            color="#1E1E1E"
+            fontSize={14}
+            fontFamily="Poppins-Bold">
             Address Information
           </Text>
           <VStack space="1.5">

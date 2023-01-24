@@ -314,8 +314,8 @@ export default function AuthScreen() {
           backgroundColor={'#00559A'}
           rounded="sm"
           onPress={() => {
-            openAuthLink();
-            // openAuthLinkInApp();
+            // openAuthLink();
+            openAuthLinkInApp();
           }}
           startIcon={<KompasIcon size="lg" px="6" />}>
           <Text color="white" px="12">

@@ -7,11 +7,11 @@ import {
   ScrollView,
   Toast,
   Center,
+  Button,
 } from 'native-base';
 import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
-import BMButton from '../../components/buttons/Button';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
@@ -20,7 +20,7 @@ import {AuthService} from '../../api/auth.service';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {getErrorMessage} from '../../helpers/errorHandler';
-import {Pressable, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -97,9 +97,9 @@ export default function InputProfileScreen() {
     if (!mbsdAddress) {
       valid = false;
     }
-    if (!phoneNumber) {
-      valid = false;
-    }
+    // if (!phoneNumber) {
+    //   valid = false;
+    // }
 
     if (!valid) {
       Toast.show({
@@ -110,22 +110,26 @@ export default function InputProfileScreen() {
       return;
     }
 
-    try {
-      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-      console.info('SendOTP result: ', sendOtpRes);
-      navigation.navigate('PhoneNumberValidation', {
-        phoneNumber,
-        onSuccess: () => {
-          setProfileAfterVerifyPhoneSuccess();
-        },
-      });
-      setIsLoading(false);
-    } catch (err) {
-      Toast.show({
-        title: 'Failed to send otp',
-        description: getErrorMessage(err),
-      });
-      setIsLoading(false);
+    if (phoneNumber) {
+      try {
+        const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+        console.info('SendOTP result: ', sendOtpRes);
+        navigation.navigate('PhoneNumberValidation', {
+          phoneNumber,
+          onSuccess: () => {
+            setProfileAfterVerifyPhoneSuccess();
+          },
+        });
+        setIsLoading(false);
+      } catch (err) {
+        Toast.show({
+          title: 'Failed to send otp',
+          description: getErrorMessage(err),
+        });
+        setIsLoading(false);
+      }
+    } else {
+      setProfileAfterVerifyPhoneSuccess();
     }
   };
 
@@ -352,7 +356,7 @@ export default function InputProfileScreen() {
           style={{paddingHorizontal: 20, paddingVertical: 5}}
           onPress={() => {
             setBirthDate(new Date('1995-11-29'));
-            setPhoneNumber('083116872224');
+            // setPhoneNumber('083116872224');
             setIDNumber('33181100000000');
             setBirthPlace('Pati');
             setMbsdBirthDate('1995-11-29');
@@ -380,9 +384,9 @@ export default function InputProfileScreen() {
           </Checkbox.Group>
         </Box>
         <Box px="4">
-          <BMButton h="12" onPress={setProfile} loading={isLoading}>
+          <Button h="12" onPress={setProfile} isLoading={isLoading}>
             Continue
-          </BMButton>
+          </Button>
         </Box>
       </VStack>
     </ScrollView>

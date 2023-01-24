@@ -69,8 +69,7 @@ export default function useInit() {
 
   useEffect(() => {
     if (isFocused) {
-      // checkLogin();
-      navigation.navigate('DataConfirmation');
+      checkLogin();
     }
   }, [isFocused]);
 

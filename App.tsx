@@ -108,6 +108,9 @@ const App = () => {
           background: '#EB1C23',
           size: 'lg',
         },
+        defaultProps: {
+          bg: '#EB1C23',
+        },
         variants: {
           ghost: {
             bgColor: 'transparent',

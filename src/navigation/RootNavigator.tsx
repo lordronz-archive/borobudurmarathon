@@ -16,6 +16,9 @@ import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import RegisterScreen from '../screens/Event/Register';
 import DetailEventScreen from '../screens/DetailEvent';
 import PaymentScreen from '../screens/Payment';
+import EventRegisterScreen from '../screens/Event/Register';
+import DetailEvent from '../screens/Event/DetailEvent';
+import {GetEventResponse} from '../types/event.type';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -26,6 +29,8 @@ export type RootStackParamList = {
   PhoneNumberValidation?: {phoneNumber?: string};
   Main: undefined | {screen: string};
 
+  EventDetail: {id: number};
+
   UpdateProfile: undefined;
   Welcome: undefined;
 
@@ -33,6 +38,7 @@ export type RootStackParamList = {
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 
   Register: undefined;
+  EventRegister: {event: GetEventResponse; selectedCategoryId: string};
   DetailEvent: undefined;
   Payment: undefined;
 };
@@ -86,6 +92,17 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="EventDetail"
+          component={DetailEvent}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EventRegister"
+          component={EventRegisterScreen}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
           name="UpdateProfile"
           component={UpdateProfileScreen}
           options={{headerShown: false}}
@@ -93,11 +110,6 @@ function RootNavigator() {
         <Stack.Screen
           name="FAQ"
           component={FAQScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

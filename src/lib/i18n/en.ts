@@ -1,5 +1,6 @@
 export default {
   welcomeTo: 'Welcome to',
+  Hello: 'Hello',
   auth: {
     description:
       "Let's join and be part of the Borobudur Marathon community. The biggest running event in Central Java, Indonesia.",

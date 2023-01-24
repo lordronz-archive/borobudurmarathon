@@ -139,10 +139,25 @@ const AuthService = {
   },
   setprofile: async function (personalData: any) {
     try {
-      console.log(config.apiUrl.apis.member.setProfile.path);
+      return await httpRequest.post(
+        config.apiUrl.apis.member.setProfileAutoApprove.path,
+        {
+          data: personalData,
+        },
+      );
       // return await httpRequest.post(config.apiUrl.apis.member.setProfile.path, {
-      // data: personalData,
+      //   data: personalData,
       // });
+    } catch (error) {
+      const msg = error as any;
+      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+    }
+  },
+  deleteprofile: async function () {
+    try {
+      return await httpRequest.post(
+        config.apiUrl.apis.member.deleteProfile.path,
+      );
     } catch (error) {
       const msg = error as any;
       throw new AuthenticationError(msg.status, msg.data.status.error.message);

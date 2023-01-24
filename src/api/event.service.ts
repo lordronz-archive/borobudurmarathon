@@ -1,4 +1,6 @@
 import config from '../config';
+import httpRequest from '../helpers/httpRequest';
+import {GetEventResponse} from '../types/event.type';
 import ApiService from './api.service';
 // import qs from "qs";
 
@@ -125,12 +127,13 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getEvent: async function (eventId: string) {
+  getEvent: async function (eventId: number): Promise<GetEventResponse> {
     console.log('Event id to get : ', eventId);
     try {
-      return ApiService.get(
+      const res = await httpRequest.get(
         config.apiUrl.apis.event.detail.path + '/' + eventId,
       );
+      return res.data;
     } catch (error) {
       console.log('E : ', error);
       const msg = error as any;
@@ -152,7 +155,7 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getEvents: async function () {
+  getEvents: async function (): Promise<GetEventResponse> {
     const parameter = {
       filter: {
         evnhEmail: 'reg@borobudurmarathon.co.id',
@@ -168,7 +171,11 @@ const EventService = {
       parameter.filter.evnhEmail = 'dev@borobudurmarathon.com';
     }
     try {
-      return ApiService.get('/resources/event_header?' + qs(parameter, false));
+      const res = await httpRequest.get(
+        '/resources/event_header?' + qs(parameter, false),
+      );
+
+      return res.data;
     } catch (error) {
       const msg = error as any;
       throw new ResponseError(msg.status, msg.error.message);

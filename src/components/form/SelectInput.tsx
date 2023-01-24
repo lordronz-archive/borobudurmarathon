@@ -25,7 +25,7 @@ export default function SelectInput(props: SelectInputProps) {
   const handleInputSubmit = React.useCallback(
     (ev: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
       const input = ev.nativeEvent.text;
-      setSearchValue(input);
+      setSearchValue(String(input));
     },
     [setSearchValue],
   );
@@ -58,7 +58,9 @@ export default function SelectInput(props: SelectInputProps) {
           {props.items
             .filter(
               ({value, label}) =>
-                value.toLowerCase().includes(searchValue.toLowerCase()) ||
+                String(value || '')
+                  .toLowerCase()
+                  .includes(searchValue.toLowerCase()) ||
                 label.toLowerCase().includes(searchValue.toLowerCase()),
             )
             .map(({label, value}, i) => (

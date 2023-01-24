@@ -1,25 +1,58 @@
-import {Box, Divider, Flex, Text, VStack} from 'native-base';
+import {Avatar, Box, Divider, Flex, Icon, ScrollView, Text} from 'native-base';
 import React from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont();
+
 import useInit from '../../hooks/useInit';
+import {useAuthUser} from '../../context/auth.context';
+import {getShortCodeName} from '../../helpers/name';
+import SectionListEvent from './components/SectionListEvent';
+import I18n from '../../lib/i18n';
+import SectionFeaturedEvents from './components/SectionFeaturedEvents';
+import {TouchableOpacity} from 'react-native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../navigation/RootNavigator';
 
 export default function HomeScreen() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const _init = useInit();
+  const {user} = useAuthUser();
 
   return (
-    <Box>
-      <Flex mx="3" direction="row" justify="space-evenly" alignItems={'center'}>
-        <VStack alignItems="center">
-          <Text py="2" color={'#768499'} fontSize={12}>
-            Time
-          </Text>
-          <Text py="1" fontWeight={500} fontSize={18}>
-            00:00:00
-          </Text>
-        </VStack>
+    <ScrollView>
+      <Box backgroundColor={'#fff'}>
+        <Flex
+          mx="4"
+          justify={'space-between'}
+          direction="row"
+          alignItems="center">
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Main', {screen: 'Profile'})}>
+            <Flex alignContent={'center'} direction="row" alignItems={'center'}>
+              <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
+              <Avatar bg="gray.400" mx={2}>
+                {getShortCodeName(user?.data[0].zmemFullName || '')}
+              </Avatar>
+              <Text fontSize={'lg'} mx={2} fontWeight={700}>
+                {I18n.t('Hello')}, {user?.data[0].zmemFullName}
+              </Text>
+            </Flex>
+          </TouchableOpacity>
+          <Icon
+            as={Ionicons}
+            name="help-circle-outline"
+            size="xl"
+            color="black"
+          />
+        </Flex>
+
+        {/* <SummaryRecord /> */}
+
         <Divider
-          orientation="vertical"
-          mx="3"
-          h={12}
+          mt="2"
+          mb="2"
           _light={{
             bg: 'muted.300',
           }}
@@ -27,49 +60,12 @@ export default function HomeScreen() {
             bg: 'muted.50',
           }}
         />
-        <VStack alignItems="center">
-          <Text py="2" color={'#768499'} fontSize={12}>
-            Distance
-          </Text>
-          <Text py="1" fontWeight={500} fontSize={18}>
-            0{' '}
-            <Text fontWeight={600} color={'#768499'} fontSize={12}>
-              km
-            </Text>
-          </Text>
-        </VStack>
-        <Divider
-          orientation="vertical"
-          h={12}
-          mx="3"
-          _light={{
-            bg: 'muted.300',
-          }}
-          _dark={{
-            bg: 'muted.50',
-          }}
-        />
-        <VStack alignItems="center">
-          <Text py="2" color={'#768499'} fontSize={12}>
-            Pace
-          </Text>
-          <Text py="1" fontWeight={500} fontSize={18}>
-            00:00
-            <Text fontWeight={600} color={'#768499'} fontSize={12}>
-              /km
-            </Text>
-          </Text>
-        </VStack>
-      </Flex>
-      <Divider
-        my="2"
-        _light={{
-          bg: 'muted.300',
-        }}
-        _dark={{
-          bg: 'muted.50',
-        }}
-      />
-    </Box>
+        {/* <Section title="Featured Events" mx="4" my={3} /> */}
+
+        <SectionFeaturedEvents />
+
+        <SectionListEvent />
+      </Box>
+    </ScrollView>
   );
 }

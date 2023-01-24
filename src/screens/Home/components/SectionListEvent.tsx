@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import moment from 'moment';
 import {FlatList, Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
@@ -70,7 +71,10 @@ export default function SectionListEvent() {
               ? {uri: item.evnhThumbnail}
               : require('../../../assets/images/FeaturedEventImage.png')
           }
-          isAvailable={false}
+          isAvailable={moment(
+            item.evnhRegistrationEnd,
+            'YYYY-MM-DD HH:mm:ss',
+          ).isBefore(moment())}
         />
       </TouchableOpacity>
     );

@@ -16,12 +16,14 @@ type EventRegistrationCardProps = {
   title?: ReactNode;
   category?: ReactNode;
   registrationDate?: ReactNode;
+  imgSrc?: any;
 };
 
 export default function EventRegistrationCard({
   title,
   runningDate,
   category,
+  imgSrc,
   registrationDate,
 }: EventRegistrationCardProps) {
   return (
@@ -29,7 +31,7 @@ export default function EventRegistrationCard({
       <HStack flex={1}>
         <AspectRatio w="20%" ratio={1 / 1}>
           <Image
-            source={require('../../assets/images/FeaturedEventImage.png')}
+            source={imgSrc}
             w="100%"
             h="100%"
             borderRadius={5}

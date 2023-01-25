@@ -11,7 +11,7 @@ import {
   Button,
   Toast,
 } from 'native-base';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
@@ -23,26 +23,44 @@ import moment from 'moment';
 import datetime from '../../helpers/datetime';
 import {EVENT_TYPES} from '../../types/event.type';
 
-export default function MyEventDetail(id: number) {
+export default function MyEventDetail() {
+  const route = useRoute();
+  const params = route.params as RootStackParamList['MyEventsDetail'];
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [detailTransaction, setDetailTransaction] = useState<any>();
+  const [detailEvent, setDetailEvent] = useState<any>();
+  const today = new Date();
 
   const fetchList = () => {
     setIsLoading(true);
-    EventService.getTransactionDetail('OMBAKCEA')
+
+    EventService.getTransactionDetail(params.transactionId)
       .then(res => {
-        console.info('res transaction', JSON.stringify(res));
+        console.info('res detail transaction', JSON.stringify(res));
         if (res) {
           setDetailTransaction(res);
         }
       })
       .catch(err => {
         Toast.show({
-          title: 'Failed to get featured events',
+          title: 'Failed to get detail transaction',
+          description: getErrorMessage(err),
+        });
+      });
+    EventService.getEvent(params.eventId)
+      .then(res => {
+        console.info('res detail event', JSON.stringify(res));
+        if (res) {
+          setDetailEvent(res);
+        }
+      })
+      .catch(err => {
+        Toast.show({
+          title: 'Failed to detail event',
           description: getErrorMessage(err),
         });
       })
@@ -121,14 +139,20 @@ export default function MyEventDetail(id: number) {
   const statusComp = useMemo(() => {
     let status;
 
-    if (detailTransaction?.data?.trnsConfirmed === 1) {
-      status = 'Paid';
-    } else if (detailTransaction?.data?.trnsPaymentStatus === 1) {
-      status = 'Waiting Payment';
-    } else if (detailTransaction?.data?.trnsConfirmed === 0) {
-      status = 'Paid';
-    } else {
-      status = 'Waiting Payment';
+    if (params.isBallot) {
+      if (!params.ballotStatus) {
+        status = 'Registered';
+      } else {
+        if (detailTransaction?.data?.trnsConfirmed === 1) {
+          status = 'Paid';
+        } else if (detailTransaction?.data?.trnsPaymentStatus === 1) {
+          status = 'Waiting Payment';
+        } else if (detailTransaction?.data?.trnsConfirmed === 0) {
+          status = 'Paid';
+        } else {
+          status = 'Waiting Payment';
+        }
+      }
     }
 
     const color = statusColor(status || '');
@@ -177,8 +201,16 @@ export default function MyEventDetail(id: number) {
             <IconInfo color={colors.black} size={6} />
             <VStack flex={1} paddingLeft={'10px'}>
               <Text fontWeight={400} color="#201D1D" fontSize={12}>
-                Pengumuman hasil ballot akan diinformasikan pada periode
-                pengumuman hasil ballot.
+                {`${
+                  new Date(detailTransaction?.data?.trnsExpiredTime).getTime() <
+                  today.getTime()
+                    ? 'Status pembayaran sudah expired, jika masih ingin mengikuti event ini silahkan register ulang event ini'
+                    : !params.isBallot
+                    ? 'Silahkan selesaikan pembayaran anda sebelum batas pembayaran berakhir'
+                    : params.ballotStatus
+                    ? 'Selamat anda lolos tahap ballot, silahkan lanjutkan ke pembayaran event.'
+                    : 'Pengumuman hasil ballot akan diinformasikan pada periode pengumuman hasil ballot.'
+                }`}
               </Text>
               <Text
                 fontWeight={600}
@@ -220,7 +252,16 @@ export default function MyEventDetail(id: number) {
               color="#201D1D"
               fontSize={16}
               textAlign={'center'}>
-              Status
+              {`${
+                new Date(detailTransaction?.data?.trnsExpiredTime).getTime() <
+                today.getTime()
+                  ? 'Payment Expired'
+                  : !params.isBallot
+                  ? 'Menunggu pembayaran'
+                  : params.ballotStatus
+                  ? 'Menunggu pembayaran'
+                  : 'Menunggu hasil ballot'
+              }`}
             </Text>
             <Text
               fontWeight={400}
@@ -230,41 +271,45 @@ export default function MyEventDetail(id: number) {
               QR Code event akan tampil disini setalah anda lolos ballot &
               melakukan pembayaran
             </Text>
-            <Box
-              width={'100%'}
-              marginX={'22px'}
-              marginTop={'12px'}
-              paddingY={'12px'}
-              borderRadius={8}
-              alignSelf={'center'}
-              bg={'#F4F6F9'}>
-              <Text
-                fontWeight={500}
-                color="#201D1D"
-                fontSize={14}
-                textAlign={'center'}>
-                {`Pay before ${moment(
-                  detailTransaction?.data?.trnsExpiredTime,
-                ).format('DD MMM YYYY, HH:mm')}`}
-              </Text>
-            </Box>
-            <Button
-              onPress={() => handlePayNow()}
-              width={'100%'}
-              marginX={'22px'}
-              marginTop={'12px'}
-              paddingY={'12px'}
-              borderRadius={8}
-              alignSelf={'center'}
-              bg={'#EB1C23'}>
-              <Text
-                fontWeight={500}
-                color={colors.white}
-                fontSize={14}
-                textAlign={'center'}>
-                Pay Now
-              </Text>
-            </Button>
+            {((params.isBallot && params.ballotStatus) || !params.isBallot) && (
+              <>
+                <Box
+                  width={'100%'}
+                  marginX={'22px'}
+                  marginTop={'12px'}
+                  paddingY={'12px'}
+                  borderRadius={8}
+                  alignSelf={'center'}
+                  bg={'#F4F6F9'}>
+                  <Text
+                    fontWeight={500}
+                    color="#201D1D"
+                    fontSize={14}
+                    textAlign={'center'}>
+                    {`Pay before ${moment(
+                      detailTransaction?.data?.trnsExpiredTime,
+                    ).format('DD MMM YYYY, HH:mm')}`}
+                  </Text>
+                </Box>
+                <Button
+                  onPress={() => handlePayNow()}
+                  width={'100%'}
+                  marginX={'22px'}
+                  marginTop={'12px'}
+                  paddingY={'12px'}
+                  borderRadius={8}
+                  alignSelf={'center'}
+                  bg={'#EB1C23'}>
+                  <Text
+                    fontWeight={500}
+                    color={colors.white}
+                    fontSize={14}
+                    textAlign={'center'}>
+                    Pay Now
+                  </Text>
+                </Button>
+              </>
+            )}
             <Box
               marginTop={'15px'}
               paddingY={'16px'}

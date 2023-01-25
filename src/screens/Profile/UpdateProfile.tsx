@@ -181,7 +181,7 @@ export default function UpdateProfileScreen() {
                 source={{
                   // uri: 'https://robohash.org/bormar?set=set4',
                   uri:
-                    user?.linked.mbsdZmemId[0].mbsdFile &&
+                    user?.linked?.mbsdZmemId?.[0]?.mbsdFile &&
                     user?.linked.mbsdZmemId[0].mbsdFile !== '0'
                       ? 'https://facepool.oss-ap-southeast-5.aliyuncs.com/' +
                         user?.linked.mbsdZmemId[0].mbsdFile

@@ -22,6 +22,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {phoneNumber} = route.params as {phoneNumber?: string};
+  const {onSuccess} = route.params as {onSuccess?: any};
 
   const [isLoading, setIsLoading] = useState(false);
   const [otpCode, setOtpCode] = useState<string>();
@@ -68,6 +69,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
 
     try {
       const res = await AuthService.confirmOTP(payload);
+      await onSuccess();
       console.info('Confirm OTP result: ', res);
       navigation.navigate('Welcome');
       setIsLoading(false);

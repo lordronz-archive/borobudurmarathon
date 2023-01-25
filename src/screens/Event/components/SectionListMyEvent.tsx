@@ -67,7 +67,12 @@ export default function SectionListMyEvent() {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate('MyEventsDetail', {id: transaction.id})
+          navigation.navigate('MyEventsDetail', {
+            transactionId: item.mregOrderId,
+            eventId: event.evnhId,
+            isBallot: item.mregType === 'MB' ? true : false,
+            ballotStatus: item.mregStatus,
+          })
         }>
         <MyEventCard
           title={event.evnhName}

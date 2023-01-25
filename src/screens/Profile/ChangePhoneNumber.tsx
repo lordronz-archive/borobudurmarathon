@@ -28,7 +28,7 @@ export default function ChangePhoneNumberScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
 
-  const setProfile = async () => {
+  const sendPhoneOTP = async () => {
     setIsLoading(true);
     let valid = true;
     if (!phoneNumber) {
@@ -37,8 +37,7 @@ export default function ChangePhoneNumberScreen() {
 
     if (!valid) {
       Toast.show({
-        title: 'Not Complete',
-        description: 'Please complete the data',
+        description: 'Please insert your new phone number',
       });
       setIsLoading(false);
       return;
@@ -67,16 +66,16 @@ export default function ChangePhoneNumberScreen() {
       });
     } else {
       Toast.show({
-        description: 'Success',
+        title: "It's your current phone number",
+        description: 'Please insert different phone number to change',
       });
-      navigation.goBack();
       setIsLoading(false);
     }
   };
 
   return (
     <View>
-      <Header title={I18n.t('profile.editProfile')} left="back" />
+      <Header title={I18n.t('profile.changePhoneNumber')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
           <VStack space="2.5" px="4">
@@ -95,7 +94,7 @@ export default function ChangePhoneNumberScreen() {
           </VStack>
         </VStack>
         <Box px="4">
-          <Button h="12" onPress={setProfile} isLoading={isLoading}>
+          <Button h="12" onPress={sendPhoneOTP} isLoading={isLoading}>
             {I18n.t('profile.sendOtp')}
           </Button>
         </Box>

@@ -16,6 +16,7 @@ export default {
     title: 'Profile',
     editProfile: 'Edit Profile',
     buttonUpdate: 'Update Profile',
+    changePhoneNumber: 'Change Phone Number',
     sendOtp: 'Send OTP',
   },
   save: 'Save',

@@ -63,15 +63,13 @@ export default function SectionListMyEvent() {
 
     const cleanTransactionExpTime = transaction.trnsExpiredTime;
 
-    console.log(transaction, 'transaction testing');
     return (
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('MyEventsDetail', {
             transactionId: item.mregOrderId,
             eventId: event.evnhId,
-            isBallot: item.mregType === 'MB' ? true : false,
-            ballotStatus: item.mregStatus,
+            regStatus: item.mregStatus,
           })
         }>
         <MyEventCard
@@ -96,7 +94,7 @@ export default function SectionListMyEvent() {
   };
 
   return (
-    <Section title="Our Events" mt="1" _title={{py: 2, px: 4}}>
+    <Section title="Our Events" _title={{py: 2, px: 4}}>
       <CategoryButton
         categories={[{id: null, value: 'All'}, ...Object.values(EVENT_TYPES)]}
         selected={selectedCategory?.id || null}

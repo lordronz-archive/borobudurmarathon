@@ -227,3 +227,110 @@ export const EVENT_TYPES: {[key: number]: IEventType} = {
   //   value: 'Other',
   // },
 };
+
+export interface Transaction {
+  data: Datum[];
+  linked: TransactionLinked;
+  fields: Field[];
+  status: TransactionStatus;
+}
+
+export interface Datum {
+  id: number;
+  mregId: number;
+  mregOrderId: string;
+  mregType: string;
+  mregStatus: number;
+  mregCreatedTime: string;
+  links: TransactionLinks;
+}
+
+export interface TransactionLinks {
+  mregTrnsId: number;
+  mregZmemId: number;
+  mregEventId: number;
+}
+
+export interface Field {
+  name: string;
+  label: string;
+  size: number;
+  type: Type;
+}
+
+export enum Type {
+  Datetime = 'datetime',
+  Integer = 'integer',
+  String = 'string',
+}
+
+export interface TransactionLinked {
+  mregTrnsId: MregTrnsID[];
+  mregZmemId: MregZmemID[];
+  mregEventId: MregEventID[];
+}
+
+export interface MregEventID {
+  id: number;
+  evnhId: number;
+  evnhType: number;
+  evnhName: string;
+  evnhQuotaRegistration: number;
+  evnhFuture: null;
+  evnhDescription: null;
+  evnhPlace: null;
+  evnhNote: null;
+  evnhThumbnail: null;
+  evnhQuotaConfirmation: number;
+  evnhTimeLimitRegistration: string;
+  evnhTimeLimitConfirmation: string;
+  evnhStartDate: string;
+  evnhEndDate: string;
+  evnhRegistrationStart: string;
+  evnhRegistrationEnd: string;
+  evnhStatusPublish: number;
+  evnhRegistrationStatus: number;
+  evnhTransactionExpired: number;
+  evnhStatus: number;
+}
+
+export interface MregTrnsID {
+  id: number;
+  trnsId: number;
+  trnsUserId: number;
+  trnsUserName: string;
+  trnsEventId: number;
+  trnsUserEmail: string;
+  trnsInvoiceId: number;
+  trnsInvoiceNumber: number;
+  trnsRefId: string;
+  trnsStatus: number;
+  trnsPaymentType: number;
+  trnsPaymentStatus: number;
+  trnsType: number;
+  trnsAmount: string;
+  trnsConfirmed: number;
+  trnsConfirmTime: null | string;
+  trnsExpiredTime: string;
+  trnsCreatedTime: string;
+}
+
+export interface MregZmemID {
+  id: number;
+  zmemId: number;
+  zmemLoyalty: number;
+  zmemLevel: number;
+  zmemStatus: number;
+  zmemCreatedTime: string;
+  zmemAuusId: number;
+  zmemOwner: number;
+  zmemNewsletter: number;
+  zmemFullName: string;
+  zmemGender: number;
+  zmemLanguage: number;
+}
+
+export interface TransactionStatus {
+  page: number;
+  totalRecords: number;
+}

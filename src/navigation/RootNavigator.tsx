@@ -13,11 +13,16 @@ import WebViewScreen from '../screens/Information/WebViewScreen';
 import FAQScreen from '../screens/Information/FAQScreen';
 import WelcomeScreen from '../screens/Welcome/Welcome';
 import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
+import RegisterScreen from '../screens/Event/Register';
+import DetailEventScreen from '../screens/Event/MyEventsDetail';
+import PaymentScreen from '../screens/Payment';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
 import {GetEventResponse} from '../types/event.type';
+import HowToPayScreen from '../screens/HowToPay';
 import LogoutScreen from '../screens/Profile/LogoutScreen';
 import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
+import MyEventDetail from '../screens/Event/MyEventsDetail';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -55,7 +60,16 @@ export type RootStackParamList = {
   FAQ: undefined;
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 
+  Register: undefined;
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};
+  MyEventsDetail: {
+    transactionId: string;
+    eventId: number;
+    isBallot: boolean;
+    ballotStatus: number;
+  };
+  Payment: undefined;
+  HowToPay: undefined;
 
   Logout: undefined;
 };
@@ -137,6 +151,21 @@ function RootNavigator() {
         <Stack.Screen
           name="WebView"
           component={WebViewScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MyEventsDetail"
+          component={MyEventDetail}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Payment"
+          component={PaymentScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="HowToPay"
+          component={HowToPayScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

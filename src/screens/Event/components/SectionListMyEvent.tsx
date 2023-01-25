@@ -62,9 +62,18 @@ export default function SectionListMyEvent() {
     const cleanEndDate = event.evnhEndDate.split(' ')[0];
 
     const cleanTransactionExpTime = transaction.trnsExpiredTime;
+
+    console.log(transaction, 'transaction testing');
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('EventDetail', {id: event.evnhId})}>
+        onPress={() =>
+          navigation.navigate('MyEventsDetail', {
+            transactionId: item.mregOrderId,
+            eventId: event.evnhId,
+            isBallot: item.mregType === 'MB' ? true : false,
+            ballotStatus: item.mregStatus,
+          })
+        }>
         <MyEventCard
           title={event.evnhName}
           date={

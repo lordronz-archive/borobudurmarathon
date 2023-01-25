@@ -20,6 +20,8 @@ import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import Congratulation from '../../components/modal/Congratulation';
 import {TouchableOpacity} from 'react-native';
+import EventRegistrationCard from '../../components/card/EventRegistrationCard';
+import datetime from '../../helpers/datetime';
 
 export default function EventRegisterScreen() {
   const navigation =
@@ -91,14 +93,37 @@ export default function EventRegisterScreen() {
     }
   };
 
+  const event = params.event;
+
   return (
     <ScrollView>
       <Header title="Form Registration" left="back" />
       <VStack space="4" pb="3">
+        <EventRegistrationCard
+          runningDate={datetime.getDateRangeString(
+            event?.data.evnhStartDate,
+            event?.data.evnhEndDate,
+            'short',
+            'short',
+          )}
+          registrationDate={datetime.getDateRangeString(
+            event?.data.evnhRegistrationStart,
+            event?.data.evnhRegistrationEnd,
+            'short',
+            'short',
+          )}
+          title={event?.data?.evnhName}
+          category={
+            (event?.categories || []).find(
+              cat => cat.evncId === params.selectedCategoryId,
+            )?.evncName
+          }
+        />
         <Divider
-          my="2"
+          mb="2"
+          height="8px"
           _light={{
-            bg: 'muted.800',
+            bg: '#E8ECF3',
           }}
           _dark={{
             bg: 'muted.50',

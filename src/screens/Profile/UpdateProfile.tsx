@@ -8,10 +8,11 @@ import {
   HStack,
   Avatar,
   useTheme,
+  Toast,
+  Button,
 } from 'native-base';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-import BMButton from '../../components/buttons/Button';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
@@ -23,6 +24,7 @@ import Header from '../../components/header/Header';
 import I18n from '../../lib/i18n';
 import {getShortCodeName} from '../../helpers/name';
 import {useAuthUser} from '../../context/auth.context';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function UpdateProfileScreen() {
   const navigation =
@@ -30,6 +32,7 @@ export default function UpdateProfileScreen() {
   const {colors} = useTheme();
   const {user} = useAuthUser();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [fullName, setFullName] = useState<string>(
     user?.data[0].zmemFullName || '',
   );
@@ -42,6 +45,7 @@ export default function UpdateProfileScreen() {
   const [phoneNumber, setPhoneNumber] = useState<string>(
     user?.linked.zmemAuusId[0].auusPhone || '',
   );
+  const [mbsdIDNumberType, setIDNumberType] = useState<string>();
   const [mbsdIDNumber, setIDNumber] = useState<string>(
     user?.linked.mbsdZmemId[0].mbsdIDNumber || '',
   );
@@ -68,6 +72,7 @@ export default function UpdateProfileScreen() {
   );
 
   const setProfile = async () => {
+    setIsLoading(true);
     const payload = {
       mbsdIDNumber,
       mbsdBirthDate: birthDate ? birthDate.toJSON().slice(0, 10) : undefined,
@@ -79,8 +84,8 @@ export default function UpdateProfileScreen() {
       mbsdProvinces,
       mbsdAddress,
       mbsdRawAddress: '-',
-      mbsdIDNumberType: 0,
-      mbsdFile: 0,
+      mbsdIDNumberType,
+      mbsdFile: 'thomas.jpg',
       mmedEducation: '-',
       mmedOccupation: '-',
       mmedIncome: '-',
@@ -118,24 +123,54 @@ export default function UpdateProfileScreen() {
     }
 
     if (!valid) {
+      Toast.show({
+        title: 'Not Complete',
+        description: 'Please complete the data',
+      });
+      setIsLoading(false);
       return;
     }
     const res = await AuthService.setprofile(payload);
-    const sendOtpRes = await AuthService.sendOTP({phoneNumber});
     console.info('Setprofile result: ', res);
-    console.info('SendOTP result: ', sendOtpRes);
-    navigation.navigate('PhoneNumberValidation', {
-      phoneNumber,
-    });
+
+    if (user?.linked.zmemAuusId[0].auusPhone !== phoneNumber) {
+      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+      console.info('SendOTP result: ', sendOtpRes);
+      navigation.navigate('PhoneNumberValidation', {
+        phoneNumber,
+        onSuccess: async () => {
+          try {
+            setIsLoading(true);
+            await AuthService.setprofile(payload);
+            Toast.show({
+              description: 'Success',
+            });
+            setIsLoading(false);
+            navigation.goBack();
+          } catch (err) {
+            Toast.show({
+              title: 'Failed to update',
+              description: getErrorMessage(err),
+            });
+            setIsLoading(false);
+          }
+        },
+      });
+    } else {
+      Toast.show({
+        description: 'Success',
+      });
+      navigation.goBack();
+      setIsLoading(false);
+    }
   };
 
   return (
     <View>
-      <Header title="Edit Profile" left="back" />
+      <Header title={I18n.t('profile.title')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
-          <TouchableOpacity
-            onPress={() => navigation.navigate('UpdateProfile')}>
+          <TouchableOpacity onPress={() => {}}>
             <HStack
               space={2}
               paddingLeft={3}
@@ -145,7 +180,12 @@ export default function UpdateProfileScreen() {
                 size="lg"
                 source={{
                   // uri: 'https://robohash.org/bormar?set=set4',
-                  uri: '',
+                  uri:
+                    user?.linked.mbsdZmemId[0].mbsdFile &&
+                    user?.linked.mbsdZmemId[0].mbsdFile !== '0'
+                      ? 'https://facepool.oss-ap-southeast-5.aliyuncs.com/' +
+                        user?.linked.mbsdZmemId[0].mbsdFile
+                      : 'https://robohash.org/bormar?set=set4',
                 }}>
                 {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
               </Avatar>
@@ -190,6 +230,26 @@ export default function UpdateProfileScreen() {
               Personal Data
             </Text>
             <VStack space="1.5">
+              <SelectInput
+                items={[
+                  {
+                    label: 'KTP',
+                    value: '1',
+                  },
+                  {
+                    label: 'SIM',
+                    value: '2',
+                  },
+                  {
+                    label: 'Passport',
+                    value: '3',
+                  },
+                ]}
+                placeholder="Choose identity type"
+                label="Identity Type"
+                onValueChange={setIDNumberType}
+                value={mbsdIDNumberType}
+              />
               <TextInput
                 placeholder="Enter your identity number"
                 label="Identity number"
@@ -306,11 +366,11 @@ export default function UpdateProfileScreen() {
               />
             </VStack>
           </VStack>
-          <Box px="4">
-            <BMButton h="12" onPress={setProfile}>
-              Update Profile
-            </BMButton>
-          </Box>
+          {/* <Box px="4">
+            <Button h="12" onPress={setProfile} isLoading={isLoading}>
+              {I18n.t('profile.buttonUpdate')}
+            </Button>
+          </Box> */}
         </VStack>
         <Box pb={100} />
       </ScrollView>

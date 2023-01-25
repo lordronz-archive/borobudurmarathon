@@ -17,6 +17,7 @@ import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
 import {GetEventResponse} from '../types/event.type';
 import LogoutScreen from '../screens/Profile/LogoutScreen';
+import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -48,6 +49,7 @@ export type RootStackParamList = {
   EventDetail: {id: number};
 
   UpdateProfile: undefined;
+  UpdatePhone: undefined;
   Welcome: undefined;
 
   FAQ: undefined;
@@ -120,6 +122,11 @@ function RootNavigator() {
         <Stack.Screen
           name="UpdateProfile"
           component={UpdateProfileScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UpdatePhone"
+          component={ChangePhoneNumberScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

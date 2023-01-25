@@ -32,6 +32,7 @@ export default function InputProfileScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [birthDate, setBirthDate] = useState<Date>();
   const [phoneNumber, setPhoneNumber] = useState<string>();
+  const [mbsdIDNumberType, setIDNumberType] = useState<string>();
   const [mbsdIDNumber, setIDNumber] = useState<string>();
   const [mbsdGender, setGender] = useState<string>('1');
   const [mbsdBirthPlace, setBirthPlace] = useState<string>();
@@ -57,7 +58,7 @@ export default function InputProfileScreen() {
     mbsdProvinces,
     mbsdAddress,
     mbsdRawAddress: '-',
-    mbsdIDNumberType: 0,
+    mbsdIDNumberType,
     mbsdFile: 0,
     mmedEducation: '-',
     mmedOccupation: '-',
@@ -203,8 +204,8 @@ export default function InputProfileScreen() {
               ]}
               placeholder="Choose identity type"
               label="Identity Type"
-              onValueChange={setBloodType}
-              value={mbsdBloodType}
+              onValueChange={setIDNumberType}
+              value={mbsdIDNumberType}
             />
             <TextInput
               placeholder="Enter your identity number"

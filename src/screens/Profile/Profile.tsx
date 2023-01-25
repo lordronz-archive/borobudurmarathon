@@ -60,6 +60,12 @@ export default function MyProfile() {
       route: 'UpdateProfile',
     },
     {
+      key: 'edit-phone',
+      icon: <IconSingleUser color={colors.black} size={6} />,
+      name: 'Change Phone Number',
+      route: 'UpdatePhone',
+    },
+    {
       key: 'faqs',
       icon: <IconInfo color={colors.black} size={6} />,
       name: 'FAQs',
@@ -149,9 +155,7 @@ export default function MyProfile() {
             </Avatar>
             <VStack paddingLeft={2}>
               <Text fontWeight="bold" fontSize="md">
-                {user?.data[0].zmemFullName}{' '}
-                {typeof user?.linked.mbsdZmemId[0].mbsdFile}{' '}
-                #{user?.linked.mbsdZmemId[0].mbsdFile}#
+                {user?.data[0].zmemFullName}
               </Text>
               <Text color={colors.gray[500]} fontSize="sm">
                 {user?.linked.zmemAuusId[0].auusEmail}

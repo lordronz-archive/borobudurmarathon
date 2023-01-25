@@ -12,4 +12,11 @@ export default {
     accountInformation: 'Account Information',
     addressInformation: 'Address Information',
   },
+  profile: {
+    title: 'Profile',
+    editProfile: 'Edit Profile',
+    buttonUpdate: 'Update Profile',
+    sendOtp: 'Send OTP',
+  },
+  save: 'Save',
 };

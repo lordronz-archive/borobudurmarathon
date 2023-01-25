@@ -3,7 +3,6 @@ import {Box, Button, Text, Toast, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
-import BMButton from '../../components/buttons/Button';
 import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
 import {
@@ -11,7 +10,7 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import { getErrorMessage } from '../../helpers/errorHandler';
+import {getErrorMessage} from '../../helpers/errorHandler';
 import config from '../../config';
 
 type Props = NativeStackScreenProps<
@@ -23,6 +22,8 @@ export default function PhoneNumberValidationScreen({route}: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {phoneNumber} = route.params as {phoneNumber?: string};
+
+  const [isLoading, setIsLoading] = useState(false);
   const [otpCode, setOtpCode] = useState<string>();
   const [seconds, setSeconds] = useState(30);
   const [errMessage, setErrMessage] = useState<string>();
@@ -45,6 +46,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
   }, [seconds]);
 
   const validatePhoneNumber = async () => {
+    setIsLoading(true);
     const payload = {
       otpCode,
     };
@@ -60,6 +62,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
       Toast.show({
         description: 'Enter the verification code',
       });
+      setIsLoading(false);
       return;
     }
 
@@ -67,6 +70,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
       const res = await AuthService.confirmOTP(payload);
       console.info('Confirm OTP result: ', res);
       navigation.navigate('Welcome');
+      setIsLoading(false);
     } catch (err) {
       Toast.show({
         // title: 'Failed to confirm OTP',
@@ -79,18 +83,25 @@ export default function PhoneNumberValidationScreen({route}: Props) {
         });
         navigation.navigate('Welcome');
       }
+      setIsLoading(false);
     }
   };
 
   const resendOTP = async () => {
     setSeconds(30);
     try {
+      setIsLoading(true);
       const sendOtpRes = await AuthService.sendOTP({phoneNumber});
       console.info('SendOTP result: ', sendOtpRes);
+      Toast.show({
+        description: 'OTP has been sent successfully',
+      });
+      setIsLoading(false);
     } catch (err) {
       Toast.show({
         description: getErrorMessage(err),
       });
+      setIsLoading(false);
     }
   };
 
@@ -158,9 +169,9 @@ export default function PhoneNumberValidationScreen({route}: Props) {
           )}
         </VStack>
       </Box>
-      <BMButton h="12" mb="3" onPress={validatePhoneNumber}>
+      <Button h="12" mb="3" onPress={validatePhoneNumber} isLoading={isLoading}>
         Confirm
-      </BMButton>
+      </Button>
     </VStack>
   );
 }

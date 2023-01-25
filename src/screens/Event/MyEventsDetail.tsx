@@ -23,7 +23,7 @@ import moment from 'moment';
 import datetime from '../../helpers/datetime';
 import {EVENT_TYPES} from '../../types/event.type';
 
-export default function MyEventDetail(id: string) {
+export default function MyEventDetail(id: number) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
@@ -147,6 +147,27 @@ export default function MyEventDetail(id: string) {
     );
   }, [detailTransaction?.data]);
 
+  const handlePayNow = async () => {
+    setIsLoading(true);
+
+    EventService.checkoutTransaction('OMBAKCEA')
+      .then(res => {
+        console.info('res transaction', JSON.stringify(res));
+        if (res) {
+          setDetailTransaction(res);
+        }
+      })
+      .catch(err => {
+        Toast.show({
+          title: 'Failed to get featured events',
+          description: getErrorMessage(err),
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <View backgroundColor={colors.white} flex={1}>
       <Header title="Detail Event" left="back" />
@@ -228,7 +249,7 @@ export default function MyEventDetail(id: string) {
               </Text>
             </Box>
             <Button
-              onPress={() => navigation.navigate('Payment')}
+              onPress={() => handlePayNow()}
               width={'100%'}
               marginX={'22px'}
               marginTop={'12px'}

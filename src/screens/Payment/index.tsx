@@ -12,6 +12,7 @@ import {
   Divider,
   Button,
   Toast,
+  Pressable,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -197,6 +198,30 @@ export default function PaymentScreen() {
               <Text fontWeight={'bold'} color="#1E1E1E" fontSize={12}>
                 {item.value}
               </Text>
+            </HStack>
+          </Box>
+        ))}
+        {DATA_PAYMENT.map(item => (
+          <Box
+            key={item.title}
+            paddingY={'16px'}
+            borderBottomColor={'#E8ECF3'}
+            borderBottomWidth={1}
+            borderBottomStyle={'solid'}>
+            <HStack justifyContent={'space-between'}>
+              <Text fontWeight={400} color="#768499" fontSize={11}>
+                {item.title}
+              </Text>
+              <Text fontWeight={'bold'} color="#1E1E1E" fontSize={12}>
+                {item.value}
+              </Text>
+              {item.title === 'Virtual Account' && (
+                <Pressable>
+                  <Text fontSize={12} fontWeight={600} color={'#3D52E6'}>
+                    Copy
+                  </Text>
+                </Pressable>
+              )}
             </HStack>
           </Box>
         ))}

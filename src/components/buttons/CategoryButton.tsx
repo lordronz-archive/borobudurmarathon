@@ -29,14 +29,19 @@ export default function CategoryButton({
       renderItem={({item}) => {
         return (
           <TouchableOpacity onPress={() => onSelect(item)}>
-            <Box bg="white" shadow="0.5" mr={2}>
+            <Box
+              bg="white"
+              shadow="0.5"
+              mr={2}
+              borderRadius={12}
+              overflow="hidden">
               <Box
                 {...(selected === item.id
                   ? {bg: '#FDEBEB', borderColor: 'red.400', borderWidth: 1}
                   : {borderColor: 'gray.300', borderWidth: 1})}
                 px={4}
                 py={1}
-                borderRadius={7}>
+                borderRadius={12}>
                 <Text color="black">{item.value}</Text>
               </Box>
             </Box>

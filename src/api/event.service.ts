@@ -52,11 +52,22 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getTransaction: async function (transactionId: string) {
+  getTransaction: async function () {
+    try {
+      return ApiService.get(config.apiUrl.apis.member.getTransaction.path);
+    } catch (error) {
+      console.log('E : ', error);
+      const msg = error as any;
+      throw new ResponseError(msg.status, msg.error.message);
+    }
+  },
+  getTransactionDetail: async function (transactionId: string) {
     console.log('Transaction id to get : ', transactionId);
     try {
       return ApiService.get(
-        config.apiUrl.apis.member.getTransaction.path + '/' + transactionId,
+        config.apiUrl.apis.member.getTransactionDetail.path +
+          '/' +
+          transactionId,
       );
     } catch (error) {
       console.log('E : ', error);

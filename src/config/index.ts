@@ -227,6 +227,10 @@ export default {
           method: 'POST',
         },
         getTransaction: {
+          path: 'member_resource/transaction/',
+          method: 'GET',
+        },
+        getTransactionDetail: {
           path: 'member_zone/transaction/',
           method: 'GET',
         },

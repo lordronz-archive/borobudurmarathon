@@ -19,6 +19,7 @@ import PaymentScreen from '../screens/Payment';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
 import {GetEventResponse} from '../types/event.type';
+import HowToPayScreen from '../screens/HowToPay';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -41,6 +42,7 @@ export type RootStackParamList = {
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};
   DetailEvent: undefined;
   Payment: undefined;
+  HowToPay: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -125,6 +127,11 @@ function RootNavigator() {
         <Stack.Screen
           name="Payment"
           component={PaymentScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="HowToPay"
+          component={HowToPayScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

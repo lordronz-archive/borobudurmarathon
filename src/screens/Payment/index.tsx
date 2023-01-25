@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Box,
   useTheme,
@@ -10,6 +10,8 @@ import {
   ChevronRightIcon,
   Image,
   Divider,
+  Button,
+  Toast,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -17,19 +19,51 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconQr from '../../assets/icons/IconQr';
+import {TouchableOpacity} from 'react-native';
+import {EventProperties} from '../../types/event.type';
+import {EventService} from '../../api/event.service';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function PaymentScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
-  // const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [detailTransaction, setDetailTransaction] = useState<any>();
 
   const DATA_LIST = [
-    {title: 'Registration Dates', value: ''},
-    {title: 'Running Dates', value: ''},
-    {title: 'Location', value: ''},
+    {title: 'Order at', value: ''},
     {title: 'Total Payment', value: ''},
+    {title: 'Payment Method', value: ''},
+    {title: 'Total Payment', value: ''},
+    {title: 'Virtual Account', value: ''},
   ];
+
+  const [data, setData] = useState<any[]>([]);
+
+  const fetchList = () => {
+    setIsLoading(true);
+    EventService.getTransactionDetail('OMBAKCEA')
+      .then(res => {
+        console.info('res transaction', JSON.stringify(res));
+        if (res) {
+          setDetailTransaction(res);
+        }
+      })
+      .catch(err => {
+        Toast.show({
+          title: 'Failed to get featured events',
+          description: getErrorMessage(err),
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchList();
+  }, []);
 
   function statusColor(status: string) {
     switch (status) {
@@ -86,7 +120,20 @@ export default function PaymentScreen() {
       <Header title="" left="back" />
       <ScrollView backgroundColor={colors.white} marginX={15}>
         <HStack paddingY={'16px'}>
-          <Image width={62} height={62} alt="e" />
+          <Image
+            w="62px"
+            h="62px"
+            borderRadius={5}
+            source={
+              detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhThumbnail
+                ? {
+                    uri: detailTransaction?.data?.linked?.trnsEventId?.[0]
+                      ?.evnhThumbnail,
+                  }
+                : require('../../assets/images/FeaturedEventImage.png')
+            }
+            alt="Event Thumbnail"
+          />
           <VStack>
             <Text fontSize={12} fontWeight={600} color={'#768499'}>
               OFFLINE Elite Runner 42 Km
@@ -152,6 +199,61 @@ export default function PaymentScreen() {
             </Text>
           </Box>
         </VStack>
+        {DATA_LIST.map(item => (
+          <Box
+            key={item.title}
+            paddingY={'16px'}
+            borderBottomColor={'#E8ECF3'}
+            borderBottomWidth={1}
+            borderBottomStyle={'solid'}>
+            <HStack justifyContent={'space-between'}>
+              <Text fontWeight={400} color="#768499" fontSize={11}>
+                {item.title}
+              </Text>
+              <Text fontWeight={500} color="#1E1E1E" fontSize={12}>
+                {item.value}
+              </Text>
+            </HStack>
+          </Box>
+        ))}
+        <Box
+          paddingY={'16px'}
+          borderBottomColor={'#E8ECF3'}
+          borderBottomWidth={1}
+          borderBottomStyle={'solid'}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('HowToPay')}
+            style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <HStack alignItems={'center'}>
+              <IconInfo color={'#3D52E6'} />
+              <Text
+                fontWeight={600}
+                fontSize={12}
+                paddingLeft={'6px'}
+                color={'#3D52E6'}>
+                How to Pay
+              </Text>
+            </HStack>
+            <ChevronRightIcon color={'#3D52E6'} />
+          </TouchableOpacity>
+        </Box>
+        <Button
+          onPress={() => navigation.navigate('Payment')}
+          width={'100%'}
+          marginX={'22px'}
+          marginTop={'12px'}
+          paddingY={'12px'}
+          borderRadius={8}
+          alignSelf={'center'}
+          bg={'#EB1C23'}>
+          <Text
+            fontWeight={600}
+            color={colors.white}
+            fontSize={14}
+            textAlign={'center'}>
+            Check Payment Status
+          </Text>
+        </Button>
         <Text
           fontWeight={400}
           marginTop={'14px'}

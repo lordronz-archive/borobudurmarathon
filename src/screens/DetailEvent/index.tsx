@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Box,
   useTheme,
@@ -9,6 +9,7 @@ import {
   VStack,
   ChevronRightIcon,
   Button,
+  Toast,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -16,51 +17,112 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconQr from '../../assets/icons/IconQr';
+import {EventService} from '../../api/event.service';
+import {getErrorMessage} from '../../helpers/errorHandler';
+import moment from 'moment';
+import datetime from '../../helpers/datetime';
 
-export default function DetailEventScreen() {
+export default function DetailEventScreen(transactionId: string) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [detailTransaction, setDetailTransaction] = useState<any>();
+
+  const fetchList = () => {
+    setIsLoading(true);
+    EventService.getTransactionDetail('OMBAKCEA')
+      .then(res => {
+        console.info('res transaction', JSON.stringify(res));
+        if (res) {
+          setDetailTransaction(res);
+        }
+      })
+      .catch(err => {
+        Toast.show({
+          title: 'Failed to get featured events',
+          description: getErrorMessage(err),
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchList();
+  }, []);
 
   const DATA_LIST = [
-    {title: 'Registration Dates', value: ''},
-    {title: 'Running Dates', value: ''},
-    {title: 'Location', value: ''},
-    {title: 'Total Payment', value: ''},
+    {
+      title: 'Registration Dates',
+      value: datetime.getDateRangeString(
+        detailTransaction?.data?.linked?.trnsEventId?.[0]
+          ?.evnhRegistrationStart,
+        detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhRegistrationEnd,
+
+        'short',
+        'short',
+      ),
+    },
+    {
+      title: 'Running Dates',
+      value: datetime.getDateRangeString(
+        detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhStartDate,
+        detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhEndDate,
+        'short',
+        'short',
+      ),
+    },
+    {
+      title: 'Location',
+      value:
+        detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhPlace || '-',
+    },
+    {
+      title: 'Total Payment',
+      value: `IDR ${Number(
+        detailTransaction?.data?.data?.trnsAmount,
+      )?.toLocaleString('id-ID')}`,
+    },
   ];
 
   function statusColor(status: string) {
     switch (status) {
-      case 'Free':
+      case 'Registered':
         return {
-          bgColor: '#DAEFFA',
-          color: '#2B9CDC',
+          bgColor: '#E7F3FC',
+          color: '#3D52E6',
         };
-      case 'Cleared':
+      case 'Unqualified':
         return {
-          bgColor: '#D7F4EB',
-          color: '#268E6C',
+          bgColor: '#FDEBEB',
+          color: '#EB1C23',
         };
-      case 'Pending Payment':
+      case 'Waiting Payment':
         return {
-          bgColor: '#FCF1E3',
-          color: '#DA7B11',
+          bgColor: '#A4660A',
+          color: '#FFF8E4',
         };
-      default:
+      case 'Paid':
         return {
-          name: '',
-          bgColor: null,
-          color: null,
+          bgColor: ' #DFF4E0',
+          color: '#26A62C',
         };
     }
   }
 
   const statusComp = useMemo(() => {
     // const status = statusColor(p.statusString);
-    // if (!p.statusString) {
-    //   return false;
-    // }
+    let status;
+    if (detailTransaction?.data?.trnsConfirmed === 1) {
+      status = 'Paid';
+    } else if (detailTransaction?.data?.trnsPaymentStatus === 1) {
+      status = 'Waiting Payment';
+    } else if (detailTransaction?.data?.trnsConfirmed === 1) {
+      status = 'Paid';
+    }
     // return (
     //   <Text
     //     fontSize={14}
@@ -155,7 +217,9 @@ export default function DetailEventScreen() {
                 color="#201D1D"
                 fontSize={14}
                 textAlign={'center'}>
-                Pay before 02 Oct 2022, 14:32
+                {`Pay before ${moment(
+                  detailTransaction?.data?.trnsExpiredTime,
+                ).format('DD MMM YYYY, HH:mm')}`}
               </Text>
             </Button>
             <Button

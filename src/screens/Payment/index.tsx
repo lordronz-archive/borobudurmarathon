@@ -20,9 +20,11 @@ import Header from '../../components/header/Header';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconQr from '../../assets/icons/IconQr';
 import {TouchableOpacity} from 'react-native';
-import {EventProperties} from '../../types/event.type';
+import {EVENT_TYPES, EventProperties} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
+import datetime from '../../helpers/datetime';
+import moment from 'moment';
 
 export default function PaymentScreen() {
   const navigation =
@@ -30,16 +32,6 @@ export default function PaymentScreen() {
   const {colors} = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [detailTransaction, setDetailTransaction] = useState<any>();
-
-  const DATA_LIST = [
-    {title: 'Order at', value: ''},
-    {title: 'Total Payment', value: ''},
-    {title: 'Payment Method', value: ''},
-    {title: 'Total Payment', value: ''},
-    {title: 'Virtual Account', value: ''},
-  ];
-
-  const [data, setData] = useState<any[]>([]);
 
   const fetchList = () => {
     setIsLoading(true);
@@ -65,56 +57,27 @@ export default function PaymentScreen() {
     fetchList();
   }, []);
 
-  function statusColor(status: string) {
-    switch (status) {
-      case 'Free':
-        return {
-          bgColor: '#DAEFFA',
-          color: '#2B9CDC',
-        };
-      case 'Cleared':
-        return {
-          bgColor: '#D7F4EB',
-          color: '#268E6C',
-        };
-      case 'Pending Payment':
-        return {
-          bgColor: '#FCF1E3',
-          color: '#DA7B11',
-        };
-      default:
-        return {
-          name: '',
-          bgColor: null,
-          color: null,
-        };
-    }
-  }
+  const DATA_LIST = [
+    {
+      title: 'Order at',
+      value: `${moment(detailTransaction?.data?.data?.trnsCreatedTime).format(
+        'DD MMM YYYY, HH:mm',
+      )}`,
+    },
+    {
+      title: 'Total Payment',
+      value: `IDR ${Number(
+        detailTransaction?.data?.data?.trnsAmount,
+      )?.toLocaleString('id-ID')}`,
+    },
+  ];
 
-  const statusComp = useMemo(() => {
-    // const status = statusColor(p.statusString);
-    // if (!p.statusString) {
-    //   return false;
-    // }
-    // return (
-    //   <Text
-    //     fontSize={14}
-    //     style={[
-    //       LAYOUT['py-2'],
-    //       {
-    //         backgroundColor: status.bgColor || undefined,
-    //         color: status.color || undefined,
-    //         borderColor: status.color || undefined,
-    //         borderWidth: 1,
-    //         borderRadius: 6,
-    //         width: 100,
-    //         textAlign: 'center',
-    //       },
-    //     ]}>
-    //     {p.statusString}
-    //   </Text>
-    // );
-  }, []);
+  const DATA_PAYMENT = [
+    {title: 'Payment Method', value: 'Bank Jateng Virtual Account'},
+    {title: 'Total Payment', value: '113 - Bank Jateng'},
+    {title: 'Virtual Account', value: ''},
+  ];
+
   return (
     <View backgroundColor={colors.white} flex={1}>
       <Header title="" left="back" />
@@ -123,6 +86,7 @@ export default function PaymentScreen() {
           <Image
             w="62px"
             h="62px"
+            marginRight={'15px'}
             borderRadius={5}
             source={
               detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhThumbnail
@@ -134,35 +98,53 @@ export default function PaymentScreen() {
             }
             alt="Event Thumbnail"
           />
-          <VStack>
+          <VStack flex={1}>
             <Text fontSize={12} fontWeight={600} color={'#768499'}>
-              OFFLINE Elite Runner 42 Km
+              {(detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhType
+                ? EVENT_TYPES[
+                    detailTransaction?.data?.linked?.trnsEventId?.[0]
+                      ?.evnhType as any
+                  ].value || 'OTHER'
+                : 'OTHER'
+              ).toUpperCase()}
             </Text>
             <Text fontSize={13} fontWeight={400} color={'#1E1E1E'}>
-              Elite Runner 42 Km Borobudur Marathon 2022
+              {detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhName}
             </Text>
           </VStack>
         </HStack>
         <HStack
-          justifyContent={'space-around'}
           borderTopColor={'#E8ECF3'}
           borderTopWidth={1}
           borderTopStyle={'solid'}
           paddingY={'16px'}>
-          <VStack justifyContent={'space-evenly'}>
+          <VStack width={'50%'}>
             <Text fontWeight={400} color="#768499" fontSize={10}>
               Registration date
             </Text>
             <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-              Oct 10 - Oct 21
+              {datetime.getDateRangeString(
+                detailTransaction?.data?.linked?.trnsEventId?.[0]
+                  ?.evnhRegistrationStart,
+                detailTransaction?.data?.linked?.trnsEventId?.[0]
+                  ?.evnhRegistrationEnd,
+                'short',
+                'short',
+              )}
             </Text>
           </VStack>
-          <VStack>
+          <VStack width={'50%'}>
             <Text fontWeight={400} color="#768499" fontSize={10}>
               Running date
             </Text>
             <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-              Nov 28 - Dec 07 2023
+              {datetime.getDateRangeString(
+                detailTransaction?.data?.linked?.trnsEventId?.[0]
+                  ?.evnhStartDate,
+                detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhEndDate,
+                'short',
+                'short',
+              )}
             </Text>
           </VStack>
         </HStack>
@@ -195,7 +177,9 @@ export default function PaymentScreen() {
               fontSize={16}
               color={'#1E1E1E'}
               textAlign={'center'}>
-              02 Oct 2022, 14:32
+              {`${moment(detailTransaction?.data?.data?.trnsExpiredTime).format(
+                'DD MMM YYYY, HH:mm',
+              )}`}
             </Text>
           </Box>
         </VStack>
@@ -210,7 +194,7 @@ export default function PaymentScreen() {
               <Text fontWeight={400} color="#768499" fontSize={11}>
                 {item.title}
               </Text>
-              <Text fontWeight={500} color="#1E1E1E" fontSize={12}>
+              <Text fontWeight={'bold'} color="#1E1E1E" fontSize={12}>
                 {item.value}
               </Text>
             </HStack>

@@ -45,7 +45,7 @@ export default function SectionListMyEvent() {
   const _renderItem = ({item}: {item: EventProperties}) => {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('EventDetail', {id: item.evnhId})}>
+        onPress={() => navigation.navigate('MyEventsDetail', {id: 'OMBAKCEA'})}>
         <MyEventCard
           title={item.evnhName}
           place={item.evnhPlace || '-'}

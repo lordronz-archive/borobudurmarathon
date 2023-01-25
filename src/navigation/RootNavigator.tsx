@@ -14,7 +14,7 @@ import FAQScreen from '../screens/Information/FAQScreen';
 import WelcomeScreen from '../screens/Welcome/Welcome';
 import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import RegisterScreen from '../screens/Event/Register';
-import DetailEventScreen from '../screens/DetailEvent';
+import DetailEventScreen from '../screens/Event/MyEventsDetail';
 import PaymentScreen from '../screens/Payment';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
@@ -22,6 +22,7 @@ import {GetEventResponse} from '../types/event.type';
 import HowToPayScreen from '../screens/HowToPay';
 import LogoutScreen from '../screens/Profile/LogoutScreen';
 import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
+import MyEventDetail from '../screens/Event/MyEventsDetail';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -61,7 +62,7 @@ export type RootStackParamList = {
 
   Register: undefined;
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};
-  DetailOrder: undefined;
+  MyEventsDetail: {id: number};
   Payment: undefined;
   HowToPay: undefined;
 
@@ -148,8 +149,8 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="DetailOrder"
-          component={DetailEventScreen}
+          name="MyEventsDetail"
+          component={MyEventDetail}
           options={{headerShown: false}}
         />
         <Stack.Screen

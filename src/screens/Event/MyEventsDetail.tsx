@@ -21,8 +21,9 @@ import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import moment from 'moment';
 import datetime from '../../helpers/datetime';
+import {EVENT_TYPES} from '../../types/event.type';
 
-export default function DetailEventScreen() {
+export default function MyEventDetail(id: string) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
@@ -61,7 +62,6 @@ export default function DetailEventScreen() {
         detailTransaction?.data?.linked?.trnsEventId?.[0]
           ?.evnhRegistrationStart,
         detailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhRegistrationEnd,
-
         'short',
         'short',
       ),
@@ -102,10 +102,15 @@ export default function DetailEventScreen() {
         };
       case 'Waiting Payment':
         return {
-          bgColor: '#A4660A',
-          color: '#FFF8E4',
+          bgColor: '#FFF8E4',
+          color: '#A4660A',
         };
       case 'Paid':
+        return {
+          bgColor: ' #DFF4E0',
+          color: '#26A62C',
+        };
+      default:
         return {
           bgColor: ' #DFF4E0',
           color: '#26A62C',
@@ -114,34 +119,34 @@ export default function DetailEventScreen() {
   }
 
   const statusComp = useMemo(() => {
-    // const status = statusColor(p.statusString);
     let status;
+
     if (detailTransaction?.data?.trnsConfirmed === 1) {
       status = 'Paid';
     } else if (detailTransaction?.data?.trnsPaymentStatus === 1) {
       status = 'Waiting Payment';
-    } else if (detailTransaction?.data?.trnsConfirmed === 1) {
+    } else if (detailTransaction?.data?.trnsConfirmed === 0) {
       status = 'Paid';
+    } else {
+      status = 'Waiting Payment';
     }
-    // return (
-    //   <Text
-    //     fontSize={14}
-    //     style={[
-    //       LAYOUT['py-2'],
-    //       {
-    //         backgroundColor: status.bgColor || undefined,
-    //         color: status.color || undefined,
-    //         borderColor: status.color || undefined,
-    //         borderWidth: 1,
-    //         borderRadius: 6,
-    //         width: 100,
-    //         textAlign: 'center',
-    //       },
-    //     ]}>
-    //     {p.statusString}
-    //   </Text>
-    // );
-  }, []);
+
+    const color = statusColor(status || '');
+
+    return (
+      <Text
+        fontSize={12}
+        fontWeight={600}
+        paddingX={'10px'}
+        paddingY={'4px'}
+        borderRadius={3}
+        bg={color.bgColor}
+        color={color.color}>
+        {status}
+      </Text>
+    );
+  }, [detailTransaction?.data]);
+
   return (
     <View backgroundColor={colors.white} flex={1}>
       <Header title="Detail Event" left="back" />
@@ -204,7 +209,7 @@ export default function DetailEventScreen() {
               QR Code event akan tampil disini setalah anda lolos ballot &
               melakukan pembayaran
             </Text>
-            <Button
+            <Box
               width={'100%'}
               marginX={'22px'}
               marginTop={'12px'}
@@ -221,7 +226,7 @@ export default function DetailEventScreen() {
                   detailTransaction?.data?.trnsExpiredTime,
                 ).format('DD MMM YYYY, HH:mm')}`}
               </Text>
-            </Button>
+            </Box>
             <Button
               onPress={() => navigation.navigate('Payment')}
               width={'100%'}
@@ -248,7 +253,14 @@ export default function DetailEventScreen() {
               <HStack justifyContent={'space-between'} alignItems={'center'}>
                 <VStack>
                   <Text fontWeight={500} color="#768499" fontSize={12}>
-                    OFFLINE
+                    {(detailTransaction?.data?.linked?.trnsEventId?.[0]
+                      ?.evnhType
+                      ? EVENT_TYPES[
+                          detailTransaction?.data?.linked?.trnsEventId?.[0]
+                            ?.evnhType as any
+                        ].value || 'OTHER'
+                      : 'OTHER'
+                    ).toUpperCase()}
                   </Text>
                   <Text fontWeight={500} color="#1E1E1E" fontSize={14}>
                     Bank Jateng Tilik Candi 2022

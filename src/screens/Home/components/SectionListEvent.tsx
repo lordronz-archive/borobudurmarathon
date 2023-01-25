@@ -11,13 +11,17 @@ import Section from '../../../components/section/Section';
 import datetime from '../../../helpers/datetime';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {EventPropertiesDetail, EVENT_TYPES} from '../../../types/event.type';
+import {
+  EventProperties,
+  EventPropertiesDetail,
+  EVENT_TYPES,
+} from '../../../types/event.type';
 
 export default function SectionListEvent() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<EventPropertiesDetail[]>([]);
+  const [data, setData] = useState<EventProperties[]>([]);
   // const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
   const [selectedEventCategory, setSelectedEventCategory] = useState<{
     id: number | null;
@@ -26,7 +30,7 @@ export default function SectionListEvent() {
   let filteredEvents = [...data];
   if (selectedEventCategory && selectedEventCategory.id) {
     filteredEvents = filteredEvents.filter(
-      item => item.evnhType === String(selectedEventCategory.id),
+      item => Number(item.evnhType) === Number(selectedEventCategory.id),
     );
   }
 

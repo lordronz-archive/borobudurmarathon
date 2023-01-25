@@ -2,11 +2,15 @@ import React from 'react';
 import {Box, FlatList, Text} from 'native-base';
 import {TouchableOpacity} from 'react-native';
 
+type CategoryOption = {
+  id: number | null;
+  value: string;
+};
 type CategoryButtonType = {
-  categories: string[];
-  selected?: string;
+  categories: CategoryOption[];
+  selected?: number | null;
   style?: any;
-  onSelect: (cat: string) => void;
+  onSelect: (cat: CategoryOption) => void;
 };
 
 export default function CategoryButton({
@@ -21,18 +25,19 @@ export default function CategoryButton({
       data={categories}
       showsHorizontalScrollIndicator={false}
       _contentContainerStyle={{pr: '8', ...style}}
-      renderItem={({item, index}) => {
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={({item}) => {
         return (
           <TouchableOpacity onPress={() => onSelect(item)}>
             <Box bg="white" shadow="0.5" mr={2}>
               <Box
-                {...(selected === item
+                {...(selected === item.id
                   ? {bg: '#FDEBEB', borderColor: 'red.400', borderWidth: 1}
                   : {borderColor: 'gray.300', borderWidth: 1})}
                 px={4}
                 py={1}
                 borderRadius={7}>
-                <Text color="black">{item}</Text>
+                <Text color="black">{item.value}</Text>
               </Box>
             </Box>
           </TouchableOpacity>

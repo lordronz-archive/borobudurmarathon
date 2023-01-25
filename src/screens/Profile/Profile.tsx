@@ -14,6 +14,8 @@ import {
   ChevronRightIcon,
   Center,
   Pressable,
+  AlertDialog,
+  Toast,
 } from 'native-base';
 import CookieManager from '@react-native-cookies/cookies';
 import {useNavigation} from '@react-navigation/native';
@@ -29,6 +31,8 @@ import {getShortCodeName} from '../../helpers/name';
 import {SessionService} from '../../api/session.service';
 import Logout from './Logout';
 import {TouchableOpacity} from 'react-native';
+import {AuthService} from '../../api/auth.service';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function MyProfile() {
   const navigation =
@@ -36,6 +40,11 @@ export default function MyProfile() {
   const {colors} = useTheme();
   const {dispatch, user} = useAuthUser();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // logout
+  const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
+  const onCloseModalLogout = () => setIsOpenModalLogout(false);
+  const cancelLogoutRef = React.useRef(null);
 
   const menus: {
     key: string;
@@ -49,6 +58,12 @@ export default function MyProfile() {
       icon: <IconSingleUser color={colors.black} size={6} />,
       name: 'Edit Profile',
       route: 'UpdateProfile',
+    },
+    {
+      key: 'edit-phone',
+      icon: <IconSingleUser color={colors.black} size={6} />,
+      name: 'Change Phone Number',
+      route: 'UpdatePhone',
     },
     {
       key: 'faqs',
@@ -73,11 +88,14 @@ export default function MyProfile() {
   ];
 
   const logout = async () => {
+    InAppBrowser.closeAuth();
     await CookieManager.clearAll();
 
     dispatch({type: EAuthUserAction.LOGOUT});
     SessionService.removeSession();
 
+    setIsLoggingOut(false);
+    onCloseModalLogout();
     navigation.navigate('Initial');
   };
 
@@ -87,8 +105,6 @@ export default function MyProfile() {
         onLoadEnd={() => {
           //navigation.navigate('Register');
           logout();
-          InAppBrowser.closeAuth();
-          setIsLoggingOut(false);
         }}
       />
     );
@@ -128,7 +144,12 @@ export default function MyProfile() {
               size="lg"
               source={{
                 // uri: 'https://robohash.org/bormar?set=set4',
-                uri: 'https://robohash.org/bormar?set=set4',
+                uri:
+                  user?.linked.mbsdZmemId[0].mbsdFile &&
+                  user?.linked.mbsdZmemId[0].mbsdFile !== '0'
+                    ? 'https://facepool.oss-ap-southeast-5.aliyuncs.com/' +
+                      user?.linked.mbsdZmemId[0].mbsdFile
+                    : 'https://robohash.org/bormar?set=set4',
               }}>
               {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
             </Avatar>
@@ -217,14 +238,30 @@ export default function MyProfile() {
           borderWidth="0.5"
           _text={{color: colors.black, fontWeight: 600}}
           onPress={() => {
-            setIsLoggingOut(true);
-            // setTimeout(() => {
-            //   logout();
-            //   InAppBrowser.closeAuth();
-            //   setIsLoggingOut(false);
-            // }, 1000);
+            setIsOpenModalLogout(true);
+            // setIsLoggingOut(true);
           }}>
           Sign Out
+        </Button>
+
+        <Button
+          width="100%"
+          backgroundColor={colors.white}
+          borderColor={colors.gray[500]}
+          borderWidth="0.5"
+          _text={{color: colors.black, fontWeight: 600}}
+          onPress={() => {
+            AuthService.deleteprofile()
+              .then(res => {
+                navigation.navigate('Logout');
+              })
+              .catch(err => {
+                Toast.show({
+                  description: getErrorMessage(err),
+                });
+              });
+          }}>
+          Sign Out & Delete Profile
         </Button>
 
         <Center marginTop={5}>
@@ -233,6 +270,37 @@ export default function MyProfile() {
           </Text>
         </Center>
       </Box>
+
+      <AlertDialog
+        leastDestructiveRef={cancelLogoutRef}
+        isOpen={isOpenModalLogout}
+        onClose={onCloseModalLogout}>
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Confirmation</AlertDialog.Header>
+          <AlertDialog.Body>Are you sure want to sign out?</AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="unstyled"
+                bg="white"
+                size="sm"
+                onPress={onCloseModalLogout}
+                ref={cancelLogoutRef}>
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                colorScheme="danger"
+                onPress={() => {
+                  setIsLoggingOut(true);
+                }}>
+                Yes, Sure
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
     </>
   );
 }

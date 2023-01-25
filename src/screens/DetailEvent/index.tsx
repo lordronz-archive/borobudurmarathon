@@ -22,7 +22,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import moment from 'moment';
 import datetime from '../../helpers/datetime';
 
-export default function DetailEventScreen(transactionId: string) {
+export default function DetailEventScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();

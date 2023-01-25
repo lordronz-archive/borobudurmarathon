@@ -8,7 +8,7 @@ type HeadingProps = {
 
 export function Heading({children, ...rest}: HeadingProps) {
   return (
-    <Text fontSize="2xl" fontWeight={600} {...rest}>
+    <Text fontSize="2xl" fontWeight={600} fontFamily="Poppins-Bold" {...rest}>
       {children}
     </Text>
   );

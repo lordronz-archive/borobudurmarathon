@@ -1,6 +1,6 @@
 import config from '../config';
 import httpRequest from '../helpers/httpRequest';
-import {GetEventResponse} from '../types/event.type';
+import {GetEventResponse, GetEventsResponse} from '../types/event.type';
 import ApiService from './api.service';
 // import qs from "qs";
 
@@ -166,7 +166,7 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getEvents: async function (): Promise<GetEventResponse> {
+  getEvents: async function (): Promise<GetEventsResponse> {
     const parameter = {
       filter: {
         evnhEmail: 'reg@borobudurmarathon.co.id',

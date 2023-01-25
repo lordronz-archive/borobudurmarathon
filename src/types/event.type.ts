@@ -203,3 +203,27 @@ export interface PaymentsEntity {
   evptPercentFee: string;
   evptUseFee: string;
 }
+
+type IEventType = {
+  id: number | null;
+  value: string;
+};
+
+export const EVENT_TYPES: {[key: number]: IEventType} = {
+  1: {
+    id: 1,
+    value: 'Reguler',
+  },
+  2: {
+    id: 2,
+    value: 'Virtual',
+  },
+  7: {
+    id: 7,
+    value: 'Ballot',
+  },
+  // {
+  //   id: 0,
+  //   value: 'Other',
+  // },
+};

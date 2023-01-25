@@ -28,6 +28,8 @@ import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {SessionService} from '../../api/session.service';
+import { getParameterByName } from '../../helpers/url';
+import LoadingBlock from '../../components/loading/LoadingBlock';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -40,7 +42,7 @@ export default function AuthScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const {state, dispatch} = useAuthUser();
-  const [isNotRegistered, setIsNotRegistered] = useState(false);
+  const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   console.info('#Auth -- state', state);
 
   const [authorizationCode, setAuthorizationCode] = useState<string>(
@@ -53,49 +55,6 @@ export default function AuthScreen() {
     }
   }, [params?.authorization_code]);
 
-  // useEffect(() => {
-  //   if (params && params.authorization_code) {
-  //     AuthService.authorizeKompas(params.authorization_code)
-  //       .then(res => {
-  //         console.info('### res.data', res.data);
-
-  //         ProfileService.getMemberDetail()
-  //           .then(resProfile => {
-  //             console.info('resProfile', resProfile);
-  //             console.info('resProfile', JSON.stringify(resProfile));
-
-  //             if (resProfile.data && resProfile.data.length > 0) {
-  //               toast.show({
-  //                 description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-  //               });
-  //             } else {
-  //               toast.show({
-  //                 description: 'Welcome, New Runner',
-  //               });
-  //             }
-
-  //             // AuthService.refreshToken();
-  //             navigation.navigate('DataConfirmation');
-  //           })
-  //           .catch(err => {
-  //             console.info('### error resProfile', err);
-  //             toast.show({
-  //               title: 'Failed to get profile',
-  //               variant: 'subtle',
-  //               description: getErrorMessage(err),
-  //             });
-  //           });
-  //       })
-  //       .catch(err => {
-  //         toast.show({
-  //           title: 'Failed to authorize',
-  //           variant: 'subtle',
-  //           description: getErrorMessage(err),
-  //         });
-  //       });
-  //   }
-  // }, [route.params]);
-
   const redirect_uri = 'bormar://auth-me';
   // 'https://account.kompas.id/sso/check?redirect_uri=https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth&client_id=3&state=borobudur_marathon&scope=nama%20lengkap,%20alamat,%20Alamat%20email%20dan%20mengirimkan%20pesan&response_type=code';
 
@@ -106,9 +65,9 @@ export default function AuthScreen() {
   console.info('url', url);
 
   // Do not call this every time the component render
-  useEffect(() => {
-    InAppBrowser.mayLaunchUrl(url, []);
-  }, []);
+  // useEffect(() => {
+  //   InAppBrowser.mayLaunchUrl(url, []);
+  // }, []);
 
   const sleep = (timeout: number) => {
     return new Promise((resolve: any) => setTimeout(resolve, timeout));
@@ -116,13 +75,6 @@ export default function AuthScreen() {
 
   const openAuthLink = async () => {
     try {
-      // AuthService.bindMemberToKompas()
-      //   .then(res => {
-      //     console.info('res bindMemberToKompas', res);
-      //   })
-      //   .catch(err => {
-      //     console.info('err bindMemberToKompas', err);
-      //   });
       Linking.openURL(url);
       return;
     } catch (error) {
@@ -166,13 +118,18 @@ export default function AuthScreen() {
         await sleep(800);
 
         if (result.type === 'success') {
-          setAuthorizationCode(
-            result.url.replace(redirect_uri + '?authorization_code=', ''),
-          );
+          const authCode = getParameterByName('authorization_code', result.url);
+          console.info('authCode', authCode);
+          // let queryString = result.url.replace(redirect_uri + '?', '');
+          // const exp = queryString.split('&').map(item => item.split('='));
+          // console.info('exp---', exp);
+          // console.info('auth code', authCode);
+          // setAuthorizationCode(authCode);
         }
         // Alert.alert(JSON.stringify(result));
       } else {
-        Linking.openURL(url);
+        // Linking.openURL(url);
+        openAuthLink();
       }
     } catch (error) {
       // Alert.alert(error.message)
@@ -187,44 +144,64 @@ export default function AuthScreen() {
     ProfileService.getMemberDetail()
       .then(resProfile => {
         console.info('resProfile', resProfile);
-        console.info('resProfile', JSON.stringify(resProfile));
-        if (resProfile.data && resProfile.data.length > 0) {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-          });
-        } else {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, New Runner',
-          });
-        }
+        console.info('###resProfile###', JSON.stringify(resProfile));
         dispatch({
           type: EAuthUserAction.LOGIN,
           payload: {user: resProfile},
         });
         SessionService.saveSession();
-        navigation.navigate('Main', {screen: 'Home'});
-        // navigation.navigate('DataConfirmation');
+        if (resProfile.data && resProfile.data.length > 0) {
+          toast.show({
+            id: 'welcome',
+            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+          });
+          if (resProfile.linked.mbsdZmemId && resProfile.linked.mbsdZmemId[0]) {
+            // profile has been completed
+            // if (payload.data.linked.mbsdZmemId[0].mbsdStatus > 0) {
+            //   state.readyToRegister = true;
+            // }
+            navigation.navigate('Main', {screen: 'Home'});
+          } else {
+            // need to complete profile
+            navigation.navigate('InputProfile');
+          }
+        } else {
+          toast.show({
+            id: 'welcome',
+            description: 'Welcome, New Runner',
+          });
+          navigation.navigate('InputProfile');
+        }
       })
       .catch(err => {
         console.info('### error resProfile', err);
-        toast.show({
-          title: 'Failed to get profile',
-          variant: 'subtle',
-          description: getErrorMessage(err),
-        });
-        navigation.navigate('Initial');
+        console.info('### error resProfile --- ', JSON.stringify(err));
+        if (err && err.errorCode === 409) {
+          navigation.navigate('Logout');
+          // setIsNotRegistered(true);
+        } else {
+          toast.show({
+            title: 'Failed to get profile',
+            variant: 'subtle',
+            description: getErrorMessage(err),
+          });
+          navigation.navigate('Initial');
+        }
       });
   };
 
-  if (authorizationCode && isNotRegistered) {
+  if (authorizationCode && isNotRegistered === true) {
     let uri =
       config.apiUrl.href.href +
-      config.ssoKompasUrl.apis.newBorobudurMember.path +
+      '/kompasid/newmember/auth' +
       '?authorization_code=' +
       encodeURIComponent(authorizationCode);
-    console.info('uri', uri);
+    // let uri =
+    //   config.apiUrl.href.href +
+    //   config.ssoKompasUrl.apis.newBorobudurMember.path +
+    //   '?authorization_code=' +
+    //   encodeURIComponent(authorizationCode);
+    console.info('uri isNotRegistered === true', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
     return (
       <Box flex={1}>
@@ -235,25 +212,13 @@ export default function AuthScreen() {
           thirdPartyCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
-            console.info('cookiesString', cookiesString);
+            console.info('cookiesString isNotRegistered true', cookiesString);
             navigation.navigate('InputProfile');
           }}
+          contentMode="mobile"
         />
 
-        <Box
-          justifyContent="center"
-          alignItems="center"
-          flex={1}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#ffffff',
-          }}>
-          <Center>
-            <Spinner size="lg" />
-          </Center>
-        </Box>
+        <LoadingBlock />
       </Box>
     );
   } else if (authorizationCode) {
@@ -262,8 +227,12 @@ export default function AuthScreen() {
       config.apiUrl.apis.kompas.authorize_code.path +
       '?authorization_code=' +
       encodeURIComponent(authorizationCode);
-    console.info('uri', uri);
     uri = uri.replace('//kompasid/', '/kompasid/');
+    console.info('uri', uri);
+
+    // const jsCode =
+    //   "window.postMessage(document.getElementById('gb-main').innerHTML)";
+
     return (
       <Box flex={1}>
         <WebView
@@ -271,7 +240,9 @@ export default function AuthScreen() {
             uri,
           }}
           thirdPartyCookiesEnabled={true}
-          onLoadEnd={async () => {
+          onLoadEnd={async event => {
+            console.info('###event', event);
+            await sleep(1000);
             const cookiesString = await getCookiesString();
             console.info('cookiesString', cookiesString);
             if (cookiesString) {
@@ -280,6 +251,11 @@ export default function AuthScreen() {
               setIsNotRegistered(true);
             }
           }}
+          // javaScriptEnabled={true}
+          // injectedJavaScript={jsCode}
+          // onMessage={event =>
+          //   console.log('###Received: ', event.nativeEvent.data)
+          // }
           // onNavigationStateChange={async event => {
           //   console.info('event', event);
           //   const cookiesString = await getCookiesString();
@@ -289,20 +265,7 @@ export default function AuthScreen() {
           // }}
         />
 
-        <Box
-          justifyContent="center"
-          alignItems="center"
-          flex={1}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#ffffff',
-          }}>
-          <Center>
-            <Spinner size="lg" />
-          </Center>
-        </Box>
+        <LoadingBlock />
       </Box>
     );
   }
@@ -331,8 +294,11 @@ export default function AuthScreen() {
           backgroundColor={'#00559A'}
           rounded="sm"
           onPress={() => {
-            openAuthLink();
-            // openAuthLinkInApp();
+            if (config.inAppBrowser) {
+              openAuthLinkInApp();
+            } else {
+              openAuthLink();
+            }
           }}
           startIcon={<KompasIcon size="lg" px="6" />}>
           <Text color="white" px="12">

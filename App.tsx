@@ -8,6 +8,7 @@
  * @format
  */
 import 'react-native-gesture-handler';
+import SplashScreen from 'react-native-splash-screen';
 import {extendTheme, NativeBaseProvider} from 'native-base';
 import React from 'react';
 import {StatusBar, useColorScheme} from 'react-native';
@@ -16,6 +17,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AuthUserProvider} from './src/context/auth.context';
 import RootNavigator from './src/navigation/RootNavigator';
+import {useEffect} from 'react';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -85,11 +87,34 @@ const App = () => {
     fontConfig,
     fonts,
     components: {
+      AlertDialogHeader: {
+        baseStyle: {
+          borderBottomWidth: 0,
+        },
+      },
+      AlertDialogBody: {
+        baseStyle: {
+          py: 0,
+        },
+      },
+      AlertDialogFooter: {
+        baseStyle: {
+          borderTopWidth: 0,
+        },
+      },
       Button: {
         // Can simply pass default props to change default behaviour of components.
-        defaultProps: {
-          bgColor: '#EB1C23',
+        baseStyle: {
+          background: '#EB1C23',
           size: 'lg',
+        },
+        defaultProps: {
+          bg: '#EB1C23',
+        },
+        variants: {
+          ghost: {
+            bgColor: 'transparent',
+          },
         },
       },
       Text: {
@@ -105,6 +130,10 @@ const App = () => {
       },
     },
   });
+
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
   return (
     <NativeBaseProvider theme={theme}>

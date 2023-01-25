@@ -13,6 +13,7 @@ import {TouchableOpacity} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/RootNavigator';
+import IconInformationCircle from '../../assets/icons/IconInformationCircle';
 
 export default function HomeScreen() {
   const navigation =
@@ -40,12 +41,9 @@ export default function HomeScreen() {
               </Text>
             </Flex>
           </TouchableOpacity>
-          <Icon
-            as={Ionicons}
-            name="help-circle-outline"
-            size="xl"
-            color="black"
-          />
+          <TouchableOpacity>
+            <IconInformationCircle size="xl" color="black" />
+          </TouchableOpacity>
         </Flex>
 
         {/* <SummaryRecord /> */}

@@ -20,19 +20,40 @@ import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
 import {GetEventResponse} from '../types/event.type';
 import HowToPayScreen from '../screens/HowToPay';
+import LogoutScreen from '../screens/Profile/LogoutScreen';
+import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
 
 export type RootStackParamList = {
   Initial: undefined;
   Auth: undefined;
   SignInWithKompas: undefined;
   DataConfirmation: undefined;
-  InputProfile: undefined;
-  PhoneNumberValidation?: {phoneNumber?: string};
+  InputProfile:
+    | {
+        mbsdIDNumber: number;
+        mbsdBirthDate: Date;
+        mbsdBirthPlace: string;
+        mbsdBloodType: string;
+        mbsdNationality: string;
+        mbsdCountry: string;
+        mbsdCity: string;
+        mbsdProvinces: string;
+        mbsdAddress: string;
+        mbsdRawAddress: string;
+        mbsdIDNumberType: number;
+        mbsdFile: number;
+        mmedEducation: string;
+        mmedOccupation: string;
+        mmedIncome: string;
+      }
+    | undefined;
+  PhoneNumberValidation?: {phoneNumber?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
 
   EventDetail: {id: number};
 
   UpdateProfile: undefined;
+  UpdatePhone: undefined;
   Welcome: undefined;
 
   FAQ: undefined;
@@ -40,9 +61,11 @@ export type RootStackParamList = {
 
   Register: undefined;
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};
-  DetailEvent: undefined;
+  DetailOrder: undefined;
   Payment: undefined;
   HowToPay: undefined;
+
+  Logout: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -110,6 +133,11 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="UpdatePhone"
+          component={ChangePhoneNumberScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="FAQ"
           component={FAQScreen}
           options={{headerShown: false}}
@@ -120,7 +148,7 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="DetailEvent"
+          name="DetailOrder"
           component={DetailEventScreen}
           options={{headerShown: false}}
         />
@@ -132,6 +160,11 @@ function RootNavigator() {
         <Stack.Screen
           name="HowToPay"
           component={HowToPayScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Logout"
+          component={LogoutScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

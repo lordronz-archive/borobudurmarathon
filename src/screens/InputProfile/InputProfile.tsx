@@ -1,9 +1,17 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Checkbox, Text, VStack, ScrollView} from 'native-base';
+import {
+  Box,
+  Checkbox,
+  Text,
+  VStack,
+  ScrollView,
+  Toast,
+  Center,
+  Button,
+} from 'native-base';
 import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
-import BMButton from '../../components/buttons/Button';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
@@ -11,14 +19,22 @@ import countries from '../../helpers/countries';
 import {AuthService} from '../../api/auth.service';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {getErrorMessage} from '../../helpers/errorHandler';
+import {TouchableOpacity} from 'react-native';
 
 export default function InputProfileScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  // const isFocused = useIsFocused();
+  // const route = useRoute();
+  // const params = route.params as RootStackParamList['InputProfile'];
 
+  const [isLoading, setIsLoading] = useState(false);
   const [birthDate, setBirthDate] = useState<Date>();
   const [phoneNumber, setPhoneNumber] = useState<string>();
+  const [mbsdIDNumberType, setIDNumberType] = useState<string>();
   const [mbsdIDNumber, setIDNumber] = useState<string>();
+  const [mbsdGender, setGender] = useState<string>('1');
   const [mbsdBirthPlace, setBirthPlace] = useState<string>();
   const [mbsdBirthDate, setMbsdBirthDate] = useState<string>();
   const [mbsdBloodType, setBloodType] = useState<string>();
@@ -30,26 +46,32 @@ export default function InputProfileScreen() {
 
   const [checkbox, setCheckbox] = useState<string[]>([]);
 
+  const payload = {
+    mbsdIDNumber,
+    mbsdBirthDate,
+    mbsdBirthPlace,
+    mbsdGender,
+    mbsdBloodType,
+    mbsdNationality,
+    mbsdCountry,
+    mbsdCity,
+    mbsdProvinces,
+    mbsdAddress,
+    mbsdRawAddress: '-',
+    mbsdIDNumberType,
+    mbsdFile: 0,
+    mmedEducation: '-',
+    mmedOccupation: '-',
+    mmedIncome: '-',
+  };
+
   const setProfile = async () => {
-    const payload = {
-      mbsdIDNumber,
-      mbsdBirthDate,
-      mbsdBirthPlace,
-      mbsdBloodType,
-      mbsdNationality,
-      mbsdCountry,
-      mbsdCity,
-      mbsdProvinces,
-      mbsdAddress,
-      mbsdRawAddress: '-',
-      mbsdIDNumberType: 0,
-      mbsdFile: 0,
-      mmedEducation: '-',
-      mmedOccupation: '-',
-      mmedIncome: '-',
-    };
+    setIsLoading(true);
     let valid = true;
     if (!mbsdIDNumber) {
+      valid = false;
+    }
+    if (!mbsdGender) {
       valid = false;
     }
     if (!mbsdBirthDate) {
@@ -76,20 +98,53 @@ export default function InputProfileScreen() {
     if (!mbsdAddress) {
       valid = false;
     }
-    if (!phoneNumber) {
-      valid = false;
-    }
+    // if (!phoneNumber) {
+    //   valid = false;
+    // }
 
     if (!valid) {
+      Toast.show({
+        title: 'Not Completed',
+        description: 'Please complete the required data.',
+      });
+      setIsLoading(false);
       return;
     }
-    const res = await AuthService.setprofile(payload);
-    const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-    console.info('Setprofile result: ', res);
-    console.info('SendOTP result: ', sendOtpRes);
-    navigation.navigate('PhoneNumberValidation', {
-      phoneNumber,
-    });
+
+    try {
+      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+      console.info('SendOTP result: ', sendOtpRes);
+      navigation.navigate('PhoneNumberValidation', {
+        phoneNumber,
+        onSuccess: () => {
+          setProfileAfterVerifyPhoneSuccess();
+        },
+      });
+      setIsLoading(false);
+    } catch (err) {
+      Toast.show({
+        title: 'Failed to send otp',
+        description: getErrorMessage(err),
+      });
+      setIsLoading(false);
+    }
+  };
+
+  const setProfileAfterVerifyPhoneSuccess = async () => {
+    try {
+      setIsLoading(true);
+      const res = await AuthService.setprofile(payload);
+      console.info('Setprofile result: ', res);
+
+      navigation.navigate('Welcome');
+      setIsLoading(false);
+    } catch (err) {
+      Toast.show({
+        title: 'Failed to save',
+        description: getErrorMessage(err),
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -105,7 +160,11 @@ export default function InputProfileScreen() {
           </VStack>
         </Box>
         <VStack space="2.5" px="4">
-          <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
+          <Text
+            fontWeight={600}
+            color="#1E1E1E"
+            fontSize={14}
+            fontFamily="Poppins-Bold">
             Account Information
           </Text>
           <VStack space="1.5">
@@ -115,19 +174,61 @@ export default function InputProfileScreen() {
               label="Phone number"
               helperText="We will send verification code to this number for validation"
               onChangeText={setPhoneNumber}
+              value={phoneNumber}
             />
           </VStack>
         </VStack>
         <VStack space="2.5" px="4">
-          <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
+          <Text
+            fontWeight={600}
+            color="#1E1E1E"
+            fontSize={14}
+            fontFamily="Poppins-Bold">
             Personal Data
           </Text>
           <VStack space="1.5">
+            <SelectInput
+              items={[
+                {
+                  label: 'KTP',
+                  value: '1',
+                },
+                {
+                  label: 'SIM',
+                  value: '2',
+                },
+                {
+                  label: 'Passport',
+                  value: '3',
+                },
+              ]}
+              placeholder="Choose identity type"
+              label="Identity Type"
+              onValueChange={setIDNumberType}
+              value={mbsdIDNumberType}
+            />
             <TextInput
               placeholder="Enter your identity number"
               label="Identity number"
               helperText="Enter your KTP/SIM/Passport ID number"
               onChangeText={setIDNumber}
+              value={mbsdIDNumber}
+            />
+            <SelectInput
+              items={[
+                {
+                  label: 'Male',
+                  value: '1',
+                },
+                {
+                  label: 'Female',
+                  value: '2',
+                },
+              ]}
+              placeholder="Choose gender"
+              label="Gender"
+              onValueChange={setGender}
+              value={mbsdGender}
             />
             <DateInput
               placeholder="DD MMM YYYY"
@@ -142,6 +243,7 @@ export default function InputProfileScreen() {
               placeholder="Enter your place of birth"
               label="Place of birth"
               onChangeText={setBirthPlace}
+              value={mbsdBirthPlace}
             />
             <SelectInput
               items={[
@@ -197,6 +299,7 @@ export default function InputProfileScreen() {
               placeholder="Choose blood type"
               label="Blood Type"
               onValueChange={setBloodType}
+              value={mbsdBloodType}
             />
             <SelectInput
               items={countries.map(({en_short_name}) => ({
@@ -206,6 +309,7 @@ export default function InputProfileScreen() {
               placeholder="Choose country"
               label="Country"
               onValueChange={setCountry}
+              value={mbsdCountry}
             />
             <SelectInput
               items={countries.map(({nationality}) => ({
@@ -215,11 +319,16 @@ export default function InputProfileScreen() {
               placeholder="Choose nationality"
               label="Nationality"
               onValueChange={setNationality}
+              value={mbsdNationality}
             />
           </VStack>
         </VStack>
         <VStack space="2.5" px="4">
-          <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
+          <Text
+            fontWeight={600}
+            color="#1E1E1E"
+            fontSize={14}
+            fontFamily="Poppins-Bold">
             Address Information
           </Text>
           <VStack space="1.5">
@@ -227,34 +336,58 @@ export default function InputProfileScreen() {
               placeholder="Enter province name"
               label="Province"
               onChangeText={setProvinces}
+              value={mbsdProvinces}
             />
             <TextInput
               placeholder="Enter city or district name"
               label="City/District"
               onChangeText={setCity}
+              value={mbsdCity}
             />
             <TextInput
               placeholder="Enter your address"
               label="Address"
               onChangeText={setAddress}
+              value={mbsdAddress}
             />
           </VStack>
         </VStack>
-        <Box backgroundColor={'#F4F6F9'} py="3" px="4">
+
+        <TouchableOpacity
+          style={{paddingHorizontal: 20, paddingVertical: 5}}
+          onPress={() => {
+            setBirthDate(new Date('1995-11-29'));
+            setPhoneNumber('083116872224');
+            setIDNumber('33181100000000');
+            setBirthPlace('Pati');
+            setMbsdBirthDate('1995-11-29');
+            setBloodType('3');
+            setNationality('Indonesian');
+            setCountry('Indonesia');
+            setAddress('Wuwur');
+            setCity('Pati');
+            setProvinces('Jawa Tengah');
+          }}>
+          <Center>
+            <Text color="primary.900">Set Dummy Data</Text>
+          </Center>
+        </TouchableOpacity>
+
+        <Box backgroundColor={'#F4F6F9'} px={4}>
           <Checkbox.Group
             onChange={setCheckbox}
             value={checkbox}
             accessibilityLabel="Agree to terms">
-            <Checkbox value="agreed" _text={{fontSize: 12}}>
+            <Checkbox value="agreed" _text={{fontSize: 12, px: 3}}>
               Dengan melanjutkan saya mengerti, mengetahui, dan bersedia tunduk
-              untuk segala persyaratan & ketentuan borobudur marathon.
+              tunduk untuk segala persyaratan & ketentuan borobudur marathon.
             </Checkbox>
           </Checkbox.Group>
         </Box>
         <Box px="4">
-          <BMButton h="12" onPress={setProfile}>
+          <Button h="12" onPress={setProfile} isLoading={isLoading}>
             Continue
-          </BMButton>
+          </Button>
         </Box>
       </VStack>
     </ScrollView>

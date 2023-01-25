@@ -84,13 +84,13 @@ export default function FAQScreen() {
       <Box borderTopColor={colors.gray[500]}>
         {menus.map((menu, index) => (
           <Pressable
+            key={index}
             onPress={() => {
               if (menu.route) {
                 navigation.navigate(menu.route, menu.params);
               }
             }}>
             <HStack
-              key={index}
               justifyContent="space-between"
               alignItems="center"
               paddingX="3"

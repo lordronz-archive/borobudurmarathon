@@ -30,7 +30,7 @@ import Section from '../../components/section/Section';
 import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {GetEventResponse} from '../../types/event.type';
+import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
 
 type Price = {
   id: string;
@@ -167,8 +167,10 @@ export default function DetailEvent() {
         />
         <Stack mx={4}>
           <Text fontSize="sm" color={'#768499'} fontWeight={600} my={2}>
-            {/* {event?.evnhType} */}
-            OFFLINE
+            {(event?.data.evnhType
+              ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
+              : 'OTHER'
+            ).toUpperCase()}
           </Text>
           <Text fontSize="xl" fontWeight={700} mb="2">
             {event?.data?.evnhName}
@@ -233,6 +235,7 @@ export default function DetailEvent() {
               // .filter(price => price)
               .map(price => (
                 <EventPricingCard
+                  key={price.id}
                   title={price.name}
                   subtitle={price.description}
                   originalPrice={price.originalPrice}

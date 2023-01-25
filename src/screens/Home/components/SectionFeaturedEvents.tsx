@@ -8,7 +8,7 @@ import Section from '../../../components/section/Section';
 import datetime from '../../../helpers/datetime';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {EventProperties} from '../../../types/event.type';
+import {EventProperties, EVENT_TYPES} from '../../../types/event.type';
 
 export default function SectionFeaturedEvents() {
   const navigation =
@@ -48,7 +48,7 @@ export default function SectionFeaturedEvents() {
       <BannerNew
         entries={data.map(item => ({
           title: item.evnhName,
-          eventType: item.evnhType === 1 ? 'Online' : 'Offline',
+          eventType: EVENT_TYPES[item.evnhType]?.value || 'Other',
           date: datetime.getDateRangeString(
             item.evnhStartDate,
             item.evnhEndDate,

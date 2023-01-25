@@ -26,45 +26,12 @@ export default function RegistrationForm(
   const [dateField, setDateField] = useState<Date>();
 
   useEffect(() => {
-    if (props.evhfExternalData && props.evhfExternalData.includes('/api/')) {
-      ApiService.getExternal(props.evhfExternalData.replace('/api/v1/', ''))
-        .then(({data: {data}}: any) => {
-          const kys = Object.keys(data[0]);
-          const labelkey = kys.find(v => v.toLowerCase().includes('label'));
-          setOptions(
-            data.map((v: {[key: string]: string | number}) => ({
-              value: v.id,
-              label: v[labelkey!],
-            })),
-          );
-        })
-        .catch(err => {
-          console.info(err);
-        });
-    } else if (
-      props.evhfType === 'Option' &&
-      (props.evhfLabel.toLowerCase().includes('country') ||
-        props.evhfName.toLowerCase().includes('country'))
-    ) {
-      setOptions(
-        countries.map(({en_short_name}) => ({
-          label: en_short_name || '',
-          value: en_short_name || '',
-        })),
-      );
-    } else if (
-      props.evhfType === 'Option' &&
-      (props.evhfLabel.toLowerCase().includes('nationality') ||
-        props.evhfName.toLowerCase().includes('nationality'))
-    ) {
-      setOptions(
-        countries.map(({nationality}) => ({
-          label: nationality || '',
-          value: nationality || '',
-        })),
-      );
-    }
-  }, [props.evhfExternalData, props.evhfLabel, props.evhfName, props.evhfType]);
+    getListOptions();
+  }, []);
+
+  const getListOptions = async () => {
+    setOptions(await getOptions(props));
+  };
 
   if (props.evhfType === 'Option') {
     return (
@@ -119,5 +86,48 @@ export default function RegistrationForm(
         placeholder={`Enter ${props.evhfLabel}`}
       />
     );
+  }
+}
+
+export async function getOptions(props: EventFieldsEntity) {
+  if (props.evhfExternalData && props.evhfExternalData.includes('/api/')) {
+    try {
+      const res: any = await ApiService.getExternal(
+        props.evhfExternalData.replace('/api/v1/', ''),
+      );
+      if (res && res.data) {
+        console.info('#res.data getOptions', res.data.data);
+        const kys = Object.keys(res.data.data[0]);
+        const labelkey = kys.find(v => v.toLowerCase().includes('label'));
+        return res.data.data.map((v: {[key: string]: string | number}) => ({
+          value: v.id,
+          label: v[labelkey!],
+        }));
+      } else {
+        return [];
+      }
+    } catch (err) {
+      return [];
+    }
+  } else if (
+    props.evhfType === 'Option' &&
+    (props.evhfLabel.toLowerCase().includes('country') ||
+      props.evhfName.toLowerCase().includes('country'))
+  ) {
+    return countries.map(({en_short_name}) => ({
+      label: en_short_name || '',
+      value: en_short_name || '',
+    }));
+  } else if (
+    props.evhfType === 'Option' &&
+    (props.evhfLabel.toLowerCase().includes('nationality') ||
+      props.evhfName.toLowerCase().includes('nationality'))
+  ) {
+    return countries.map(({nationality}) => ({
+      label: nationality || '',
+      value: nationality || '',
+    }));
+  } else {
+    return [];
   }
 }

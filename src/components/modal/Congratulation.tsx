@@ -28,7 +28,7 @@ const Congratulation = ({
       isOpen={isOpen}
       onClose={onClose}>
       <AlertDialog.Content>
-        <AlertDialog.Body>
+        <AlertDialog.Body p="4">
           <Center>
             <IconCircleCheck size={110} />
             <Center px="2" mb="4" mt="4">

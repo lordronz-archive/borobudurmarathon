@@ -83,7 +83,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
         Toast.show({
           description: 'BYPASS Phone Verification',
         });
-        navigation.navigate('Welcome');
+        await onSuccess();
       }
       setIsLoading(false);
     }

@@ -20,10 +20,15 @@ import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import Congratulation from '../../components/modal/Congratulation';
 import {TouchableOpacity} from 'react-native';
+import EventRegistrationCard from '../../components/card/EventRegistrationCard';
+import datetime from '../../helpers/datetime';
+import useProfile from '../../hooks/useProfile';
 
 export default function EventRegisterScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const profile = useProfile();
 
   const toast = useToast();
 
@@ -36,7 +41,6 @@ export default function EventRegisterScreen() {
       : params.event.fields && typeof params.event.fields === 'object'
       ? (Object.values(params.event.fields) as EventFieldsEntity[])
       : ([] as EventFieldsEntity[]);
-  console.info('fields', fields);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [fieldsData, setFieldsData] = React.useState<any>({});
@@ -51,22 +55,32 @@ export default function EventRegisterScreen() {
   const register = async () => {
     setIsLoading(true);
     let valid = true;
+    let toastDescription = '';
+
+    const payload = {
+      ...fieldsData,
+      evpaEvnhId: params.event.data.evnhId,
+      evpaEvncId: params.selectedCategoryId,
+      evpaName: profile?.zmemFullName,
+    };
 
     fields.forEach((f: EventFieldsEntity) => {
-      if (f.evhfIsRequired.toString() === '1' && !(f.evhfName in fieldsData)) {
+      if (f.evhfIsRequired.toString() === '1' && !(f.evhfName in payload)) {
         valid = false;
+        console.info('INVALID: ', f);
+        toastDescription = `Field "${f.evhfLabel}" is required`;
       }
     });
 
     if (!valid) {
       setIsLoading(false);
+      toast.show({
+        title: 'Failed to register event',
+        description: toastDescription,
+      });
       return;
     }
-    const payload = {
-      ...fieldsData,
-      evpaEvnhId: params.event.data.evnhId,
-      evpaEvncId: params.selectedCategoryId,
-    };
+
     try {
       let res: any;
       if (
@@ -91,14 +105,42 @@ export default function EventRegisterScreen() {
     }
   };
 
+  const event = params.event;
+
   return (
     <ScrollView>
       <Header title="Form Registration" left="back" />
       <VStack space="4" pb="3">
+        <EventRegistrationCard
+          imgSrc={
+            event?.data.evnhThumbnail
+              ? {uri: event?.data.evnhThumbnail}
+              : require('../../assets/images/FeaturedEventImage.png')
+          }
+          runningDate={datetime.getDateRangeString(
+            event?.data.evnhStartDate,
+            event?.data.evnhEndDate,
+            'short',
+            'short',
+          )}
+          registrationDate={datetime.getDateRangeString(
+            event?.data.evnhRegistrationStart,
+            event?.data.evnhRegistrationEnd,
+            'short',
+            'short',
+          )}
+          title={event?.data?.evnhName}
+          category={
+            (event?.categories || []).find(
+              cat => cat.evncId === params.selectedCategoryId,
+            )?.evncName
+          }
+        />
         <Divider
-          my="2"
+          mb="2"
+          height="8px"
           _light={{
-            bg: 'muted.800',
+            bg: '#E8ECF3',
           }}
           _dark={{
             bg: 'muted.50',
@@ -109,17 +151,15 @@ export default function EventRegisterScreen() {
             Registration Information
           </Text>
           <VStack space="1.5">
-            {fields
-              .filter(f => f.evhfIsAttribute === '1')
-              .map(field => (
-                <RegistrationForm
-                  key={field.evhfId}
-                  {...field}
-                  onValueChange={val => {
-                    setFieldsData({...fieldsData, [field.evhfName]: val});
-                  }}
-                />
-              ))}
+            {fields.map(field => (
+              <RegistrationForm
+                key={field.evhfId}
+                {...field}
+                onValueChange={val => {
+                  setFieldsData({...fieldsData, [field.evhfName]: val});
+                }}
+              />
+            ))}
           </VStack>
         </VStack>
         <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
@@ -167,7 +207,15 @@ export default function EventRegisterScreen() {
           <Button
             h="12"
             isLoading={isLoading}
+            isDisabled={checkbox[0] !== 'agreed'}
             onPress={() => {
+              if (checkbox[0] !== 'agreed') {
+                toast.show({
+                  title: 'Failed to register event',
+                  description: 'Please agree to terms and service',
+                });
+                return;
+              }
               register();
             }}>
             Register Now

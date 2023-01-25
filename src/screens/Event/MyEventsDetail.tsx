@@ -36,16 +36,14 @@ export default function MyEventDetail() {
   const {colors} = useTheme();
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  // const [showModal, setShowModal] = useState<boolean>(false);
 
   const [detailTransaction, setDetailTransaction] = useState<any>();
   const [detailEvent, setDetailEvent] = useState<GetEventResponse>();
 
   const [status, setStatus] = useState<string>('');
 
-  const [selectedPayment, setSelectedPayment] = useState<any>();
-
-  const today = new Date();
+  // const [selectedPayment, setSelectedPayment] = useState<any>();
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -145,8 +143,7 @@ export default function MyEventDetail() {
     if (detailTransaction?.data?.trnsConfirmed === 1) {
       status = 'Paid';
     } else if (
-      new Date(detailTransaction?.data?.trnsExpiredTime).getTime() <
-      today.getTime()
+      moment(detailTransaction?.data?.trnsExpiredTime).isBefore(moment())
     ) {
       status = 'Payment Expired';
     } else if (params.regStatus === 0) {
@@ -338,23 +335,22 @@ export default function MyEventDetail() {
                 borderTopWidth={1}
                 borderTopStyle={'solid'}>
                 <TouchableOpacity
-                // onPress={() => setShowModal(true)}
-                >
+                  onPress={() =>
+                    navigation.navigate('Main', {screen: 'My Events'})
+                  }>
                   <HStack
                     justifyContent={'space-between'}
                     alignItems={'center'}>
                     <VStack>
                       <Text fontWeight={500} color="#768499" fontSize={12}>
-                        {(detailTransaction?.linked?.trnsEventId?.[0]?.evnhType
-                          ? EVENT_TYPES[
-                              detailTransaction?.linked?.trnsEventId?.[0]
-                                ?.evnhType as any
-                            ].value || 'OTHER'
+                        {(detailEvent?.data?.evnhType
+                          ? EVENT_TYPES[detailEvent?.data?.evnhType as any]
+                              .value || 'OTHER'
                           : 'OTHER'
                         ).toUpperCase()}
                       </Text>
                       <Text fontWeight={500} color="#1E1E1E" fontSize={14}>
-                        Bank Jateng Tilik Candi 2022
+                        {detailEvent?.data?.evnhName}
                       </Text>
                     </VStack>
                     <ChevronRightIcon />

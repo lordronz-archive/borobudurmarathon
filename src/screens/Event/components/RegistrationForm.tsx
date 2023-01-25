@@ -30,7 +30,7 @@ export default function RegistrationForm(
   }, []);
 
   const getListOptions = async () => {
-    setOptions(await getOptions(props));
+    setOptions((await getOptions(props)) ?? opts);
   };
 
   if (props.evhfType === 'Option') {
@@ -90,13 +90,16 @@ export default function RegistrationForm(
 }
 
 export async function getOptions(props: EventFieldsEntity) {
+  if (props.evhfType.toLowerCase() !== 'option') {
+    return;
+  }
+
   if (props.evhfExternalData && props.evhfExternalData.includes('/api/')) {
     try {
       const res: any = await ApiService.getExternal(
         props.evhfExternalData.replace('/api/v1/', ''),
       );
       if (res && res.data) {
-        console.info('#res.data getOptions', res.data.data);
         const kys = Object.keys(res.data.data[0]);
         const labelkey = kys.find(v => v.toLowerCase().includes('label'));
         return res.data.data.map((v: {[key: string]: string | number}) => ({
@@ -128,6 +131,14 @@ export async function getOptions(props: EventFieldsEntity) {
       value: nationality || '',
     }));
   } else {
-    return [];
+    const opts = (
+      props.evhfExternalData && !props.evhfExternalData.includes('/api/')
+        ? JSON.parse(props.evhfExternalData)
+        : []
+    ).map((item: {id: number; label: string}) => ({
+      label: item.label || '',
+      value: item.id || '',
+    }));
+    return opts;
   }
 }

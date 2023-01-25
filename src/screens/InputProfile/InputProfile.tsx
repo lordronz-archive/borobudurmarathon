@@ -385,7 +385,11 @@ export default function InputProfileScreen() {
           </Checkbox.Group>
         </Box>
         <Box px="4">
-          <Button h="12" onPress={setProfile} isLoading={isLoading}>
+          <Button
+            h="12"
+            onPress={setProfile}
+            isLoading={isLoading}
+            isDisabled={checkbox[0] !== 'agreed'}>
             Continue
           </Button>
         </Box>

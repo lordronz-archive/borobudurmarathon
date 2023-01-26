@@ -15,6 +15,8 @@ export function getErrorMessage(err: any) {
   } else if (err && err.data) {
     if (err.data && err.data.message) {
       errMessage = err.data.message;
+    } else if (err.data && err.data.status && err.data.status?.error?.message) {
+      errMessage = err.data.status?.error?.message;
     } else {
       errMessage = JSON.stringify(err);
     }

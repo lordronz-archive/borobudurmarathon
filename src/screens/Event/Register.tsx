@@ -10,7 +10,7 @@ import {
   Center,
   Button,
 } from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
@@ -22,25 +22,30 @@ import Congratulation from '../../components/modal/Congratulation';
 import {TouchableOpacity} from 'react-native';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime from '../../helpers/datetime';
-import useProfile from '../../hooks/useProfile';
+import {useAuthUser} from '../../context/auth.context';
 
 export default function EventRegisterScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const profile = useProfile();
+  const [autofilled, setAutofilled] = useState(false);
+
+  const {user} = useAuthUser();
 
   const toast = useToast();
 
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
 
-  const fields =
-    params.event.fields && Array.isArray(params.event.fields)
-      ? params.event.fields
-      : params.event.fields && typeof params.event.fields === 'object'
-      ? (Object.values(params.event.fields) as EventFieldsEntity[])
-      : ([] as EventFieldsEntity[]);
+  const fields = useMemo<EventFieldsEntity[]>(
+    () =>
+      params.event.fields && Array.isArray(params.event.fields)
+        ? params.event.fields
+        : params.event.fields && typeof params.event.fields === 'object'
+        ? (Object.values(params.event.fields) as EventFieldsEntity[])
+        : ([] as EventFieldsEntity[]),
+    [params.event.fields],
+  );
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [fieldsData, setFieldsData] = React.useState<any>({});
@@ -52,6 +57,33 @@ export default function EventRegisterScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [checkbox, setCheckbox] = useState<string[]>([]);
 
+  useEffect(() => {
+    const data: {[key: string]: any} = {};
+    if (!user || autofilled || fields.length < 1) {
+      return;
+    }
+    if (fields.find(f => f.evhfName === 'evpaName')) {
+      data.evpaName = user?.data[0].zmemFullName;
+    }
+    if (fields.find(f => f.evhfName === 'evpaPhone')) {
+      data.evpaPhone = user?.linked?.zmemAuusId?.[0]?.auusPhone;
+    }
+    if (fields.find(f => f.evhfName === 'evpaEmail')) {
+      data.evpaEmail = user?.linked?.zmemAuusId?.[0]?.auusEmail;
+    }
+    if (fields.find(f => f.evhfName === 'evpaAddress')) {
+      data.evpaAddress = user?.linked?.mbsdZmemId?.[0]?.mbsdAddress;
+    }
+    if (fields.find(f => f.evhfName === 'evpaCity')) {
+      data.evpaevpaCityName = user?.linked?.mbsdZmemId?.[0]?.mbsdCity;
+    }
+    if (fields.find(f => f.evhfName === 'evpaProvinces')) {
+      data.evpaProvinces = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
+    }
+    setFieldsData({...fieldsData, ...data});
+    setAutofilled(true);
+  }, [autofilled, fields, fieldsData, user]);
+
   const register = async () => {
     setIsLoading(true);
     let valid = true;
@@ -61,11 +93,15 @@ export default function EventRegisterScreen() {
       ...fieldsData,
       evpaEvnhId: params.event.data.evnhId,
       evpaEvncId: params.selectedCategoryId,
-      evpaName: profile?.zmemFullName,
+      evpaName: user?.data[0].zmemFullName,
+      evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
     };
 
     fields.forEach((f: EventFieldsEntity) => {
-      if (f.evhfIsRequired.toString() === '1' && !(f.evhfName in payload)) {
+      if (
+        f.evhfIsRequired.toString() === '1' &&
+        (!(f.evhfName in payload) || !payload[f.evhfName])
+      ) {
         valid = false;
         console.info('INVALID: ', f);
         toastDescription = `Field "${f.evhfLabel}" is required`;
@@ -91,16 +127,14 @@ export default function EventRegisterScreen() {
       } else {
         res = await EventService.registerVREvent(payload);
       }
-      // const res: any = await EventService.registerEvent(payload);
       console.info(res.data);
       setIsOpen(true);
-      setIsLoading(false);
     } catch (error) {
-      console.error(error);
       toast.show({
         title: 'Failed to register event',
         description: getErrorMessage(error),
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -151,15 +185,20 @@ export default function EventRegisterScreen() {
             Registration Information
           </Text>
           <VStack space="1.5">
-            {fields.map(field => (
-              <RegistrationForm
-                key={field.evhfId}
-                {...field}
-                onValueChange={val => {
-                  setFieldsData({...fieldsData, [field.evhfName]: val});
-                }}
-              />
-            ))}
+            {fields
+              .filter(
+                f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
+              )
+              .map(field => (
+                <RegistrationForm
+                  key={field.evhfId}
+                  {...field}
+                  onValueChange={val => {
+                    setFieldsData({...fieldsData, [field.evhfName]: val});
+                  }}
+                  value={fieldsData[field.evhfName]}
+                />
+              ))}
           </VStack>
         </VStack>
         <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
@@ -167,7 +206,10 @@ export default function EventRegisterScreen() {
             onChange={setCheckbox}
             value={checkbox}
             accessibilityLabel="Agree to terms">
-            <Checkbox value="agreed" _text={{fontSize: 12, flexWrap: 'wrap'}}>
+            <Checkbox
+              value="agreed"
+              _text={{fontSize: 12, flexWrap: 'wrap'}}
+              isDisabled={isLoading}>
               Dengan melanjutkan saya mengerti, mengetahui, dan bersedia tunduk
               untuk segala persyaratan & ketentuan event borobudur marathon.
             </Checkbox>

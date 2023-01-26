@@ -209,7 +209,7 @@ const EventService = {
     console.log('Do register Event : ', data);
     try {
       return ApiService.post(
-        config.apiUrl.apis.member.registerEvent.path + data.evpaEvnhId,
+        config.apiUrl.apis.member.registerBallot.path + data.evpaEvnhId,
         {data: [data]},
       );
     } catch (error) {

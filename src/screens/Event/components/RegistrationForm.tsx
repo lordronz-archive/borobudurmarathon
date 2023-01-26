@@ -10,6 +10,7 @@ type Option = {value: string; label: string};
 export default function RegistrationForm(
   props: EventFieldsEntity & {
     onValueChange: (val: string) => void;
+    value: string;
   },
 ) {
   const opts = (
@@ -40,6 +41,7 @@ export default function RegistrationForm(
         placeholder={'Choose one'}
         label={props.evhfLabel}
         onValueChange={props.onValueChange}
+        value={props.value}
       />
     );
   } else if (['number', 'phone'].includes(props.evhfType.toLowerCase())) {
@@ -51,6 +53,7 @@ export default function RegistrationForm(
         _inputProps={{
           keyboardType: 'numeric',
         }}
+        value={props.value}
       />
     );
   } else if (props.evhfType === 'Email') {
@@ -62,6 +65,7 @@ export default function RegistrationForm(
         _inputProps={{
           keyboardType: 'email-address',
         }}
+        value={props.value}
       />
     );
   } else if (props.evhfType === 'Date') {
@@ -84,6 +88,7 @@ export default function RegistrationForm(
         label={props.evhfLabel}
         onChangeText={props.onValueChange}
         placeholder={`Enter ${props.evhfLabel}`}
+        value={props.value}
       />
     );
   }

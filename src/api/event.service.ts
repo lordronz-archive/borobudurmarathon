@@ -61,7 +61,7 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getTransactionDetail: async function (transactionId: string) {
+  getTransactionDetail: async function (transactionId: string): Promise<any> {
     console.log('Transaction id to get : ', transactionId);
     try {
       return ApiService.get(

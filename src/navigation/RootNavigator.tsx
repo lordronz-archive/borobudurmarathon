@@ -65,8 +65,7 @@ export type RootStackParamList = {
   MyEventsDetail: {
     transactionId: string;
     eventId: number;
-    isBallot: boolean;
-    ballotStatus: number;
+    regStatus: number;
   };
   Payment: undefined;
   HowToPay: undefined;

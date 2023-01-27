@@ -36,10 +36,15 @@ export default function BannerNew(props: IProps) {
           height={width / 1.5}
           autoPlay={true}
           data={props.entries}
+          modeConfig={{
+            parallaxScrollingScale: 0.96,
+            parallaxScrollingOffset: 38,
+          }}
+          mode="parallax"
           scrollAnimationDuration={3000}
           // onSnapToItem={index => console.log('current index:', index)}
           renderItem={({item, index}) => (
-            <Box shadow="2" bg="white" mx={4}>
+            <Box shadow="2" bg="white" mx={4} borderRadius="lg">
               <VStack>
                 <Image
                   key={index}
@@ -53,7 +58,7 @@ export default function BannerNew(props: IProps) {
                     setImageLoaded(true);
                   }}
                 />
-                <VStack py="3" px="3" borderBottomRadius="lg">
+                <VStack py="3" px="3">
                   <Text
                     fontFamily="Poppins-Medium"
                     fontWeight="600"

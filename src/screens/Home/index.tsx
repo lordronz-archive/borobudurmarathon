@@ -14,6 +14,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import IconInformationCircle from '../../assets/icons/IconInformationCircle';
+import SummaryRecord from './components/SummaryRecord';
 
 export default function HomeScreen() {
   const navigation =
@@ -46,7 +47,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </Flex>
 
-        {/* <SummaryRecord /> */}
+        <SummaryRecord />
 
         <Divider
           mt="2"

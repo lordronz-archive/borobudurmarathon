@@ -81,7 +81,7 @@ export default function HowToPayScreen() {
     return (
       <View marginX={'15px'}>
         {section.content?.map((item: string, index: number) => (
-          <HStack paddingY={'4px'}>
+          <HStack paddingY={'4px'} key={index}>
             <Text fontSize={12} fontWeight={400} color={'#201D1D'}>{`${
               index + 1
             }. `}</Text>

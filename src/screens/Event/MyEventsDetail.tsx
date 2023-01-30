@@ -45,6 +45,42 @@ export default function MyEventDetail() {
 
   // const [selectedPayment, setSelectedPayment] = useState<any>();
 
+  const checkStatus = () => {
+    let status;
+    if (params.isBallot) {
+      if (params.regStatus === 0) {
+        status = 'Registered';
+      } else if (params.regStatus === 99) {
+        status = 'Unqualified';
+      } else {
+        if (detailTransaction?.data?.trnsConfirmed === 1) {
+          status = 'Paid';
+        } else if (
+          moment(detailTransaction?.data?.trnsExpiredTime).isBefore(
+            moment(new Date()),
+          )
+        ) {
+          status = 'Payment Expired';
+        } else {
+          status = 'Waiting Payment';
+        }
+      }
+    } else {
+      if (detailTransaction?.data?.trnsConfirmed === 1) {
+        status = 'Paid';
+      } else if (
+        moment(detailTransaction?.data?.trnsExpiredTime).isBefore(
+          moment(new Date()),
+        )
+      ) {
+        status = 'Payment Expired';
+      } else {
+        status = 'Waiting Payment';
+      }
+    }
+    setStatus(status);
+  };
+
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -70,6 +106,10 @@ export default function MyEventDetail() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    checkStatus();
+  }, [detailTransaction]);
 
   useEffect(() => {
     fetchData();
@@ -126,7 +166,7 @@ export default function MyEventDetail() {
         };
       case 'Paid':
         return {
-          bgColor: ' #DFF4E0',
+          bgColor: '#DFF4E0',
           color: '#26A62C',
         };
       default:
@@ -138,23 +178,6 @@ export default function MyEventDetail() {
   }
 
   const statusComp = useMemo(() => {
-    let status;
-
-    if (detailTransaction?.data?.trnsConfirmed === 1) {
-      status = 'Paid';
-    } else if (
-      moment(detailTransaction?.data?.trnsExpiredTime).isBefore(moment())
-    ) {
-      status = 'Payment Expired';
-    } else if (params.regStatus === 0) {
-      status = 'Registered';
-    } else if (params.regStatus === 99) {
-      status = 'Unqualified';
-    } else {
-      status = 'Waiting Payment';
-    }
-    setStatus(status);
-
     const color = statusColor(status || '');
 
     return (
@@ -169,7 +192,7 @@ export default function MyEventDetail() {
         {status}
       </Text>
     );
-  }, [detailTransaction?.data]);
+  }, [status]);
 
   const handlePayNow = async () => {
     setIsLoading(true);
@@ -180,9 +203,9 @@ export default function MyEventDetail() {
         paymentType: '10',
       });
       console.info('res pay now', JSON.stringify(resPayNow));
-      if (resPayNow) {
-        Toast.show({
-          title: 'Payment Success',
+      if (resPayNow && resPayNow.data) {
+        navigation.navigate('Payment', {
+          transactionId: params.transactionId,
         });
       }
     } catch (err) {
@@ -240,39 +263,45 @@ export default function MyEventDetail() {
                 </Text>
                 {statusComp}
               </HStack>
-              <Box
-                width={44}
-                h={44}
-                borderRadius={8}
-                alignSelf={'center'}
-                bg={'#E8ECF3'}
-                p={'14px'}>
-                <IconQr />
-              </Box>
-              <Text
-                fontWeight={600}
-                marginY={'12px'}
-                color="#201D1D"
-                fontSize={16}
-                textAlign={'center'}>
-                {status === 'Payment Expired'
-                  ? 'Payment Expired'
-                  : status === 'Waiting Payment'
-                  ? 'Menunggu pembayaran'
-                  : status === 'Registered'
-                  ? 'Menunggu hasil ballot'
-                  : 'Maaf anda tidak lolos tahap ballot'}
-              </Text>
+              {status !== 'Paid' && (
+                <>
+                  <Box
+                    width={44}
+                    h={44}
+                    borderRadius={8}
+                    alignSelf={'center'}
+                    bg={'#E8ECF3'}
+                    p={'14px'}>
+                    <IconQr />
+                  </Box>
+                  <Text
+                    fontWeight={600}
+                    marginY={'12px'}
+                    color="#201D1D"
+                    fontSize={16}
+                    textAlign={'center'}>
+                    {status === 'Payment Expired'
+                      ? 'Payment Expired'
+                      : status === 'Waiting Payment'
+                      ? 'Menunggu pembayaran'
+                      : status === 'Registered'
+                      ? 'Menunggu hasil ballot'
+                      : 'Maaf anda tidak lolos tahap ballot'}
+                  </Text>
+                </>
+              )}
               <Text
                 fontWeight={400}
                 color="#768499"
                 fontSize={12}
                 textAlign={'center'}>
-                {status === 'Expired'
-                  ? 'QR Code event akan tampil disini setalah anda lolos ballot & melakukan pembayaran'
+                {status === 'Payment Expired'
+                  ? 'Status pembayaran anda sudah expire'
                   : status === 'Paid'
                   ? 'Use this QR Code to enter the event'
-                  : 'Status pembayaran anda sudah expired'}
+                  : `QR Code event akan tampil disini setalah anda ${
+                      params.isBallot ? 'lolos ballot & ' : ''
+                    }melakukan pembayaran`}
               </Text>
               {status === 'Waiting Payment' && (
                 <Box
@@ -296,7 +325,7 @@ export default function MyEventDetail() {
               )}
 
               {(status === 'Waiting Payment' ||
-                status === 'Payment Expired') && (
+                (status === 'Payment Expired' && !params.isBallot)) && (
                 <Button
                   onPress={() =>
                     status === 'Waiting Payment'

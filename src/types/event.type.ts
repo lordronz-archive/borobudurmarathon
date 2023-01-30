@@ -248,6 +248,7 @@ export interface Datum {
 export interface TransactionLinks {
   mregTrnsId: number;
   mregZmemId: number;
+  mregEvncId: number;
   mregEventId: number;
 }
 
@@ -267,7 +268,27 @@ export enum Type {
 export interface TransactionLinked {
   mregTrnsId: MregTrnsID[];
   mregZmemId: MregZmemID[];
+  mregEvncId: MregEvncID[];
   mregEventId: MregEventID[];
+}
+
+export interface MregEvncID {
+  id: number;
+  evncId: number;
+  evncEvnhId: number;
+  evncName: string;
+  evncDesc: null;
+  evncBenefit: null;
+  evncQuotaRegistration: number;
+  evncQuotaConfirmation: number;
+  evncVrStartDate: null;
+  evncVrEndDate: null;
+  evncVrReps: null;
+  evncStartDate: string;
+  evncPrice: string;
+  evncMaxDistance: null;
+  evncMaxDistancePoint: null;
+  evncStatus: number;
 }
 
 export interface MregEventID {

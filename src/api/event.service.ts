@@ -251,7 +251,7 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  checkoutTransaction: async function (data: any) {
+  checkoutTransaction: async function (data: any): Promise<any> {
     console.log('Data to checkout : ', data);
     try {
       return ApiService.get(

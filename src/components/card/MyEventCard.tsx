@@ -1,37 +1,77 @@
 import moment from 'moment';
 import {HStack, VStack, Text, Box, Stack, Badge, Alert} from 'native-base';
-import React from 'react';
+import React, {useMemo} from 'react';
 import IconRun from '../../assets/icons/IconRun';
 import IconTag from '../../assets/icons/IconTag';
 import MButton from '../buttons/Button';
+import {useNavigation} from '@react-navigation/native';
 
 type MyCardEventProps = {
   title: string;
-  paid: boolean;
+  status: string;
   date: string;
   transactionExpirationTime?: string;
   isAvailable?: boolean;
+  category: string;
+  onPayNowClick: () => void;
 };
-
-enum PAYMENT_STATUS {
-  REGISTERED,
-  WAITING_PAYMENT,
-  PAID,
-  UNQUALIFIED,
-  PAYMENT_EXPIRED,
-}
 
 export default function MyCardEvent({
   title,
   date,
-  paid,
+  status,
   transactionExpirationTime,
+  category,
+  onPayNowClick,
 }: MyCardEventProps) {
-  const status = paid
-    ? PAYMENT_STATUS.PAID
-    : moment().isBefore(moment(transactionExpirationTime))
-    ? PAYMENT_STATUS.WAITING_PAYMENT
-    : PAYMENT_STATUS.PAYMENT_EXPIRED;
+  function statusColor(status: string) {
+    switch (status) {
+      case 'Registered':
+        return {
+          bgColor: '#E7F3FC',
+          color: '#3D52E6',
+        };
+      case 'Unqualified':
+      case 'Payment Expired':
+        return {
+          bgColor: '#FDEBEB',
+          color: '#EB1C23',
+        };
+      case 'Waiting Payment':
+        return {
+          bgColor: '#FFF8E4',
+          color: '#A4660A',
+        };
+      case 'Paid':
+        return {
+          bgColor: ' #DFF4E0',
+          color: '#26A62C',
+        };
+      default:
+        return {
+          bgColor: ' #DFF4E0',
+          color: '#26A62C',
+        };
+    }
+  }
+
+  const statusComp = useMemo(() => {
+    const color = statusColor(status || '');
+
+    return (
+      <Text
+        fontSize={12}
+        fontWeight={600}
+        paddingX={'10px'}
+        height={'30px'}
+        paddingY={'4px'}
+        borderRadius={3}
+        bg={color.bgColor}
+        color={color.color}>
+        {status}
+      </Text>
+    );
+  }, [status]);
 
   return (
     <Box alignItems="flex-start" my={3} width="100%">
@@ -47,49 +87,7 @@ export default function MyCardEvent({
               flexWrap={'wrap'}>
               {title}
             </Text>
-            {status === PAYMENT_STATUS.PAID ? (
-              <Badge
-                backgroundColor="#DFF4E0"
-                px="3"
-                py="0.5"
-                borderRadius="4"
-                alignSelf="flex-start"
-                _text={{
-                  color: '#26A62C',
-                  fontWeight: 'bold',
-                  fontSize: 'xs',
-                }}>
-                Paid
-              </Badge>
-            ) : status === PAYMENT_STATUS.PAYMENT_EXPIRED ? (
-              <Badge
-                backgroundColor="#FDEBEB"
-                px="3"
-                py="0.5"
-                borderRadius="4"
-                alignSelf="flex-start"
-                _text={{
-                  color: '#FE4545',
-                  fontWeight: 'bold',
-                  fontSize: 'xs',
-                }}>
-                Payment Expired
-              </Badge>
-            ) : status === PAYMENT_STATUS.WAITING_PAYMENT ? (
-              <Badge
-                backgroundColor="#FFF8E4"
-                px="3"
-                py="0.5"
-                borderRadius="4"
-                alignSelf="flex-start"
-                _text={{
-                  color: '#A4660A',
-                  fontWeight: 'bold',
-                  fontSize: 'xs',
-                }}>
-                Waiting Payment
-              </Badge>
-            ) : null}
+            {statusComp}
           </HStack>
           <HStack flex="1" justifyContent={'space-between'}>
             <HStack space={1} alignItems="center">
@@ -101,11 +99,11 @@ export default function MyCardEvent({
             <HStack space={2} alignItems="center">
               <IconTag />
               <Text fontSize="xs" color="coolGray.500">
-                Elite Runner 42 Km
+                {category}
               </Text>
             </HStack>
           </HStack>
-          {status === PAYMENT_STATUS.WAITING_PAYMENT && (
+          {status === 'Waiting Payment' && (
             <HStack space="2">
               <Alert
                 status="warning"
@@ -129,7 +127,10 @@ export default function MyCardEvent({
                   </HStack>
                 </VStack>
               </Alert>
-              <MButton variant="outline" _text={{fontSize: 12}}>
+              <MButton
+                variant="outline"
+                _text={{fontSize: 12}}
+                onPress={() => onPayNowClick()}>
                 Pay Now
               </MButton>
             </HStack>

@@ -44,7 +44,7 @@ export default function MyCardEvent({
         };
       case 'Paid':
         return {
-          bgColor: ' #DFF4E0',
+          bgColor: '#DFF4E0',
           color: '#26A62C',
         };
       default:

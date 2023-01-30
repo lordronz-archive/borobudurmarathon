@@ -2,6 +2,7 @@ import config from '../config';
 import httpRequest from '../helpers/httpRequest';
 import {GetEventResponse, GetEventsResponse} from '../types/event.type';
 import ApiService from './api.service';
+import QRCode from 'qrcode';
 // import qs from "qs";
 
 function qs(obj: any, prefix: any) {
@@ -83,6 +84,20 @@ const EventService = {
       console.log('E : ', error);
       const msg = error as any;
       throw new ResponseError(msg.status, msg.error.message);
+    }
+  },
+  async generateQR(data: any) {
+    try {
+      const resp = await QRCode.toString(data, {
+        errorCorrectionLevel: 'H',
+        width: 200,
+        margin: 2,
+      });
+      // console.log('QR Response : ', resp);
+      return resp;
+    } catch (e) {
+      console.log('Generate QR Error:', e);
+      return e;
     }
   },
   getGarminActivities: async function (memberId: string) {

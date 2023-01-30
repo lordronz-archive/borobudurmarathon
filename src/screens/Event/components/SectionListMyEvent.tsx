@@ -145,7 +145,7 @@ export default function SectionListMyEvent() {
               : '')
           }
           status={checkStatus()}
-          category={category?.evncName}
+          category={category?.evncName || ''}
           transactionExpirationTime={cleanTransactionExpTime}
           isAvailable={false}
           onPayNowClick={() => handlePayNow()}

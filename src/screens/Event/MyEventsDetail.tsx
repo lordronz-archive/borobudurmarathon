@@ -27,6 +27,7 @@ import datetime from '../../helpers/datetime';
 import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {TouchableOpacity} from 'react-native';
+import {SvgXml} from 'react-native-svg';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -42,10 +43,11 @@ export default function MyEventDetail() {
   const [detailEvent, setDetailEvent] = useState<GetEventResponse>();
 
   const [status, setStatus] = useState<string>('');
+  const [QR, setQR] = useState<any>();
 
   // const [selectedPayment, setSelectedPayment] = useState<any>();
 
-  const checkStatus = () => {
+  const checkStatus = async () => {
     let status;
     if (params.isBallot) {
       if (params.regStatus === 0) {
@@ -76,6 +78,18 @@ export default function MyEventDetail() {
         status = 'Payment Expired';
       } else {
         status = 'Waiting Payment';
+      }
+    }
+    if (status === 'Paid') {
+      const resQR = await EventService.generateQR(
+        detailTransaction?.data?.trnsRefId +
+          '%' +
+          detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaBIBNo,
+      );
+      console.log(resQR);
+
+      if (resQR) {
+        setQR(resQR);
       }
     }
     setStatus(status);
@@ -225,31 +239,35 @@ export default function MyEventDetail() {
         <LoadingBlock />
       ) : (
         <ScrollView backgroundColor={'#E8ECF3'}>
-          <Box m={15} p={'10px'} borderRadius={5} bg={'#FFF8E4'}>
-            <HStack>
-              <IconInfo color={colors.black} size={6} />
-              <VStack flex={1} paddingLeft={'10px'}>
-                <Text fontWeight={400} color="#201D1D" fontSize={12}>
-                  {status === 'Payment Expired'
-                    ? 'Status pembayaran sudah expired, jika masih ingin mengikuti event ini silahkan register ulang event ini'
-                    : status === 'Waiting Payment'
-                    ? 'Silahkan selesaikan pembayaran anda sebelum batas pembayaran berakhir'
-                    : 'Pengumuman hasil ballot akan diinformasikan pada periode pengumuman hasil ballot.'}
-                </Text>
-                {(status === 'Registered' || status === 'Unqualified') && (
-                  <Text
-                    fontWeight={600}
-                    color="#201D1D"
-                    fontSize={12}
-                    textDecorationLine={'underline'}>
-                    Lihat detail info
+          {status !== 'Paid' && (
+            <Box m={15} p={'10px'} borderRadius={5} bg={'#FFF8E4'}>
+              <HStack>
+                <IconInfo color={colors.black} size={6} />
+                <VStack flex={1} paddingLeft={'10px'}>
+                  <Text fontWeight={400} color="#201D1D" fontSize={12}>
+                    {status === 'Payment Expired'
+                      ? 'Status pembayaran sudah expired, jika masih ingin mengikuti event ini silahkan register ulang event ini'
+                      : params.isBallot && status === 'Waiting Payment'
+                      ? 'Selamat anda lolos tahap ballot, silahkan lanjutkan ke pembayaran event.'
+                      : !params.isBallot && status === 'Waiting Payment'
+                      ? 'Silahkan selesaikan pembayaran anda sebelum batas pembayaran berakhir'
+                      : 'Pengumuman hasil ballot akan diinformasikan pada periode pengumuman hasil ballot.'}
                   </Text>
-                )}
-              </VStack>
-            </HStack>
-          </Box>
+                  {(status === 'Registered' || status === 'Unqualified') && (
+                    <Text
+                      fontWeight={600}
+                      color="#201D1D"
+                      fontSize={12}
+                      textDecorationLine={'underline'}>
+                      Lihat detail info
+                    </Text>
+                  )}
+                </VStack>
+              </HStack>
+            </Box>
+          )}
 
-          <Box marginX={'15px'} bg={colors.white} borderRadius={8}>
+          <Box margin={'15px'} bg={colors.white} borderRadius={8}>
             <VStack paddingX={'15px'}>
               <HStack
                 justifyContent={'space-between'}
@@ -263,6 +281,11 @@ export default function MyEventDetail() {
                 </Text>
                 {statusComp}
               </HStack>
+              {status === 'Paid' && (
+                <Box alignItems={'center'}>
+                  <SvgXml xml={QR} />
+                </Box>
+              )}
               {status !== 'Paid' && (
                 <>
                   <Box

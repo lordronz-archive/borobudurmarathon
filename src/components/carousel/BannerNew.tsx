@@ -38,7 +38,7 @@ export default function BannerNew(props: IProps) {
           data={props.entries}
           modeConfig={{
             parallaxScrollingScale: 0.94,
-            parallaxScrollingOffset: 46,
+            parallaxScrollingOffset: 54,
             parallaxAdjacentItemScale: 0.86,
           }}
           mode="parallax"
@@ -50,7 +50,7 @@ export default function BannerNew(props: IProps) {
               bg="white"
               mx={4}
               borderRadius="lg"
-              style={{marginRight: 25, marginLeft: 4}}>
+              style={{marginRight: 32, marginLeft: 4}}>
               <VStack>
                 <Image
                   key={index}

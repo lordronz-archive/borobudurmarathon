@@ -33,7 +33,7 @@ export default function BannerNew(props: IProps) {
         <Carousel
           loop
           width={width}
-          height={width / 1.4}
+          height={width / 1.45}
           autoPlay={true}
           data={props.entries}
           modeConfig={{

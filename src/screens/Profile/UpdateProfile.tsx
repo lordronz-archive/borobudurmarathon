@@ -1,38 +1,18 @@
-import {useNavigation} from '@react-navigation/native';
-import {
-  Box,
-  Text,
-  VStack,
-  ScrollView,
-  View,
-  HStack,
-  Avatar,
-  useTheme,
-  Toast,
-  Button,
-} from 'native-base';
+import {Box, Text, VStack, ScrollView, View, HStack, Avatar} from 'native-base';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
 import countries from '../../helpers/countries';
-import {AuthService} from '../../api/auth.service';
-import {RootStackParamList} from '../../navigation/RootNavigator';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import I18n from '../../lib/i18n';
 import {getShortCodeName} from '../../helpers/name';
 import {useAuthUser} from '../../context/auth.context';
-import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function UpdateProfileScreen() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {colors} = useTheme();
   const {user} = useAuthUser();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [fullName, setFullName] = useState<string>(
     user?.data[0].zmemFullName || '',
   );
@@ -71,100 +51,6 @@ export default function UpdateProfileScreen() {
     user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces || '',
   );
 
-  const setProfile = async () => {
-    setIsLoading(true);
-    const payload = {
-      mbsdIDNumber,
-      mbsdBirthDate: birthDate ? birthDate.toJSON().slice(0, 10) : undefined,
-      mbsdBirthPlace,
-      mbsdBloodType,
-      mbsdNationality,
-      mbsdCountry,
-      mbsdCity,
-      mbsdProvinces,
-      mbsdAddress,
-      mbsdRawAddress: '-',
-      mbsdIDNumberType,
-      mbsdFile: 'thomas.jpg',
-      mmedEducation: '-',
-      mmedOccupation: '-',
-      mmedIncome: '-',
-    };
-    let valid = true;
-    if (!mbsdIDNumber) {
-      valid = false;
-    }
-    if (!birthDate) {
-      valid = false;
-    }
-    if (!mbsdBirthPlace) {
-      valid = false;
-    }
-    if (!mbsdBloodType) {
-      valid = false;
-    }
-    if (!mbsdNationality) {
-      valid = false;
-    }
-    if (!mbsdCountry) {
-      valid = false;
-    }
-    if (!mbsdCity) {
-      valid = false;
-    }
-    if (!mbsdProvinces) {
-      valid = false;
-    }
-    if (!mbsdAddress) {
-      valid = false;
-    }
-    if (!phoneNumber) {
-      valid = false;
-    }
-
-    if (!valid) {
-      Toast.show({
-        title: 'Not Complete',
-        description: 'Please complete the data',
-      });
-      setIsLoading(false);
-      return;
-    }
-    const res = await AuthService.setprofile(payload);
-    console.info('Setprofile result: ', res);
-
-    if (user?.linked.zmemAuusId[0].auusPhone !== phoneNumber) {
-      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-      console.info('SendOTP result: ', sendOtpRes);
-      navigation.navigate('PhoneNumberValidation', {
-        phoneNumber,
-        onSuccess: async () => {
-          try {
-            setIsLoading(true);
-            await AuthService.setprofile(payload);
-            Toast.show({
-              description: 'Success',
-            });
-            setIsLoading(false);
-            navigation.goBack();
-          } catch (err) {
-            Toast.show({
-              title: 'Failed to update',
-              description: getErrorMessage(err),
-            });
-            setIsLoading(false);
-          }
-        },
-      });
-    } else {
-      Toast.show({
-        description: 'Success',
-      });
-      navigation.goBack();
-      setIsLoading(false);
-    }
-  };
-
   return (
     <View>
       <Header title={I18n.t('profile.title')} left="back" />
@@ -176,18 +62,8 @@ export default function UpdateProfileScreen() {
               paddingLeft={3}
               paddingRight={3}
               alignItems="center">
-              <Avatar
-                size="lg"
-                source={{
-                  // uri: 'https://robohash.org/bormar?set=set4',
-                  uri:
-                    user?.linked?.mbsdZmemId?.[0]?.mbsdFile &&
-                    user?.linked.mbsdZmemId[0].mbsdFile !== '0'
-                      ? 'https://facepool.oss-ap-southeast-5.aliyuncs.com/' +
-                        user?.linked.mbsdZmemId[0].mbsdFile
-                      : 'https://robohash.org/bormar?set=set4',
-                }}>
-                {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
+              <Avatar bg="gray.400" mx={2}>
+                {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
               <VStack paddingLeft={2}>
                 <Text fontSize="md">Choose profile picture</Text>
@@ -222,6 +98,9 @@ export default function UpdateProfileScreen() {
                 helperText="We will send verification code to this number for validation"
                 onChangeText={setPhoneNumber}
                 value={phoneNumber}
+                _inputProps={{
+                  keyboardType: 'numeric',
+                }}
               />
             </VStack>
           </VStack>
@@ -268,6 +147,7 @@ export default function UpdateProfileScreen() {
                 placeholder="Enter your place of birth"
                 label="Place of birth"
                 onChangeText={setBirthPlace}
+                value={mbsdBirthPlace}
               />
               <SelectInput
                 items={[
@@ -323,6 +203,7 @@ export default function UpdateProfileScreen() {
                 placeholder="Choose blood type"
                 label="Blood Type"
                 onValueChange={setBloodType}
+                value={mbsdBloodType}
               />
               <SelectInput
                 items={countries.map(({en_short_name}) => ({
@@ -352,25 +233,23 @@ export default function UpdateProfileScreen() {
               <TextInput
                 placeholder="Enter province name"
                 label="Province"
+                value={mbsdProvinces}
                 onChangeText={setProvinces}
               />
               <TextInput
                 placeholder="Enter city or district name"
                 label="City/District"
                 onChangeText={setCity}
+                value={mbsdCity}
               />
               <TextInput
                 placeholder="Enter your address"
                 label="Address"
+                value={mbsdAddress}
                 onChangeText={setAddress}
               />
             </VStack>
           </VStack>
-          {/* <Box px="4">
-            <Button h="12" onPress={setProfile} isLoading={isLoading}>
-              {I18n.t('profile.buttonUpdate')}
-            </Button>
-          </Box> */}
         </VStack>
         <Box pb={100} />
       </ScrollView>

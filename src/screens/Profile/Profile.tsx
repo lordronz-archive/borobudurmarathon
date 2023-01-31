@@ -140,18 +140,8 @@ export default function MyProfile() {
             paddingLeft={3}
             paddingRight={3}
             alignItems="center">
-            <Avatar
-              size="lg"
-              source={{
-                // uri: 'https://robohash.org/bormar?set=set4',
-                uri:
-                  user?.linked?.mbsdZmemId?.[0]?.mbsdFile &&
-                  user?.linked.mbsdZmemId[0].mbsdFile !== '0'
-                    ? 'https://facepool.oss-ap-southeast-5.aliyuncs.com/' +
-                      user?.linked.mbsdZmemId[0].mbsdFile
-                    : 'https://robohash.org/bormar?set=set4',
-              }}>
-              {getShortCodeName(user?.data[0].zmemFullName || 'Unknown Name')}
+            <Avatar bg="gray.400" mx={2}>
+              {getShortCodeName(user?.data[0].zmemFullName || '')}
             </Avatar>
             <VStack paddingLeft={2}>
               <Text fontWeight="bold" fontSize="md">
@@ -252,7 +242,7 @@ export default function MyProfile() {
           _text={{color: colors.black, fontWeight: 600}}
           onPress={() => {
             AuthService.deleteprofile()
-              .then(res => {
+              .then(_res => {
                 navigation.navigate('Logout');
               })
               .catch(err => {

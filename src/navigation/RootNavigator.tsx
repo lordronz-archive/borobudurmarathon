@@ -66,9 +66,9 @@ export type RootStackParamList = {
     transactionId: string;
     eventId: number;
     isBallot: boolean;
-    ballotStatus: number;
+    regStatus: number;
   };
-  Payment: undefined;
+  Payment: {transactionId: string};
   HowToPay: undefined;
 
   Logout: undefined;

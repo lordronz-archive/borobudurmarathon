@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import moment from 'moment';
-import {FlatList, Toast} from 'native-base';
+import {Box, FlatList, Flex, Image, Text, Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
@@ -87,8 +87,26 @@ export default function SectionListEvent() {
     );
   };
 
+  const _renderEmpty = () => {
+    return (
+      <Flex my={5} flex={1}>
+        <Image
+          source={require('../../../assets/images/hiasan-not-found.png')}
+          alignSelf={'center'}
+          mb={1}
+        />
+        <Text textAlign={'center'} fontSize={'lg'} fontWeight={'bold'} mb={1}>
+          Data Empty
+        </Text>
+        <Text textAlign={'center'} fontSize={'sm'} color={'gray.400'}>
+          There are no data to display
+        </Text>
+      </Flex>
+    );
+  };
+
   return (
-    <Section title="Our Events" mt="1" _title={{py: 2, px: 4}}>
+    <Section title="Our Events" mt={1} _title={{py: 2, px: 4}}>
       <CategoryButton
         categories={[{id: null, value: 'All'}, ...Object.values(EVENT_TYPES)]}
         selected={selectedEventCategory?.id || null}
@@ -99,6 +117,7 @@ export default function SectionListEvent() {
       <FlatList
         refreshing={isLoading}
         data={filteredEvents}
+        ListEmptyComponent={_renderEmpty}
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}
         _contentContainerStyle={{px: 4, py: 3}}

@@ -378,7 +378,10 @@ export default function InputProfileScreen() {
             onChange={setCheckbox}
             value={checkbox}
             accessibilityLabel="Agree to terms">
-            <Checkbox value="agreed" _text={{fontSize: 12, px: 3}}>
+            <Checkbox
+              value="agreed"
+              _text={{fontSize: 12, px: 3}}
+              isDisabled={isLoading}>
               Dengan melanjutkan saya mengerti, mengetahui, dan bersedia tunduk
               tunduk untuk segala persyaratan & ketentuan borobudur marathon.
             </Checkbox>

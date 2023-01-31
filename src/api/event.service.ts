@@ -2,6 +2,7 @@ import config from '../config';
 import httpRequest from '../helpers/httpRequest';
 import {GetEventResponse, GetEventsResponse} from '../types/event.type';
 import ApiService from './api.service';
+import QRCode from 'qrcode';
 // import qs from "qs";
 
 function qs(obj: any, prefix: any) {
@@ -61,7 +62,7 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getTransactionDetail: async function (transactionId: string) {
+  getTransactionDetail: async function (transactionId: string): Promise<any> {
     console.log('Transaction id to get : ', transactionId);
     try {
       return ApiService.get(
@@ -83,6 +84,20 @@ const EventService = {
       console.log('E : ', error);
       const msg = error as any;
       throw new ResponseError(msg.status, msg.error.message);
+    }
+  },
+  async generateQR(data: any) {
+    try {
+      const resp = await QRCode.toString(data, {
+        errorCorrectionLevel: 'H',
+        width: 200,
+        margin: 2,
+      });
+      // console.log('QR Response : ', resp);
+      return resp;
+    } catch (e) {
+      console.log('Generate QR Error:', e);
+      return e;
     }
   },
   getGarminActivities: async function (memberId: string) {
@@ -209,7 +224,7 @@ const EventService = {
     console.log('Do register Event : ', data);
     try {
       return ApiService.post(
-        config.apiUrl.apis.member.registerEvent.path + data.evpaEvnhId,
+        config.apiUrl.apis.member.registerBallot.path + data.evpaEvnhId,
         {data: [data]},
       );
     } catch (error) {
@@ -251,7 +266,7 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  checkoutTransaction: async function (data: any) {
+  checkoutTransaction: async function (data: any): Promise<any> {
     console.log('Data to checkout : ', data);
     try {
       return ApiService.get(

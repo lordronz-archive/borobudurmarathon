@@ -4,24 +4,82 @@ import moment from 'moment';
 import {Divider, FlatList, Toast} from 'native-base';
 import React, {ComponentType, useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
+import {EventService} from '../../../api/event.service';
 import CategoryButton from '../../../components/buttons/CategoryButton';
 import MyEventCard from '../../../components/card/MyEventCard';
 import Section from '../../../components/section/Section';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import httpRequest from '../../../helpers/httpRequest';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {Datum, EVENT_TYPES, Transaction} from '../../../types/event.type';
+import {Datum, EventProperties, EVENT_TYPES, Transaction} from '../../../types/event.type';
 import {EventService} from '../../../api/event.service';
+
+enum CategoryEnum {
+  ALL = 0,
+  ACTIVE,
+  VIRTUAL,
+  PAST,
+  OFFLINE,
+  RACE,
+  ELITE_RUNNER,
+  TILIK_CANDI,
+  YOUNG_TALENT,
+  FRIENDSHIP_RUN,
+}
+
+const EVENT_TYPES = {
+  [CategoryEnum.ACTIVE]: {
+    id: CategoryEnum.ACTIVE,
+    value: 'Active',
+  },
+  [CategoryEnum.PAST]: {
+    id: CategoryEnum.PAST,
+    value: 'Past',
+  },
+  [CategoryEnum.OFFLINE]: {
+    id: CategoryEnum.OFFLINE,
+    value: 'Offline',
+  },
+  [CategoryEnum.RACE]: {
+    id: CategoryEnum.RACE,
+    value: 'Race',
+  },
+  [CategoryEnum.VIRTUAL]: {
+    id: CategoryEnum.VIRTUAL,
+    value: 'Virtual',
+  },
+  [CategoryEnum.ELITE_RUNNER]: {
+    id: CategoryEnum.ELITE_RUNNER,
+    value: 'Elite Runner',
+  },
+};
 
 export default function SectionListMyEvent() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Transaction>();
+  const [eventL, setEvent] = useState<EventProperties[]>([]);
+  let filteredEvents = [...(eventL || [])];
+  let filteredData = [...(data?.data || [])];
   const [selectedCategory, setSelectedCategory] = useState<{
-    id: number | null;
+    id: CategoryEnum | null;
     value: string;
   }>();
+  if (selectedCategory?.id) {
+    filteredEvents = filteredEvents.filter(item => {
+      if (selectedCategory.id === CategoryEnum.ACTIVE) {
+        return moment().isBefore(moment(item.evnhEndDate));
+      }
+      if (selectedCategory.id === CategoryEnum.PAST) {
+        return moment().isAfter(moment(item.evnhEndDate));
+      }
+      return Number(item.evnhType) === Number(selectedCategory.id);
+    });
+    filteredData = filteredData.filter(item =>
+      filteredEvents.find(s => s.id === item.links.mregEventId),
+    );
+  }
 
   const fetchList = () => {
     setIsLoading(true);
@@ -32,13 +90,29 @@ export default function SectionListMyEvent() {
         if (res.data) {
           setData(res.data);
         }
-        setIsLoading(false);
+        EventService.getEvents()
+          .then(ress => {
+            if (ress.data) {
+              setEvent(ress.data);
+            }
+          })
+          .catch(err => {
+            Toast.show({
+              title: 'Failed to get events',
+              description: getErrorMessage(err),
+            });
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       })
       .catch(err => {
         Toast.show({
           title: 'Failed to get events',
           description: getErrorMessage(err),
         });
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   };
@@ -165,7 +239,7 @@ export default function SectionListMyEvent() {
 
       <FlatList
         refreshing={isLoading}
-        data={data?.data}
+        data={filteredData}
         renderItem={_renderItem}
         keyExtractor={item => item.id.toString()}
         _contentContainerStyle={{px: 4, py: 3}}

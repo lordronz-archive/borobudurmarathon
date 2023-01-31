@@ -9,6 +9,7 @@ import {
   useToast,
   Center,
   Button,
+  Spinner,
 } from 'native-base';
 import React, {useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
@@ -80,6 +81,10 @@ export default function EventRegisterScreen() {
     if (fields.find(f => f.evhfName === 'evpaProvinces')) {
       data.evpaProvinces = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
     }
+    if (fields.find(f => f.evhfName === 'evpaProvinsi')) {
+      data.evpaProvinsi = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
+    }
+    console.info(fields);
     setFieldsData({...fieldsData, ...data});
     setAutofilled(true);
   }, [autofilled, fields, fieldsData, user]);
@@ -278,6 +283,26 @@ export default function EventRegisterScreen() {
           buttonContent={'Check My Event'}
         />
       </VStack>
+      {isLoading && (
+        <Box
+          position="absolute"
+          width="100%"
+          height="100%"
+          justifyContent="center"
+          alignItems="center"
+          flex={1}>
+          <Box
+            bg="gray.300"
+            opacity="0.9"
+            width="100%"
+            height="100%"
+            position="absolute"
+          />
+          <Center>
+            <Spinner size="lg" />
+          </Center>
+        </Box>
+      )}
     </ScrollView>
   );
 }

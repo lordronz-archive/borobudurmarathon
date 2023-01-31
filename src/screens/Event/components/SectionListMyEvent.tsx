@@ -11,7 +11,8 @@ import Section from '../../../components/section/Section';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import httpRequest from '../../../helpers/httpRequest';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {Datum, EventProperties, Transaction} from '../../../types/event.type';
+import {Datum, EventProperties, EVENT_TYPES, Transaction} from '../../../types/event.type';
+import {EventService} from '../../../api/event.service';
 
 enum CategoryEnum {
   ALL = 0,
@@ -85,7 +86,7 @@ export default function SectionListMyEvent() {
     httpRequest
       .get('member_resource/transaction')
       .then(res => {
-        console.info('res getEvents', JSON.stringify(res.data));
+        console.info('res transaction', JSON.stringify(res.data));
         if (res.data) {
           setData(res.data);
         }
@@ -129,6 +130,10 @@ export default function SectionListMyEvent() {
       ({id}) => id.toString() === item.links.mregTrnsId.toString(),
     );
 
+    const category = data?.linked.mregEvncId.find(
+      ({id}) => id.toString() === item.links.mregEvncId.toString(),
+    );
+
     if (!event || !transaction) {
       return null;
     }
@@ -137,12 +142,66 @@ export default function SectionListMyEvent() {
 
     const cleanTransactionExpTime = transaction.trnsExpiredTime;
 
+    const handlePayNow = async () => {
+      setIsLoading(true);
+
+      try {
+        const resPayNow = await EventService.checkoutTransaction({
+          transactionId: item.links.mregTrnsId,
+          paymentType: '10',
+        });
+        console.info('res pay now', JSON.stringify(resPayNow));
+
+        if (resPayNow && resPayNow.data) {
+          navigation.navigate('Payment', {
+            transactionId: item.mregOrderId,
+          });
+        }
+      } catch (err) {
+        Toast.show({
+          title: 'Failed to pay now',
+          description: getErrorMessage(err),
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const checkStatus = () => {
+      let status;
+      if (item.mregType === 'MB') {
+        if (item.mregStatus === 0) {
+          status = 'Registered';
+        } else if (item.mregStatus === 99) {
+          status = 'Unqualified';
+        } else {
+          if (transaction?.trnsConfirmed === 1) {
+            status = 'Paid';
+          } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
+            status = 'Payment Expired';
+          } else {
+            status = 'Waiting Payment';
+          }
+        }
+      } else {
+        if (transaction?.trnsConfirmed === 1) {
+          status = 'Paid';
+        } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
+          status = 'Payment Expired';
+        } else {
+          status = 'Waiting Payment';
+        }
+      }
+      return status;
+    };
+
     return (
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('MyEventsDetail', {
             transactionId: item.mregOrderId,
             eventId: event.evnhId,
+            isBallot: item.mregType === 'MB' ? true : false,
             regStatus: item.mregStatus,
           })
         }>
@@ -159,9 +218,11 @@ export default function SectionListMyEvent() {
               ? ' - ' + moment(cleanEndDate).format('MMM D YYYY')
               : '')
           }
-          paid={!!transaction.trnsConfirmTime}
+          status={checkStatus()}
+          category={category?.evncName || ''}
           transactionExpirationTime={cleanTransactionExpTime}
           isAvailable={false}
+          onPayNowClick={() => handlePayNow()}
         />
       </TouchableOpacity>
     );

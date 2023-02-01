@@ -94,6 +94,7 @@ export default function SectionListEvent() {
           source={require('../../../assets/images/hiasan-not-found.png')}
           alignSelf={'center'}
           mb={1}
+          alt="Data empty"
         />
         <Text textAlign={'center'} fontSize={'lg'} fontWeight={'bold'} mb={1}>
           Data Empty

@@ -11,8 +11,7 @@ import Section from '../../../components/section/Section';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import httpRequest from '../../../helpers/httpRequest';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {Datum, EventProperties, EVENT_TYPES, Transaction} from '../../../types/event.type';
-import {EventService} from '../../../api/event.service';
+import {Datum, EventProperties, Transaction} from '../../../types/event.type';
 
 enum CategoryEnum {
   ALL = 0,

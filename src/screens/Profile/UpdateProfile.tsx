@@ -9,9 +9,13 @@ import Header from '../../components/header/Header';
 import I18n from '../../lib/i18n';
 import {getShortCodeName} from '../../helpers/name';
 import {useAuthUser} from '../../context/auth.context';
+import ImagePicker from '../../components/modal/ImagePicker';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
+
+  const [isShowImagePickerModal, setIsShowImagePickerModal] =
+    useState<boolean>(false);
 
   const [fullName, setFullName] = useState<string>(
     user?.data[0].zmemFullName || '',
@@ -56,7 +60,7 @@ export default function UpdateProfileScreen() {
       <Header title={I18n.t('profile.title')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => setIsShowImagePickerModal(true)}>
             <HStack
               space={2}
               paddingLeft={3}
@@ -253,6 +257,11 @@ export default function UpdateProfileScreen() {
         </VStack>
         <Box pb={100} />
       </ScrollView>
+      <ImagePicker
+        visible={isShowImagePickerModal}
+        setVisible={setIsShowImagePickerModal}
+        onChange={() => {}}
+      />
     </View>
   );
 }

@@ -35,6 +35,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app requires access your library when you want to change your profile picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The app use camera only when you want to change your profile picture by taking photo using camera.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>UILaunchStoryboardName</key>

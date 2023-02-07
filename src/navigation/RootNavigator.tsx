@@ -13,8 +13,6 @@ import WebViewScreen from '../screens/Information/WebViewScreen';
 import FAQScreen from '../screens/Information/FAQScreen';
 import WelcomeScreen from '../screens/Welcome/Welcome';
 import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
-import RegisterScreen from '../screens/Event/Register';
-import DetailEventScreen from '../screens/Event/MyEventsDetail';
 import PaymentScreen from '../screens/Payment';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
@@ -23,6 +21,7 @@ import HowToPayScreen from '../screens/HowToPay';
 import LogoutScreen from '../screens/Profile/LogoutScreen';
 import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
 import MyEventDetail from '../screens/Event/MyEventsDetail';
+import CertificatesScreen from '../screens/Profile/Certificates';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -54,6 +53,7 @@ export type RootStackParamList = {
   EventDetail: {id: number};
 
   UpdateProfile: undefined;
+  Certificates: undefined;
   UpdatePhone: undefined;
   Welcome: undefined;
 
@@ -136,6 +136,11 @@ function RootNavigator() {
         <Stack.Screen
           name="UpdateProfile"
           component={UpdateProfileScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Certificates"
+          component={CertificatesScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

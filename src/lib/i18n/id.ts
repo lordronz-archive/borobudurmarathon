@@ -15,9 +15,11 @@ export default {
   profile: {
     title: 'Profil',
     editProfile: 'Edit Profil',
+    viewProfile: 'Lihat Profil',
     buttonUpdate: 'Ubah Profil',
     changePhoneNumber: 'Ubah Nomor Handphone',
     sendOtp: 'Kirim OTP',
   },
+  certificates: 'Sertifikat',
   save: 'Simpan',
 };

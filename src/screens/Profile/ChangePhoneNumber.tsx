@@ -43,7 +43,7 @@ export default function ChangePhoneNumberScreen() {
       setIsLoading(false);
       return;
     }
-    if (user?.linked.zmemAuusId[0].auusPhone !== phoneNumber) {
+    if ('0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !== phoneNumber) {
       const sendOtpRes = await AuthService.sendOTP({phoneNumber});
       console.info('SendOTP result: ', sendOtpRes);
       navigation.navigate('PhoneNumberValidation', {

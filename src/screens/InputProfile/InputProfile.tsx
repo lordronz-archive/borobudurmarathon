@@ -21,10 +21,14 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {TouchableOpacity} from 'react-native';
+import {useAuthUser} from '../../context/auth.context';
 
 export default function InputProfileScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const {user} = useAuthUser();
+
   // const isFocused = useIsFocused();
   // const route = useRoute();
   // const params = route.params as RootStackParamList['InputProfile'];
@@ -32,7 +36,7 @@ export default function InputProfileScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [birthDate, setBirthDate] = useState<Date>();
   const [phoneNumber, setPhoneNumber] = useState<string>();
-  const [mbsdIDNumberType, setIDNumberType] = useState<string>();
+  const [mbsdIDNumberType, setIDNumberType] = useState<string>('1');
   const [mbsdIDNumber, setIDNumber] = useState<string>();
   const [mbsdGender, setGender] = useState<string>('1');
   const [mbsdBirthPlace, setBirthPlace] = useState<string>();
@@ -58,7 +62,7 @@ export default function InputProfileScreen() {
     mbsdProvinces,
     mbsdAddress,
     mbsdRawAddress: '-',
-    mbsdIDNumberType: Number(mbsdIDNumber),
+    mbsdIDNumberType: Number(mbsdIDNumberType),
     mbsdFile: 0,
     mmedEducation: '-',
     mmedOccupation: '-',
@@ -112,20 +116,24 @@ export default function InputProfileScreen() {
     }
 
     try {
-      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-      console.info('SendOTP result: ', sendOtpRes);
-      navigation.navigate('PhoneNumberValidation', {
-        phoneNumber,
-        onSuccess: () => {
-          setProfileAfterVerifyPhoneSuccess();
-        },
-      });
-      setIsLoading(false);
+      if ('0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !== phoneNumber) {
+        const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+        console.info('SendOTP result: ', sendOtpRes);
+        navigation.navigate('PhoneNumberValidation', {
+          phoneNumber,
+          onSuccess: () => {
+            setProfileAfterVerifyPhoneSuccess();
+          },
+        });
+      } else {
+        setProfileAfterVerifyPhoneSuccess();
+      }
     } catch (err) {
       Toast.show({
         title: 'Failed to send otp',
         description: getErrorMessage(err),
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -193,14 +201,14 @@ export default function InputProfileScreen() {
                   label: 'KTP',
                   value: '1',
                 },
-                {
-                  label: 'SIM',
-                  value: '2',
-                },
-                {
-                  label: 'Passport',
-                  value: '3',
-                },
+                // {
+                //   label: 'SIM',
+                //   value: '2',
+                // },
+                // {
+                //   label: 'Passport',
+                //   value: '3',
+                // },
               ]}
               placeholder="Choose identity type"
               label="Identity Type"

@@ -27,9 +27,11 @@ export default function UpdateProfileScreen() {
   );
   const [email] = useState<string>(user?.linked.zmemAuusId[0].auusEmail || '');
   const [phoneNumber, setPhoneNumber] = useState<string>(
-    user?.linked?.zmemAuusId?.[0]?.auusPhone || '',
+    '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber || '',
   );
-  const [mbsdIDNumberType, setIDNumberType] = useState<string>();
+  const [mbsdIDNumberType, setIDNumberType] = useState<string>(
+    user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumberType.toString() || '',
+  );
   const [mbsdIDNumber, setIDNumber] = useState<string>(
     user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumber || '',
   );
@@ -119,14 +121,14 @@ export default function UpdateProfileScreen() {
                     label: 'KTP',
                     value: '1',
                   },
-                  {
-                    label: 'SIM',
-                    value: '2',
-                  },
-                  {
-                    label: 'Passport',
-                    value: '3',
-                  },
+                  // {
+                  //   label: 'SIM',
+                  //   value: '2',
+                  // },
+                  // {
+                  //   label: 'Passport',
+                  //   value: '3',
+                  // },
                 ]}
                 placeholder="Choose identity type"
                 label="Identity Type"
@@ -138,6 +140,7 @@ export default function UpdateProfileScreen() {
                 label="Identity number"
                 helperText="Enter your KTP/SIM/Passport ID number"
                 onChangeText={setIDNumber}
+                value={mbsdIDNumber}
               />
               <DateInput
                 placeholder="DD MMM YYYY"
@@ -216,6 +219,7 @@ export default function UpdateProfileScreen() {
                 }))}
                 placeholder="Choose country"
                 label="Country"
+                value={mbsdCountry}
                 onValueChange={setCountry}
               />
               <SelectInput
@@ -223,6 +227,7 @@ export default function UpdateProfileScreen() {
                   label: nationality,
                   value: nationality,
                 }))}
+                value={mbsdNationality}
                 placeholder="Choose nationality"
                 label="Nationality"
                 onValueChange={setNationality}

@@ -69,7 +69,9 @@ export default function PhoneNumberValidationScreen({route}: Props) {
 
     try {
       const res = await AuthService.confirmOTP(payload);
-      await onSuccess();
+      if (res) {
+        await onSuccess();
+      }
       console.info('Confirm OTP result: ', res);
       navigation.navigate('Welcome');
       setIsLoading(false);

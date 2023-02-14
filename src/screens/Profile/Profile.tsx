@@ -56,7 +56,7 @@ export default function MyProfile() {
     {
       key: 'edit-profile',
       icon: <IconSingleUser color={colors.black} size={6} />,
-      name: 'Edit Profile',
+      name: 'View Profile',
       route: 'UpdateProfile',
     },
     {
@@ -154,37 +154,39 @@ export default function MyProfile() {
           </HStack>
         </Pressable>
 
-        <Box
-          marginX={3}
-          marginTop={5}
-          marginBottom={7}
-          borderWidth={1}
-          borderColor={colors.gray[300]}
-          borderRadius={8}
-          backgroundColor={colors.white}
-          shadow="1">
-          <VStack padding={3} justifyContent="space-between">
-            <IconBadge color={colors.primary[900]} size="lg" />
-            <Text marginTop={3} fontWeight={600}>
-              View Certificate
-            </Text>
-          </VStack>
-          <Image
-            alt="hiasan"
-            source={require('../../assets/images/hiasan-color.png')}
-            position="absolute"
-            right={0}
-            bottom={0}
-            zIndex={10}
-          />
-          <Image
-            alt="hiasan"
-            source={require('../../assets/images/hiasan-shadow.png')}
-            position="absolute"
-            right={10}
-            zIndex={0}
-          />
-        </Box>
+        <Pressable onPress={() => navigation.navigate('Certificates')}>
+          <Box
+            marginX={3}
+            marginTop={5}
+            marginBottom={7}
+            borderWidth={1}
+            borderColor={colors.gray[300]}
+            borderRadius={8}
+            backgroundColor={colors.white}
+            shadow="1">
+            <VStack padding={3} justifyContent="space-between">
+              <IconBadge color={colors.primary[900]} size="lg" />
+              <Text marginTop={3} fontWeight={600}>
+                View Certificate
+              </Text>
+            </VStack>
+            <Image
+              alt="hiasan"
+              source={require('../../assets/images/hiasan-color.png')}
+              position="absolute"
+              right={0}
+              bottom={0}
+              zIndex={10}
+            />
+            <Image
+              alt="hiasan"
+              source={require('../../assets/images/hiasan-shadow.png')}
+              position="absolute"
+              right={10}
+              zIndex={0}
+            />
+          </Box>
+        </Pressable>
 
         <Box borderTopColor={colors.gray[500]}>
           {menus.map((menu, index) => (

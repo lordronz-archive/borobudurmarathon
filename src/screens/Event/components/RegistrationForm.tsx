@@ -28,6 +28,7 @@ export default function RegistrationForm(
 
   useEffect(() => {
     getListOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getListOptions = async () => {

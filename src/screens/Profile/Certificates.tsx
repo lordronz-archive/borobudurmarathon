@@ -4,11 +4,16 @@ import Header from '../../components/header/Header';
 import I18n from '../../lib/i18n';
 import {useAuthUser} from '../../context/auth.context';
 import Pdf from 'react-native-pdf';
-import {Dimensions} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 import IconDownload from '../../assets/icons/IconDownload';
 
+const PDF_STYLE: StyleProp<ViewStyle> = {
+  width: '100%',
+  height: '100%',
+};
+
 export default function CertificatesScreen() {
-  const {user} = useAuthUser();
+  const {user: _user} = useAuthUser();
   const source = {
     uri: 'https://my.borobudurmarathon.com/dev.titudev.com/api//e-certificate/MTEzMDAxNzAtMzMyLTEyNjM=',
     cache: true,
@@ -23,16 +28,7 @@ export default function CertificatesScreen() {
             <Pdf
               trustAllCerts={false}
               source={source}
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              onLoadComplete={(numberOfPages, filePath) => {
-                console.log(`Number of pages: ${numberOfPages}`);
-              }}
-              onPageChanged={(page, numberOfPages) => {
-                console.log(`Current page: ${page}`);
-              }}
+              style={PDF_STYLE}
               onError={error => {
                 console.log(error);
               }}
@@ -44,7 +40,9 @@ export default function CertificatesScreen() {
           <Button
             endIcon={<IconDownload />}
             variant="ghost"
-            colorScheme="secondary">
+            colorScheme="secondary"
+            bgColor={'transparent'}
+            _stack={{justifyContent: 'center', alignItems: 'center'}}>
             <Text fontWeight={600} fontFamily="Poppins-Medium" fontSize="14px">
               Download Certificate
             </Text>

@@ -131,8 +131,9 @@ export default function InputProfileScreen() {
     } catch (err) {
       Toast.show({
         title: 'Failed to send otp',
-        description: getErrorMessage(err),
+        description: 'Phone already used by another user',
       });
+      console.info(err, getErrorMessage(err), 'Failed to send otp');
     } finally {
       setIsLoading(false);
     }

@@ -139,7 +139,7 @@ export default function DetailEvent() {
     setIsLoading(true);
     EventService.getEvent(params.id)
       .then(res => {
-        console.info('res getEvent', res);
+        console.info('res get detail event', res);
         setEvent(res);
         setIsLoading(false);
       })

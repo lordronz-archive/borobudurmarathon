@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import moment from 'moment';
 import {Divider, FlatList, Toast} from 'native-base';
@@ -54,6 +54,7 @@ const EVENT_TYPES = {
 };
 
 export default function SectionListMyEvent() {
+  const IsFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +119,7 @@ export default function SectionListMyEvent() {
 
   useEffect(() => {
     fetchList();
-  }, []);
+  }, [IsFocused]);
 
   const _renderItem = ({item}: {item: Datum}) => {
     const event = data?.linked.mregEventId.find(

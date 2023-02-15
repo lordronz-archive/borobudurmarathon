@@ -57,9 +57,10 @@ export default function ChangePhoneNumberScreen() {
             navigation.goBack();
           } catch (err) {
             Toast.show({
-              title: 'Failed to update',
-              description: getErrorMessage(err),
+              title: 'Failed to send otp',
+              description: 'Phone already used by another user',
             });
+            console.info(err, getErrorMessage(err), 'Failed to send otp');
             setIsLoading(false);
           }
         },

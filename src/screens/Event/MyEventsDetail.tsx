@@ -10,11 +10,10 @@ import {
   ChevronRightIcon,
   Button,
   Toast,
-  Modal,
-  Pressable,
-  Radio,
+  Actionsheet,
+  AlertDialog,
 } from 'native-base';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
@@ -26,18 +25,23 @@ import moment from 'moment';
 import datetime from '../../helpers/datetime';
 import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
-import {TouchableOpacity} from 'react-native';
+import {Dimensions, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
 export default function MyEventDetail() {
   const route = useRoute();
+  const IsFocused = useIsFocused();
   const params = route.params as RootStackParamList['MyEventsDetail'];
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
+  const screenWidth = Dimensions.get('window').width;
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
+
+  const confirmRef = React.useRef(null);
 
   const [detailTransaction, setDetailTransaction] = useState<any>();
   const [detailEvent, setDetailEvent] = useState<GetEventResponse>();
@@ -45,7 +49,8 @@ export default function MyEventDetail() {
   const [status, setStatus] = useState<string>('');
   const [QR, setQR] = useState<any>();
 
-  // const [selectedPayment, setSelectedPayment] = useState<any>();
+  const [tmpPayment, setTmpPayment] = useState<any>();
+  const [confirmPayment, setConfirmPayment] = useState<any>();
 
   const checkStatus = async () => {
     let status;
@@ -127,7 +132,7 @@ export default function MyEventDetail() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [IsFocused]);
 
   const DATA_LIST = [
     {
@@ -214,7 +219,7 @@ export default function MyEventDetail() {
     try {
       const resPayNow = await EventService.checkoutTransaction({
         transactionId: detailTransaction?.data?.trnsId,
-        paymentType: '10',
+        paymentType: confirmPayment.evptMsptId,
       });
       console.info('res pay now', JSON.stringify(resPayNow));
       if (resPayNow && resPayNow.data) {
@@ -350,17 +355,27 @@ export default function MyEventDetail() {
               {(status === 'Waiting Payment' ||
                 (status === 'Payment Expired' && !params.isBallot)) && (
                 <Button
-                  onPress={() =>
+                  onPress={() => {
                     status === 'Waiting Payment'
-                      ? handlePayNow()
+                      ? confirmPayment
+                        ? detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
+                          detailTransaction?.linked?.trihTrnsId?.find(
+                            (item: any) => item.trihIsCurrent === 1,
+                          )?.trihPaymentType === confirmPayment?.evptMsptName
+                          ? navigation.navigate('Payment', {
+                              transactionId: params.transactionId,
+                            })
+                          : handlePayNow()
+                        : setShowModal(true)
                       : detailEvent &&
                         navigation.navigate('EventRegister', {
                           event: detailEvent,
                           selectedCategoryId:
                             detailTransaction?.linked?.evrlTrnsId?.[0]
                               ?.evpaEvncId,
-                        })
-                  }
+                        });
+                    setConfirmPayment(undefined);
+                  }}
                   width={'100%'}
                   marginX={'22px'}
                   marginTop={'12px'}
@@ -374,7 +389,9 @@ export default function MyEventDetail() {
                     fontSize={14}
                     textAlign={'center'}>
                     {status === 'Waiting Payment'
-                      ? 'Pay Now'
+                      ? confirmPayment
+                        ? `Pay Now via ${confirmPayment?.evptLabel}`
+                        : 'Choose Payment Method'
                       : 'Register Ulang Event'}
                   </Text>
                 </Button>
@@ -453,49 +470,99 @@ export default function MyEventDetail() {
           </Text>
         </ScrollView>
       )}
-      {/* <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Choose Payment</Modal.Header>
-          <Modal.Body>
-            <Radio.Group
-              name="payment"
-              size="sm"
-              onChange={val => console.log(val)}>
-              <VStack space={3}>
-                {detailEvent &&
-                  detailEvent?.payments?.map(item => (
-                    <Radio
-                      alignItems="flex-start"
-                      value={item.evptMsptId}
-                      colorScheme="red"
-                      size="sm">
-                      {item.evptLabel}
-                    </Radio>
-                  ))}
-              </VStack>
-            </Radio.Group>
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button.Group space={2}>
+      <Actionsheet
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        size={'full'}>
+        <Actionsheet.Content maxWidth={'100%'}>
+          <Text color={'#1E1E1E'} fontSize={'20px'} fontWeight={600}>
+            Choose Payment Method
+          </Text>
+          <Text color={'#768499'} fontSize={'12px'} fontWeight={400}>
+            Silahkan pilih metode pembayarn untuk event ini
+          </Text>
+          <ScrollView
+            flexGrow={1}
+            width={'full'}
+            height={screenWidth / 1.4}
+            showsVerticalScrollIndicator={false}>
+            {detailEvent &&
+              detailEvent?.payments
+                ?.sort((a, b) =>
+                  a.evptLabel < b.evptLabel
+                    ? -1
+                    : a.evptLabel > b.evptLabel
+                    ? 1
+                    : 0,
+                )
+                ?.map(item => (
+                  <Actionsheet.Item
+                    onPress={() => {
+                      setTmpPayment(item);
+                      setShowModal(false);
+                      setShowModalConfirm(true);
+                    }}
+                    color={'#1E1E1E'}
+                    fontSize={'14px'}
+                    fontWeight={400}>
+                    {item.evptLabel}
+                  </Actionsheet.Item>
+                ))}
+          </ScrollView>
+        </Actionsheet.Content>
+      </Actionsheet>
+      <AlertDialog leastDestructiveRef={confirmRef} isOpen={showModalConfirm}>
+        <AlertDialog.Content>
+          <AlertDialog.Header>Confirm Payment</AlertDialog.Header>
+          <AlertDialog.Body marginY={'20px'}>
+            <Text
+              textAlign={'center'}
+              fontSize={'16px'}
+              fontWeight={600}
+              marginBottom={'12px'}>
+              {`Are you sure want to use ${tmpPayment?.evptLabel} as your Payment method?`}
+            </Text>
+            <Text
+              textAlign={'center'}
+              color={'#768499'}
+              fontSize={'11px'}
+              fontWeight={400}>
+              You can’t change payment method after confirming your choice.
+            </Text>
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group width={'full'}>
               <Button
+                flex={1}
+                backgroundColor={'#fff'}
+                borderColor={'#C5CDDB'}
+                borderStyle={'solid'}
+                borderWidth={1}
+                borderRadius={'8px'}
                 onPress={() => {
-                  setShowModal(false);
-                }}>
-                Cancel
+                  setShowModalConfirm(false);
+                  setTmpPayment(undefined);
+                  setShowModal(true);
+                }}
+                ref={confirmRef}>
+                <Text fontSize={'14px'} fontWeight={400}>
+                  Cancel
+                </Text>
               </Button>
               <Button
-                disabled={selectedPayment}
+                flex={1}
+                borderRadius={'8px'}
                 onPress={() => {
-                  setShowModal(false);
+                  setConfirmPayment(tmpPayment);
+                  setTmpPayment(undefined);
+                  setShowModalConfirm(false);
                 }}>
-                Save
+                Yes, Sure
               </Button>
             </Button.Group>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal> */}
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
     </View>
   );
 }

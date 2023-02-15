@@ -120,7 +120,7 @@ export default function MyCardEvent({
                       <Text fontSize={12} color="coolGray.800">
                         Pay before{' '}
                         {moment(transactionExpirationTime).format(
-                          'DD MMM YYYY, HH:MM',
+                          'DD MMM YYYY, H:mm',
                         )}
                       </Text>
                     </HStack>

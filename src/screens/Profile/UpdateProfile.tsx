@@ -1,6 +1,15 @@
-import {Box, Text, VStack, ScrollView, View, HStack, Avatar} from 'native-base';
-import React, {useState} from 'react';
-import {TouchableOpacity} from 'react-native';
+import {
+  Box,
+  Text,
+  VStack,
+  ScrollView,
+  View,
+  HStack,
+  Avatar,
+  Button,
+} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {Platform, TouchableOpacity} from 'react-native';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
@@ -10,12 +19,18 @@ import I18n from '../../lib/i18n';
 import {getShortCodeName} from '../../helpers/name';
 import {useAuthUser} from '../../context/auth.context';
 import ImagePicker from '../../components/modal/ImagePicker';
+import httpRequest from '../../helpers/httpRequest';
+import {ProfileService} from '../../api/profile.service';
+import {useNavigation} from '@react-navigation/native';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
+  const navigation = useNavigation();
 
   const [isShowImagePickerModal, setIsShowImagePickerModal] =
     useState<boolean>(false);
+
+  const [profilePic, setProfilePic] = useState<any>();
 
   const [fullName, setFullName] = useState<string>(
     user?.data[0].zmemFullName || '',
@@ -57,6 +72,60 @@ export default function UpdateProfileScreen() {
     user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces || '',
   );
 
+  function handleChangeProfilePic(image: any) {
+    console.log(image);
+    setProfilePic({
+      mime: image.mime,
+      path: image.path,
+      modificationDate: image.modificationDate,
+    });
+  }
+
+  const handleUpdatePhotoProfile = async () => {
+    if (!profilePic) {
+      return;
+    }
+
+    try {
+      let uri =
+        Platform.OS === 'android'
+          ? profilePic.path
+          : profilePic.path.replace('file://', '');
+      let uriSplit = uri.split('/');
+      let name = uriSplit[uriSplit.length - 1];
+
+      let formData = new FormData();
+      formData.append('fileType', 'avatar');
+      formData.append('file', {
+        name,
+        type: profilePic.mime,
+        uri,
+      });
+
+      const res = await httpRequest({
+        url: 'https://repository.race.id/public',
+        method: 'POST',
+        headers: {
+          Authorization: 'Api-Key=C00l&@lm!ghTyyA4pp',
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      });
+
+      console.log(res, 'save Image');
+
+      if (res.data) {
+        const result = await ProfileService.updatePhoto(res.data.fileId);
+
+        console.log(result, 'save ID');
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      navigation.goBack();
+    }
+  };
+
   return (
     <View>
       <Header title={I18n.t('profile.title')} left="back" />
@@ -68,8 +137,12 @@ export default function UpdateProfileScreen() {
               paddingLeft={3}
               paddingRight={3}
               alignItems="center">
-              <Avatar bg="gray.400" mx={2}>
-                {getShortCodeName(user?.data[0].zmemFullName || '')}
+              <Avatar
+                bg="gray.400"
+                mx={2}
+                source={profilePic && {uri: profilePic?.path || ''}}>
+                {!profilePic?.path &&
+                  getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
               <VStack paddingLeft={2}>
                 <Text fontSize="md">Choose profile picture</Text>
@@ -259,13 +332,18 @@ export default function UpdateProfileScreen() {
               />
             </VStack>
           </VStack>
+          <VStack space="2.5" px="4">
+            <Button onPress={handleUpdatePhotoProfile}>
+              Update Photo Profile
+            </Button>
+          </VStack>
         </VStack>
         <Box pb={100} />
       </ScrollView>
       <ImagePicker
         visible={isShowImagePickerModal}
         setVisible={setIsShowImagePickerModal}
-        onChange={() => {}}
+        onChange={image => handleChangeProfilePic(image)}
       />
     </View>
   );

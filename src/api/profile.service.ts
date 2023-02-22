@@ -1,6 +1,9 @@
 import config from '../config';
 import httpRequest from '../helpers/httpRequest';
-import {IMemberDetailResponse} from '../types/profile.type';
+import type {
+  IMemberDetailResponse,
+  MasterLocationResponse,
+} from '../types/profile.type';
 
 function qs(obj: any, prefix: boolean | string) {
   const str: string[] = [];
@@ -70,6 +73,18 @@ const ProfileService = {
             zmemPhoto: id,
           },
         },
+      );
+    } catch (error) {
+      const msg = error as any;
+      throw msg;
+    }
+  },
+  getLocation: async function (parameter?: any) {
+    try {
+      return await httpRequest.get<MasterLocationResponse>(
+        config.steelytoeUrl.href +
+          config.steelytoeUrl.apis.masterLocation.path +
+          (parameter ? '?' + qs(parameter, false) : ''),
       );
     } catch (error) {
       const msg = error as any;

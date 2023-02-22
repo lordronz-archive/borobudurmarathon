@@ -9,7 +9,7 @@ import {
   Center,
   Button,
 } from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
 import TextInput from '../../components/form/TextInput';
@@ -22,6 +22,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {TouchableOpacity} from 'react-native';
 import {useAuthUser} from '../../context/auth.context';
+import {MasterLocationResponse} from '../../types/profile.type';
+import {ProfileService} from '../../api/profile.service';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -48,7 +50,16 @@ export default function InputProfileScreen() {
   const [mbsdCity, setCity] = useState<string>();
   const [mbsdProvinces, setProvinces] = useState<string>();
 
+  const [locations, setLocations] = useState<MasterLocationResponse>();
+
   const [checkbox, setCheckbox] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const {data: loc} = await ProfileService.getLocation();
+      setLocations(loc);
+    })();
+  }, []);
 
   const payload = {
     mbsdIDNumber,
@@ -155,6 +166,9 @@ export default function InputProfileScreen() {
       setIsLoading(false);
     }
   };
+  if (!locations) {
+    return null;
+  }
 
   return (
     <ScrollView>
@@ -341,16 +355,40 @@ export default function InputProfileScreen() {
             Address Information
           </Text>
           <VStack space="1.5">
-            <TextInput
+            <SelectInput
+              items={locations?.data.map(v => ({
+                label: v.mlocProvince,
+                value: v.mlocProvince,
+              }))}
               placeholder="Enter province name"
               label="Province"
-              onChangeText={setProvinces}
+              onValueChange={text => {
+                setProvinces(text);
+                (async () => {
+                  const {data: loc} = await ProfileService.getLocation({
+                    filter: {mLocName: {like: text}},
+                  });
+                  setLocations(loc);
+                })();
+              }}
               value={mbsdProvinces}
             />
-            <TextInput
+            <SelectInput
+              items={locations?.data.map(v => ({
+                label: v.mlocRegency,
+                value: v.mlocRegency,
+              }))}
               placeholder="Enter city or district name"
               label="City/District"
-              onChangeText={setCity}
+              onValueChange={text => {
+                setCity(text);
+                (async () => {
+                  const {data: loc} = await ProfileService.getLocation({
+                    filter: {mLocName: {like: text}},
+                  });
+                  setLocations(loc);
+                })();
+              }}
               value={mbsdCity}
             />
             <TextInput

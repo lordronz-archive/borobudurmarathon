@@ -7,7 +7,7 @@ import {
 
 type SelectInputProps = {
   isInvalid?: boolean;
-  helperText?: string;
+  helperText?: React.ReactNode;
   errorMessage?: string;
   placeholder?: string;
   label?: string;

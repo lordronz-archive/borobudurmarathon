@@ -18,7 +18,7 @@ export default function SectionFeaturedEvents() {
 
   const fetchList = () => {
     setIsLoading(true);
-    EventService.getEvents()
+    EventService.getEvents(true)
       .then(res => {
         console.info('res getEvents', JSON.stringify(res));
         if (res.data) {

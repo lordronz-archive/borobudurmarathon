@@ -297,7 +297,7 @@ export interface MregEventID {
   evnhType: number;
   evnhName: string;
   evnhQuotaRegistration: number;
-  evnhFuture: null;
+  evnhFuture: null | number;
   evnhDescription: null;
   evnhPlace: null;
   evnhNote: null;

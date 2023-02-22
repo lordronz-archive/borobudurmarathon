@@ -94,3 +94,35 @@ export type IMemberDetailResponse = {
   linked: ILinked;
   status: IStatus;
 };
+
+export type MasterLocationResponse = {
+  data: Datum[];
+  linked: any[];
+  fields: Field[];
+  status: Status;
+};
+
+export type Datum = {
+  id: number;
+  mlocId: number;
+  mlocName: string;
+  mlocProvince: string;
+  mlocRegency: string;
+  mlocSubdistrict: string;
+  mlocVillage: string;
+  links: Links;
+};
+
+export type Links = {};
+
+export type Field = {
+  name: string;
+  label: string;
+  size: number;
+  type: string;
+};
+
+export type Status = {
+  page: number;
+  totalRecords: number;
+};

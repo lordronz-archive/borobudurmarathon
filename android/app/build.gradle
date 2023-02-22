@@ -141,8 +141,8 @@ android {
         applicationId "com.borobudurmarathon.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 201
-        versionName "2.0.6"
+        versionCode 202
+        versionName "2.0.7"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
         resValue "string", "build_config_package", "com.borobudurmarathon.app"
         vectorDrawables.useSupportLibrary = true

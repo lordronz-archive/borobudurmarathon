@@ -5,9 +5,12 @@ export default {
     href: 'https://jobs.race.id/api/',
     // href : 'http://localhost:9922/api/',
   },
-  steelytoeUrl: {
+  apiUrl: {
     href: 'https://my.borobudurmarathon.com/dev.titudev.com/api/v1/',
     // href : '/dev.titudev.com/api/v1/',
+  },
+  steelytoeUrl: {
+    href: 'https://steelytoe.com/dev.titudev.com//api/v1/',
   },
   validatorUrl: {
     href: 'https://validator.race.id/',

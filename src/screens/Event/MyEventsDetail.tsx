@@ -488,6 +488,7 @@ export default function MyEventDetail() {
             showsVerticalScrollIndicator={false}>
             {detailEvent &&
               detailEvent?.payments
+                ?.filter(item => item.evptMsptId !== '9')
                 ?.sort((a, b) =>
                   a.evptLabel < b.evptLabel
                     ? -1
@@ -497,6 +498,7 @@ export default function MyEventDetail() {
                 )
                 ?.map(item => (
                   <Actionsheet.Item
+                    key={item.evptMsptId}
                     onPress={() => {
                       setTmpPayment(item);
                       setShowModal(false);

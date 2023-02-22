@@ -10,6 +10,7 @@ import {
   Center,
   Button,
   Spinner,
+  HStack,
 } from 'native-base';
 import React, {useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
@@ -24,6 +25,15 @@ import {TouchableOpacity} from 'react-native';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
+
+type Price = {
+  id: string;
+  name: string;
+  description: string;
+  originalPrice: number;
+  finalPrice: number;
+  benefits: string[];
+};
 
 export default function EventRegisterScreen() {
   const navigation =
@@ -63,6 +73,7 @@ export default function EventRegisterScreen() {
     if (!user || autofilled || fields.length < 1) {
       return;
     }
+    console.info(fields);
     if (fields.find(f => f.evhfName === 'evpaName')) {
       data.evpaName = user?.data[0].zmemFullName;
     }
@@ -76,13 +87,24 @@ export default function EventRegisterScreen() {
       data.evpaAddress = user?.linked?.mbsdZmemId?.[0]?.mbsdAddress;
     }
     if (fields.find(f => f.evhfName === 'evpaCity')) {
-      data.evpaevpaCityName = user?.linked?.mbsdZmemId?.[0]?.mbsdCity;
+      data.evpaCity = user?.linked?.mbsdZmemId?.[0]?.mbsdCity;
     }
     if (fields.find(f => f.evhfName === 'evpaProvinces')) {
       data.evpaProvinces = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
     }
     if (fields.find(f => f.evhfName === 'evpaProvinsi')) {
       data.evpaProvinsi = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
+    }
+    if (fields.find(f => f.evhfName.toLowerCase().includes('jersey'))) {
+      data.evpaJersey = {...data.evpaJersey};
+      data.evpaJersey.helperText = (
+        <Text>
+          For more information about size,{' '}
+          <Text textDecorationLine={'underline'} color="primary.900">
+            See jersey size chart
+          </Text>
+        </Text>
+      );
     }
     console.info(fields);
     setFieldsData({...fieldsData, ...data});
@@ -145,6 +167,45 @@ export default function EventRegisterScreen() {
   };
 
   const event = params.event;
+  const prices: Price[] = (event?.categories || [])
+    .map(cat => ({
+      id: cat.evncId,
+      name: cat.evncName,
+      description: [
+        cat.evncMaxDistance,
+        cat.evncMaxDistancePoint
+          ? cat.evncMaxDistancePoint + ' point'
+          : undefined,
+        cat.evncVrReps,
+        'Sisa Kuota: ' +
+          (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
+          Number(cat.evncQuotaRegistration)
+            ? (
+                Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
+              ).toLocaleString('id-ID') +
+              '/' +
+              Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
+            : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
+        datetime.getDateRangeString(
+          cat.evncStartDate,
+          cat.evncVrEndDate || undefined,
+          'short',
+          'short',
+        ),
+      ]
+        .filter(item => item)
+        .join(', '),
+      originalPrice: Number(cat.evncPrice),
+      finalPrice: Number(cat.evncPrice),
+      benefits: [
+        'Medal',
+        'Jersey (Merchandise)',
+        'Local UMKM Merchandise',
+        'Free Ongkir',
+        'This is Dummy Data',
+      ],
+    }))
+    .filter(cat => cat.id === params.selectedCategoryId);
 
   return (
     <ScrollView>
@@ -202,6 +263,7 @@ export default function EventRegisterScreen() {
                     setFieldsData({...fieldsData, [field.evhfName]: val});
                   }}
                   value={fieldsData[field.evhfName]}
+                  helperText={fieldsData[field.evhfName]?.helperText}
                 />
               ))}
           </VStack>
@@ -249,7 +311,12 @@ export default function EventRegisterScreen() {
             <Text color="primary.900">Set Dummy Data</Text>
           </Center>
         </TouchableOpacity>
-
+        <HStack px="4" justifyContent={'space-between'} alignItems={'center'}>
+          <Text>Total Payment</Text>
+          <Text fontSize={18} fontWeight={700}>{`IDR ${Number(
+            prices[0].finalPrice || 0,
+          )?.toLocaleString('id-ID')}`}</Text>
+        </HStack>
         <Box px="4">
           <Button
             h="12"

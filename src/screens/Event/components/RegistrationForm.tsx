@@ -11,6 +11,7 @@ export default function RegistrationForm(
   props: EventFieldsEntity & {
     onValueChange: (val: string) => void;
     value: string;
+    helperText?: React.ReactNode;
   },
 ) {
   const opts = (
@@ -43,6 +44,7 @@ export default function RegistrationForm(
         label={props.evhfLabel}
         onValueChange={props.onValueChange}
         value={props.value}
+        helperText={props.helperText}
       />
     );
   } else if (['number', 'phone'].includes(props.evhfType.toLowerCase())) {
@@ -55,6 +57,7 @@ export default function RegistrationForm(
           keyboardType: 'numeric',
         }}
         value={props.value}
+        helperText={props.helperText}
       />
     );
   } else if (props.evhfType === 'Email') {
@@ -67,6 +70,7 @@ export default function RegistrationForm(
           keyboardType: 'email-address',
         }}
         value={props.value}
+        helperText={props.helperText}
       />
     );
   } else if (props.evhfType === 'Date') {
@@ -81,6 +85,7 @@ export default function RegistrationForm(
             date.toJSON().slice(0, 10).split('-').reverse().join('-'),
           );
         }}
+        helperText={props.helperText}
       />
     );
   } else {
@@ -90,6 +95,7 @@ export default function RegistrationForm(
         onChangeText={props.onValueChange}
         placeholder={`Enter ${props.evhfLabel}`}
         value={props.value}
+        helperText={props.helperText}
       />
     );
   }

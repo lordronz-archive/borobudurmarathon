@@ -4,7 +4,7 @@ import React from 'react';
 
 type TextInputProps = {
   isInvalid?: boolean;
-  helperText?: string;
+  helperText?: React.ReactNode;
   errorMessage?: string;
   placeholder?: string;
   label?: string;

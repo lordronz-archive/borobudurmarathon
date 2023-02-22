@@ -5,7 +5,7 @@ import CalendarIcon from '../icons/CalendarIcon';
 
 type DateInputProps = {
   isInvalid?: boolean;
-  helperText?: string;
+  helperText?: React.ReactNode;
   errorMessage?: string;
   placeholder?: string;
   label?: string;

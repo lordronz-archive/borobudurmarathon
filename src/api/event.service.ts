@@ -181,7 +181,7 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getEvents: async function (): Promise<GetEventsResponse> {
+  getEvents: async function (featured = false): Promise<GetEventsResponse> {
     const parameter = {
       filter: {
         evnhEmail: 'reg@borobudurmarathon.co.id',
@@ -189,6 +189,7 @@ const EventService = {
           in: [2, 1, 7],
         },
         evnhStatusPublish: 1,
+        ...(featured && {evnhFuture: 1}),
       },
       sort: '-evnhStartDate',
     };

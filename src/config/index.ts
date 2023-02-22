@@ -47,7 +47,7 @@ export default {
     },
   },
   apiUrl: {
-    href: apiUrl.steelytoeUrl,
+    href: apiUrl.apiUrl,
     apis: {
       kompas: {
         authorize_code: {
@@ -297,6 +297,9 @@ export default {
       masterKabupaten: {
         path: 'resources/master_kabupaten',
       },
+      masterLocation: {
+        path: 'resources/master_location',
+      },
       ongkir: {
         path: 'resources/ongkir',
       },
@@ -390,6 +393,19 @@ export default {
     apis: {
       upload: {
         path: 'upload/',
+      },
+    },
+  },
+  steelytoeUrl: {
+    href: apiUrl.steelytoeUrl.href,
+    // href : 'https://utilities.race.id/file/',
+    // href : 'http://localhost:8082/',
+    apis: {
+      upload: {
+        path: 'upload/',
+      },
+      masterLocation: {
+        path: 'resources/master_location',
       },
     },
   },

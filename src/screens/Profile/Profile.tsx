@@ -33,11 +33,13 @@ import Logout from './Logout';
 import {TouchableOpacity} from 'react-native';
 import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
+import useProfile from '../../hooks/useProfile';
 
 export default function MyProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
+  const _profile = useProfile();
   const {dispatch, user} = useAuthUser();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -140,7 +142,14 @@ export default function MyProfile() {
             paddingLeft={3}
             paddingRight={3}
             alignItems="center">
-            <Avatar bg="gray.400" mx={2}>
+            <Avatar
+              bg="gray.400"
+              mx={2}
+              source={{
+                uri: user?.data[0]?.zmemPhoto
+                  ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
+                  : '',
+              }}>
               {getShortCodeName(user?.data[0].zmemFullName || '')}
             </Avatar>
             <VStack paddingLeft={2}>

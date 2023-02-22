@@ -366,7 +366,9 @@ export default function InputProfileScreen() {
                 setProvinces(text);
                 (async () => {
                   const {data: loc} = await ProfileService.getLocation({
-                    filter: {mLocName: {like: text}},
+                    filter: {
+                      mlocProvince: {like: `%${text}%`},
+                    },
                   });
                   setLocations(loc);
                 })();
@@ -384,7 +386,12 @@ export default function InputProfileScreen() {
                 setCity(text);
                 (async () => {
                   const {data: loc} = await ProfileService.getLocation({
-                    filter: {mLocName: {like: text}},
+                    filter: {
+                      ...(mbsdProvinces && {
+                        mlocProvince: {like: `%${mbsdProvinces}%`},
+                      }),
+                      mlocRegency: {like: `%${text}%`},
+                    },
                   });
                   setLocations(loc);
                 })();

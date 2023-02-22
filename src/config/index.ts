@@ -188,6 +188,10 @@ export default {
           path: 'member_zone/phone/',
           method: 'POST',
         },
+        updatePhoto: {
+          path: 'member_zone/foto/',
+          method: 'POST',
+        },
         /*
 					{
 						"data": {

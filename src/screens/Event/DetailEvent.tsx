@@ -31,6 +31,7 @@ import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
+import httpRequest from '../../helpers/httpRequest';
 
 type Price = {
   id: string;
@@ -47,6 +48,7 @@ export default function DetailEvent() {
   const params = route.params as RootStackParamList['EventDetail'];
 
   const [event, setEvent] = useState<GetEventResponse>();
+  const [registeredEvent, setRegisteredEvent] = useState<string[]>([]);
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -137,6 +139,14 @@ export default function DetailEvent() {
 
   useEffect(() => {
     setIsLoading(true);
+    httpRequest.get('member_resource/transaction').then(res => {
+      if (res.data) {
+        const registerEventId = res.data?.linked?.mregEventId?.map(
+          (item: any) => item.evnhId?.toString(),
+        );
+        setRegisteredEvent(registerEventId);
+      }
+    });
     EventService.getEvent(params.id)
       .then(res => {
         console.info('res get detail event', res);
@@ -281,12 +291,19 @@ export default function DetailEvent() {
           background="white"
           shadow="3">
           <Button
-            onPress={() =>
-              navigation.navigate('EventRegister', {
-                event,
-                selectedCategoryId: selected.id,
-              })
-            }>
+            onPress={() => {
+              if (!registeredEvent?.includes(event.data?.evnhId)) {
+                navigation.navigate('EventRegister', {
+                  event,
+                  selectedCategoryId: selected.id,
+                });
+              } else {
+                Toast.show({
+                  title: 'Failed to register event',
+                  description: 'You have registered for this event',
+                });
+              }
+            }}>
             {'Continue with ' + selected?.name}
           </Button>
         </Box>

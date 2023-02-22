@@ -142,31 +142,6 @@ export default function SectionListMyEvent() {
 
     const cleanTransactionExpTime = transaction.trnsExpiredTime;
 
-    const handlePayNow = async () => {
-      setIsLoading(true);
-
-      try {
-        const resPayNow = await EventService.checkoutTransaction({
-          transactionId: item.links.mregTrnsId,
-          paymentType: '10',
-        });
-        console.info('res pay now', JSON.stringify(resPayNow));
-
-        if (resPayNow && resPayNow.data) {
-          navigation.navigate('Payment', {
-            transactionId: item.mregOrderId,
-          });
-        }
-      } catch (err) {
-        Toast.show({
-          title: 'Failed to pay now',
-          description: getErrorMessage(err),
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     const checkStatus = () => {
       let status;
       if (item.mregType === 'MB') {
@@ -222,7 +197,14 @@ export default function SectionListMyEvent() {
           category={category?.evncName || ''}
           transactionExpirationTime={cleanTransactionExpTime}
           isAvailable={false}
-          onPayNowClick={() => handlePayNow()}
+          onPayNowClick={() =>
+            navigation.navigate('MyEventsDetail', {
+              transactionId: item.mregOrderId,
+              eventId: event.evnhId,
+              isBallot: item.mregType === 'MB' ? true : false,
+              regStatus: item.mregStatus,
+            })
+          }
         />
       </TouchableOpacity>
     );

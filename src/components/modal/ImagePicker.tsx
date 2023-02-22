@@ -43,9 +43,8 @@ const ImagePicker = (props: Props) => {
   };
 
   return (
-    <Modal isOpen={visible} onClose={() => setVisible(false)}>
+    <Modal size={'full'} isOpen={visible} onClose={() => setVisible(false)}>
       <Modal.Content
-        width={'100%'}
         alignItems={'center'}
         paddingY={'30px'}
         paddingX={'15px'}

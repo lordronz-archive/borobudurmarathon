@@ -61,6 +61,21 @@ const ProfileService = {
       throw msg;
     }
   },
+  updatePhoto: async function (id: string) {
+    try {
+      return await httpRequest.post(
+        config.apiUrl.apis.member.updatePhoto.path,
+        {
+          data: {
+            zmemPhoto: id,
+          },
+        },
+      );
+    } catch (error) {
+      const msg = error as any;
+      throw msg;
+    }
+  },
 };
 
 export {ProfileService, ResponseError};

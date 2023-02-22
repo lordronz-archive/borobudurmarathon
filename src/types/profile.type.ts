@@ -86,6 +86,7 @@ export type IProfile = {
   zmemNewsletter: number; // 1;
   zmemOwner: number; // 1;
   zmemStatus: number; // 1;
+  zmemPhoto: string;
 };
 
 export type IMemberDetailResponse = {

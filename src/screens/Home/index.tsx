@@ -34,7 +34,14 @@ export default function HomeScreen() {
             onPress={() => navigation.navigate('Main', {screen: 'Profile'})}>
             <Flex alignContent={'center'} direction="row" alignItems={'center'}>
               <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
-              <Avatar bg="gray.400" mx={2}>
+              <Avatar
+                bg="gray.400"
+                mx={2}
+                source={{
+                  uri: user?.data[0]?.zmemPhoto
+                    ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
+                    : '',
+                }}>
                 {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
               <Text fontSize={'lg'} mx={2} fontWeight={700}>

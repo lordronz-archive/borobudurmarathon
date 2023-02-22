@@ -22,14 +22,17 @@ import ImagePicker from '../../components/modal/ImagePicker';
 import httpRequest from '../../helpers/httpRequest';
 import {ProfileService} from '../../api/profile.service';
 import {useNavigation} from '@react-navigation/native';
+import useProfile from '../../hooks/useProfile';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
+  const _profile = useProfile();
   const navigation = useNavigation();
 
   const [isShowImagePickerModal, setIsShowImagePickerModal] =
     useState<boolean>(false);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [profilePic, setProfilePic] = useState<any>();
 
   const [fullName, setFullName] = useState<string>(
@@ -82,6 +85,7 @@ export default function UpdateProfileScreen() {
   }
 
   const handleUpdatePhotoProfile = async () => {
+    setIsLoading(true);
     if (!profilePic) {
       return;
     }
@@ -116,13 +120,13 @@ export default function UpdateProfileScreen() {
 
       if (res.data) {
         const result = await ProfileService.updatePhoto(res.data.fileId);
-
         console.log(result, 'save ID');
+        navigation.goBack();
       }
     } catch (error) {
       console.error(error);
     } finally {
-      navigation.goBack();
+      setIsLoading(false);
     }
   };
 
@@ -140,9 +144,13 @@ export default function UpdateProfileScreen() {
               <Avatar
                 bg="gray.400"
                 mx={2}
-                source={profilePic && {uri: profilePic?.path || ''}}>
-                {!profilePic?.path &&
-                  getShortCodeName(user?.data[0].zmemFullName || '')}
+                source={{
+                  uri:
+                    profilePic?.path ||
+                    `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}` ||
+                    '',
+                }}>
+                {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
               <VStack paddingLeft={2}>
                 <Text fontSize="md">Choose profile picture</Text>
@@ -333,7 +341,7 @@ export default function UpdateProfileScreen() {
             </VStack>
           </VStack>
           <VStack space="2.5" px="4">
-            <Button onPress={handleUpdatePhotoProfile}>
+            <Button isLoading={isLoading} onPress={handleUpdatePhotoProfile}>
               Update Photo Profile
             </Button>
           </VStack>

@@ -1,9 +1,14 @@
 import React, {useRef, useState} from 'react';
-import {View, Dimensions, StyleSheet} from 'react-native';
+import {View, Dimensions, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {
+  GestureHandlerRootView,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 import {Image, VStack, Text, Box, HStack} from 'native-base';
+import {RootStackParamList} from '../../navigation/RootNavigator';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 const defaultImage = require('../../assets/images/FeaturedEventImage.png');
 
@@ -15,11 +20,13 @@ type IProps = {
     imageUrl?: string | null;
     eventType: string;
     date: string;
+    id: number | string;
   }[];
 };
 
 export default function BannerNew(props: IProps) {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let _carousel = useRef();
 
@@ -51,41 +58,46 @@ export default function BannerNew(props: IProps) {
               mx={4}
               borderRadius="lg"
               style={{marginRight: 32, marginLeft: 4}}>
-              <VStack>
-                <Image
-                  key={index}
-                  source={item.imageUrl ? {uri: item.imageUrl} : defaultImage}
-                  alt={item.title || 'image'}
-                  resizeMode="contain"
-                  width="100%"
-                  height="200"
-                  borderTopRadius="lg"
-                  onLoad={() => {
-                    setImageLoaded(true);
-                  }}
-                />
-                <VStack padding={'12px'}>
-                  <Text fontWeight="500" fontSize="14px" marginBottom={'8px'}>
-                    {item.title}
-                  </Text>
-                  {/* <Text color="gray.500">Offline · Oct 10 - Oct 21 2023</Text> */}
-                  <HStack alignItems={'center'}>
-                    <Text fontWeight="500" fontSize="12px" color="gray.500">
-                      {item.eventType}
+              <TouchableWithoutFeedback
+                onPress={() =>
+                  navigation.navigate('EventDetail', {id: Number(item.id)})
+                }>
+                <VStack>
+                  <Image
+                    key={index}
+                    source={item.imageUrl ? {uri: item.imageUrl} : defaultImage}
+                    alt={item.title || 'image'}
+                    resizeMode="contain"
+                    width="100%"
+                    height="200"
+                    borderTopRadius="lg"
+                    onLoad={() => {
+                      setImageLoaded(true);
+                    }}
+                  />
+                  <VStack padding={'12px'}>
+                    <Text fontWeight="500" fontSize="14px" marginBottom={'8px'}>
+                      {item.title}
                     </Text>
-                    <Text
-                      fontWeight="500"
-                      fontSize="12px"
-                      color="gray.500"
-                      marginX={'8px'}>
-                      •
-                    </Text>
-                    <Text fontWeight="500" fontSize="12px" color="gray.500">
-                      {item.date}
-                    </Text>
-                  </HStack>
+                    {/* <Text color="gray.500">Offline · Oct 10 - Oct 21 2023</Text> */}
+                    <HStack alignItems={'center'}>
+                      <Text fontWeight="500" fontSize="12px" color="gray.500">
+                        {item.eventType}
+                      </Text>
+                      <Text
+                        fontWeight="500"
+                        fontSize="12px"
+                        color="gray.500"
+                        marginX={'8px'}>
+                        •
+                      </Text>
+                      <Text fontWeight="500" fontSize="12px" color="gray.500">
+                        {item.date}
+                      </Text>
+                    </HStack>
+                  </VStack>
                 </VStack>
-              </VStack>
+              </TouchableWithoutFeedback>
             </Box>
           )}
         />

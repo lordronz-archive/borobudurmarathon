@@ -56,6 +56,7 @@ export default function SectionFeaturedEvents() {
             'short',
           ),
           imageUrl: item.evnhThumbnail,
+          id: item.evnhId,
         }))}
       />
     </Section>

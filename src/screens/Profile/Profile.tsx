@@ -267,7 +267,7 @@ export default function MyProfile() {
 
         <Center marginTop={5}>
           <Text color={colors.gray[500]} fontSize="xs">
-            Version App v2.0.0
+            Version App v2.0.1
           </Text>
         </Center>
       </Box>

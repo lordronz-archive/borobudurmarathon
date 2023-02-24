@@ -48,6 +48,7 @@ export type RootStackParamList = {
       }
     | undefined;
   PhoneNumberValidation?: {phoneNumber?: string; onSuccess: () => void};
+  EmailValidation?: {email?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
 
   EventDetail: {id: number};

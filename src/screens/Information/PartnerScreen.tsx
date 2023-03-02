@@ -23,7 +23,7 @@ export default function PartnerScreen() {
             ),
             description:
               'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-            url: 'https://google.com',
+            url: 'https://bankjateng.co.id',
           },
           {
             title: 'DIPRAKARSAI OLEH',
@@ -34,7 +34,7 @@ export default function PartnerScreen() {
             ),
             description:
               'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-            url: 'https://google.com',
+            url: 'https://borobudurmarathon.com/',
           },
           {
             title: 'DISELENGGARAKAN OLEH',
@@ -45,7 +45,7 @@ export default function PartnerScreen() {
             ),
             description:
               'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-            url: 'https://google.com',
+            url: 'https://kompas.id/',
           },
           {
             title: 'DIDUKUNG OLEH',
@@ -56,7 +56,7 @@ export default function PartnerScreen() {
             ),
             description:
               'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-            url: 'https://google.com',
+            url: 'https://jatengprov.go.id/',
           },
         ]}
       />

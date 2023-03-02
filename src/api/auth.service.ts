@@ -208,6 +208,28 @@ const AuthService = {
       throw new AuthenticationError(msg.status, msg.data.status.error.message);
     }
   },
+  verificationEmail: async function () {
+    try {
+      return await httpRequest.get(
+        config.apiUrl.apis.member.verificationEmail.path,
+      );
+    } catch (error) {
+      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      const msg = error as any;
+      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+    }
+  },
+  inputVerificationEmail: async function (code: string) {
+    try {
+      return await httpRequest.get(
+        config.apiUrl.apis.member.inputVerificationEmail.path + code,
+      );
+    } catch (error) {
+      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      const msg = error as any;
+      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+    }
+  },
   signIn: async function (signInData: any) {
     console.log('Auth service started...');
     // const requestData: AxiosRequestConfig = {

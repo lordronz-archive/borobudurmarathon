@@ -101,6 +101,14 @@ export default {
           path: 'member/verification/',
           method: 'GET',
         },
+        inputVerificationEmail: {
+          path: 'member_zone/input_verification_email/',
+          method: 'GET',
+        },
+        verificationEmail: {
+          path: 'member_zone/verification_email',
+          method: 'GET',
+        },
         // {"data":{"email":"thomas.rubhez@gmail.com","password":"sa"}}
         login: {
           path: 'member/login/',

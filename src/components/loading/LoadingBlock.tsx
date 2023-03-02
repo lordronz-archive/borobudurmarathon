@@ -1,7 +1,10 @@
 import React from 'react';
-import {Box, Center, Spinner} from 'native-base';
+import {Box, Center, Spinner, Text} from 'native-base';
 
-export default function LoadingBlock() {
+type Props = {
+  text?: string;
+};
+export default function LoadingBlock(props: Props) {
   return (
     <Box
       justifyContent="center"
@@ -15,6 +18,7 @@ export default function LoadingBlock() {
       }}>
       <Center>
         <Spinner size="lg" />
+        {!!props.text && <Text color="gray.400">{props.text}</Text>}
       </Center>
     </Box>
   );

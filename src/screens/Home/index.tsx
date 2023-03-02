@@ -1,5 +1,5 @@
 import {Avatar, Box, Divider, Flex, Row, ScrollView, Text} from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 
@@ -11,17 +11,24 @@ import I18n from '../../lib/i18n';
 import SectionFeaturedEvents from './components/SectionFeaturedEvents';
 import {TouchableOpacity} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import IconInformationCircle from '../../assets/icons/IconInformationCircle';
 import SummaryRecord from './components/SummaryRecord';
 import IconHamburgerMenu from '../../assets/icons/IconHamburgerMenu';
 
 export default function HomeScreen() {
+  const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const _init = useInit();
+  const {checkLogin} = useInit();
   const {user} = useAuthUser();
+
+  useEffect(() => {
+    if (isFocused) {
+      checkLogin();
+    }
+  }, [isFocused]);
 
   return (
     <ScrollView>
@@ -41,7 +48,7 @@ export default function HomeScreen() {
                 source={{
                   uri: user?.data[0]?.zmemPhoto
                     ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
-                    : '',
+                    : undefined,
                 }}>
                 {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>

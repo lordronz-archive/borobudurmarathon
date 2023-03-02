@@ -16,6 +16,7 @@ import {
   Pressable,
   AlertDialog,
   Toast,
+  useToast,
 } from 'native-base';
 import CookieManager from '@react-native-cookies/cookies';
 import {useNavigation} from '@react-navigation/native';
@@ -36,12 +37,15 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import useProfile from '../../hooks/useProfile';
 import IconUserGroup from '../../assets/icons/IconUserGroup';
 import IconPhone from '../../assets/icons/IconPhone';
+import useInit from '../../hooks/useInit';
 
 export default function MyProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
+  const toast = useToast();
   const _profile = useProfile();
+  const {logout} = useInit();
   const {dispatch, user} = useAuthUser();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -98,17 +102,7 @@ export default function MyProfile() {
     },
   ];
 
-  const logout = async () => {
-    InAppBrowser.closeAuth();
-    await CookieManager.clearAll();
-
-    dispatch({type: EAuthUserAction.LOGOUT});
-    SessionService.removeSession();
-
-    setIsLoggingOut(false);
-    onCloseModalLogout();
-    navigation.navigate('Initial');
-  };
+  
 
   if (isLoggingOut) {
     return (
@@ -157,7 +151,7 @@ export default function MyProfile() {
               source={{
                 uri: user?.data[0]?.zmemPhoto
                   ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
-                  : '',
+                  : undefined,
               }}>
               {getShortCodeName(user?.data[0].zmemFullName || '')}
             </Avatar>

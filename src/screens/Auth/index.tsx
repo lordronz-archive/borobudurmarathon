@@ -30,12 +30,14 @@ import {SessionService} from '../../api/session.service';
 import {getParameterByName} from '../../helpers/url';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {AuthService} from '../../api/auth.service';
+import useInit from '../../hooks/useInit';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
   const route = useRoute();
   const toast = useToast();
   const {colors} = useTheme();
+  const {getProfile} = useInit();
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
   const navigation =
@@ -140,61 +142,6 @@ export default function AuthScreen() {
     }
   };
 
-  const getProfile = () => {
-    ProfileService.getMemberDetail()
-      .then(resProfile => {
-        console.info('resProfile', resProfile);
-        console.info('###resProfile###', JSON.stringify(resProfile));
-        dispatch({
-          type: EAuthUserAction.LOGIN,
-          payload: {user: resProfile},
-        });
-        SessionService.saveSession();
-        if (resProfile.data && resProfile.data.length > 0) {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-          });
-          if (resProfile.linked.mbsdZmemId && resProfile.linked.mbsdZmemId[0]) {
-            // profile has been completed
-            // if (payload.data.linked.mbsdZmemId[0].mbsdStatus > 0) {
-            //   state.readyToRegister = true;
-            // }
-            navigation.navigate('Main', {screen: 'Home'});
-          } else if (resProfile.linked.zmemAuusId[0].auusVerification) {
-            // need to complete profile
-            navigation.navigate('InputProfile');
-          } else if (!resProfile.linked.zmemAuusId[0].auusVerification) {
-            // need to complete profile
-            AuthService.verificationEmail().then(() =>
-              navigation.navigate('EmailValidation'),
-            );
-          }
-        } else {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, New Runner',
-          });
-          navigation.navigate('InputProfile');
-        }
-      })
-      .catch(err => {
-        console.info('### error resProfile', err);
-        console.info('### error resProfile --- ', JSON.stringify(err));
-        if (err && err.errorCode === 409) {
-          navigation.navigate('Logout');
-          // setIsNotRegistered(true);
-        } else {
-          toast.show({
-            title: 'Failed to get profile',
-            variant: 'subtle',
-            description: getErrorMessage(err),
-          });
-          navigation.navigate('Initial');
-        }
-      });
-  };
-
   if (authorizationCode && isNotRegistered === true) {
     let uri =
       config.apiUrl.href.href +
@@ -218,12 +165,22 @@ export default function AuthScreen() {
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
             console.info('cookiesString isNotRegistered true', cookiesString);
-            navigation.navigate('InputProfile');
+
+            if (cookiesString) {
+              navigation.navigate('InputProfile');
+            } else {
+              toast.show({
+                title: 'Failed to get cookies',
+                description:
+                  "We can't get the cookies, please try again later.",
+              });
+              navigation.navigate('Logout');
+            }
           }}
           contentMode="mobile"
         />
 
-        <LoadingBlock />
+        <LoadingBlock text="You are not registered. Please wait..." />
       </Box>
     );
   } else if (authorizationCode) {
@@ -270,7 +227,7 @@ export default function AuthScreen() {
           // }}
         />
 
-        <LoadingBlock />
+        <LoadingBlock text="Checking your session..." />
       </Box>
     );
   }

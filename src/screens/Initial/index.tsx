@@ -1,11 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Box, Center, Spinner} from 'native-base';
 import useInit from '../../hooks/useInit';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function InitialScreen() {
-  const _init = useInit();
+  const isFocused = useIsFocused();
+  const {checkLogin} = useInit();
 
+  useEffect(() => {
+    if (isFocused) {
+      checkLogin();
+    }
+  }, [isFocused]);
   return (
     <Box justifyContent="center" alignItems="center" flex={1}>
       <Center>

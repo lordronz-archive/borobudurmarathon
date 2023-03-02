@@ -22,6 +22,7 @@ import LogoutScreen from '../screens/Profile/LogoutScreen';
 import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
 import MyEventDetail from '../screens/Event/MyEventsDetail';
 import CertificatesScreen from '../screens/Profile/Certificates';
+import PartnerScreen from '../screens/Information/PartnerScreen';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -59,6 +60,7 @@ export type RootStackParamList = {
   Welcome: undefined;
 
   FAQ: undefined;
+  Partner: undefined;
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 
   Register: undefined;
@@ -152,6 +154,11 @@ function RootNavigator() {
         <Stack.Screen
           name="FAQ"
           component={FAQScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Partner"
+          component={PartnerScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

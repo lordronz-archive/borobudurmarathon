@@ -34,6 +34,8 @@ import {TouchableOpacity} from 'react-native';
 import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import useProfile from '../../hooks/useProfile';
+import IconUserGroup from '../../assets/icons/IconUserGroup';
+import IconPhone from '../../assets/icons/IconPhone';
 
 export default function MyProfile() {
   const navigation =
@@ -63,7 +65,7 @@ export default function MyProfile() {
     },
     {
       key: 'edit-phone',
-      icon: <IconSingleUser color={colors.black} size={6} />,
+      icon: <IconPhone color={colors.black} size={6} />,
       name: 'Change Phone Number',
       route: 'UpdatePhone',
     },
@@ -85,6 +87,13 @@ export default function MyProfile() {
       icon: <IconInfo color={colors.black} size={6} />,
       name: 'About Us',
       route: 'WebView',
+      params: {page: 'about'},
+    },
+    {
+      key: 'about',
+      icon: <IconUserGroup color={colors.black} size={6} />,
+      name: 'Partner',
+      route: 'Partner',
       params: {page: 'about'},
     },
   ];

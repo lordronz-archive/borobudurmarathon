@@ -129,7 +129,7 @@ export default function Logout(props: Props) {
         // injectedJavaScript={jsCode}
         onLoadEnd={props.onLoadEnd}
       />
-      <LoadingBlock text="Please wait..." />
+      <LoadingBlock text="Logout. Please wait..." />
     </View>
   );
 }

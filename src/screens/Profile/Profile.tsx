@@ -102,14 +102,12 @@ export default function MyProfile() {
     },
   ];
 
-  
-
   if (isLoggingOut) {
     return (
       <Logout
         onLoadEnd={() => {
           //navigation.navigate('Register');
-          logout();
+          logout(setIsLoggingOut, onCloseModalLogout);
         }}
       />
     );

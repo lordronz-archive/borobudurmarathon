@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import moment from 'moment';
-import {Box, FlatList, Flex, Image, Text, Toast} from 'native-base';
+import {Box, FlatList, Flex, Image, Spinner, Text, Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
@@ -118,7 +118,15 @@ export default function SectionListEvent() {
       <FlatList
         refreshing={isLoading}
         data={filteredEvents}
-        ListEmptyComponent={_renderEmpty}
+        ListEmptyComponent={() =>
+          isLoading ? (
+            <Box height={100}>
+              <Spinner />
+            </Box>
+          ) : (
+            _renderEmpty()
+          )
+        }
         renderItem={_renderItem}
         keyExtractor={item => item.evnhId.toString()}
         _contentContainerStyle={{px: 4, py: 3}}

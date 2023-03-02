@@ -11,7 +11,6 @@ import {
   Text,
   VStack,
   useToast,
-  Spinner,
   useTheme,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
@@ -28,8 +27,9 @@ import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {SessionService} from '../../api/session.service';
-import { getParameterByName } from '../../helpers/url';
+import {getParameterByName} from '../../helpers/url';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import {AuthService} from '../../api/auth.service';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -161,9 +161,14 @@ export default function AuthScreen() {
             //   state.readyToRegister = true;
             // }
             navigation.navigate('Main', {screen: 'Home'});
-          } else {
+          } else if (resProfile.linked.zmemAuusId[0].auusVerification) {
             // need to complete profile
             navigation.navigate('InputProfile');
+          } else if (!resProfile.linked.zmemAuusId[0].auusVerification) {
+            // need to complete profile
+            AuthService.verificationEmail().then(() =>
+              navigation.navigate('EmailValidation'),
+            );
           }
         } else {
           toast.show({

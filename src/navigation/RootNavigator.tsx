@@ -23,6 +23,7 @@ import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
 import MyEventDetail from '../screens/Event/MyEventsDetail';
 import CertificatesScreen from '../screens/Profile/Certificates';
 import PartnerScreen from '../screens/Information/PartnerScreen';
+import ChooseCitizenScreen from '../screens/InputProfile/ChooseCitizen';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -51,6 +52,7 @@ export type RootStackParamList = {
   PhoneNumberValidation?: {phoneNumber?: string; onSuccess: () => void};
   EmailValidation?: {email?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
+  ChooseCitizen: undefined;
 
   EventDetail: {id: number};
 
@@ -112,6 +114,11 @@ function RootNavigator() {
           <Stack.Screen
             name="PhoneNumberValidation"
             component={PhoneNumberValidationScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ChooseCitizen"
+            component={ChooseCitizenScreen}
             options={{headerShown: false}}
           />
         </Stack.Group>

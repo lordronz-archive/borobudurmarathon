@@ -32,6 +32,8 @@ type ILinked = {
     auusPhone: string; // '6285xxxxxxxx',
     auusKompasId: null;
     auusUniqueKey: string; //'c8fd60e4d183....2b2b5',
+    auusVerification: number; // 1 or 0
+    auusConsent: number; // 1 or 0
   }[];
   mregZmemId: number[];
   mrvrZmemId: number[];

@@ -16,37 +16,32 @@ import {
   Pressable,
   AlertDialog,
   Toast,
-  useToast,
 } from 'native-base';
-import CookieManager from '@react-native-cookies/cookies';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {EAuthUserAction, useAuthUser} from '../../context/auth.context';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
+import {useAuthUser} from '../../context/auth.context';
 import IconBadge from '../../assets/icons/IconBadge';
 import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
 import {getShortCodeName} from '../../helpers/name';
-import {SessionService} from '../../api/session.service';
 import Logout from './Logout';
 import {TouchableOpacity} from 'react-native';
 import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
-import useProfile from '../../hooks/useProfile';
 import IconUserGroup from '../../assets/icons/IconUserGroup';
 import IconPhone from '../../assets/icons/IconPhone';
 import useInit from '../../hooks/useInit';
+import Config from 'react-native-config';
+import config from '../../config';
 
 export default function MyProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
-  const toast = useToast();
-  const _profile = useProfile();
   const {logout} = useInit();
-  const {dispatch, user} = useAuthUser();
+  const {user} = useAuthUser();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // logout
@@ -246,30 +241,39 @@ export default function MyProfile() {
           Sign Out
         </Button>
 
-        <Button
-          width="100%"
-          backgroundColor={colors.white}
-          borderColor={colors.gray[500]}
-          borderWidth="0.5"
-          _text={{color: colors.black, fontWeight: 600}}
-          onPress={() => {
-            AuthService.deleteprofile()
-              .then(_res => {
-                navigation.navigate('Logout');
-              })
-              .catch(err => {
-                Toast.show({
-                  description: getErrorMessage(err),
+        {config.isDev && (
+          <Button
+            width="100%"
+            backgroundColor={colors.white}
+            borderColor={colors.gray[500]}
+            borderWidth="0.5"
+            _text={{color: colors.black, fontWeight: 600}}
+            onPress={() => {
+              AuthService.deleteprofile()
+                .then(_res => {
+                  navigation.navigate('Logout');
+                })
+                .catch(err => {
+                  Toast.show({
+                    description: getErrorMessage(err),
+                  });
                 });
-              });
-          }}>
-          Sign Out & Delete Profile
-        </Button>
+            }}>
+            Sign Out & Delete Profile
+          </Button>
+        )}
 
         <Center marginTop={5}>
           <Text color={colors.gray[500]} fontSize="xs">
-            Version App v2.0.1
+            Version App v{Config.APP_VERSION_NAME} (build:{' '}
+            {Config.APP_VERSIONC_CODE})
           </Text>
+
+          {config.isDev && (
+            <Text color={colors.gray[500]} fontSize="xs">
+              ~ development ~
+            </Text>
+          )}
         </Center>
       </Box>
 

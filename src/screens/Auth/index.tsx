@@ -12,6 +12,9 @@ import {
   VStack,
   useToast,
   useTheme,
+  Modal,
+  Checkbox,
+  FormControl,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Alert, Linking} from 'react-native';
@@ -19,18 +22,16 @@ import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {ProfileService} from '../../api/profile.service';
 import I18n from '../../lib/i18n';
-import {EAuthUserAction, useAuthUser} from '../../context/auth.context';
+import {useAuthUser} from '../../context/auth.context';
 import WebView from 'react-native-webview';
 import config from '../../config';
 import {getCookiesString} from '../../api/cookies';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import {SessionService} from '../../api/session.service';
 import {getParameterByName} from '../../helpers/url';
 import LoadingBlock from '../../components/loading/LoadingBlock';
-import {AuthService} from '../../api/auth.service';
 import useInit from '../../hooks/useInit';
+import {useDemo} from '../../context/demo.context';
 
 export default function AuthScreen() {
   console.info('render AuthScreen');
@@ -38,12 +39,19 @@ export default function AuthScreen() {
   const toast = useToast();
   const {colors} = useTheme();
   const {getProfile} = useInit();
+  const {
+    isShowModal,
+    showModal,
+    hideModal,
+    isShowDemoVerifyEmail,
+    setDemoVerifyEmail,
+  } = useDemo();
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const {state, dispatch} = useAuthUser();
+  const {state} = useAuthUser();
   const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   console.info('#Auth -- state', state);
 
@@ -233,61 +241,109 @@ export default function AuthScreen() {
   }
 
   return (
-    <Box px="4" flex="1">
-      <HStack justifyContent="center" flex="5">
-        <VStack space="3" alignItems="center" justifyContent="center">
-          <Image
-            source={require('../../assets/images/logo.png')}
-            alt="Alternate Text"
-            width={221.17}
-            height={100}
-            mb="10"
-          />
-          <Heading textAlign={'center'}>
-            {I18n.t('welcomeTo') + ' Borobudur Marathon'}
-          </Heading>
-          <Text fontWeight={400} textAlign={'center'} color="#768499">
-            {I18n.t('auth.description')}
-          </Text>
-        </VStack>
-      </HStack>
-      <VStack flex="1" justifyContent={'center'} space="5">
-        <Button
-          backgroundColor={'#00559A'}
-          rounded="sm"
-          onPress={() => {
-            if (config.inAppBrowser) {
-              openAuthLinkInApp();
-            } else {
-              openAuthLink();
-            }
-          }}
-          startIcon={<KompasIcon size="lg" px="6" />}>
-          <Text color="white" px="12">
-            {I18n.t('auth.signInWith') + ' Kompas.id'}
-          </Text>
-        </Button>
-        <Center>
-          <HStack>
-            <Text
-              justifyContent={'center'}
-              alignItems="center"
-              fontWeight={400}>
-              {I18n.t('auth.dontHaveAccount')}{' '}
+    <>
+      <Box px="4" flex="1">
+        <HStack justifyContent="center" flex={config.isDev ? '3' : '5'}>
+          <VStack space="3" alignItems="center" justifyContent="center">
+            <Image
+              source={require('../../assets/images/logo.png')}
+              alt="Alternate Text"
+              width={221.17}
+              height={100}
+              mb="10"
+            />
+            <Heading textAlign={'center'}>
+              {I18n.t('welcomeTo') + ' Borobudur Marathon'}
+            </Heading>
+            <Text fontWeight={400} textAlign={'center'} color="#768499">
+              {I18n.t('auth.description')}
             </Text>
-            <Link
+          </VStack>
+        </HStack>
+        <VStack flex="1" justifyContent={'center'} space="5">
+          {config.isDev && (
+            <Button
+              // backgroundColor={'#00559A'}
+              variant="link"
+              rounded="sm"
               onPress={() => {
-                openAuthLink();
-              }}
-              _text={{
-                color: 'blue.600',
-                fontWeight: 600,
+                showModal();
               }}>
-              {I18n.t('auth.register')}
-            </Link>
-          </HStack>
-        </Center>
-      </VStack>
-    </Box>
+              <Text color="red.900" px="12">
+                Demo Settings
+              </Text>
+            </Button>
+          )}
+
+          <Button
+            backgroundColor={'#00559A'}
+            rounded="sm"
+            onPress={() => {
+              if (config.inAppBrowser) {
+                openAuthLinkInApp();
+              } else {
+                openAuthLink();
+              }
+            }}
+            startIcon={<KompasIcon size="lg" px="6" />}>
+            <Text color="white" px="12">
+              {I18n.t('auth.signInWith') + ' Kompas.id'}
+            </Text>
+          </Button>
+          <Center>
+            <HStack>
+              <Text
+                justifyContent={'center'}
+                alignItems="center"
+                fontWeight={400}>
+                {I18n.t('auth.dontHaveAccount')}{' '}
+              </Text>
+              <Link
+                onPress={() => {
+                  openAuthLink();
+                }}
+                _text={{
+                  color: 'blue.600',
+                  fontWeight: 600,
+                }}>
+                {I18n.t('auth.register')}
+              </Link>
+            </HStack>
+          </Center>
+        </VStack>
+      </Box>
+
+      <Modal
+        isOpen={isShowModal}
+        onClose={() => hideModal()}
+        safeAreaTop={true}>
+        <Modal.Content maxWidth="350">
+          <Modal.CloseButton />
+          <Modal.Header>Demo Settings</Modal.Header>
+          <Modal.Body>
+            <FormControl>
+              <Checkbox
+                onChange={() => setDemoVerifyEmail(!isShowDemoVerifyEmail)}
+                isChecked={isShowDemoVerifyEmail}
+                value="demo-verify-email">
+                Show Verify Email
+              </Checkbox>
+            </FormControl>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="ghost"
+                colorScheme="blueGray"
+                onPress={() => {
+                  hideModal();
+                }}>
+                Close
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+    </>
   );
 }

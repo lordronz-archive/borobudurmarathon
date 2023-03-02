@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SignInWithKompas from '../screens/Auth/SignInWithKompas';
 import InitialScreen from '../screens/Initial';
 import AuthScreen from '../screens/Auth';
 import {linking} from './linking';
@@ -24,6 +23,7 @@ import MyEventDetail from '../screens/Event/MyEventsDetail';
 import CertificatesScreen from '../screens/Profile/Certificates';
 import PartnerScreen from '../screens/Information/PartnerScreen';
 import ChooseCitizenScreen from '../screens/InputProfile/ChooseCitizen';
+import EmailValidationScreen from '../screens/InputProfile/EmailValidation';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -96,8 +96,8 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="SignInWithKompas"
-          component={SignInWithKompas}
+          name="EmailValidation"
+          component={EmailValidationScreen}
           options={{headerShown: false}}
         />
         <Stack.Group>

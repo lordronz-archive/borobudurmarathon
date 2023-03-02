@@ -16,6 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AuthUserProvider} from './src/context/auth.context';
+import {DemoProvider} from './src/context/demo.context';
 import RootNavigator from './src/navigation/RootNavigator';
 import {useEffect} from 'react';
 
@@ -108,12 +109,15 @@ const App = () => {
           background: '#EB1C23',
           size: 'lg',
         },
-        defaultProps: {
-          bg: '#EB1C23',
-        },
         variants: {
           ghost: {
             bgColor: 'transparent',
+          },
+          link: {
+            bgColor: 'transparent',
+          },
+          solid: {
+            bgColor: '#EB1C23',
           },
         },
       },
@@ -143,9 +147,11 @@ const App = () => {
       />
 
       <AuthUserProvider>
-        <SafeAreaView style={{...backgroundStyle, flex: 1}}>
-          <RootNavigator />
-        </SafeAreaView>
+        <DemoProvider>
+          <SafeAreaView style={{...backgroundStyle, flex: 1}}>
+            <RootNavigator />
+          </SafeAreaView>
+        </DemoProvider>
       </AuthUserProvider>
     </NativeBaseProvider>
   );

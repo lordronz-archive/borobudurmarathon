@@ -20,6 +20,11 @@ export default {
     changePhoneNumber: 'Ubah Nomor Handphone',
     sendOtp: 'Kirim OTP',
   },
+  consent: {
+    title: 'Konfirmasi Data',
+    description:
+      'Kami mendeteksi bahwa Anda sudah pernah mendaftar ke Aplikasi Borobudur Marathon. Apakah Anda ingin menggunakan data lama sebagai data profil? Di bawah ini adalah profil lama Anda.',
+  },
   certificates: 'Sertifikat',
   save: 'Simpan',
 };

@@ -8,7 +8,7 @@ import {
   Avatar,
   Button,
 } from 'native-base';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Platform, TouchableOpacity} from 'react-native';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
@@ -22,11 +22,9 @@ import ImagePicker from '../../components/modal/ImagePicker';
 import httpRequest from '../../helpers/httpRequest';
 import {ProfileService} from '../../api/profile.service';
 import {useNavigation} from '@react-navigation/native';
-import useProfile from '../../hooks/useProfile';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
-  const _profile = useProfile();
   const navigation = useNavigation();
 
   const [isShowImagePickerModal, setIsShowImagePickerModal] =

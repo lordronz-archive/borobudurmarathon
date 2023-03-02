@@ -128,6 +128,7 @@ export default function Logout(props: Props) {
         originWhitelist={['*']}
         // injectedJavaScript={jsCode}
         onLoadEnd={props.onLoadEnd}
+        renderLoading={() => <LoadingBlock text="Logout. Please wait..." />}
       />
       <LoadingBlock text="Logout. Please wait..." />
     </View>

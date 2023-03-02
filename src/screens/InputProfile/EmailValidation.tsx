@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, Text, Toast, useToast, VStack} from 'native-base';
+import {Box, Button, Text, Toast, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -12,7 +12,6 @@ import {
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import config from '../../config';
-import {ProfileService} from '../../api/profile.service';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'EmailValidation'>;
 
@@ -22,7 +21,6 @@ export default function EmailValidationScreen({route}: Props) {
   const {email} = route.params as {email?: string};
   const {onSuccess} = route.params as {onSuccess?: any};
 
-  const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [otpCode, setOtpCode] = useState<string>();
   const [seconds, setSeconds] = useState(30);
@@ -44,40 +42,6 @@ export default function EmailValidationScreen({route}: Props) {
       clearInterval(interval);
     };
   }, [seconds]);
-
-  const getProfile = () => {
-    ProfileService.getMemberDetail()
-      .then(resProfile => {
-        console.info('resProfile', resProfile);
-        console.info('###resProfile###', JSON.stringify(resProfile));
-        if (resProfile.data && resProfile.data.length > 0) {
-          if (resProfile.linked.zmemAuusId[0].auusConsent) {
-            // profile has been completed
-            // if (payload.data.linked.mbsdZmemId[0].mbsdStatus > 0) {
-            //   state.readyToRegister = true;
-            // }
-            navigation.navigate('Welcome');
-          } else if (!resProfile.linked.zmemAuusId[0].auusConsent) {
-            navigation.navigate('DataConfirmation');
-          }
-        }
-      })
-      .catch(err => {
-        console.info('### error resProfile', err);
-        console.info('### error resProfile --- ', JSON.stringify(err));
-        if (err && err.errorCode === 409) {
-          navigation.navigate('Logout');
-          // setIsNotRegistered(true);
-        } else {
-          toast.show({
-            title: 'Failed to get profile',
-            variant: 'subtle',
-            description: getErrorMessage(err),
-          });
-          navigation.navigate('Initial');
-        }
-      });
-  };
 
   const validatePhoneNumber = async () => {
     setIsLoading(true);
@@ -103,7 +67,6 @@ export default function EmailValidationScreen({route}: Props) {
         await onSuccess();
       }
       console.info('Confirm OTP result: ', res);
-      getProfile();
       setIsLoading(false);
     } catch (err) {
       Toast.show({
@@ -111,7 +74,7 @@ export default function EmailValidationScreen({route}: Props) {
         description: getErrorMessage(err),
       });
 
-      if (config.bypassPhoneVerification) {
+      if (config.bypassEmailVerification) {
         Toast.show({
           description: 'BYPASS EMAIL Verification',
         });
@@ -125,7 +88,7 @@ export default function EmailValidationScreen({route}: Props) {
     setSeconds(30);
     try {
       setIsLoading(true);
-      const sendOtpRes = await AuthService.sendOTP({phoneNumber: email});
+      const sendOtpRes = await AuthService.verificationEmail();
       console.info('SendOTP result: ', sendOtpRes);
       Toast.show({
         description: 'OTP has been sent successfully',
@@ -191,7 +154,7 @@ export default function EmailValidationScreen({route}: Props) {
               seconds before resend code
             </Text>
           ) : (
-            <Button variant={'ghost'} onPress={resendOTP}>
+            <Button variant="link" onPress={resendOTP}>
               <Text
                 fontWeight={600}
                 color="#EB1C23"

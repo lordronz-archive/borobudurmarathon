@@ -20,6 +20,13 @@ export default {
     changePhoneNumber: 'Change Phone Number',
     sendOtp: 'Send OTP',
   },
+  consent: {
+    title: 'Data Confirmation',
+    subtitle:
+      'Choose whether you want to create new profile or use your existing profil information',
+    description:
+      'We have detected that you have previously registered to the Borobudur Marathon Application. Do you still want to use your old profile?, below are your old profile.',
+  },
   certificates: 'Certificates',
   save: 'Save',
 };

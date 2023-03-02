@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useEffect} from 'react';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {getCookiesString} from '../api/cookies';
 import {ProfileService} from '../api/profile.service';
@@ -12,11 +11,15 @@ import {getErrorMessage} from '../helpers/errorHandler';
 import {AuthService} from '../api/auth.service';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import CookieManager from '@react-native-cookies/cookies';
+import {IMemberDetailResponse} from '../types/profile.type';
+import {useDemo} from '../context/demo.context';
 
 export default function useInit() {
   const toast = useToast();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const {isShowDemoVerifyEmail, setDemoVerifyEmail} = useDemo();
 
   const {isLoggedIn, dispatch} = useAuthUser();
 
@@ -26,39 +29,6 @@ export default function useInit() {
 
       if (cookiesString) {
         getProfile();
-        // get profile
-        // ProfileService.getMemberDetail()
-        //   .then(resProfile => {
-        //     if (resProfile && resProfile.data && resProfile.data.length > 0) {
-        //       console.info('##resProfile', JSON.stringify(resProfile));
-        //       dispatch({
-        //         type: EAuthUserAction.LOGIN,
-        //         payload: {user: resProfile},
-        //       });
-        //       if (
-        //         resProfile.linked.mbsdZmemId &&
-        //         resProfile.linked.mbsdZmemId[0]
-        //       ) {
-        //         // profile has been completed
-        //         navigation.navigate('Main', {screen: 'Home'});
-        //       } else {
-        //         // need to complete profile
-        //         navigation.navigate('InputProfile');
-        //       }
-        //       // if (!toast.isActive('welcome')) {
-        //       //   toast.show({
-        //       //     id: 'welcome',
-        //       //     description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-        //       //   });
-        //       // }
-        //     } else {
-        //       navigation.navigate('Auth');
-        //     }
-        //   })
-        //   .catch(err => {
-        //     console.info('err ProfileService.getMemberDetail()', err);
-        //     navigation.navigate('Auth');
-        //   });
       } else {
         navigation.navigate('Auth');
       }
@@ -83,49 +53,60 @@ export default function useInit() {
         });
         SessionService.saveSession();
         if (resProfile.data && resProfile.data.length > 0) {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-          });
-          if (resProfile.linked.zmemAuusId[0].auusVerification) {
-            if (
-              resProfile.linked.mbsdZmemId &&
-              resProfile.linked.mbsdZmemId[0]
-            ) {
-              // profile has been completed
-              // if (payload.data.linked.mbsdZmemId[0].mbsdStatus > 0) {
-              //   state.readyToRegister = true;
-              // }
-              navigation.navigate('Main', {screen: 'Home'});
-              if (!toast.isActive('welcome')) {
-                toast.show({
-                  id: 'welcome',
-                  description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-                });
-              }
-            } else {
+          if (
+            resProfile.linked.zmemAuusId &&
+            resProfile.linked.zmemAuusId[0] &&
+            resProfile.linked.zmemAuusId[0].auusVerification
+          ) {
+            // start trial
+            if (isShowDemoVerifyEmail) {
               toast.show({
-                description: "Welcome, let's complete your data",
+                id: 'need-to-verify-email',
+                description: '(DEMO) Please confirm your email to continue',
               });
-              // need to complete profile
-              navigation.navigate('InputProfile');
+              AuthService.verificationEmail().then(() =>
+                navigation.navigate('EmailValidation', {
+                  email: resProfile.linked.zmemAuusId[0].auusEmail,
+                  onSuccess: () => {
+                    setDemoVerifyEmail(false);
+                    checkProfileIsCompleteOrNot(resProfile);
+                  },
+                }),
+              );
+            } else {
+              checkProfileIsCompleteOrNot(resProfile);
             }
-          } else if (!resProfile.linked.zmemAuusId[0].auusVerification) {
+          } else if (
+            resProfile.linked.zmemAuusId &&
+            resProfile.linked.zmemAuusId[0] &&
+            !resProfile.linked.zmemAuusId[0].auusVerification
+          ) {
             // need to complete profile
             toast.show({
               id: 'need-to-verify-email',
               description: 'Please confirm your email to continue',
             });
             AuthService.verificationEmail().then(() =>
-              navigation.navigate('EmailValidation'),
+              navigation.navigate('EmailValidation', {
+                email: resProfile.linked.zmemAuusId[0].auusEmail,
+                onSuccess: () => {
+                  checkProfileIsCompleteOrNot(resProfile);
+                },
+              }),
             );
+          } else {
+            toast.show({
+              id: 'logout',
+              description: 'Something wrong, please try again',
+            });
+            navigation.navigate('Logout');
           }
         } else {
           toast.show({
-            id: 'welcome',
-            description: 'Welcome, New Runner',
+            id: 'logout',
+            description: 'Something wrong, please try again',
           });
-          navigation.navigate('InputProfile');
+          navigation.navigate('Auth');
         }
       })
       .catch(err => {
@@ -143,6 +124,37 @@ export default function useInit() {
           navigation.navigate('Initial');
         }
       });
+  };
+
+  const checkProfileIsCompleteOrNot = (resProfile: IMemberDetailResponse) => {
+    if (resProfile.linked.mbsdZmemId && resProfile.linked.mbsdZmemId[0]) {
+      // profile has been completed
+      // if (payload.data.linked.mbsdZmemId[0].mbsdStatus > 0) {
+      //   state.readyToRegister = true;
+      // }
+
+      if (resProfile.linked.zmemAuusId[0].auusConsent) {
+        navigation.navigate('Main', {screen: 'Home'});
+        if (!toast.isActive('welcome')) {
+          toast.show({
+            id: 'welcome',
+            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+          });
+        }
+      } else if (!resProfile.linked.zmemAuusId[0].auusConsent) {
+        navigation.navigate('DataConfirmation');
+      }
+    } else {
+      // toast.show({
+      //   description: "Let's complete your data",
+      // });
+      toast.show({
+        id: 'welcome',
+        description: 'Welcome, New Runner',
+      });
+      // need to complete profile
+      navigation.navigate('InputProfile');
+    }
   };
 
   const logout = async (

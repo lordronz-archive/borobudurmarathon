@@ -19,7 +19,8 @@ export default function useInit() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const {isShowDemoVerifyEmail, setDemoVerifyEmail} = useDemo();
+  const {isShowDemoVerifyEmail, setDemoVerifyEmail, isShowDemoConsent} =
+    useDemo();
 
   const {isLoggedIn, dispatch} = useAuthUser();
 
@@ -134,12 +135,16 @@ export default function useInit() {
       // }
 
       if (resProfile.linked.zmemAuusId[0].auusConsent) {
-        navigation.navigate('Main', {screen: 'Home'});
-        if (!toast.isActive('welcome')) {
-          toast.show({
-            id: 'welcome',
-            description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-          });
+        if (isShowDemoConsent) {
+          navigation.navigate('DataConfirmation');
+        } else {
+          navigation.navigate('Main', {screen: 'Home'});
+          if (!toast.isActive('welcome')) {
+            toast.show({
+              id: 'welcome',
+              description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+            });
+          }
         }
       } else if (!resProfile.linked.zmemAuusId[0].auusConsent) {
         navigation.navigate('DataConfirmation');

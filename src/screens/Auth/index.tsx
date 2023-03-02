@@ -45,6 +45,8 @@ export default function AuthScreen() {
     hideModal,
     isShowDemoVerifyEmail,
     setDemoVerifyEmail,
+    isShowDemoConsent,
+    setDemoConsent,
   } = useDemo();
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
@@ -319,7 +321,7 @@ export default function AuthScreen() {
         safeAreaTop={true}>
         <Modal.Content maxWidth="350">
           <Modal.CloseButton />
-          <Modal.Header>Demo Settings</Modal.Header>
+          <Modal.Header>Demo Settings (Auto Save)</Modal.Header>
           <Modal.Body>
             <FormControl>
               <Checkbox
@@ -327,6 +329,15 @@ export default function AuthScreen() {
                 isChecked={isShowDemoVerifyEmail}
                 value="demo-verify-email">
                 Show Verify Email
+              </Checkbox>
+            </FormControl>
+
+            <FormControl>
+              <Checkbox
+                onChange={() => setDemoConsent(!isShowDemoConsent)}
+                isChecked={isShowDemoConsent}
+                value="demo-consent">
+                Show Consent Screen
               </Checkbox>
             </FormControl>
           </Modal.Body>
@@ -338,7 +349,7 @@ export default function AuthScreen() {
                 onPress={() => {
                   hideModal();
                 }}>
-                Close
+                OK
               </Button>
             </Button.Group>
           </Modal.Footer>

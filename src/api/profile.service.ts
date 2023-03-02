@@ -44,6 +44,18 @@ const ProfileService = {
       throw new ResponseError(msg.status, msg.data.status.error.message);
     }
   },
+  markAsAgreeTheConsent: async function (): Promise<IMemberDetailResponse> {
+    try {
+      const res = await httpRequest.get('/member_zone/consent', {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error) {
+      console.log('Error getting member detail : ', error);
+      const msg = error as any;
+      throw new ResponseError(msg.status, msg.data.status.error.message);
+    }
+  },
   secretArea: async function () {
     try {
       return httpRequest.get('/member_resource/member/');

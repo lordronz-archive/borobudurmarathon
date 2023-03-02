@@ -27,6 +27,10 @@ export default {
     description:
       'We have detected that you have previously registered to the Borobudur Marathon Application. Do you still want to use your old profile?, below are your old profile.',
   },
+  gender: {
+    male: 'Male',
+    female: 'Female',
+  },
   certificates: 'Certificates',
   save: 'Save',
 };

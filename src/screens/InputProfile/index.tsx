@@ -9,8 +9,9 @@ import {
   Row,
   SectionList,
   Divider,
+  useToast,
 } from 'native-base';
-import React from 'react';
+import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
 import BMButton from '../../components/buttons/Button';
@@ -19,11 +20,103 @@ import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {useAuthUser} from '../../context/auth.context';
 import I18n from '../../lib/i18n';
+import moment from 'moment';
+import {ProfileService} from '../../api/profile.service';
+import {useDemo} from '../../context/demo.context';
 
 export default function DataConfirmationScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {user} = useAuthUser();
+  const toast = useToast();
+  const {setDemoConsent} = useDemo();
+  const [isLoadingAction, setIsLoadingAction] = useState(false);
+
+  const sectionsDataProfile = [
+    {
+      title: 'Account & Personal Data',
+      data: [
+        {
+          label: 'Name',
+          value: user?.data[0].zmemFullName,
+        },
+        {
+          label: 'Phone Number',
+          value: user?.linked.mbsdZmemId[0].mbsdPhone,
+        },
+        {
+          label: 'Birthday',
+          data: [
+            {
+              label: 'Place Of Birth',
+              value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
+            },
+            {
+              label: 'Date of Birth',
+              value: user?.linked.mbsdZmemId[0].mbsdBirthDate
+                ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
+                    'DD MMMM yyyy',
+                  )
+                : undefined,
+            },
+          ],
+        },
+        {
+          label: 'Gender Blood',
+          data: [
+            {
+              label: 'Gender',
+              value:
+                user?.linked.mbsdZmemId[0].mbsdGender === 1
+                  ? I18n.t('gender.male')
+                  : I18n.t('gender.female'),
+            },
+            {
+              label: 'Blood Type',
+              value: user?.linked.mbsdZmemId[0].mbsdBloodType,
+            },
+          ],
+        },
+        {
+          label: 'Country Nationality',
+          data: [
+            {
+              label: 'Country',
+              value: user?.linked.mbsdZmemId[0].mbsdNationality,
+            },
+            {
+              label: 'Nationality',
+              value: user?.linked.mbsdZmemId[0].mbsdCountry,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      title: 'Address Info',
+      data: [
+        user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
+          ? {
+              label: 'Province City',
+              data: [
+                {
+                  label: 'Province',
+                  value: user?.linked.mbsdZmemId[0].mbsdProvinces,
+                },
+                {
+                  label: 'City',
+                  value: user?.linked.mbsdZmemId[0].mbsdCity,
+                },
+              ],
+            }
+          : {label: '', value: ''},
+        {
+          label: 'Address',
+          value: user?.linked.mbsdZmemId[0].mbsdAddress,
+        },
+      ].filter(item => item && item.label),
+    },
+  ];
 
   const handleNoAddNewProfile = () => {
     AuthService.deleteprofile()
@@ -37,6 +130,31 @@ export default function DataConfirmationScreen() {
           description: getErrorMessage(err),
         });
       });
+  };
+
+  const handleUseExisting = () => {
+    setIsLoadingAction(true);
+    // check is profile complete?
+    // perlu dicek apa saja yang wajib ada? jika semua sudah lengkap, baru mark as agree
+
+    const isProfileComplete = true;
+    if (isProfileComplete) {
+      ProfileService.markAsAgreeTheConsent()
+        .then(() => {
+          setDemoConsent(false);
+          navigation.navigate('Welcome');
+          setIsLoadingAction(false);
+        })
+        .catch(err => {
+          toast.show({
+            title: 'Failed',
+            description: getErrorMessage(err),
+          });
+          setIsLoadingAction(false);
+        });
+    } else {
+      //
+    }
   };
 
   return (
@@ -58,82 +176,7 @@ export default function DataConfirmationScreen() {
         <Box height="2" mt="5" mb="2" bgColor="gray.200" />
         <SectionList
           px="4"
-          sections={[
-            {
-              title: 'Account & Personal Data',
-              data: [
-                {
-                  label: 'Name',
-                  value: user?.data[0].zmemFullName,
-                },
-                {
-                  label: 'Phone Number',
-                  value: user?.linked.mbsdZmemId[0].mbsdPhone,
-                },
-                {
-                  label: 'Birthday',
-                  data: [
-                    {
-                      label: 'Place Of Birth',
-                      value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
-                    },
-                    {
-                      label: 'Date of Birth',
-                      value: user?.linked.mbsdZmemId[0].mbsdBirthDate,
-                    },
-                  ],
-                },
-                {
-                  label: 'Gender Blood',
-                  data: [
-                    {
-                      label: 'Gender',
-                      value: user?.linked.mbsdZmemId[0].mbsdGender,
-                    },
-                    {
-                      label: 'Blood Type',
-                      value: user?.linked.mbsdZmemId[0].mbsdBloodType,
-                    },
-                  ],
-                },
-                {
-                  label: 'Country Nationality',
-                  data: [
-                    {
-                      label: 'Country',
-                      value: user?.linked.mbsdZmemId[0].mbsdNationality,
-                    },
-                    {
-                      label: 'Nationality',
-                      value: user?.linked.mbsdZmemId[0].mbsdCountry,
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              title: 'Address Info',
-              data: [
-                {
-                  label: 'Province City',
-                  data: [
-                    {
-                      label: 'Province',
-                      value: user?.linked.mbsdZmemId[0].mbsdProvinces,
-                    },
-                    {
-                      label: 'City',
-                      value: user?.linked.mbsdZmemId[0].mbsdCity,
-                    },
-                  ],
-                },
-                {
-                  label: 'Address',
-                  value: user?.linked.mbsdZmemId[0].mbsdAddress,
-                },
-              ],
-            },
-          ]}
+          sections={sectionsDataProfile}
           renderItem={({item}) =>
             item.data && item.data.length > 0 ? (
               <Row flex={1}>
@@ -178,20 +221,23 @@ export default function DataConfirmationScreen() {
           )}
           ItemSeparatorComponent={() => <Divider mt={2} mb={2} />}
           keyExtractor={(item, index) => item.label + index}
+          ListFooterComponent={<Box height="50" />}
         />
       </Box>
-      <Button.Group flex="1">
+      <Button.Group flex="1" px="4">
         <BMButton
           variant="outline"
           flex="1"
           h="12"
-          onPress={handleNoAddNewProfile}>
+          onPress={handleNoAddNewProfile}
+          isLoading={isLoadingAction}>
           No, Add New Profile
         </BMButton>
         <BMButton
           flex="1"
           h="12"
-          onPress={() => navigation.navigate('InputProfile')}>
+          onPress={handleUseExisting}
+          isLoading={isLoadingAction}>
           Yes, Sure
         </BMButton>
       </Button.Group>

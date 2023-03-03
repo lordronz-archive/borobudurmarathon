@@ -18,7 +18,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 export default function ChooseCitizenScreen({route}: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {step, citizen, setCitizen} = useProfileStepper();
+  const {step, citizen, setCitizen, nextStep} = useProfileStepper();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -65,9 +65,13 @@ export default function ChooseCitizenScreen({route}: Props) {
           </Box>
         </TouchableOpacity>
       </VStack>
-      <Button h="12" mb="3" onPress={() => {
-        nextStep();
-      }} isLoading={isLoading} >
+      <Button
+        h="12"
+        mb="3"
+        onPress={() => {
+          nextStep();
+        }}
+        isLoading={isLoading}>
         Next
       </Button>
     </VStack>

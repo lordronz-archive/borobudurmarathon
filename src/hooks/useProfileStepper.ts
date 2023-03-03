@@ -22,11 +22,19 @@ export default function useProfileStepper() {
       setStep('profile');
     }
   };
+  const prevStep = () => {
+    if (step === 'upload-id') {
+      setStep('choose-citizen');
+    } else if (step === 'profile') {
+      setStep('upload-id');
+    }
+  };
 
   return {
     citizen,
     setCitizen,
     step,
     nextStep,
+    prevStep
   };
 }

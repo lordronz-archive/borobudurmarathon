@@ -1,5 +1,5 @@
 import {Avatar, Box, Divider, Flex, Row, ScrollView, Text} from 'native-base';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 

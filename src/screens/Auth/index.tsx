@@ -47,6 +47,8 @@ export default function AuthScreen() {
     setDemoVerifyEmail,
     isShowDemoConsent,
     setDemoConsent,
+    isShowDemoNewUser,
+    setDemoNewUser,
   } = useDemo();
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
@@ -338,6 +340,15 @@ export default function AuthScreen() {
                 isChecked={isShowDemoConsent}
                 value="demo-consent">
                 Show Consent Screen
+              </Checkbox>
+            </FormControl>
+
+            <FormControl>
+              <Checkbox
+                onChange={() => setDemoNewUser(!isShowDemoNewUser)}
+                isChecked={isShowDemoNewUser}
+                value="demo-consent">
+                Flow New User
               </Checkbox>
             </FormControl>
           </Modal.Body>

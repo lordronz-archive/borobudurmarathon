@@ -11,15 +11,16 @@ import Breadcrumbs from '../../components/header/Breadcrumbs';
 import {TouchableOpacity} from 'react-native';
 import IconIndonesia from '../../assets/icons/IconIndonesia';
 import IconWNA from '../../assets/icons/IconWNA';
+import useProfileStepper from '../../hooks/useProfileStepper';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
 export default function ChooseCitizenScreen({route}: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {step, citizen, setCitizen} = useProfileStepper();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [selected, setSelected] = useState<number>();
 
   return (
     <VStack px="4" flex="1">
@@ -35,13 +36,13 @@ export default function ChooseCitizenScreen({route}: Props) {
       <VStack my="3" space="2">
         <TouchableOpacity
           style={{width: '100%', height: 200}}
-          onPress={() => setSelected(0)}>
+          onPress={() => setCitizen('WNI')}>
           <Box
             w="full"
             h="full"
             justifyContent="center"
             alignItems={'center'}
-            borderColor={selected === 0 ? 'primary.900' : '#C5CDDB'}
+            borderColor={citizen === 'WNI' ? 'primary.900' : '#C5CDDB'}
             borderWidth="1"
             borderRadius="10px">
             <IconIndonesia />
@@ -50,13 +51,13 @@ export default function ChooseCitizenScreen({route}: Props) {
         </TouchableOpacity>
         <TouchableOpacity
           style={{width: '100%', height: 200}}
-          onPress={() => setSelected(1)}>
+          onPress={() => setCitizen('WNA')}>
           <Box
             w="full"
             h="full"
             justifyContent="center"
             alignItems={'center'}
-            borderColor={selected === 1 ? 'primary.900' : '#C5CDDB'}
+            borderColor={citizen === 'WNA' ? 'primary.900' : '#C5CDDB'}
             borderWidth="1"
             borderRadius="10px">
             <IconWNA />
@@ -64,7 +65,9 @@ export default function ChooseCitizenScreen({route}: Props) {
           </Box>
         </TouchableOpacity>
       </VStack>
-      <Button h="12" mb="3" onPress={() => {}} isLoading={isLoading}>
+      <Button h="12" mb="3" onPress={() => {
+        nextStep();
+      }} isLoading={isLoading} >
         Next
       </Button>
     </VStack>

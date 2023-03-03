@@ -19,8 +19,12 @@ export default function useInit() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const {isShowDemoVerifyEmail, setDemoVerifyEmail, isShowDemoConsent} =
-    useDemo();
+  const {
+    isShowDemoVerifyEmail,
+    setDemoVerifyEmail,
+    isShowDemoConsent,
+    isShowDemoNewUser,
+  } = useDemo();
 
   const {isLoggedIn, dispatch} = useAuthUser();
 
@@ -130,24 +134,30 @@ export default function useInit() {
   const checkProfileIsCompleteOrNot = (resProfile: IMemberDetailResponse) => {
     if (resProfile.linked.mbsdZmemId && resProfile.linked.mbsdZmemId[0]) {
       // profile has been completed
-      // if (payload.data.linked.mbsdZmemId[0].mbsdStatus > 0) {
-      //   state.readyToRegister = true;
-      // }
-
-      if (resProfile.linked.zmemAuusId[0].auusConsent) {
-        if (isShowDemoConsent) {
-          navigation.navigate('DataConfirmation');
-        } else {
-          navigation.navigate('Main', {screen: 'Home'});
-          if (!toast.isActive('welcome')) {
-            toast.show({
-              id: 'welcome',
-              description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-            });
+      if (isShowDemoNewUser) {
+        toast.show({
+          id: 'welcome',
+          description: 'Welcome, New Runner',
+        });
+        // need to complete profile
+        // navigation.navigate('InputProfile');
+        navigation.navigate('ChooseCitizen');
+      } else {
+        if (resProfile.linked.zmemAuusId[0].auusConsent) {
+          if (isShowDemoConsent) {
+            navigation.navigate('DataConfirmation');
+          } else {
+            navigation.navigate('Main', {screen: 'Home'});
+            if (!toast.isActive('welcome')) {
+              toast.show({
+                id: 'welcome',
+                description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+              });
+            }
           }
+        } else if (!resProfile.linked.zmemAuusId[0].auusConsent) {
+          navigation.navigate('DataConfirmation');
         }
-      } else if (!resProfile.linked.zmemAuusId[0].auusConsent) {
-        navigation.navigate('DataConfirmation');
       }
     } else {
       // toast.show({
@@ -158,7 +168,8 @@ export default function useInit() {
         description: 'Welcome, New Runner',
       });
       // need to complete profile
-      navigation.navigate('InputProfile');
+      // navigation.navigate('InputProfile');
+      navigation.navigate('ChooseCitizen');
     }
   };
 

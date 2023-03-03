@@ -5,11 +5,13 @@ export enum EDemoAction {
   HIDE_MODAL = 'HIDE_MODAL',
   SET_DEMO_VERIFY_EMAIL = 'SET_DEMO_VERIFY_EMAIL',
   SET_DEMO_CONSENT = 'SET_DEMO_CONSENT',
+  SET_DEMO_NEW_USER = 'SET_DEMO_NEW_USER',
 }
 type State = {
   isShowModal?: boolean;
   isShowDemoVerifyEmail?: boolean;
   isShowDemoConsent?: boolean;
+  isShowDemoNewUser?: boolean;
 };
 type Action = {type: EDemoAction; payload?: State};
 type Dispatch = (action: Action) => void;
@@ -38,6 +40,12 @@ function demoReducer(state: State, action: Action) {
         isShowDemoConsent: action.payload?.isShowDemoConsent,
       };
     }
+    case EDemoAction.SET_DEMO_NEW_USER: {
+      return {
+        ...state,
+        isShowDemoNewUser: action.payload?.isShowDemoNewUser,
+      };
+    }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -49,6 +57,7 @@ function DemoProvider({children}: {children: React.ReactNode}) {
     isShowModal: false,
     isShowDemoVerifyEmail: false,
     isShowDemoConsent: false,
+    isShowDemoNewUser: false,
   });
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
@@ -79,6 +88,13 @@ function useDemo() {
         type: EDemoAction.SET_DEMO_CONSENT,
         payload: {
           isShowDemoConsent: val,
+        },
+      }),
+    setDemoNewUser: (val: boolean) =>
+      context.dispatch({
+        type: EDemoAction.SET_DEMO_NEW_USER,
+        payload: {
+          isShowDemoNewUser: val,
         },
       }),
   };

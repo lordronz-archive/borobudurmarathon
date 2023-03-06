@@ -1,17 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {
-  ArrowBackIcon,
-  Box,
-  Divider,
-  Heading,
-  HStack,
-  IconButton,
-  Stack,
-  Text,
-  useTheme,
-  VStack,
-} from 'native-base';
+import {Box, Divider, HStack, Text, useTheme, VStack} from 'native-base';
 import React from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 

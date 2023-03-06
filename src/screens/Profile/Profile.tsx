@@ -101,8 +101,8 @@ export default function MyProfile() {
     return (
       <Logout
         onLoadEnd={() => {
-          //navigation.navigate('Register');
-          logout(setIsLoggingOut, onCloseModalLogout);
+          navigation.navigate('ChooseCitizen');
+          // logout(setIsLoggingOut, onCloseModalLogout);
         }}
       />
     );

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useTheme, ScrollView, Box, Image} from 'native-base';
+import {useTheme, ScrollView, Box} from 'native-base';
 import Header from '../../components/header/Header';
 import ListSponsorCard, {
   ISponsorItem,

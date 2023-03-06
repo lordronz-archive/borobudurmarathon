@@ -1,5 +1,5 @@
 import React from 'react';
-import {Center, ChevronRightIcon, Text} from 'native-base';
+import {Center, ChevronRightIcon, Text, Image} from 'native-base';
 import {Linking, TouchableOpacity} from 'react-native';
 
 type Props = {
@@ -14,7 +14,11 @@ export default function SponsorCard(props: Props) {
 
       {props.items.map(item => (
         <Center px="10">
-          {item.logo}
+          {typeof item.logo === 'string' ? (
+            <Image src={item.logo} />
+          ) : (
+            item.logo
+          )}
 
           <Text color="gray.400" fontSize="sm" textAlign="center">
             {item.description}

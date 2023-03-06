@@ -1,4 +1,4 @@
-import {Box, Text} from 'native-base';
+import {Box, Image, Text} from 'native-base';
 import React from 'react';
 
 type Props = {
@@ -12,7 +12,7 @@ export default function SponsorCard2(props: Props) {
       <Text color="gray.500" mb="2">
         {props.title}
       </Text>
-      {props.logo}
+      {typeof props.logo === 'string' ? <Image src={props.logo} /> : props.logo}
     </Box>
   );
 }

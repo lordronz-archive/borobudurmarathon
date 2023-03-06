@@ -1,4 +1,4 @@
-import {Box} from 'native-base';
+import {Box, Image} from 'native-base';
 import React from 'react';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 export default function SponsorCard3(props: Props) {
   return (
     <Box width="33%" alignItems="center" py="3">
-      {props.logo}
+      {typeof props.logo === 'string' ? <Image src={props.logo} /> : props.logo}
     </Box>
   );
 }

@@ -18,6 +18,7 @@ import {ImageOrVideo} from 'react-native-image-crop-picker';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
+import VerifyID from '../../components/modal/VerifyID';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -32,6 +33,9 @@ export default function ChooseCitizenScreen({route}: Props) {
   const [visible, setVisible] = useState(false);
   const [birthDate, setBirthDate] = useState<Date>();
   const toast = useToast();
+  const cancelRef = React.useRef(null);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpenNotReadable, setIsOpenNotReadable] = React.useState(false);
 
   const stepProperties = [
     {
@@ -157,6 +161,37 @@ export default function ChooseCitizenScreen({route}: Props) {
               }
             }}
           />
+          <VerifyID
+            cancelRef={cancelRef}
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            onPress={() => {
+              setIsOpen(false);
+            }}
+            isLoading
+            title={'Verify your ID'}
+            content={'Please wait a moment while we try to verify your ID'}
+            buttonContent={'Check My Event'}
+          />
+          <VerifyID
+            cancelRef={cancelRef}
+            isOpen={isOpenNotReadable}
+            onClose={() => {
+              setIsOpenNotReadable(false);
+              nextStep();
+              setStepCount(v => v + 1);
+            }}
+            onPress={() => {
+              setIsOpenNotReadable(false);
+              nextStep();
+              setStepCount(v => v + 1);
+            }}
+            title={'Your ID is not readable'}
+            content={
+              "Sorry we can't verify your ID please re-upload your ID or select Verify ID later"
+            }
+            buttonContent={'Close'}
+          />
         </VStack>
       )}
       {step === 'profile' && (
@@ -168,6 +203,9 @@ export default function ChooseCitizenScreen({route}: Props) {
                 placeholder="Enter your phone number"
                 label="Phone number"
                 helperText="We will send verification code to this number for validation"
+                _inputProps={{
+                  keyboardType: 'phone-pad',
+                }}
               />
             </VStack>
           )}
@@ -391,6 +429,15 @@ export default function ChooseCitizenScreen({route}: Props) {
         h="12"
         mb="3"
         onPress={async () => {
+          if (step === 'upload-id') {
+            setIsOpen(!isOpen);
+            setTimeout(() => {
+              setIsOpen(false);
+              setIsOpenNotReadable(true);
+            }, 1000);
+
+            return;
+          }
           nextStep();
           setStepCount(v => v + 1);
         }}

@@ -321,6 +321,10 @@ export default {
       vrRecords: {
         path: 'resources/vr_data',
       },
+      sponsor: {
+        path: 'resources/event_header_sponsor',
+        method: 'GET',
+      },
     },
   },
   ssoKompasUrl: {

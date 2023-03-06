@@ -3,7 +3,7 @@ import httpRequest from '../helpers/httpRequest';
 import {GetEventResponse, GetEventsResponse} from '../types/event.type';
 import ApiService from './api.service';
 import QRCode from 'qrcode';
-// import qs from "qs";
+import {ISponsorResponse} from '../types/sponsor.type';
 
 function qs(obj: any, prefix: any) {
   const str: string[] = [];
@@ -299,6 +299,18 @@ const EventService = {
       // throw new ResponseError(
       // msg
       // );
+    }
+  },
+  getSponsors: async function () {
+    try {
+      const res = (await ApiService.get(
+        config.apiUrl.resources.sponsor.path,
+      )) as {data: ISponsorResponse};
+
+      return res;
+    } catch (error) {
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      throw error;
     }
   },
   // export function checkout({transactionId, paymentType}){

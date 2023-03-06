@@ -97,20 +97,28 @@ export default function SectionListMyEvent() {
             }
           })
           .catch(err => {
-            Toast.show({
-              title: 'Failed to get events',
-              description: getErrorMessage(err),
-            });
+            if (getErrorMessage(err).includes('Not Found')) {
+              //
+            } else {
+              Toast.show({
+                title: 'Failed to get events',
+                description: getErrorMessage(err),
+              });
+            }
           })
           .finally(() => {
             setIsLoading(false);
           });
       })
       .catch(err => {
-        Toast.show({
-          title: 'Failed to get events',
-          description: getErrorMessage(err),
-        });
+        if (getErrorMessage(err).includes('Not Found')) {
+          //
+        } else {
+          Toast.show({
+            title: 'Failed to get events',
+            description: getErrorMessage(err),
+          });
+        }
       })
       .finally(() => {
         setIsLoading(false);

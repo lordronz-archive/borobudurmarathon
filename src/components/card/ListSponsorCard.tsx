@@ -5,16 +5,18 @@ import SponsorCard from './SponsorCard';
 import SponsorCard2 from './SponsorCard2';
 import SponsorCard3 from './SponsorCard3';
 
+export type ISponsorItem = {
+  title?: string;
+  description?: string;
+  logo: any;
+  url?: string;
+  urlText?: string;
+};
+
 type Props = {
   priority: 'high' | 'medium' | 'low';
   title: string;
-  items: {
-    title?: string;
-    description?: string;
-    logo: any;
-    url?: string;
-    urlText?: string;
-  }[];
+  items: ISponsorItem[];
 };
 
 export default function ListSponsorCard(props: Props) {

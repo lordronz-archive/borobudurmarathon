@@ -1,10 +1,4 @@
-type IField = {
-  label: string;
-  name: string;
-  size: number;
-  type: 'integer' | 'string' | 'datetime';
-};
-type IStatus = {page: number; totalRecords: number};
+import {IField, IStatus} from './baseResponse.type';
 
 type ILink = {
   zmemLoyalty: number;

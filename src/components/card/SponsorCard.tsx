@@ -10,7 +10,9 @@ type Props = {
 export default function SponsorCard(props: Props) {
   return (
     <Center mt="6" mb="6">
-      <Text color="gray.400">{props.title}</Text>
+      <Text fontSize={'10px'} fontWeight={400} mb={'12px'} color="gray.400">
+        {props.title}
+      </Text>
 
       {props.items.map(item => (
         <Center px="10">
@@ -20,7 +22,7 @@ export default function SponsorCard(props: Props) {
             item.logo
           )}
 
-          <Text color="gray.400" fontSize="sm" textAlign="center">
+          {/* <Text color="gray.400" fontSize="sm" textAlign="center">
             {item.description}
           </Text>
           <TouchableOpacity
@@ -33,7 +35,7 @@ export default function SponsorCard(props: Props) {
               {item.urlText || 'Know More'}
               <ChevronRightIcon />
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </Center>
       ))}
     </Center>

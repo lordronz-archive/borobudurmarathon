@@ -7,8 +7,8 @@ const SessionService = {
     return AsyncStorage.getItem(SESSION_KEY);
   },
 
-  saveSession() {
-    AsyncStorage.setItem(SESSION_KEY, 'TRUE');
+  saveSession(cookie: string) {
+    AsyncStorage.setItem(SESSION_KEY, cookie);
   },
 
   removeSession() {

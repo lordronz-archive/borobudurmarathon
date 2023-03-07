@@ -21,7 +21,7 @@ type Props = {
 
 export default function ListSponsorCard(props: Props) {
   return (
-    <Box>
+    <Box mt={'24px'}>
       <LineTitle title={props.title} />
 
       {props.priority === 'high' && (

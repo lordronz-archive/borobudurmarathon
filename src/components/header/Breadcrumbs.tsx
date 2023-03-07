@@ -15,50 +15,46 @@ export default function Breadcrumbs(props: Props) {
   const {colors} = useTheme();
 
   return (
-    <HStack
-      justifyContent="space-between"
-      alignItems="center"
-      paddingX={1}
-      paddingY={2}>
+    <HStack paddingY={'12px'}>
       {props.titles.map((title, i) => (
-        <HStack flex="1" alignItems="center">
-          <VStack alignItems="center">
+        <VStack flex="1" alignItems={'center'} justifyContent={'center'}>
+          <HStack>
             <Box
               rounded={'full'}
+              zIndex={1}
               height="24px"
               width="24px"
               backgroundColor={
-                props.step && props.step >= i + 1 ? 'primary.900' : '#E8ECF3'
+                props.step && props.step > i + 1 ? 'primary.900' : '#E8ECF3'
               }
               textAlign={'center'}
               justifyContent="center"
               alignItems="center"
               _text={{
-                color: props.step && props.step >= i + 1 ? 'white' : '#9FACBF',
+                color: props.step && props.step > i + 1 ? 'white' : '#9FACBF',
                 fontWeight: 600,
                 fontSize: 12,
               }}>
               {i + 1}
             </Box>
-            <Text fontWeight={400} fontSize={12} textAlign="center">
-              {title}
-            </Text>
-          </VStack>
-          {i < props.titles.length - 1 && (
-            <Divider
-              my="2"
-              _light={{
-                bg: '#E8ECF3',
-                height: '2px',
-              }}
-              _dark={{
-                bg: 'muted.50',
-              }}
-              justifyContent="center"
-              alignItems="center"
-            />
-          )}
-        </HStack>
+            {i < props.titles.length - 1 && (
+              <Divider
+                position={'absolute'}
+                my="3"
+                _light={{
+                  bg: '#E8ECF3',
+                  height: '2px',
+                }}
+                _dark={{
+                  bg: 'muted.50',
+                }}
+              />
+            )}
+          </HStack>
+          <Text fontWeight={400} fontSize={12} textAlign="center">
+            {title}
+          </Text>
+        </VStack>
       ))}
     </HStack>
   );

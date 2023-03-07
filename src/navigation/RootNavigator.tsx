@@ -26,6 +26,7 @@ import ChooseCitizenScreen from '../screens/InputProfile/ChooseCitizen';
 import EmailValidationScreen from '../screens/InputProfile/EmailValidation';
 import VerifyLaterScreen from '../screens/InputProfile/VerifyLater';
 import AboutUsScreen from '../screens/Information/AboutUs';
+import SearchLocationScreen from '../screens/InputProfile/SearchLocation';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -55,6 +56,7 @@ export type RootStackParamList = {
   EmailValidation?: {email?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
   ChooseCitizen: undefined;
+  SearchLocation: undefined;
 
   EventDetail: {id: number};
 
@@ -128,6 +130,11 @@ function RootNavigator() {
           <Stack.Screen
             name="ChooseCitizen"
             component={ChooseCitizenScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SearchLocation"
+            component={SearchLocationScreen}
             options={{headerShown: false}}
           />
         </Stack.Group>

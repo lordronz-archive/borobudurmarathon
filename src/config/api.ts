@@ -10,7 +10,7 @@ export default {
     // href : '/dev.titudev.com/api/v1/',
   },
   steelytoeUrl: {
-    href: 'https://steelytoe.com/dev.titudev.com//api/v1/',
+    href: 'https://steelytoe.com/dev.titudev.com/api/v1/',
   },
   validatorUrl: {
     href: 'https://validator.race.id/',

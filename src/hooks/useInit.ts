@@ -23,7 +23,9 @@ export default function useInit() {
     isShowDemoVerifyEmail,
     setDemoVerifyEmail,
     isShowDemoConsent,
+    setDemoConsent,
     isShowDemoNewUser,
+    setDemoNewUser,
   } = useDemo();
 
   const {isLoggedIn, dispatch} = useAuthUser();
@@ -33,21 +35,32 @@ export default function useInit() {
       const cookiesString = await getCookiesString();
 
       if (cookiesString) {
-        getProfile();
+        getProfile(cookiesString);
       } else {
         navigation.navigate('Auth');
       }
     } else {
       const isSessionAvailable = await SessionService.getSession();
       if (isSessionAvailable) {
-        checkLogin(true);
+        const res = await AuthService.checkSession();
+        if (res && res.data) {
+          checkLogin(true);
+        } else {
+          InAppBrowser.closeAuth();
+          await CookieManager.clearAll();
+
+          dispatch({type: EAuthUserAction.LOGOUT});
+          SessionService.removeSession();
+
+          navigation.navigate('Initial');
+        }
       } else {
         navigation.navigate('Auth');
       }
     }
   };
 
-  const getProfile = () => {
+  const getProfile = (cookie?: string) => {
     ProfileService.getMemberDetail()
       .then(resProfile => {
         console.info('resProfile', resProfile);
@@ -56,7 +69,9 @@ export default function useInit() {
           type: EAuthUserAction.LOGIN,
           payload: {user: resProfile},
         });
-        SessionService.saveSession();
+        if (cookie) {
+          SessionService.saveSession(cookie);
+        }
         if (resProfile.data && resProfile.data.length > 0) {
           if (
             resProfile.linked.zmemAuusId &&
@@ -141,13 +156,15 @@ export default function useInit() {
         });
         // need to complete profile
         // navigation.navigate('InputProfile');
-        navigation.navigate('ChooseCitizen');
+        navigation.replace('ChooseCitizen');
+        setDemoNewUser(false);
       } else {
-        if (resProfile.linked.zmemAuusId[0].auusConsent) {
+        if (resProfile.linked.zmemAuusId[0].auusConsent === 1) {
           if (isShowDemoConsent) {
-            navigation.navigate('DataConfirmation');
+            navigation.replace('DataConfirmation');
+            setDemoConsent(false);
           } else {
-            navigation.navigate('Main', {screen: 'Home'});
+            // navigation.replace('Main', {screen: 'Home'});
             if (!toast.isActive('welcome')) {
               toast.show({
                 id: 'welcome',
@@ -155,8 +172,8 @@ export default function useInit() {
               });
             }
           }
-        } else if (!resProfile.linked.zmemAuusId[0].auusConsent) {
-          navigation.navigate('DataConfirmation');
+        } else {
+          navigation.replace('DataConfirmation');
         }
       }
     } else {
@@ -169,7 +186,7 @@ export default function useInit() {
       });
       // need to complete profile
       // navigation.navigate('InputProfile');
-      navigation.navigate('ChooseCitizen');
+      navigation.replace('ChooseCitizen');
     }
   };
 

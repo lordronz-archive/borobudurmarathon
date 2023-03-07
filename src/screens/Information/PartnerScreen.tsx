@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useTheme, ScrollView, Box} from 'native-base';
+import {useTheme, ScrollView, Box, Image} from 'native-base';
 import Header from '../../components/header/Header';
 import ListSponsorCard, {
   ISponsorItem,
@@ -75,16 +75,16 @@ export default function PartnerScreen() {
     <ScrollView backgroundColor={colors.white}>
       <Header title="" left="back" />
 
-      {sponsors.map(sponsor => (
+      {/* {sponsors.map(sponsor => (
         <ListSponsorCard
           key={sponsor.title}
           title={sponsor.title}
           priority={sponsor.priority as any}
           items={sponsor.items}
         />
-      ))}
+      ))} */}
 
-      {/* <ListSponsorCard
+      <ListSponsorCard
         title="Komite"
         priority="high"
         items={[
@@ -255,7 +255,7 @@ export default function PartnerScreen() {
             ),
           },
         ]}
-      /> */}
+      />
 
       <Box height="50" />
     </ScrollView>

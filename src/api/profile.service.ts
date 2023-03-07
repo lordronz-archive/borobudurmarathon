@@ -11,7 +11,9 @@ function qs(obj: any, prefix: boolean | string) {
     const k = prefix ? prefix + '[' + p + ']' : p,
       v = obj[p];
     // str.push(typeof(v) == 'object' ? qs(v, k) : (k) + "=" + encodeURIComponent(v));
-    str.push(typeof v === 'object' ? qs(v, k) : k + '=' + v);
+    str.push(
+      typeof v === 'object' ? qs(v, k) : k + '[like]' + '=' + '%25' + v + '%25',
+    );
   }
   return str.join('&');
 }

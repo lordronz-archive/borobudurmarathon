@@ -106,13 +106,28 @@ export default function MyEventDetail() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const resDetailTransaction = await EventService.getTransactionDetail(
+      let resDetailTransaction = await EventService.getTransactionDetail(
         params.transactionId,
       );
       console.info(
         'res detail transaction',
         JSON.stringify(resDetailTransaction),
       );
+
+      if (
+        resDetailTransaction?.data?.data?.trnsAmount === '0' &&
+        resDetailTransaction?.data?.data?.trnsConfirmed === 0
+      ) {
+        const resPayNow = await EventService.checkoutTransaction({
+          transactionId: resDetailTransaction?.data?.data?.trnsId,
+          paymentType: 9,
+        });
+        console.info('res pay now', JSON.stringify(resPayNow));
+        if (resPayNow && resPayNow.data) {
+          resDetailTransaction.data.data.trnsConfirmed = 1;
+        }
+      }
+
       if (resDetailTransaction && resDetailTransaction.data) {
         setDetailTransaction(resDetailTransaction.data);
       }
@@ -235,6 +250,7 @@ export default function MyEventDetail() {
         description: getErrorMessage(err),
       });
     } finally {
+      await fetchData();
       setIsLoadingApplyCoupon(false);
     }
   };
@@ -464,27 +480,37 @@ export default function MyEventDetail() {
                     <Text fontWeight={400} color="#768499" fontSize={11}>
                       Coupon
                     </Text>
-                    <HStack alignItems={'center'}>
-                      <TextInput
-                        onChangeText={val => setCouponCode(val)}
-                        value={couponCode}
-                        style={{
-                          borderWidth: 1,
-                          borderStyle: 'solid',
-                          borderColor: '#C5CDDB',
-                          borderRadius: 3,
-                          width: 150,
-                          height: 40,
-                          paddingHorizontal: 10,
-                        }}
-                      />
-                      <Button
-                        isLoading={isLoadingApplyCoupon}
-                        onPress={handleApplyCoupon}
-                        marginLeft={'10px'}>
-                        Apply
-                      </Button>
-                    </HStack>
+                    {detailTransaction?.linked?.trcpTrnsId &&
+                    detailTransaction?.linked?.trcpTrnsId?.length !== 0 ? (
+                      <Text fontWeight={500} color="#1E1E1E" fontSize={12}>
+                        {
+                          detailTransaction?.linked?.trcpTrnsId?.[0]
+                            ?.trcpCupnCode
+                        }
+                      </Text>
+                    ) : (
+                      <HStack alignItems={'center'}>
+                        <TextInput
+                          onChangeText={val => setCouponCode(val)}
+                          value={couponCode}
+                          style={{
+                            borderWidth: 1,
+                            borderStyle: 'solid',
+                            borderColor: '#C5CDDB',
+                            borderRadius: 3,
+                            width: 150,
+                            height: 40,
+                            paddingHorizontal: 10,
+                          }}
+                        />
+                        <Button
+                          isLoading={isLoadingApplyCoupon}
+                          onPress={handleApplyCoupon}
+                          marginLeft={'10px'}>
+                          Apply
+                        </Button>
+                      </HStack>
+                    )}
                   </HStack>
                 </Box>
               )}

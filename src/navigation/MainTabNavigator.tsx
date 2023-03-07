@@ -9,6 +9,7 @@ import HomeScreen from '../screens/Home';
 import MyProfile from '../screens/Profile/Profile';
 import MyRecords from '../screens/Record/MyRecords';
 import {useTheme} from 'native-base';
+import IconMore from '../assets/icons/IconMore';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,12 +51,12 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="More"
         component={MyProfile}
         options={{
           headerShown: false,
           tabBarIcon: ({color, size}) => (
-            <IconUser name="profile" color={color} size={size} />
+            <IconMore name="more" color={color} size={size} />
           ),
         }}
       />

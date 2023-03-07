@@ -4,6 +4,7 @@ import {GetEventResponse, GetEventsResponse} from '../types/event.type';
 import ApiService from './api.service';
 import QRCode from 'qrcode';
 import {ISponsorResponse} from '../types/sponsor.type';
+import {GetGalleryResponse} from '../types/gallery.type';
 
 function qs(obj: any, prefix: any) {
   const str: string[] = [];
@@ -80,6 +81,17 @@ const EventService = {
     console.log('Authenticate garmin now...');
     try {
       return ApiService.get(config.apiUrl.apis.vr.authGarmin.path);
+    } catch (error) {
+      console.log('E : ', error);
+      const msg = error as any;
+      throw new ResponseError(msg.status, msg.error.message);
+    }
+  },
+  getGallery: async function (): Promise<{data: GetGalleryResponse}> {
+    try {
+      return ApiService.get('member_resource/gallery') as Promise<{
+        data: GetGalleryResponse;
+      }>;
     } catch (error) {
       console.log('E : ', error);
       const msg = error as any;

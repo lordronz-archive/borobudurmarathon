@@ -8,20 +8,30 @@ import {
   Text,
   VStack,
 } from 'native-base';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Heading} from '../../components/text/Heading';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {useAuthUser} from '../../context/auth.context';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import {EventService} from '../../api/event.service';
+import {GetGalleryResponse} from '../../types/gallery.type';
 // import useuser from '../../hooks/useuser';
 
 export default function WelcomeScreen() {
   const {user} = useAuthUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [galleries, setGalleries] = useState<GetGalleryResponse>();
 
   // const user = useuser();
+  useEffect(() => {
+    (async () => {
+      const {data} = await EventService.getGallery();
+      console.log('GALLERY', JSON.stringify(data));
+      setGalleries(data);
+    })();
+  }, []);
 
   if (!user) {
     return (
@@ -39,7 +49,9 @@ export default function WelcomeScreen() {
             flex="2"
             borderRadius={8}
             source={{
-              uri: 'https://wallpaperaccess.com/full/317501.jpg',
+              uri:
+                galleries?.data[0]?.mgalUrl ||
+                'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
           />
@@ -82,7 +94,10 @@ export default function WelcomeScreen() {
             flex="1.5"
             borderRadius={8}
             source={{
-              uri: 'https://wallpaperaccess.com/full/317501.jpg',
+              uri:
+                galleries?.data[1]?.mgalUrl ||
+                galleries?.data[0]?.mgalUrl ||
+                'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
           />
@@ -93,7 +108,10 @@ export default function WelcomeScreen() {
               flex="1"
               borderRadius={8}
               source={{
-                uri: 'https://wallpaperaccess.com/full/317501.jpg',
+                uri:
+                  galleries?.data[2]?.mgalUrl ||
+                  galleries?.data[0]?.mgalUrl ||
+                  'https://wallpaperaccess.com/full/317501.jpg',
               }}
               alt="Welcome Image"
             />
@@ -101,7 +119,10 @@ export default function WelcomeScreen() {
               flex="1"
               borderRadius={8}
               source={{
-                uri: 'https://wallpaperaccess.com/full/317501.jpg',
+                uri:
+                  galleries?.data[3]?.mgalUrl ||
+                  galleries?.data[0]?.mgalUrl ||
+                  'https://wallpaperaccess.com/full/317501.jpg',
               }}
               alt="Welcome Image"
             />
@@ -110,7 +131,10 @@ export default function WelcomeScreen() {
             flex="1.5"
             borderRadius={8}
             source={{
-              uri: 'https://wallpaperaccess.com/full/317501.jpg',
+              uri:
+                galleries?.data[4]?.mgalUrl ||
+                galleries?.data[0]?.mgalUrl ||
+                'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
           />
@@ -118,7 +142,10 @@ export default function WelcomeScreen() {
             flex="2.4"
             borderRadius={8}
             source={{
-              uri: 'https://wallpaperaccess.com/full/317501.jpg',
+              uri:
+                galleries?.data[5]?.mgalUrl ||
+                galleries?.data[0]?.mgalUrl ||
+                'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
           />
@@ -126,7 +153,10 @@ export default function WelcomeScreen() {
             flex="3"
             borderRadius={8}
             source={{
-              uri: 'https://wallpaperaccess.com/full/317501.jpg',
+              uri:
+                galleries?.data[6]?.mgalUrl ||
+                galleries?.data[0]?.mgalUrl ||
+                'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
           />
@@ -134,7 +164,10 @@ export default function WelcomeScreen() {
             flex="1.5"
             borderRadius={8}
             source={{
-              uri: 'https://wallpaperaccess.com/full/317501.jpg',
+              uri:
+                galleries?.data[7]?.mgalUrl ||
+                galleries?.data[0]?.mgalUrl ||
+                'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
           />

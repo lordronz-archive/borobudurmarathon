@@ -22,6 +22,7 @@ export default function useProfileStepper() {
       setStep('profile');
     }
   };
+
   const prevStep = () => {
     if (step === 'upload-id') {
       setStep('choose-citizen');
@@ -34,7 +35,8 @@ export default function useProfileStepper() {
     citizen,
     setCitizen,
     step,
+    setStep,
     nextStep,
-    prevStep
+    prevStep,
   };
 }

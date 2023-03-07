@@ -141,13 +141,13 @@ export default function useInit() {
         });
         // need to complete profile
         // navigation.navigate('InputProfile');
-        navigation.navigate('ChooseCitizen');
+        navigation.replace('ChooseCitizen');
       } else {
         if (resProfile.linked.zmemAuusId[0].auusConsent) {
-          if (isShowDemoConsent) {
-            navigation.navigate('DataConfirmation');
+          if (!isShowDemoConsent) {
+            navigation.replace('DataConfirmation');
           } else {
-            navigation.navigate('Main', {screen: 'Home'});
+            navigation.replace('Main', {screen: 'Home'});
             if (!toast.isActive('welcome')) {
               toast.show({
                 id: 'welcome',
@@ -156,7 +156,7 @@ export default function useInit() {
             }
           }
         } else if (!resProfile.linked.zmemAuusId[0].auusConsent) {
-          navigation.navigate('DataConfirmation');
+          navigation.replace('DataConfirmation');
         }
       }
     } else {
@@ -169,7 +169,7 @@ export default function useInit() {
       });
       // need to complete profile
       // navigation.navigate('InputProfile');
-      navigation.navigate('ChooseCitizen');
+      navigation.replace('ChooseCitizen');
     }
   };
 

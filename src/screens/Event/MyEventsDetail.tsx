@@ -25,7 +25,7 @@ import moment from 'moment';
 import datetime from '../../helpers/datetime';
 import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
-import {Dimensions, TouchableOpacity, useWindowDimensions} from 'react-native';
+import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
 export default function MyEventDetail() {
@@ -38,6 +38,8 @@ export default function MyEventDetail() {
   const screenWidth = Dimensions.get('window').width;
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingApplyCoupon, setIsLoadingApplyCoupon] =
+    useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
 
@@ -47,6 +49,7 @@ export default function MyEventDetail() {
   const [detailEvent, setDetailEvent] = useState<GetEventResponse>();
 
   const [status, setStatus] = useState<string>('');
+  const [couponCode, setCouponCode] = useState<string>('');
   const [QR, setQR] = useState<any>();
 
   const [tmpPayment, setTmpPayment] = useState<any>();
@@ -212,6 +215,29 @@ export default function MyEventDetail() {
       </Text>
     );
   }, [status]);
+
+  const handleApplyCoupon = async () => {
+    setIsLoadingApplyCoupon(true);
+    try {
+      const resApplyCoupon = await EventService.applyCoupon({
+        cupnCode: couponCode,
+        trnsRefId: detailTransaction?.data?.trnsRefId,
+      });
+      console.info('res apply coupon', JSON.stringify(resApplyCoupon));
+      if (resApplyCoupon) {
+        Toast.show({
+          title: 'Success to Apply Coupon',
+        });
+      }
+    } catch (err) {
+      Toast.show({
+        title: 'Failed to Apply Coupon',
+        description: getErrorMessage(err),
+      });
+    } finally {
+      setIsLoadingApplyCoupon(false);
+    }
+  };
 
   const handlePayNow = async () => {
     setIsLoading(true);
@@ -426,6 +452,42 @@ export default function MyEventDetail() {
                   </HStack>
                 </TouchableOpacity>
               </Box>
+              {status === 'Waiting Payment' && (
+                <Box
+                  paddingY={'16px'}
+                  borderTopColor={'#E8ECF3'}
+                  borderTopWidth={1}
+                  borderTopStyle={'solid'}>
+                  <HStack
+                    justifyContent={'space-between'}
+                    alignItems={'center'}>
+                    <Text fontWeight={400} color="#768499" fontSize={11}>
+                      Coupon
+                    </Text>
+                    <HStack alignItems={'center'}>
+                      <TextInput
+                        onChangeText={val => setCouponCode(val)}
+                        value={couponCode}
+                        style={{
+                          borderWidth: 1,
+                          borderStyle: 'solid',
+                          borderColor: '#C5CDDB',
+                          borderRadius: 3,
+                          width: 150,
+                          height: 40,
+                          paddingHorizontal: 10,
+                        }}
+                      />
+                      <Button
+                        isLoading={isLoadingApplyCoupon}
+                        onPress={handleApplyCoupon}
+                        marginLeft={'10px'}>
+                        Apply
+                      </Button>
+                    </HStack>
+                  </HStack>
+                </Box>
+              )}
               {DATA_LIST.map(item => (
                 <Box
                   key={item.title}

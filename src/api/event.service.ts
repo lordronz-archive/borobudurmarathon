@@ -285,7 +285,7 @@ const EventService = {
       // );
     }
   },
-  applyCoupon: async function (data: any) {
+  applyCoupon: async function (data: {cupnCode: string; trnsRefId: string}) {
     console.log('Data to checkout : ', data);
     try {
       return ApiService.postExternal(

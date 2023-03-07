@@ -101,7 +101,7 @@ export default function MyProfile() {
     return (
       <Logout
         onLoadEnd={() => {
-          navigation.navigate('VerifyLater');
+          navigation.navigate('Welcome');
           // logout(setIsLoggingOut, onCloseModalLogout);
         }}
       />

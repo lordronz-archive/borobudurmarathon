@@ -25,6 +25,7 @@ import PartnerScreen from '../screens/Information/PartnerScreen';
 import ChooseCitizenScreen from '../screens/InputProfile/ChooseCitizen';
 import EmailValidationScreen from '../screens/InputProfile/EmailValidation';
 import VerifyLaterScreen from '../screens/InputProfile/VerifyLater';
+import AboutUsScreen from '../screens/Information/AboutUs';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -65,6 +66,7 @@ export type RootStackParamList = {
 
   FAQ: undefined;
   Partner: undefined;
+  AboutUs: undefined;
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
 
   Register: undefined;
@@ -168,6 +170,11 @@ function RootNavigator() {
         <Stack.Screen
           name="FAQ"
           component={FAQScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AboutUs"
+          component={AboutUsScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

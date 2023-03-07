@@ -85,7 +85,7 @@ export default function MyProfile() {
       key: 'about',
       icon: <IconInfo color={colors.black} size={6} />,
       name: 'About Us',
-      route: 'WebView',
+      route: 'AboutUs',
       params: {page: 'about'},
     },
     {

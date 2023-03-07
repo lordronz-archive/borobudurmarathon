@@ -1,6 +1,18 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, Image, Text, useToast, VStack} from 'native-base';
-import React, {useState} from 'react';
+import {
+  ArrowBackIcon,
+  Box,
+  Button,
+  Checkbox,
+  HStack,
+  Image,
+  ScrollView,
+  Text,
+  Toast,
+  useToast,
+  VStack,
+} from 'native-base';
+import React, {useEffect, useState} from 'react';
 import {Heading} from '../../components/text/Heading';
 import {
   NativeStackNavigationProp,
@@ -8,34 +20,56 @@ import {
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Breadcrumbs from '../../components/header/Breadcrumbs';
-import {TouchableOpacity} from 'react-native';
+import {Platform, TouchableOpacity} from 'react-native';
 import IconIndonesia from '../../assets/icons/IconIndonesia';
 import IconWNA from '../../assets/icons/IconWNA';
 import useProfileStepper from '../../hooks/useProfileStepper';
 import ImagePicker from '../../components/modal/ImagePicker';
 import IconUpload from '../../assets/icons/IconUpload';
-import {ImageOrVideo} from 'react-native-image-crop-picker';
 import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
+import countries from '../../helpers/countries';
 import VerifyID from '../../components/modal/VerifyID';
+import httpRequest from '../../helpers/httpRequest';
+import IconLocation from '../../assets/icons/IconLocation';
+import {getErrorMessage} from '../../helpers/errorHandler';
+import {AuthService} from '../../api/auth.service';
+import {useAuthUser} from '../../context/auth.context';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
 export default function ChooseCitizenScreen({route}: Props) {
+  const {user} = useAuthUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {step, citizen, setCitizen, nextStep, prevStep} = useProfileStepper();
+
+  const {
+    step,
+    citizen,
+    setCitizen,
+    identityImage,
+    setIdentityImage,
+    profile,
+    setProfile,
+    accountInformation,
+    setAccountInformation,
+    nextStep,
+    prevStep,
+  } = useProfileStepper();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [stepCount, setStepCount] = useState(0);
-  const [idImage, setIdImage] = useState<ImageOrVideo>();
+  const [validationTry, setValidationTry] = useState(1);
+  const [stepCount, setStepCount] = useState(1);
+  const [profileStep, setProfileStep] = useState(1);
   const [visible, setVisible] = useState(false);
-  const [birthDate, setBirthDate] = useState<Date>();
   const toast = useToast();
   const cancelRef = React.useRef(null);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isOpenNotReadable, setIsOpenNotReadable] = React.useState(false);
+  const [isAgreeTermsAndCondition, setIsAgreeTermsAndCondition] =
+    React.useState<boolean>(false);
+  const [isVerifyLater, setIsVerifyLater] = React.useState<boolean>(false);
 
   const stepProperties = [
     {
@@ -43,417 +77,705 @@ export default function ChooseCitizenScreen({route}: Props) {
       subtitle: 'Choose your citizen according to identity',
     },
     {
-      title: 'Upload KTP',
-      subtitle: 'Upload your KTP and please make sure it is readable',
+      title: citizen === 'WNI' ? 'Upload KTP' : 'Upload Passport',
+      subtitle:
+        citizen === 'WNI'
+          ? 'Upload your KTP and please make sure it is readable'
+          : 'Upload your Passport and please make sure still readable',
     },
     {
+      note: 'Step 1 of 3 to Complete Profile',
       title: 'Account',
       subtitle: 'Enter all information below to continue',
     },
     {
+      note: 'Step 2 of 3 to Complete Profile',
       title: 'Personal Data',
       subtitle: 'Enter all information below to continue',
     },
     {
+      note: 'Step 3 of 3 to Complete Profile',
       title: 'Address Information',
-      subtitle: 'Enter all information below to continue',
+      subtitle: 'Find and select a location according to your address',
     },
   ];
 
+  function handleChangeProfilePic(image: any) {
+    setIdentityImage(oldVal => ({
+      ...oldVal,
+      data: {
+        mime: image.mime,
+        path: image.path,
+        modificationDate: image.modificationDate,
+      },
+    }));
+  }
+
+  const handleUpdatePhotoProfile = async () => {
+    setIsLoading(true);
+    if (!identityImage || !identityImage.data) {
+      Toast.show({
+        title: 'Please uploud your ID',
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      let uri =
+        Platform.OS === 'android'
+          ? identityImage.data.path
+          : identityImage.data.path.replace('file://', '');
+      let uriSplit = uri.split('/');
+      let name = uriSplit[uriSplit.length - 1];
+
+      let formData = new FormData();
+      formData.append('fileType', 'identity');
+      formData.append('file', {
+        name,
+        type: identityImage.data.mime,
+        uri,
+      });
+
+      const res = await httpRequest({
+        url: 'https://repository.race.id/private',
+        method: 'POST',
+        headers: {
+          Authorization: 'Api-Key=C00l&@lm!ghTyyA4pp',
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      });
+
+      console.log(res, 'uploud ID');
+      if (res && res.data && res.data.fileId) {
+        Toast.show({title: 'Uploud ID Success'});
+        console.log(res.data.fileId, 'fileId');
+
+        setIdentityImage(oldVal => ({
+          ...oldVal,
+          fileId: res.data.fileId,
+        }));
+        nextStep();
+        setStepCount(v => v + 1);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleConfirm = async () => {
+    setIsOpen(true);
+
+    try {
+      let resValidation;
+      if (!isVerifyLater) {
+        resValidation = await httpRequest({
+          url: 'https://repository.race.id/validator',
+          method: 'POST',
+          headers: {
+            Authorization: 'Api-Key=C00l&@lm!ghTyyA4pp',
+            'Content-Type': 'application/json',
+          },
+          data: {
+            fileId: identityImage.fileId,
+            fileType: citizen === 'WNI' ? 'ktp' : 'passport',
+            dataToValidate: {
+              idNumber: profile.mbsdIDNumber,
+              name: accountInformation.name,
+              birthDate: '1999-06-07',
+              birthPlace: profile.mbsdBirthPlace,
+            },
+          },
+        });
+      }
+
+      if (resValidation && resValidation.data && resValidation.data.isValid) {
+        if (
+          '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !==
+          accountInformation.phoneNumber
+        ) {
+          const sendOtpRes = await AuthService.sendOTP(
+            accountInformation.phoneNumber,
+          );
+          console.info('SendOTP result: ', sendOtpRes);
+          navigation.navigate('PhoneNumberValidation', {
+            phoneNumber: accountInformation.phoneNumber,
+            onSuccess: () => {
+              setProfileAfterVerifyPhoneSuccess();
+            },
+          });
+        } else {
+          setProfileAfterVerifyPhoneSuccess();
+        }
+      } else {
+        setIsOpenNotReadable(true);
+        setValidationTry(v => v + 1);
+      }
+    } catch (err) {
+      console.info(err, getErrorMessage(err), 'Failed confirm profile');
+    } finally {
+      setIsOpen(false);
+    }
+  };
+
+  const setProfileAfterVerifyPhoneSuccess = async () => {
+    try {
+      setIsLoading(true);
+      const profileData =
+        citizen === 'WNI'
+          ? {
+              ...profile,
+              mbsdNationality: 'Indonesia',
+              mbsdCountry: 'Indonesia',
+            }
+          : profile;
+      const res = await AuthService.setprofile(profileData);
+      console.info('Setprofile result: ', res);
+
+      navigation.navigate('Welcome');
+      setIsLoading(false);
+    } catch (err) {
+      Toast.show({
+        title: 'Failed to save',
+        description: getErrorMessage(err),
+      });
+      setIsLoading(false);
+    }
+  };
+
+  console.log(isAgreeTermsAndCondition);
+
   return (
     <VStack px="4" flex="1">
-      <Box>
+      <VStack>
         <Breadcrumbs
           titles={['Citizen', 'Upload ID', 'Profile']}
           step={stepCount + 1}
         />
-        <VStack space="1.5">
-          <Heading>{stepProperties[stepCount].title}</Heading>
+        <VStack space="1" mt={'12px'}>
+          {stepCount === 3 && (
+            <Text fontWeight={400} color="#9FACBF" fontSize={12}>
+              {stepProperties[stepCount - 1 + profileStep - 1].note}
+            </Text>
+          )}
+          <Heading>
+            {stepProperties[stepCount - 1 + profileStep - 1]?.title}
+          </Heading>
           <Text fontWeight={400} color="#768499" fontSize={11}>
-            {stepProperties[stepCount].subtitle}
+            {stepProperties[stepCount - 1 + profileStep - 1].subtitle}
           </Text>
         </VStack>
-      </Box>
-      {step === 'choose-citizen' && (
-        <VStack my="3" space="2">
-          <TouchableOpacity
-            style={{width: '100%', height: 200}}
-            onPress={() => setCitizen('WNI')}>
-            <Box
-              w="full"
-              h="full"
-              justifyContent="center"
-              alignItems={'center'}
-              borderColor={citizen === 'WNI' ? 'primary.900' : '#C5CDDB'}
-              borderWidth="1"
-              borderRadius="10px">
-              <IconIndonesia />
-              <Text>WNI (Indonesian Citizen)</Text>
-            </Box>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{width: '100%', height: 200}}
-            onPress={() => setCitizen('WNA')}>
-            <Box
-              w="full"
-              h="full"
-              justifyContent="center"
-              alignItems={'center'}
-              borderColor={citizen === 'WNA' ? 'primary.900' : '#C5CDDB'}
-              borderWidth="1"
-              borderRadius="10px">
-              <IconWNA />
-              <Text>WNA (Foreign Citizen)</Text>
-            </Box>
-          </TouchableOpacity>
-        </VStack>
-      )}
-      {step === 'upload-id' && (
-        <VStack my="3" space="2">
-          <TouchableOpacity
-            style={{width: '100%', height: 200}}
-            onPress={() => setVisible(true)}>
-            {idImage ? (
-              <Box
-                p="1"
-                justifyContent="center"
-                alignItems={'center'}
-                borderColor={'primary.900'}
-                borderWidth="1"
-                borderRadius="10px"
-                borderStyle={'dashed'}>
-                <Image
-                  source={{uri: idImage.path}}
-                  resizeMode={'cover'}
-                  size={'full'}
-                  alt="ID Image"
-                />
-              </Box>
-            ) : (
+      </VStack>
+      <ScrollView flex={1}>
+        {step === 'choose-citizen' && (
+          <VStack my="3" space="2">
+            <TouchableOpacity
+              style={{width: '100%', height: 200}}
+              onPress={() => setCitizen('WNI')}>
               <Box
                 w="full"
                 h="full"
                 justifyContent="center"
                 alignItems={'center'}
-                borderColor={'#C5CDDB'}
-                borderWidth="1"
-                borderRadius="10px"
-                borderStyle={'dashed'}>
-                <IconUpload />
+                borderColor={citizen === 'WNI' ? 'primary.900' : '#C5CDDB'}
+                borderWidth="2"
+                borderRadius="10px">
+                <IconIndonesia />
                 <Text>WNI (Indonesian Citizen)</Text>
               </Box>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{width: '100%', height: 200}}
+              onPress={() => setCitizen('WNA')}>
+              <Box
+                w="full"
+                h="full"
+                justifyContent="center"
+                alignItems={'center'}
+                borderColor={citizen === 'WNA' ? 'primary.900' : '#C5CDDB'}
+                borderWidth="2"
+                borderRadius="10px">
+                <IconWNA />
+                <Text>WNA (Foreign Citizen)</Text>
+              </Box>
+            </TouchableOpacity>
+          </VStack>
+        )}
+        {step === 'upload-id' && (
+          <VStack my="3" space="2">
+            <TouchableOpacity
+              style={{width: '100%', height: 200}}
+              onPress={() => setVisible(true)}>
+              {identityImage && identityImage.data ? (
+                <Box
+                  p="1"
+                  justifyContent="center"
+                  alignItems={'center'}
+                  borderColor={'primary.900'}
+                  borderWidth="1"
+                  borderRadius="10px"
+                  borderStyle={'dashed'}>
+                  <Image
+                    source={{
+                      uri: identityImage.data.path,
+                    }}
+                    resizeMode={'cover'}
+                    size={'full'}
+                    alt="ID Image"
+                  />
+                </Box>
+              ) : (
+                <Box
+                  w="full"
+                  h="full"
+                  justifyContent="center"
+                  alignItems={'center'}
+                  borderColor={'#C5CDDB'}
+                  borderWidth="1"
+                  borderRadius="10px"
+                  borderStyle={'dashed'}>
+                  <IconUpload />
+                  <Text>Tap to Upload</Text>
+                </Box>
+              )}
+            </TouchableOpacity>
+            <Text color="#768499" fontSize={10}>
+              Maximum file size is 5MB in .jpg format with clear images
+            </Text>
+            <ImagePicker
+              setVisible={setVisible}
+              visible={visible}
+              onChange={image => {
+                if (image.size <= 5 * 1e6) {
+                  handleChangeProfilePic(image);
+                } else {
+                  toast.show({
+                    id: 'id-image-too-big',
+                    description:
+                      'ID Image is too big, maximum file size is 5 MB',
+                  });
+                }
+              }}
+            />
+          </VStack>
+        )}
+        {step === 'profile' && (
+          <>
+            {stepCount === 3 && profileStep === 1 && (
+              <VStack my="3" space="2">
+                <TextInput
+                  placeholder="Enter your name"
+                  label="Name"
+                  helperText="Name as stated on your official ID document"
+                  value={accountInformation.name}
+                  onChangeText={val =>
+                    setAccountInformation(oldVal => ({
+                      ...oldVal,
+                      name: val,
+                    }))
+                  }
+                />
+                <TextInput
+                  placeholder="Enter your phone number"
+                  label="Phone number"
+                  helperText="We will send verification code to this number for validation"
+                  value={accountInformation.phoneNumber}
+                  onChangeText={val =>
+                    setAccountInformation(oldVal => ({
+                      ...oldVal,
+                      phoneNumber: val,
+                    }))
+                  }
+                />
+              </VStack>
             )}
-          </TouchableOpacity>
-          <Text color="#768499">
-            Maximum file size is 5MB in .jpg format with clear images
-          </Text>
-          <ImagePicker
-            setVisible={setVisible}
-            visible={visible}
-            onChange={image => {
-              if (image.size <= 5 * 1e6) {
-                setIdImage(image);
+            {stepCount === 3 && profileStep === 2 && (
+              <VStack my="3" space="2">
+                <TextInput
+                  placeholder="Enter your identity number"
+                  label="Identity Number"
+                  helperText={`Enter your ${
+                    citizen === 'WNI' ? 'KTP' : 'Passport'
+                  } ID number`}
+                  value={profile.mbsdIDNumber}
+                  onChangeText={val =>
+                    setProfile(oldVal => ({
+                      ...oldVal,
+                      mbsdIDNumber: val,
+                      mbsdIDNumberType: citizen === 'WNA' ? 1 : 3,
+                    }))
+                  }
+                />
+                <SelectInput
+                  items={[
+                    {
+                      label: 'Male',
+                      value: '1',
+                    },
+                    {
+                      label: 'Female',
+                      value: '2',
+                    },
+                  ]}
+                  placeholder="Choose gender"
+                  label="Gender"
+                  value={profile.mbsdGender}
+                  onValueChange={val =>
+                    setProfile(oldVal => ({
+                      ...oldVal,
+                      mbsdGender: val,
+                    }))
+                  }
+                />
+                <DateInput
+                  date={accountInformation.birthdate}
+                  setDate={date => {
+                    setAccountInformation(oldVal => ({
+                      ...oldVal,
+                      birthdate: date,
+                    }));
+                    setProfile(oldVal => ({
+                      ...oldVal,
+                      mbsdBirthDate: date.toJSON().slice(0, 10),
+                    }));
+                  }}
+                  placeholder="DD MMM YYYY"
+                  label="Date of birth"
+                />
+                <TextInput
+                  placeholder="Enter your place of birth"
+                  label="Place of birth"
+                  value={profile.mbsdBirthPlace}
+                  onChangeText={val =>
+                    setProfile(oldVal => ({
+                      ...oldVal,
+                      mbsdBirthPlace: val,
+                    }))
+                  }
+                />
+                <SelectInput
+                  items={[
+                    {
+                      label: 'O',
+                      value: '0',
+                    },
+                    {
+                      label: 'O+',
+                      value: '1',
+                    },
+                    {
+                      label: 'O-',
+                      value: '2',
+                    },
+                    {
+                      label: 'A',
+                      value: '3',
+                    },
+                    {
+                      label: 'A+',
+                      value: '4',
+                    },
+                    {
+                      label: 'A-',
+                      value: '5',
+                    },
+                    {
+                      label: 'B',
+                      value: '6',
+                    },
+                    {
+                      label: 'B+',
+                      value: '7',
+                    },
+                    {
+                      label: 'B-',
+                      value: '8',
+                    },
+                    {
+                      label: 'AB',
+                      value: '9',
+                    },
+                    {
+                      label: 'AB+',
+                      value: '10',
+                    },
+                    {
+                      label: 'AB-',
+                      value: '11',
+                    },
+                  ]}
+                  value={profile.mbsdBloodType?.toString()}
+                  placeholder="Choose blood type"
+                  label="Blood Type"
+                  onValueChange={val =>
+                    setProfile(oldVal => ({
+                      ...oldVal,
+                      mbsdBloodType: Number(val),
+                    }))
+                  }
+                />
+                {citizen === 'WNA' && (
+                  <>
+                    <SelectInput
+                      items={countries.map(({en_short_name}) => ({
+                        label: en_short_name,
+                        value: en_short_name,
+                      }))}
+                      value={profile.mbsdCountry}
+                      placeholder="Choose your country"
+                      label="Country"
+                      onValueChange={val =>
+                        setProfile(oldVal => ({
+                          ...oldVal,
+                          mbsdCountry: val,
+                        }))
+                      }
+                    />
+                    <SelectInput
+                      items={countries.map(({nationality}) => ({
+                        label: nationality,
+                        value: nationality,
+                      }))}
+                      value={profile.mbsdNationality}
+                      placeholder="Choose your nationality"
+                      label="Nationality"
+                      onValueChange={val =>
+                        setProfile(oldVal => ({
+                          ...oldVal,
+                          mbsdNationality: val,
+                        }))
+                      }
+                    />
+                  </>
+                )}
+              </VStack>
+            )}
+            {stepCount === 3 && profileStep === 3 && (
+              <VStack my="3" space="2">
+                {citizen === 'WNI' ? (
+                  <Box
+                    p={'16px'}
+                    borderStyle={'solid'}
+                    borderWidth={1}
+                    borderRadius={3}
+                    borderColor={'#E8ECF3'}>
+                    <Box
+                      mb={'16px'}
+                      flexDirection={'row'}
+                      alignItems={'center'}>
+                      <IconLocation />
+                      <VStack marginLeft={'16px'}>
+                        {profile.mbsdCity &&
+                        profile.mbsdProvinces &&
+                        profile.mbsdAddress ? (
+                          <>
+                            <Text
+                              fontSize={'14px'}
+                              fontWeight={600}
+                              color={'#1E1E1E'}>
+                              {profile.mbsdCity}
+                            </Text>
+                            <Text
+                              fontSize={'10px'}
+                              fontWeight={400}
+                              color={'#768499'}>
+                              {profile.mbsdAddress}
+                            </Text>
+                          </>
+                        ) : (
+                          <Text
+                            fontSize={'14px'}
+                            fontWeight={400}
+                            color={'#768499;'}>
+                            No Address Yet...
+                          </Text>
+                        )}
+                      </VStack>
+                    </Box>
+                    <Button
+                      bgColor={'#fff'}
+                      borderStyle={'solid'}
+                      borderWidth={1}
+                      borderRadius={8}
+                      borderColor={'#EB1C23'}
+                      color={'#EB1C23'}
+                      onPress={() => navigation.navigate('SearchLocation')}>
+                      <Text color={'#EB1C23'}>
+                        {profile.mbsdCity &&
+                        profile.mbsdProvinces &&
+                        profile.mbsdAddress
+                          ? 'Edit'
+                          : 'Choose your address'}
+                      </Text>
+                    </Button>
+                  </Box>
+                ) : (
+                  <TextInput
+                    placeholder="Enter your address"
+                    label="Address"
+                    value={profile.mbsdAddress}
+                    onChangeText={val =>
+                      setProfile(oldVal => ({
+                        ...oldVal,
+                        mbsdAddress: val,
+                      }))
+                    }
+                  />
+                )}
+              </VStack>
+            )}
+          </>
+        )}
+      </ScrollView>
+      {stepCount === 3 && profileStep === 3 && (
+        <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
+          <Checkbox
+            value={isAgreeTermsAndCondition.toString()}
+            onChange={setIsAgreeTermsAndCondition}
+            isDisabled={isLoading}>
+            <Text fontSize={'12px'} fontWeight={600} ml={'10px'} flex={1}>
+              By continuing I understand, know, and am willing to comply with
+              all the terms & conditions of the borobudur marathon.
+            </Text>
+          </Checkbox>
+          {validationTry >= 3 && (
+            <Checkbox
+              mt={'20px'}
+              value={isVerifyLater.toString()}
+              onChange={setIsVerifyLater}
+              isDisabled={isLoading}>
+              <HStack flex={1}>
+                <VStack ml={'10px'} flex={1}>
+                  <Text fontSize={'12px'} fontWeight={600}>
+                    Verify profile data later?
+                  </Text>
+                  <Text fontSize={'10px'} fontWeight={400}>
+                    If your profile data isn’t validated you can’t register for
+                    competition event.
+                  </Text>
+                </VStack>
+                <Text fontSize={'12px'} fontWeight={600} underline>
+                  See more info
+                </Text>
+              </HStack>
+            </Checkbox>
+          )}
+        </Box>
+      )}
+      <HStack my={3} space={'10px'}>
+        {stepCount > 1 && (
+          <Button
+            h="12"
+            backgroundColor={'#E7F3FC'}
+            borderRadius={'8px'}
+            onPress={() => {
+              if (profileStep > 1) {
+                setProfileStep(v => (v > 1 ? v - 1 : v));
               } else {
-                toast.show({
-                  id: 'id-image-too-big',
-                  description: 'ID Image is too big, maximum file size is 5 MB',
-                });
+                prevStep();
+                setStepCount(v => (v > 1 ? v - 1 : v));
               }
             }}
-          />
-          <VerifyID
-            cancelRef={cancelRef}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            onPress={() => {
-              setIsOpen(false);
-            }}
-            isLoading
-            title={'Verify your ID'}
-            content={'Please wait a moment while we try to verify your ID'}
-            buttonContent={'Check My Event'}
-          />
-          <VerifyID
-            cancelRef={cancelRef}
-            isOpen={isOpenNotReadable}
-            onClose={() => {
-              setIsOpenNotReadable(false);
-              nextStep();
-              setStepCount(v => v + 1);
-            }}
-            onPress={() => {
-              setIsOpenNotReadable(false);
-              nextStep();
-              setStepCount(v => v + 1);
-            }}
-            title={'Your ID is not readable'}
-            content={
-              "Sorry we can't verify your ID please re-upload your ID or select Verify ID later"
+            isLoading={isLoading}>
+            <ArrowBackIcon color={'#1E1E1E'} />
+          </Button>
+        )}
+        <Button
+          flex={1}
+          h="12"
+          borderRadius={'8px'}
+          onPress={async () => {
+            if (stepCount === 3) {
+              if (profileStep === 1) {
+                if (accountInformation.name && accountInformation.phoneNumber) {
+                  setProfileStep(v => v + 1);
+                } else {
+                  Toast.show({
+                    title: 'Not Completed',
+                    description: 'Please complete the required data.',
+                  });
+                }
+              }
+              if (profileStep === 2) {
+                if (
+                  profile.mbsdIDNumber &&
+                  profile.mbsdGender &&
+                  profile.mbsdBirthDate &&
+                  profile.mbsdBirthPlace &&
+                  profile.mbsdBloodType
+                ) {
+                  setProfileStep(v => v + 1);
+                } else {
+                  Toast.show({
+                    title: 'Not Completed',
+                    description: 'Please complete the required data.',
+                  });
+                }
+              }
+              if (profileStep === 3) {
+                if (profile.mbsdAddress && isAgreeTermsAndCondition) {
+                  handleConfirm();
+                } else {
+                  Toast.show({
+                    title: 'Not Completed',
+                    description: 'Please complete the required data.',
+                  });
+                }
+              }
+            } else {
+              if (step === 'choose-citizen') {
+                if (citizen) {
+                  nextStep();
+                  setStepCount(v => v + 1);
+                } else {
+                  Toast.show({
+                    title: 'Please choose your citizen',
+                  });
+                }
+              }
+              if (step === 'upload-id') {
+                await handleUpdatePhotoProfile();
+              }
             }
-            buttonContent={'Close'}
-          />
-        </VStack>
-      )}
-      {step === 'profile' && (
-        <>
-          {stepCount === 2 && (
-            <VStack my="3" space="2">
-              <TextInput placeholder="Enter your name" label="Name" />
-              <TextInput
-                placeholder="Enter your phone number"
-                label="Phone number"
-                helperText="We will send verification code to this number for validation"
-                _inputProps={{
-                  keyboardType: 'phone-pad',
-                }}
-              />
-            </VStack>
-          )}
-          {stepCount === 3 && (
-            <VStack my="3" space="2">
-              <SelectInput
-                items={[
-                  {
-                    label: 'KTP',
-                    value: '1',
-                  },
-                  // {
-                  //   label: 'SIM',
-                  //   value: '2',
-                  // },
-                  // {
-                  //   label: 'Passport',
-                  //   value: '3',
-                  // },
-                ]}
-                placeholder="Choose identity type"
-                label="Identity Type"
-              />
-              <TextInput
-                placeholder="Enter your identity number"
-                label="Identity number"
-                helperText="Enter your KTP/SIM/Passport ID number"
-              />
-              <SelectInput
-                items={[
-                  {
-                    label: 'Male',
-                    value: '1',
-                  },
-                  {
-                    label: 'Female',
-                    value: '2',
-                  },
-                ]}
-                placeholder="Choose gender"
-                label="Gender"
-              />
-              <DateInput
-                setDate={date => {
-                  setBirthDate(date);
-                  // setMbsdBirthDate(date.toJSON().slice(0, 10));
-                }}
-                placeholder="DD MMM YYYY"
-                label="Date of birth"
-              />
-              <TextInput
-                placeholder="Enter your place of birth"
-                label="Place of birth"
-              />
-              <SelectInput
-                items={[
-                  {
-                    label: 'O',
-                    value: '0',
-                  },
-                  {
-                    label: 'O+',
-                    value: '1',
-                  },
-                  {
-                    label: 'O-',
-                    value: '2',
-                  },
-                  {
-                    label: 'A',
-                    value: '3',
-                  },
-                  {
-                    label: 'A+',
-                    value: '4',
-                  },
-                  {
-                    label: 'A-',
-                    value: '5',
-                  },
-                  {
-                    label: 'B',
-                    value: '6',
-                  },
-                  {
-                    label: 'B+',
-                    value: '7',
-                  },
-                  {
-                    label: 'B-',
-                    value: '8',
-                  },
-                  {
-                    label: 'AB',
-                    value: '9',
-                  },
-                  {
-                    label: 'AB+',
-                    value: '10',
-                  },
-                  {
-                    label: 'AB-',
-                    value: '11',
-                  },
-                ]}
-                placeholder="Choose blood type"
-                label="Blood Type"
-              />
-            </VStack>
-          )}
-          {stepCount === 4 && (
-            <VStack my="3" space="2">
-              <SelectInput
-                items={[
-                  {
-                    label: 'KTP',
-                    value: '1',
-                  },
-                  // {
-                  //   label: 'SIM',
-                  //   value: '2',
-                  // },
-                  // {
-                  //   label: 'Passport',
-                  //   value: '3',
-                  // },
-                ]}
-                placeholder="Choose identity type"
-                label="Identity Type"
-              />
-              <TextInput
-                placeholder="Enter your identity number"
-                label="Identity number"
-                helperText="Enter your KTP/SIM/Passport ID number"
-              />
-              <SelectInput
-                items={[
-                  {
-                    label: 'Male',
-                    value: '1',
-                  },
-                  {
-                    label: 'Female',
-                    value: '2',
-                  },
-                ]}
-                placeholder="Choose gender"
-                label="Gender"
-              />
-              <DateInput
-                setDate={date => {
-                  setBirthDate(date);
-                  // setMbsdBirthDate(date.toJSON().slice(0, 10));
-                }}
-                placeholder="DD MMM YYYY"
-                label="Date of birth"
-              />
-              <TextInput
-                placeholder="Enter your place of birth"
-                label="Place of birth"
-              />
-              <SelectInput
-                items={[
-                  {
-                    label: 'O',
-                    value: '0',
-                  },
-                  {
-                    label: 'O+',
-                    value: '1',
-                  },
-                  {
-                    label: 'O-',
-                    value: '2',
-                  },
-                  {
-                    label: 'A',
-                    value: '3',
-                  },
-                  {
-                    label: 'A+',
-                    value: '4',
-                  },
-                  {
-                    label: 'A-',
-                    value: '5',
-                  },
-                  {
-                    label: 'B',
-                    value: '6',
-                  },
-                  {
-                    label: 'B+',
-                    value: '7',
-                  },
-                  {
-                    label: 'B-',
-                    value: '8',
-                  },
-                  {
-                    label: 'AB',
-                    value: '9',
-                  },
-                  {
-                    label: 'AB+',
-                    value: '10',
-                  },
-                  {
-                    label: 'AB-',
-                    value: '11',
-                  },
-                ]}
-                placeholder="Choose blood type"
-                label="Blood Type"
-              />
-            </VStack>
-          )}
-        </>
-      )}
-      <Button
-        h="12"
-        mb="3"
-        onPress={async () => {
-          if (step === 'upload-id') {
-            setIsOpen(!isOpen);
-            setTimeout(() => {
-              setIsOpen(false);
-              setIsOpenNotReadable(true);
-            }, 1000);
-
-            return;
-          }
+          }}
+          isLoading={isLoading}>
+          {profileStep === 3 ? 'Confirm' : 'Next'}
+        </Button>
+      </HStack>
+      <VerifyID
+        cancelRef={cancelRef}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onPress={() => {
+          setIsOpen(false);
+        }}
+        isLoading
+        title={'Verify your ID'}
+        content={'Please wait a moment while we try to verify your ID'}
+        buttonContent={'Check My Event'}
+      />
+      <VerifyID
+        cancelRef={cancelRef}
+        isOpen={isOpenNotReadable}
+        onClose={() => {
+          setIsOpenNotReadable(false);
           nextStep();
           setStepCount(v => v + 1);
         }}
-        isLoading={isLoading}>
-        Next
-      </Button>
-      <Button
-        h="12"
-        mb="3"
         onPress={() => {
-          setStepCount(v => (v > 1 ? v - 1 : v));
-          prevStep();
+          setIsOpenNotReadable(false);
+          nextStep();
+          setStepCount(v => v + 1);
         }}
-        isLoading={isLoading}>
-        Back
-      </Button>
+        title={'Your ID is not readable'}
+        content={
+          "Sorry we can't verify your ID please re-upload your ID or select Verify ID later"
+        }
+        buttonContent={'Close'}
+      />
     </VStack>
   );
 }

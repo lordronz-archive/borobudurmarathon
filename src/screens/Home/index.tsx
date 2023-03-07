@@ -65,7 +65,7 @@ export default function HomeScreen() {
               style={{padding: 7}}
               onPress={() => {
                 navigation.navigate('Main', {
-                  screen: 'Profile',
+                  screen: 'More',
                 });
               }}>
               <IconHamburgerMenu size="lg" color="black" />

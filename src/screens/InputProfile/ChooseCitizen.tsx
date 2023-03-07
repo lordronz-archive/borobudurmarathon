@@ -29,6 +29,7 @@ import TextInput from '../../components/form/TextInput';
 import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
 import countries from '../../helpers/countries';
+import VerifyID from '../../components/modal/VerifyID';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -47,6 +48,9 @@ export default function ChooseCitizenScreen({route}: Props) {
   const [visible, setVisible] = useState(false);
   const [birthDate, setBirthDate] = useState<Date>();
   const toast = useToast();
+  const cancelRef = React.useRef(null);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpenNotReadable, setIsOpenNotReadable] = React.useState(false);
 
   useEffect(() => {
     setStep('choose-citizen');
@@ -392,6 +396,15 @@ export default function ChooseCitizenScreen({route}: Props) {
           h="12"
           borderRadius={'8px'}
           onPress={async () => {
+            if (step === 'upload-id') {
+              setIsOpen(!isOpen);
+              setTimeout(() => {
+                setIsOpen(false);
+                setIsOpenNotReadable(true);
+              }, 1000);
+
+              return;
+            }
             if (profileStep === 3) {
             } else {
               if (stepCount === 3) {
@@ -406,6 +419,37 @@ export default function ChooseCitizenScreen({route}: Props) {
           {profileStep === 3 ? 'Confirm' : 'Next'}
         </Button>
       </HStack>
+      <VerifyID
+        cancelRef={cancelRef}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onPress={() => {
+          setIsOpen(false);
+        }}
+        isLoading
+        title={'Verify your ID'}
+        content={'Please wait a moment while we try to verify your ID'}
+        buttonContent={'Check My Event'}
+      />
+      <VerifyID
+        cancelRef={cancelRef}
+        isOpen={isOpenNotReadable}
+        onClose={() => {
+          setIsOpenNotReadable(false);
+          nextStep();
+          setStepCount(v => v + 1);
+        }}
+        onPress={() => {
+          setIsOpenNotReadable(false);
+          nextStep();
+          setStepCount(v => v + 1);
+        }}
+        title={'Your ID is not readable'}
+        content={
+          "Sorry we can't verify your ID please re-upload your ID or select Verify ID later"
+        }
+        buttonContent={'Close'}
+      />
     </VStack>
   );
 }

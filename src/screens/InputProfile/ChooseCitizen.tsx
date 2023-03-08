@@ -20,7 +20,7 @@ import {
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Breadcrumbs from '../../components/header/Breadcrumbs';
-import {Platform, TouchableOpacity} from 'react-native';
+import {Alert, BackHandler, Platform, TouchableOpacity} from 'react-native';
 import IconIndonesia from '../../assets/icons/IconIndonesia';
 import IconWNA from '../../assets/icons/IconWNA';
 import useProfileStepper from '../../hooks/useProfileStepper';
@@ -46,6 +46,7 @@ export default function ChooseCitizenScreen({route}: Props) {
 
   const {
     step,
+    setStep,
     citizen,
     setCitizen,
     identityImage,
@@ -56,6 +57,7 @@ export default function ChooseCitizenScreen({route}: Props) {
     setAccountInformation,
     nextStep,
     prevStep,
+    resetStepper,
   } = useProfileStepper();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -70,6 +72,27 @@ export default function ChooseCitizenScreen({route}: Props) {
   const [isAgreeTermsAndCondition, setIsAgreeTermsAndCondition] =
     React.useState<boolean>(false);
   const [isVerifyLater, setIsVerifyLater] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const stepProperties = [
     {
@@ -192,14 +215,19 @@ export default function ChooseCitizenScreen({route}: Props) {
         });
       }
 
-      if (resValidation && resValidation.data && resValidation.data.isValid) {
+      console.log('resValidation', resValidation);
+
+      if (
+        (resValidation && resValidation.data && resValidation.data.isValid) ||
+        isVerifyLater
+      ) {
         if (
           '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !==
           accountInformation.phoneNumber
         ) {
-          const sendOtpRes = await AuthService.sendOTP(
-            accountInformation.phoneNumber,
-          );
+          const sendOtpRes = await AuthService.sendOTP({
+            phoneNumber: accountInformation.phoneNumber,
+          });
           console.info('SendOTP result: ', sendOtpRes);
           navigation.navigate('PhoneNumberValidation', {
             phoneNumber: accountInformation.phoneNumber,
@@ -228,7 +256,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         citizen === 'WNI'
           ? {
               ...profile,
-              mbsdNationality: 'Indonesia',
+              mbsdNationality: 'Indonesian',
               mbsdCountry: 'Indonesia',
             }
           : profile;
@@ -236,13 +264,16 @@ export default function ChooseCitizenScreen({route}: Props) {
       console.info('Setprofile result: ', res);
 
       navigation.navigate('Welcome');
-      setIsLoading(false);
     } catch (err) {
       Toast.show({
         title: 'Failed to save',
         description: getErrorMessage(err),
       });
+    } finally {
       setIsLoading(false);
+      resetStepper();
+      setStepCount(1);
+      setProfileStep(1);
     }
   };
 

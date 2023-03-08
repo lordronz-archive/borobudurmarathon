@@ -73,6 +73,14 @@ export default function useProfileStepper() {
   const [accountInformation, setAccountInformation] =
     useGlobalState('accountInformation');
 
+  const resetStepper = () => {
+    setCitizen(initialState.citizen);
+    setStep(initialState.step);
+    setIdentityImage(initialState.identityImage);
+    setProfile(initialState.profile);
+    setAccountInformation(initialState.accountInformation);
+  };
+
   const nextStep = () => {
     if (step === 'choose-citizen') {
       setStep('upload-id');
@@ -99,7 +107,9 @@ export default function useProfileStepper() {
     accountInformation,
     setAccountInformation,
     step,
+    setStep,
     nextStep,
     prevStep,
+    resetStepper,
   };
 }

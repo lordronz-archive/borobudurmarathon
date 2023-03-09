@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {getCookiesString} from '../api/cookies';
 import {ProfileService} from '../api/profile.service';
@@ -15,6 +15,7 @@ import {IMemberDetailResponse} from '../types/profile.type';
 import {useDemo} from '../context/demo.context';
 
 export default function useInit() {
+  const route = useRoute();
   const toast = useToast();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -164,12 +165,14 @@ export default function useInit() {
             navigation.replace('DataConfirmation');
             setDemoConsent(false);
           } else {
-            // navigation.replace('Main', {screen: 'Home'});
-            if (!toast.isActive('welcome')) {
-              toast.show({
-                id: 'welcome',
-                description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-              });
+            if (route.name !== 'Home') {
+              navigation.replace('Main', {screen: 'Home'});
+              if (!toast.isActive('welcome')) {
+                toast.show({
+                  id: 'welcome',
+                  description: 'Welcome, ' + resProfile.data[0].zmemFullName,
+                });
+              }
             }
           }
         } else {

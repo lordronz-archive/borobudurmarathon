@@ -35,6 +35,20 @@ type Price = {
   benefits: string[];
 };
 
+const bannedField = [
+  'evpaName',
+  'evpaPhone',
+  'evpaEmail',
+  'evpaAddress',
+  'evpaCity',
+  'evpaProvinces',
+  'evpaProvinsi',
+  'evpaNationality',
+  'evpaBirthPlace',
+  'evpaBirthDate',
+  'evpaCountry',
+];
+
 export default function EventRegisterScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -122,6 +136,15 @@ export default function EventRegisterScreen() {
       evpaEvncId: params.selectedCategoryId,
       evpaName: user?.data[0].zmemFullName,
       evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
+      evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
+      evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
+      evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
+      evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+      evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+      evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
+      evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
+      evpaBirthDate: user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
+      evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
     };
 
     fields.forEach((f: EventFieldsEntity) => {
@@ -253,7 +276,10 @@ export default function EventRegisterScreen() {
           <VStack space="1.5">
             {fields
               .filter(
-                f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
+                f =>
+                  f.evhfName !== 'evpaEvnhId' &&
+                  f.evhfName !== 'evpaEvncId' &&
+                  !bannedField.includes(f.evhfName),
               )
               .map(field => (
                 <RegistrationForm
@@ -264,6 +290,7 @@ export default function EventRegisterScreen() {
                   }}
                   value={fieldsData[field.evhfName]}
                   helperText={fieldsData[field.evhfName]?.helperText}
+                  required={!!field.evhfIsRequired}
                 />
               ))}
           </VStack>

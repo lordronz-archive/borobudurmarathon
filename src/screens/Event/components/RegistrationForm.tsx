@@ -12,6 +12,7 @@ export default function RegistrationForm(
     onValueChange: (val: string) => void;
     value: string;
     helperText?: React.ReactNode;
+    required?: boolean;
   },
 ) {
   const opts = (
@@ -58,6 +59,7 @@ export default function RegistrationForm(
         }}
         value={props.value}
         helperText={props.helperText}
+        required={props.required}
       />
     );
   } else if (props.evhfType === 'Email') {
@@ -71,6 +73,7 @@ export default function RegistrationForm(
         }}
         value={props.value}
         helperText={props.helperText}
+        required={props.required}
       />
     );
   } else if (props.evhfType === 'Date') {
@@ -96,6 +99,7 @@ export default function RegistrationForm(
         placeholder={`Enter ${props.evhfLabel}`}
         value={props.value}
         helperText={props.helperText}
+        required={props.required}
       />
     );
   }

@@ -57,6 +57,7 @@ export default function AuthScreen() {
 
   const {state} = useAuthUser();
   const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   console.info('#Auth -- state', state);
 
   const [authorizationCode, setAuthorizationCode] = useState<string>(
@@ -173,13 +174,14 @@ export default function AuthScreen() {
           source={{
             uri,
           }}
+          onError={() => setIsLoading(false)}
           thirdPartyCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
             console.info('cookiesString isNotRegistered true', cookiesString);
 
             if (cookiesString) {
-              navigation.navigate('InputProfile');
+              getProfile();
             } else {
               toast.show({
                 title: 'Failed to get cookies',
@@ -192,7 +194,9 @@ export default function AuthScreen() {
           contentMode="mobile"
         />
 
-        <LoadingBlock text="You are not registered. Please wait..." />
+        {isLoading && (
+          <LoadingBlock text="You are not registered. Please wait..." />
+        )}
       </Box>
     );
   } else if (authorizationCode) {
@@ -213,6 +217,7 @@ export default function AuthScreen() {
           source={{
             uri,
           }}
+          onError={() => setIsLoading(false)}
           thirdPartyCookiesEnabled={true}
           onLoadEnd={async event => {
             console.info('###event', event);
@@ -239,7 +244,7 @@ export default function AuthScreen() {
           // }}
         />
 
-        <LoadingBlock text="Checking your session..." />
+        {isLoading && <LoadingBlock text="Checking your session..." />}
       </Box>
     );
   }

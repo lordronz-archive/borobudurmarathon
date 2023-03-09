@@ -139,7 +139,7 @@ export default function AuthScreen() {
           // const exp = queryString.split('&').map(item => item.split('='));
           // console.info('exp---', exp);
           // console.info('auth code', authCode);
-          // setAuthorizationCode(authCode);
+          authCode && setAuthorizationCode(authCode);
         }
         // Alert.alert(JSON.stringify(result));
       } else {

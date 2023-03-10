@@ -252,7 +252,7 @@ export default function AuthScreen() {
   return (
     <>
       <Box px="4" flex="1">
-        <HStack justifyContent="center" flex={config.isDev ? '3' : '5'}>
+        <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
           <VStack space="3" alignItems="center" justifyContent="center">
             <Image
               source={require('../../assets/images/logo.png')}
@@ -269,7 +269,7 @@ export default function AuthScreen() {
             </Text>
           </VStack>
         </HStack>
-        <VStack flex="1" justifyContent={'center'} space="5">
+        <VStack flex="1" justifyContent={'center'} space="1.5">
           {config.isDev && (
             <Button
               // backgroundColor={'#00559A'}
@@ -283,7 +283,12 @@ export default function AuthScreen() {
               </Text>
             </Button>
           )}
-
+          <Button
+            h="12"
+            mb="3"
+            onPress={() => navigation.navigate('SignInEmail')}>
+            Sign In via Email
+          </Button>
           <Button
             backgroundColor={'#00559A'}
             rounded="sm"
@@ -299,7 +304,7 @@ export default function AuthScreen() {
               {I18n.t('auth.signInWith') + ' Kompas.id'}
             </Text>
           </Button>
-          <Center>
+          <Center mt="2">
             <HStack>
               <Text
                 justifyContent={'center'}

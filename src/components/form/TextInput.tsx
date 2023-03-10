@@ -7,7 +7,8 @@ import {
   WarningOutlineIcon,
 } from 'native-base';
 import {IInputProps} from 'native-base/lib/typescript/components/primitives/Input/types';
-import React from 'react';
+import React, {useState} from 'react';
+import Icon from 'react-native-vector-icons/Feather';
 
 type TextInputProps = {
   isInvalid?: boolean;
@@ -18,10 +19,12 @@ type TextInputProps = {
   value?: string;
   required?: boolean;
   _inputProps?: IInputProps;
+  type?: 'text' | 'password';
   onChangeText?: (text: string) => void;
 };
 
 export default function TextInput(props: TextInputProps) {
+  const [show, setShow] = useState(false);
   return (
     <FormControl isInvalid={props.isInvalid}>
       <Box borderWidth={1} borderColor="#C5CDDB" borderRadius={5} px={3} pb={2}>
@@ -42,6 +45,16 @@ export default function TextInput(props: TextInputProps) {
           _input={{paddingX: 0, paddingY: 0}}
           value={props.value}
           onChangeText={props.onChangeText}
+          InputRightElement={
+            props.type === 'password' ? (
+              <Icon
+                name={!show ? 'eye' : 'eye-off'}
+                onPress={() => setShow(s => !s)}
+                size={20}
+              />
+            ) : undefined
+          }
+          type={show || props.type !== 'password' ? 'text' : 'password'}
           {...(props._inputProps || {})}
         />
       </Box>

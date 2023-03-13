@@ -10,6 +10,7 @@ import MyProfile from '../screens/Profile/Profile';
 import MyRecords from '../screens/Record/MyRecords';
 import {useTheme} from 'native-base';
 import IconMore from '../assets/icons/IconMore';
+import I18n from '../lib/i18n';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,7 +32,7 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="My Events"
+        name={I18n.t('tab.myEvents')}
         component={MyEvents}
         options={{
           headerShown: false,
@@ -41,7 +42,7 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Records"
+        name={I18n.t('tab.records')}
         component={MyRecords}
         options={{
           headerShown: false,
@@ -51,7 +52,7 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="More"
+        name={I18n.t('tab.more')}
         component={MyProfile}
         options={{
           headerShown: false,

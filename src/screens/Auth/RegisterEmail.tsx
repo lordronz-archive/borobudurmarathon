@@ -8,6 +8,7 @@ import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import SelectInput from '../../components/form/SelectInput';
+import I18n from '../../lib/i18n';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -108,7 +109,7 @@ export default function RegisterEmailScreen() {
         </HStack>
       </Box>
       <Button h="12" mb="3" onPress={() => signup()} isLoading={loading}>
-        Confirm
+        {I18n.t('confirm')}
       </Button>
     </VStack>
   );

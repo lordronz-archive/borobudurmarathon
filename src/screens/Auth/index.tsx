@@ -254,13 +254,6 @@ export default function AuthScreen() {
       <Box px="4" flex="1">
         <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
           <VStack space="3" alignItems="center" justifyContent="center">
-            <Image
-              source={require('../../assets/images/logo.png')}
-              alt="Alternate Text"
-              width={221.17}
-              height={100}
-              mb="10"
-            />
             <Heading textAlign={'center'}>
               {I18n.t('welcomeTo') + ' Borobudur Marathon'}
             </Heading>

@@ -7,6 +7,7 @@ import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
+import I18n from '../../lib/i18n';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -78,7 +79,7 @@ export default function SignInEmailScreen() {
         </HStack>
       </Box>
       <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
-        Confirm
+        {I18n.t('confirm')}
       </Button>
     </VStack>
   );

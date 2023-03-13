@@ -10,6 +10,7 @@ import MyEventCard from '../../../components/card/MyEventCard';
 import Section from '../../../components/section/Section';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import httpRequest from '../../../helpers/httpRequest';
+import I18n from '../../../lib/i18n';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {Datum, EventProperties, Transaction} from '../../../types/event.type';
 
@@ -228,17 +229,17 @@ export default function SectionListMyEvent() {
           alt="Data empty"
         />
         <Text textAlign={'center'} fontSize={'lg'} fontWeight={'bold'} mb={1}>
-          Data Empty
+          {I18n.t('dataEmpty')}
         </Text>
         <Text textAlign={'center'} fontSize={'sm'} color={'gray.400'}>
-          There are no data to display
+          {I18n.t('dataEmptyDesc')}
         </Text>
       </Flex>
     );
   };
 
   return (
-    <Section title="Our Events" _title={{py: 2, px: 4}}>
+    <Section title="">
       <CategoryButton
         categories={[{id: null, value: 'All'}, ...Object.values(EVENT_TYPES)]}
         selected={selectedCategory?.id || null}

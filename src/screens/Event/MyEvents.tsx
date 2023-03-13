@@ -15,6 +15,7 @@ import {Heading} from '../../components/text/Heading';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import SectionListMyEvent from './components/SectionListMyEvent';
+import I18n from '../../lib/i18n';
 
 export default function MyEvents() {
   const {colors} = useTheme();
@@ -34,9 +35,9 @@ export default function MyEvents() {
       <Box px="4">
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
-          <Heading>My Events</Heading>
+          <Heading>{I18n.t('myEvent.title')}</Heading>
           <Text fontWeight={400} color="#768499" fontSize={11}>
-            All of my borobudur marathon events
+            {I18n.t('myEvent.subtitle')}
           </Text>
         </VStack>
       </Box>

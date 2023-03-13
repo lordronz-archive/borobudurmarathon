@@ -16,6 +16,7 @@ import {useAuthUser} from '../../context/auth.context';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {EventService} from '../../api/event.service';
 import {GetGalleryResponse} from '../../types/gallery.type';
+import I18n from '../../lib/i18n';
 // import useuser from '../../hooks/useuser';
 
 export default function WelcomeScreen() {
@@ -72,7 +73,7 @@ export default function WelcomeScreen() {
             <Box flex="1" justifyContent={'space-between'} px="4">
               <Box py="8">
                 <Text mb={6} color="#EB1C23" fontWeight={600}>
-                  Hi,{' '}
+                  {I18n.t('hi')},{' '}
                   {!user.data[0].zmemFullName
                     .split(' ')[0]
                     .match(/^m[uo]c?hamm?[ae]d$/im) ||
@@ -81,11 +82,11 @@ export default function WelcomeScreen() {
                     : user.data[0].zmemFullName.split(' ')[1]}
                 </Text>
                 <Heading fontWeight={600} fontSize={20}>
-                  Welcome to Borobudur Marathon
+                  {I18n.t('welcomeTo')} Borobudur Marathon
                 </Heading>
               </Box>
               <Text py="4" fontSize={10}>
-                Selamat bertemu di Magelang!
+                {I18n.t('partOf')} Borobudur Marathon!
               </Text>
             </Box>
             <Box backgroundColor={'#EB1C23'} height={2} />
@@ -181,7 +182,7 @@ export default function WelcomeScreen() {
         onPress={() => navigation.navigate('Main', {screen: 'Home'})}
         rightIcon={<ChevronRightIcon />}
         _stack={{flex: '1', justifyContent: 'space-between', px: '4'}}>
-        Let's Start your Journey
+        {I18n.t('journey')}
       </Button>
     </VStack>
   );

@@ -25,6 +25,7 @@ import {TouchableOpacity} from 'react-native';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
+import I18n from '../../lib/i18n';
 
 type Price = {
   id: string;
@@ -370,11 +371,9 @@ export default function EventRegisterScreen() {
             setIsOpen(false);
             navigation.navigate('Main', {screen: 'My Events'});
           }}
-          title={'Congratulation'}
-          content={
-            'Registrasi event sukses. Silahkan lihat detail event untuk melihat apakah Anda lolos tahap ballot'
-          }
-          buttonContent={'Check My Event'}
+          title={I18n.t('registration.registrationSuccess')}
+          content={I18n.t('registration.registrationSuccessDesc')}
+          buttonContent={I18n.t('registration.checkEventBtn')}
         />
       </VStack>
       {isLoading && (

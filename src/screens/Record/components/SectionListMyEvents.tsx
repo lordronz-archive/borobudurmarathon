@@ -6,6 +6,7 @@ import {useAuthUser} from '../../../context/auth.context';
 import {EventService} from '../../../api/event.service';
 import {Activity, Datum} from '../../../types/activity.type';
 import {averagePace} from '../../../helpers/averagePace';
+import I18n from '../../../lib/i18n';
 
 export default function SectionListMyEvents() {
   const {user} = useAuthUser();
@@ -55,10 +56,10 @@ export default function SectionListMyEvents() {
           alt="Empty data"
         />
         <Text textAlign={'center'} fontSize={'lg'} fontWeight={'bold'} mb={1}>
-          Data Empty
+          {I18n.t('dataEmpty')}
         </Text>
         <Text textAlign={'center'} fontSize={'sm'} color={'gray.400'}>
-          There are no data to display
+          {I18n.t('dataEmptyDesc')}
         </Text>
       </Flex>
     );

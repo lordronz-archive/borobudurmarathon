@@ -18,6 +18,8 @@ type SelectInputProps = {
   }[];
   hideSearch?: boolean;
   onValueChange?: (text: string) => void;
+  isOpen?: boolean;
+  setIsOpen?: () => void;
 };
 
 export default function SelectInput(props: SelectInputProps) {
@@ -41,6 +43,7 @@ export default function SelectInput(props: SelectInputProps) {
           ml={-3}
           selectedValue={props.value}
           onValueChange={props.onValueChange}
+          _actionSheet={props.isOpen ? {isOpen: props.isOpen} : undefined}
           _actionSheetBody={
             props.hideSearch
               ? undefined

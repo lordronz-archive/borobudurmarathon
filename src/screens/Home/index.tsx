@@ -24,11 +24,11 @@ export default function HomeScreen() {
   const {checkLogin} = useInit();
   const {user} = useAuthUser();
 
-  useEffect(() => {
-    if (isFocused) {
-      checkLogin();
-    }
-  }, [isFocused]);
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     checkLogin('Main');
+  //   }
+  // }, [isFocused]);
 
   return (
     <ScrollView>

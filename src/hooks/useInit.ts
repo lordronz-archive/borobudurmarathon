@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {getCookiesString} from '../api/cookies';
 import {ProfileService} from '../api/profile.service';
 import {EAuthUserAction, useAuthUser} from '../context/auth.context';
 import {RootStackParamList} from '../navigation/RootNavigator';
@@ -13,6 +12,7 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 import CookieManager from '@react-native-cookies/cookies';
 import {IMemberDetailResponse} from '../types/profile.type';
 import {useDemo} from '../context/demo.context';
+import {IAuthResponseData} from '../types/auth.type';
 
 export default function useInit() {
   const route = useRoute();
@@ -29,39 +29,29 @@ export default function useInit() {
     setDemoNewUser,
   } = useDemo();
 
-  const {isLoggedIn, dispatch} = useAuthUser();
+  const {dispatch} = useAuthUser();
 
-  const checkLogin = async (loginStatus?: boolean) => {
-    if (isLoggedIn || loginStatus) {
-      const cookiesString = await getCookiesString();
+  const init = async () => {
+    try {
+      const res = await AuthService.checkSession();
 
-      if (cookiesString) {
-        getProfile(cookiesString);
+      if (res) {
+        console.info('AuthService.checkSession', res);
+
+        checkAccount(res.data);
+
+        getProfile();
       } else {
-        navigation.navigate('Auth');
+        console.info('AuthService.checkSession res empty');
+        navigation.replace('Auth');
       }
-    } else {
-      const isSessionAvailable = await SessionService.getSession();
-      if (isSessionAvailable) {
-        const res = await AuthService.checkSession();
-        if (res && res.data) {
-          checkLogin(true);
-        } else {
-          InAppBrowser.closeAuth();
-          await CookieManager.clearAll();
-
-          dispatch({type: EAuthUserAction.LOGOUT});
-          SessionService.removeSession();
-
-          navigation.navigate('Initial');
-        }
-      } else {
-        navigation.navigate('Auth');
-      }
+    } catch (err) {
+      console.info('AuthService.checkSession catch', err);
+      navigation.replace('Auth');
     }
   };
 
-  const getProfile = (cookie?: string) => {
+  const getProfile = () => {
     ProfileService.getMemberDetail()
       .then(resProfile => {
         console.info('resProfile', resProfile);
@@ -70,9 +60,9 @@ export default function useInit() {
           type: EAuthUserAction.LOGIN,
           payload: {user: resProfile},
         });
-        if (cookie) {
-          SessionService.saveSession(cookie);
-        }
+        // if (cookie) {
+        //   SessionService.saveSession(cookie);
+        // }
         if (resProfile.data && resProfile.data.length > 0) {
           if (
             resProfile.linked.zmemAuusId &&
@@ -193,15 +183,38 @@ export default function useInit() {
     }
   };
 
+  const checkAccount = (data: IAuthResponseData) => {
+    if (Number(data.authEmail) === 0) {
+      // verify email
+      navigation.navigate('EmailValidation', {
+        email: data.email,
+        onSuccess: () => {
+          checkAccount({...data, authEmail: '1'});
+        },
+      });
+    } else if (Number(data.consent) === 0) {
+      navigation.replace('DataConfirmation');
+    } else if (Number(data.authProfile) === 0) {
+      navigation.replace('InputProfile');
+    } else {
+      navigation.replace('Main', {screen: 'Home'});
+      if (!toast.isActive('welcome')) {
+        toast.show({
+          id: 'welcome',
+          description: 'Welcome',
+        });
+      }
+    }
+  };
+
   const logout = async (
     setIsLoggingOut: (val: boolean) => void,
     onCloseModalLogout: () => void,
   ) => {
     InAppBrowser.closeAuth();
-    await CookieManager.clearAll();
+    await clearCookies();
 
     dispatch({type: EAuthUserAction.LOGOUT});
-    SessionService.removeSession();
 
     setIsLoggingOut(false);
 
@@ -214,5 +227,32 @@ export default function useInit() {
     navigation.navigate('Initial');
   };
 
-  return {checkLogin, getProfile, logout};
+  const clearCookies = async () => {
+    await CookieManager.clearAll();
+    await CookieManager.clearByName(
+      'https://my.borobudurmarathon.com',
+      'PHPSESSID',
+      true,
+    );
+    await CookieManager.clearByName('https://kompas.id', 'USER_DATA', true);
+    SessionService.removeSession();
+
+    // const cookies = await getCookiesString();
+    // console.info(new Date().toISOString + ' cookies', cookies);
+
+    // if (cookies) {
+    //   toast.show({title: 'Masih Ada'});
+    // } else {
+    //   toast.show({title: 'BERHASSSIIILL', placement: 'top'});
+    // }
+    navigation.replace('Initial');
+  };
+
+  return {
+    init,
+    checkAccount,
+    getProfile,
+    clearCookies,
+    logout,
+  };
 }

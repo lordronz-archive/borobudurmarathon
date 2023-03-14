@@ -20,7 +20,7 @@ export default function SectionFeaturedEvents() {
     setIsLoading(true);
     EventService.getEvents(true)
       .then(res => {
-        console.info('res getEvents', JSON.stringify(res));
+        // console.info('res getEvents', JSON.stringify(res));
         if (res.data) {
           setData(res.data);
         }

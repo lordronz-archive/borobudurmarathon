@@ -6,11 +6,11 @@ import {useIsFocused} from '@react-navigation/native';
 
 export default function InitialScreen() {
   const isFocused = useIsFocused();
-  const {checkLogin} = useInit();
+  const {init} = useInit();
 
   useEffect(() => {
     if (isFocused) {
-      checkLogin();
+      init();
     }
   }, [isFocused]);
   return (

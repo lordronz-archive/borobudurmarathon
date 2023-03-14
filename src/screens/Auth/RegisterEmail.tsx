@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, HStack, Text, useToast, VStack} from 'native-base';
-import React, {useState} from 'react';
+import {Box, Button, HStack, Text, Toast, useToast, VStack} from 'native-base';
+import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
 import TextInput from '../../components/form/TextInput';
@@ -10,6 +10,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import SelectInput from '../../components/form/SelectInput';
 import I18n from '../../lib/i18n';
 import {getErrorMessage} from '../../helpers/errorHandler';
+import {useDebounce} from 'use-debounce';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -19,9 +20,33 @@ export default function RegisterEmailScreen() {
   const [fullname, setFullname] = useState<string>();
   const [gender, setGender] = useState<string>();
   const [email, setEmail] = useState<string>();
+  const [emailWillBeCheck] = useDebounce(email, 1000);
+
   const [password, setPassword] = useState<string>();
   const [confirmPassword, setConfirmPassword] = useState<string>();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    checkEmail();
+  }, []);
+
+  const checkEmail = () => {
+    if (!email || (email && email.length <= 5)) {
+      return false;
+    }
+    AuthService.checkEmail(emailWillBeCheck)
+      .then(res => {
+        toast.show({
+          title: 'Success',
+        });
+      })
+      .catch(err => {
+        toast.show({
+          title: 'Failed',
+          description: getErrorMessage(err),
+        });
+      });
+  };
 
   const signup = async () => {
     try {
@@ -32,7 +57,9 @@ export default function RegisterEmailScreen() {
         ptmmPassword: password,
         ptmmEmail: email,
       });
-      console.info(result);
+      console.info('register result', result);
+
+      // navigation.navigate('Initial');
     } catch (e) {
       console.error(e);
       toast.show({

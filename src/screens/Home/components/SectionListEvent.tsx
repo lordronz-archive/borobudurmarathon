@@ -39,7 +39,7 @@ export default function SectionListEvent() {
     setIsLoading(true);
     EventService.getEvents()
       .then(res => {
-        console.info('res getEvents', JSON.stringify(res));
+        // console.info('res getEvents', JSON.stringify(res));
         if (res.data) {
           setData(res.data);
         }

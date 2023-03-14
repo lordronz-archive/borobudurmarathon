@@ -6,7 +6,6 @@ import {
   Button,
   Center,
   HStack,
-  Image,
   Link,
   Text,
   VStack,
@@ -34,11 +33,11 @@ import useInit from '../../hooks/useInit';
 import {useDemo} from '../../context/demo.context';
 
 export default function AuthScreen() {
-  console.info('render AuthScreen');
+  console.info('===render AuthScreen');
   const route = useRoute();
   const toast = useToast();
   const {colors} = useTheme();
-  const {getProfile} = useInit();
+  const {getProfile, clearCookies} = useInit();
   const {
     isShowModal,
     showModal,
@@ -55,6 +54,7 @@ export default function AuthScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const [initialCookieString, setInitialCookieString] = useState<string>();
   const {state} = useAuthUser();
   const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -69,6 +69,17 @@ export default function AuthScreen() {
       setAuthorizationCode(params.authorization_code);
     }
   }, [params?.authorization_code]);
+
+  useEffect(() => {
+    getCookie();
+  }, []);
+
+  const getCookie = async () => {
+    const strCookie = await getCookiesString();
+    if (strCookie) {
+      setInitialCookieString(strCookie);
+    }
+  };
 
   const redirect_uri = 'bormar://auth-me';
   // 'https://account.kompas.id/sso/check?redirect_uri=https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth&client_id=3&state=borobudur_marathon&scope=nama%20lengkap,%20alamat,%20Alamat%20email%20dan%20mengirimkan%20pesan&response_type=code';
@@ -175,7 +186,6 @@ export default function AuthScreen() {
             uri,
           }}
           onError={() => setIsLoading(false)}
-          thirdPartyCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
             console.info('cookiesString isNotRegistered true', cookiesString);
@@ -192,6 +202,7 @@ export default function AuthScreen() {
             }
           }}
           contentMode="mobile"
+          thirdPartyCookiesEnabled={true}
         />
 
         {isLoading && (
@@ -218,9 +229,9 @@ export default function AuthScreen() {
             uri,
           }}
           onError={() => setIsLoading(false)}
-          thirdPartyCookiesEnabled={true}
+          // thirdPartyCookiesEnabled={true}
           onLoadEnd={async event => {
-            console.info('###event', event);
+            console.info('authorizationCode###event', event);
             await sleep(1000);
             const cookiesString = await getCookiesString();
             console.info('cookiesString', cookiesString);
@@ -230,10 +241,15 @@ export default function AuthScreen() {
               setIsNotRegistered(true);
             }
           }}
+          contentMode="mobile"
+          thirdPartyCookiesEnabled={true}
           // javaScriptEnabled={true}
           // injectedJavaScript={jsCode}
           // onMessage={event =>
-          //   console.log('###Received: ', event.nativeEvent.data)
+          //   console.log(
+          //     'authorizationCode###Received: ',
+          //     event.nativeEvent.data,
+          //   )
           // }
           // onNavigationStateChange={async event => {
           //   console.info('event', event);
@@ -260,6 +276,9 @@ export default function AuthScreen() {
             <Text fontWeight={400} textAlign={'center'} color="#768499">
               {I18n.t('auth.description')}
             </Text>
+            <Text>{initialCookieString}</Text>
+
+            <Button onPress={clearCookies}>Clear Cookies</Button>
           </VStack>
         </HStack>
         <VStack flex="1" justifyContent={'center'} space="1.5">

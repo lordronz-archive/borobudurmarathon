@@ -8,7 +8,7 @@ import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import I18n from '../../lib/i18n';
-import {getErrorMessage} from '../../helpers/errorHandler';
+import {getErrorMessage, getErrorStd} from '../../helpers/errorHandler';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -28,11 +28,19 @@ export default function SignInEmailScreen() {
       });
       console.info(result);
     } catch (e) {
-      console.error(e);
-      toast.show({
-        title: 'Failed to register',
-        description: getErrorMessage(e),
-      });
+      const errStd = getErrorStd(e);
+      if (errStd.errorCode === 409) {
+        toast.show({
+          description: 'Failed to login',
+          placement: 'top',
+        });
+      } else {
+        toast.show({
+          title: 'Failed to login',
+          description: getErrorMessage(e),
+          placement: 'top',
+        });
+      }
     } finally {
       setLoading(false);
     }

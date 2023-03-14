@@ -31,3 +31,16 @@ export function getErrorMessage(err: any) {
   }
   return errMessage;
 }
+
+export function getErrorStd(err: any): {name: string; errorCode: number} {
+  let errorStd = {name: 'failed', errorCode: 0};
+  console.info('err', err);
+
+  if (err.name && err.errorCode) {
+    // return {name: 'AuthenticationError', errorCode: 409};
+    return err;
+  } else if (err.errorCode) {
+    return {name: 'UnknownError', errorCode: err.errorCode};
+  }
+  return errorStd;
+}

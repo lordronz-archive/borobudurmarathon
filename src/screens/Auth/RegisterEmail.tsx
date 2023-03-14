@@ -38,6 +38,7 @@ export default function RegisterEmailScreen() {
       toast.show({
         title: 'Failed to register',
         description: getErrorMessage(e),
+        placement: 'top',
       });
     } finally {
       setLoading(false);

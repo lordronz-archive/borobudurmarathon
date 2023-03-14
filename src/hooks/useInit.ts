@@ -197,13 +197,14 @@ export default function useInit() {
     } else if (Number(data.authProfile) === 0) {
       navigation.replace('InputProfile');
     } else {
-      navigation.replace('Main', {screen: 'Home'});
-      if (!toast.isActive('welcome')) {
-        toast.show({
-          id: 'welcome',
-          description: 'Welcome',
-        });
-      }
+      getProfile();
+      // navigation.replace('Main', {screen: 'Home'});
+      // if (!toast.isActive('welcome')) {
+      //   toast.show({
+      //     id: 'welcome',
+      //     description: 'Welcome',
+      //   });
+      // }
     }
   };
 

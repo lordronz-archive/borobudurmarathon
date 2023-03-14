@@ -23,8 +23,8 @@ export default function SignInEmailScreen() {
 
   // const [email, setEmail] = useState<string>();
   // const [password, setPassword] = useState<string>();
-  const [email, setEmail] = useState<string>('aditia.prasetio12@gmail.com');
-  const [password, setPassword] = useState<string>('Aditia_054');
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
   const [loading, setLoading] = useState(false);
 
   const [loggingInData, setLoggingInData] = useState<IAuthResponseData>();

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, HStack, Text, VStack} from 'native-base';
+import {Box, Button, HStack, Text, useToast, VStack} from 'native-base';
 import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -9,10 +9,12 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import SelectInput from '../../components/form/SelectInput';
 import I18n from '../../lib/i18n';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function RegisterEmailScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const toast = useToast();
 
   const [fullname, setFullname] = useState<string>();
   const [gender, setGender] = useState<string>();
@@ -33,6 +35,10 @@ export default function RegisterEmailScreen() {
       console.info(result);
     } catch (e) {
       console.error(e);
+      toast.show({
+        title: 'Failed to register',
+        description: getErrorMessage(e),
+      });
     } finally {
       setLoading(false);
     }
@@ -65,6 +71,7 @@ export default function RegisterEmailScreen() {
               label="Gender"
               onValueChange={setGender}
               value={gender}
+              hideSearch
             />
             <TextInput
               placeholder="Enter your email here"
@@ -104,12 +111,12 @@ export default function RegisterEmailScreen() {
             textAlign="center"
             underline
             onPress={() => navigation.navigate('SignInEmail')}>
-            Sign In via Email
+            {I18n.t('auth.signinViaEmail')}
           </Text>
         </HStack>
       </Box>
       <Button h="12" mb="3" onPress={() => signup()} isLoading={loading}>
-        {I18n.t('confirm')}
+        {I18n.t('auth.register')}
       </Button>
     </VStack>
   );

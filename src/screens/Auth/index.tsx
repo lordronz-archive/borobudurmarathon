@@ -307,13 +307,14 @@ export default function AuthScreen() {
               </Text>
               <Link
                 onPress={() => {
-                  openAuthLink();
+                  // openAuthLink();
+                  navigation.navigate('RegisterEmail');
                 }}
                 _text={{
-                  color: 'blue.600',
+                  color: 'red.600',
                   fontWeight: 600,
                 }}>
-                {I18n.t('auth.register')}
+                {I18n.t('auth.registerViaEmail')}
               </Link>
             </HStack>
           </Center>

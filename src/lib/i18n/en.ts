@@ -27,6 +27,9 @@ export default {
     phoneValidation8DigitCode: 'Enter 8 digit code that we send to this number',
     dontHaveAccount: "Didn't have an account?",
     register: 'Register',
+    registerViaEmail: 'Register via Email',
+    signin: 'Sign In',
+    signinViaEmail: 'Sign In Via Email',
     uploadId: 'Tap to Upload',
     maxIdSize: 'Maximum file size is 5MB in .jpg format with clear images',
     uploadIdSubtitle:

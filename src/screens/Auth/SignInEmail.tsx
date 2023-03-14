@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, HStack, Text, VStack} from 'native-base';
+import {Box, Button, HStack, Text, useToast, VStack} from 'native-base';
 import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -8,10 +8,12 @@ import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import I18n from '../../lib/i18n';
+import {getErrorMessage} from '../../helpers/errorHandler';
 
 export default function SignInEmailScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const toast = useToast();
 
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
@@ -27,6 +29,10 @@ export default function SignInEmailScreen() {
       console.info(result);
     } catch (e) {
       console.error(e);
+      toast.show({
+        title: 'Failed to register',
+        description: getErrorMessage(e),
+      });
     } finally {
       setLoading(false);
     }
@@ -74,12 +80,12 @@ export default function SignInEmailScreen() {
             textAlign="center"
             underline
             onPress={() => navigation.navigate('RegisterEmail')}>
-            Register via Email
+            {I18n.t('auth.registerViaEmail')}
           </Text>
         </HStack>
       </Box>
       <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
-        {I18n.t('confirm')}
+        {I18n.t('auth.signin')}
       </Button>
     </VStack>
   );

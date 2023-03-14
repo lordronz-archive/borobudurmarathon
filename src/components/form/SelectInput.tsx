@@ -16,6 +16,7 @@ type SelectInputProps = {
     label: string;
     value: string;
   }[];
+  hideSearch?: boolean;
   onValueChange?: (text: string) => void;
 };
 
@@ -40,21 +41,25 @@ export default function SelectInput(props: SelectInputProps) {
           ml={-3}
           selectedValue={props.value}
           onValueChange={props.onValueChange}
-          _actionSheetBody={{
-            ListHeaderComponent: (
-              <FormControl px={3} mb={3}>
-                <Input
-                  px={15}
-                  py={2}
-                  fontSize={16}
-                  placeholder=""
-                  _focus={{bg: 'white', borderColor: 'darkBlue.600'}}
-                  type="text"
-                  onEndEditing={handleInputSubmit}
-                />
-              </FormControl>
-            ),
-          }}>
+          _actionSheetBody={
+            props.hideSearch
+              ? undefined
+              : {
+                  ListHeaderComponent: (
+                    <FormControl px={3} mb={3}>
+                      <Input
+                        px={15}
+                        py={2}
+                        fontSize={16}
+                        placeholder=""
+                        _focus={{bg: 'white', borderColor: 'darkBlue.600'}}
+                        type="text"
+                        onEndEditing={handleInputSubmit}
+                      />
+                    </FormControl>
+                  ),
+                }
+          }>
           {props.items
             .filter(
               ({value, label}) =>

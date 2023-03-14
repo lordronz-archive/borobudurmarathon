@@ -39,7 +39,9 @@ export default function HomeScreen() {
           direction="row"
           alignItems="center">
           <TouchableOpacity
-            onPress={() => navigation.navigate('Main', {screen: 'Profile'})}>
+            onPress={() =>
+              navigation.navigate('Main', {screen: I18n.t('tab.more')})
+            }>
             <Flex alignContent={'center'} direction="row" alignItems={'center'}>
               <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
               <Avatar

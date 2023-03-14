@@ -300,7 +300,9 @@ export default function MyProfile() {
                 size="sm"
                 colorScheme="danger"
                 onPress={() => {
-                  setIsLoggingOut(true);
+                  // setIsLoggingOut(true);
+                  onCloseModalLogout();
+                  navigation.navigate('Logout');
                 }}>
                 Yes, Sure
               </Button>

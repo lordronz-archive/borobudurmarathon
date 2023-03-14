@@ -3,12 +3,16 @@ import React, {useEffect} from 'react';
 import {Alert, Linking, View} from 'react-native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
+import {
+  WebViewErrorEvent,
+  WebViewNavigationEvent,
+} from 'react-native-webview/lib/WebViewTypes';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import config from '../../config';
 import {getErrorMessage} from '../../helpers/errorHandler';
 
 type Props = {
-  onLoadEnd: () => void;
+  onLoadEnd: (event: WebViewNavigationEvent | WebViewErrorEvent) => void;
 };
 
 export default function Logout(props: Props) {

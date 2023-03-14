@@ -141,6 +141,12 @@ function getDateRangeString(
   }
 }
 
+export const toAcceptableApiFormat = (s?: string) => {
+  return s
+    ? new Date(s).toJSON().slice(0, 10).split('-').reverse().join('-')
+    : s;
+};
+
 const datetime = {
   getDateString,
   getDateRangeString,

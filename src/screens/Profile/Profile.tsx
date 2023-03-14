@@ -35,6 +35,7 @@ import IconPhone from '../../assets/icons/IconPhone';
 import useInit from '../../hooks/useInit';
 import Config from 'react-native-config';
 import config from '../../config';
+import IconGlobe from '../../assets/icons/IconGlobe';
 
 export default function MyProfile() {
   const navigation =
@@ -48,12 +49,14 @@ export default function MyProfile() {
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
   const onCloseModalLogout = () => setIsOpenModalLogout(false);
   const cancelLogoutRef = React.useRef(null);
+  const [, setIsLangOpen] = useState(false);
 
   const menus: {
     key: string;
     icon: JSX.Element;
     name: string;
-    route: keyof RootStackParamList;
+    route?: keyof RootStackParamList;
+    onPress?: () => void;
     params?: any;
   }[] = [
     {
@@ -67,6 +70,12 @@ export default function MyProfile() {
       icon: <IconPhone color={colors.black} size={6} />,
       name: 'Change Phone Number',
       route: 'UpdatePhone',
+    },
+    {
+      key: 'language',
+      icon: <IconGlobe color={colors.black} size={6} />,
+      name: 'Language',
+      onPress: () => setIsLangOpen(true),
     },
     {
       key: 'faqs',
@@ -89,7 +98,7 @@ export default function MyProfile() {
       params: {page: 'about'},
     },
     {
-      key: 'about',
+      key: 'partner',
       icon: <IconUserGroup color={colors.black} size={6} />,
       name: 'Partner',
       route: 'Partner',
@@ -200,6 +209,9 @@ export default function MyProfile() {
               onPress={() => {
                 if (menu.route) {
                   navigation.navigate(menu.route, menu.params);
+                }
+                if (menu.onPress) {
+                  menu.onPress();
                 }
               }}
               key={`${menu.key}-${index}`}>

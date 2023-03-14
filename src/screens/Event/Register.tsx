@@ -23,7 +23,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import Congratulation from '../../components/modal/Congratulation';
 import {TouchableOpacity} from 'react-native';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
-import datetime from '../../helpers/datetime';
+import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
 import I18n from '../../lib/i18n';
 
@@ -48,6 +48,7 @@ const bannedField = [
   'evpaBirthPlace',
   'evpaBirthDate',
   'evpaCountry',
+  'evpaGender',
 ];
 
 export default function EventRegisterScreen() {
@@ -144,9 +145,14 @@ export default function EventRegisterScreen() {
       evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
       evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
       evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
-      evpaBirthDate: user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
+      evpaBirthDate: toAcceptableApiFormat(
+        user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
+      ),
       evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
+      evpaGender: user?.linked.mbsdZmemId[0].mbsdGender,
     };
+
+    console.info(payload.evpaBirthDate);
 
     fields.forEach((f: EventFieldsEntity) => {
       if (
@@ -178,7 +184,7 @@ export default function EventRegisterScreen() {
       } else {
         res = await EventService.registerVREvent(payload);
       }
-      console.info(res.data);
+      console.info(JSON.stringify(res.data));
       setIsOpen(true);
     } catch (error) {
       toast.show({

@@ -27,10 +27,14 @@ import EmailValidationScreen from '../screens/InputProfile/EmailValidation';
 import VerifyLaterScreen from '../screens/InputProfile/VerifyLater';
 import AboutUsScreen from '../screens/Information/AboutUs';
 import SearchLocationScreen from '../screens/InputProfile/SearchLocation';
+import SignInEmailScreen from '../screens/Auth/SignInEmail';
+import RegisterEmailScreen from '../screens/Auth/RegisterEmail';
 
 export type RootStackParamList = {
   Initial: undefined;
   Auth: undefined;
+  SignInEmail: undefined;
+  RegisterEmail: undefined;
   SignInWithKompas: undefined;
   DataConfirmation: undefined;
   InputProfile:
@@ -99,6 +103,16 @@ function RootNavigator() {
         <Stack.Screen
           name="Auth"
           component={AuthScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SignInEmail"
+          component={SignInEmailScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="RegisterEmail"
+          component={RegisterEmailScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

@@ -36,6 +36,7 @@ import IconLocation from '../../assets/icons/IconLocation';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
+import I18n from '../../lib/i18n';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -96,30 +97,31 @@ export default function ChooseCitizenScreen({route}: Props) {
 
   const stepProperties = [
     {
-      title: 'Choose Citizen',
-      subtitle: 'Choose your citizen according to identity',
+      title: I18n.t('auth.chooseCitizenTitle'),
+      subtitle: I18n.t('auth.chooseCitizenSubtitle'),
     },
     {
-      title: citizen === 'WNI' ? 'Upload KTP' : 'Upload Passport',
+      title:
+        citizen === 'WNI' ? I18n.t('auth.uploadIdTitle') : 'Upload Passport',
       subtitle:
         citizen === 'WNI'
-          ? 'Upload your KTP and please make sure it is readable'
+          ? I18n.t('auth.uploadIdSubtitle')
           : 'Upload your Passport and please make sure still readable',
     },
     {
-      note: 'Step 1 of 3 to Complete Profile',
-      title: 'Account',
-      subtitle: 'Enter all information below to continue',
+      note: I18n.t('step') + ' 1 ' + I18n.t('auth.of3Step'),
+      title: I18n.t('account'),
+      subtitle: I18n.t('auth.accountFormDesc'),
     },
     {
-      note: 'Step 2 of 3 to Complete Profile',
+      note: I18n.t('step') + ' 2 ' + I18n.t('auth.of3Step'),
       title: 'Personal Data',
-      subtitle: 'Enter all information below to continue',
+      subtitle: I18n.t('auth.accountFormDesc'),
     },
     {
-      note: 'Step 3 of 3 to Complete Profile',
+      note: I18n.t('step') + ' 3 ' + I18n.t('auth.of3Step'),
       title: 'Address Information',
-      subtitle: 'Find and select a location according to your address',
+      subtitle: I18n.t('auth.accountFormDesc'),
     },
   ];
 
@@ -138,7 +140,7 @@ export default function ChooseCitizenScreen({route}: Props) {
     setIsLoading(true);
     if (!identityImage || !identityImage.data) {
       Toast.show({
-        title: 'Please uploud your ID',
+        title: 'Please upload your ID',
       });
       setIsLoading(false);
       return;
@@ -170,7 +172,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         data: formData,
       });
 
-      console.log(res, 'uploud ID');
+      console.log(res, 'upload ID');
       if (res && res.data && res.data.fileId) {
         Toast.show({title: 'Uploud ID Success'});
         console.log(res.data.fileId, 'fileId');
@@ -315,7 +317,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 borderWidth="2"
                 borderRadius="10px">
                 <IconIndonesia />
-                <Text>WNI (Indonesian Citizen)</Text>
+                <Text>{I18n.t('auth.selectCitizenCard')}</Text>
               </Box>
             </TouchableOpacity>
             <TouchableOpacity
@@ -330,7 +332,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 borderWidth="2"
                 borderRadius="10px">
                 <IconWNA />
-                <Text>WNA (Foreign Citizen)</Text>
+                <Text>{I18n.t('auth.selectCitizenCardWna')}</Text>
               </Box>
             </TouchableOpacity>
           </VStack>
@@ -369,12 +371,12 @@ export default function ChooseCitizenScreen({route}: Props) {
                   borderRadius="10px"
                   borderStyle={'dashed'}>
                   <IconUpload />
-                  <Text>Tap to Upload</Text>
+                  <Text>{I18n.t('auth.uploadId')}</Text>
                 </Box>
               )}
             </TouchableOpacity>
             <Text color="#768499" fontSize={10}>
-              Maximum file size is 5MB in .jpg format with clear images
+              {I18n.t('auth.maxIdSize')}
             </Text>
             <ImagePicker
               setVisible={setVisible}
@@ -412,7 +414,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 <TextInput
                   placeholder="Enter your phone number"
                   label="Phone number"
-                  helperText="We will send verification code to this number for validation"
+                  helperText={I18n.t('auth.willSendToPhone')}
                   value={accountInformation.phoneNumber}
                   onChangeText={val =>
                     setAccountInformation(oldVal => ({
@@ -773,7 +775,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             }
           }}
           isLoading={isLoading}>
-          {profileStep === 3 ? 'Confirm' : 'Next'}
+          {profileStep === 3 ? I18n.t('confirm') : I18n.t('next')}
         </Button>
       </HStack>
       <VerifyID

@@ -126,6 +126,8 @@ export default function SignInEmailScreen() {
     );
   }
 
+  const isDisabledButton = !email || !password;
+
   return (
     <VStack px="4" flex="1">
       <Box flex="10">
@@ -142,7 +144,7 @@ export default function SignInEmailScreen() {
               placeholder="Enter your email here"
               label="Email"
               value={email}
-              onChangeText={text => setEmail(text)}
+              onChangeText={text => setEmail(text?.toLowerCase())}
             />
             <TextInput
               placeholder="Enter your password here"
@@ -183,7 +185,13 @@ export default function SignInEmailScreen() {
           </Text>
         </HStack>
       </Box>
-      <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
+      <Button
+        h="12"
+        mb="3"
+        onPress={() => signin()}
+        isLoading={loading}
+        disabled={isDisabledButton}
+        bg={isDisabledButton ? 'gray.400' : undefined}>
         {t('auth.signin')}
       </Button>
     </VStack>

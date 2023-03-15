@@ -65,6 +65,7 @@ export default {
   },
   label: {
     accountInformation: 'Informasi Akun',
+    personalData: 'Data Personal',
     addressInformation: 'Informasi Alamat',
   },
   profile: {

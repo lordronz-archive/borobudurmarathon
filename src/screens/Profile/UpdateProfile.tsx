@@ -6,14 +6,12 @@ import {
   View,
   HStack,
   Avatar,
-  Button,
+  SectionList,
+  Row,
+  Divider,
 } from 'native-base';
 import React, {useState} from 'react';
 import {Platform, TouchableOpacity} from 'react-native';
-import TextInput from '../../components/form/TextInput';
-import SelectInput from '../../components/form/SelectInput';
-import DateInput from '../../components/form/DateInput';
-import countries from '../../helpers/countries';
 import Header from '../../components/header/Header';
 import {getShortCodeName} from '../../helpers/name';
 import {useAuthUser} from '../../context/auth.context';
@@ -22,9 +20,12 @@ import httpRequest from '../../helpers/httpRequest';
 import {ProfileService} from '../../api/profile.service';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import moment from 'moment';
+import useInit from '../../hooks/useInit';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
+  const {getProfile} = useInit();
   const navigation = useNavigation();
   const {t} = useTranslation();
 
@@ -34,45 +35,168 @@ export default function UpdateProfileScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [profilePic, setProfilePic] = useState<any>();
 
-  const [fullName, setFullName] = useState<string>(
-    user?.data[0].zmemFullName || '',
-  );
-  const [birthDate, setBirthDate] = useState<Date | undefined>(
-    user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate
-      ? new Date(user?.linked?.mbsdZmemId?.[0]?.mbsdBirthDate)
-      : undefined,
-  );
-  const [email] = useState<string>(user?.linked.zmemAuusId[0].auusEmail || '');
-  const [phoneNumber, setPhoneNumber] = useState<string>(
-    '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber || '',
-  );
-  const [mbsdIDNumberType, setIDNumberType] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumberType.toString() || '',
-  );
-  const [mbsdIDNumber, setIDNumber] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumber || '',
-  );
-  const [mbsdBirthPlace, setBirthPlace] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace || '',
-  );
-  const [mbsdBloodType, setBloodType] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdBloodType || '',
-  );
-  const [mbsdNationality, setNationality] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdNationality || '',
-  );
-  const [mbsdCountry, setCountry] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdCountry || '',
-  );
-  const [mbsdAddress, setAddress] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdAddress || '',
-  );
-  const [mbsdCity, setCity] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdCity || '',
-  );
-  const [mbsdProvinces, setProvinces] = useState<string>(
-    user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces || '',
-  );
+  // const [fullName, setFullName] = useState<string>(
+  //   user?.data[0].zmemFullName || '',
+  // );
+  // const [birthDate, setBirthDate] = useState<Date | undefined>(
+  //   user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate
+  //     ? new Date(user?.linked?.mbsdZmemId?.[0]?.mbsdBirthDate)
+  //     : undefined,
+  // );
+  // const [email] = useState<string>(user?.linked.zmemAuusId[0].auusEmail || '');
+  // const [phoneNumber, setPhoneNumber] = useState<string>(
+  //   '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber || '',
+  // );
+  // const [mbsdIDNumberType, setIDNumberType] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumberType.toString() || '',
+  // );
+  // const [mbsdIDNumber, setIDNumber] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumber || '',
+  // );
+  // const [mbsdBirthPlace, setBirthPlace] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace || '',
+  // );
+  // const [mbsdBloodType, setBloodType] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdBloodType || '',
+  // );
+  // const [mbsdNationality, setNationality] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdNationality || '',
+  // );
+  // const [mbsdCountry, setCountry] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdCountry || '',
+  // );
+  // const [mbsdAddress, setAddress] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdAddress || '',
+  // );
+  // const [mbsdCity, setCity] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdCity || '',
+  // );
+  // const [mbsdProvinces, setProvinces] = useState<string>(
+  //   user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces || '',
+  // );
+
+  // view only
+  const sectionsDataProfile: {
+    title: string;
+    data: {
+      label: string;
+      value?: any;
+      data?: {
+        label: string;
+        value?: any;
+      }[];
+    }[];
+  }[] = [
+    {
+      title: t('label.accountInformation'),
+      data: [
+        {
+          label: 'Name',
+          value: user?.data[0].zmemFullName,
+        },
+        {
+          label: 'Email',
+          value: user?.linked.mbsdZmemId[0].mbsdEmail,
+        },
+        {
+          label: 'Phone Number',
+          value: user?.linked.mbsdZmemId[0].mbsdPhone,
+        },
+      ],
+    },
+    {
+      title: t('label.personalData'),
+      data: [
+        {
+          label: 'Identity',
+          data: [
+            {
+              label: 'Type',
+              value:
+                user?.linked.mbsdZmemId[0].mbsdIDNumberType === 3
+                  ? 'KTP'
+                  : 'Passport',
+            },
+            {
+              label: 'ID Number',
+              value: user?.linked.mbsdZmemId[0].mbsdIDNumber,
+            },
+          ],
+        },
+        {
+          label: 'Birthday',
+          data: [
+            {
+              label: 'Place Of Birth',
+              value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
+            },
+            {
+              label: 'Date of Birth',
+              value: user?.linked.mbsdZmemId[0].mbsdBirthDate
+                ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
+                    'DD MMMM yyyy',
+                  )
+                : undefined,
+            },
+          ],
+        },
+        {
+          label: 'Gender Blood',
+          data: [
+            {
+              label: 'Gender',
+              value:
+                user?.linked.mbsdZmemId[0].mbsdGender === 1
+                  ? t('gender.male')
+                  : t('gender.female'),
+            },
+            {
+              label: 'Blood Type',
+              value: user?.linked.mbsdZmemId[0].mbsdBloodType,
+            },
+          ],
+        },
+        {
+          label: 'Country Nationality',
+          data: [
+            {
+              label: 'Country',
+              value: user?.linked.mbsdZmemId[0].mbsdNationality,
+            },
+            {
+              label: 'Nationality',
+              value: user?.linked.mbsdZmemId[0].mbsdCountry,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      title: t('label.addressInformation'),
+      data: [
+        user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
+          ? {
+              label: 'Province City',
+              data: [
+                {
+                  label: 'Province',
+                  value: user?.linked.mbsdZmemId[0].mbsdProvinces,
+                },
+                {
+                  label: 'City',
+                  value: user?.linked.mbsdZmemId[0].mbsdCity,
+                },
+              ],
+            }
+          : {label: '', value: ''},
+        {
+          label: 'Address',
+          value: user?.linked.mbsdZmemId[0].mbsdAddress,
+        },
+      ].filter(item => item && item.label),
+    },
+  ];
+  // end view only
 
   function handleChangeProfilePic(image: any) {
     console.log(image);
@@ -81,19 +205,26 @@ export default function UpdateProfileScreen() {
       path: image.path,
       modificationDate: image.modificationDate,
     });
+
+    handleUpdatePhotoProfile({
+      mime: image.mime,
+      path: image.path,
+      modificationDate: image.modificationDate,
+    });
   }
 
-  const handleUpdatePhotoProfile = async () => {
+  const handleUpdatePhotoProfile = async (pic?: any) => {
+    if (!pic) {
+      pic = {...profilePic};
+    }
     setIsLoading(true);
-    if (!profilePic) {
+    if (!pic) {
       return;
     }
 
     try {
       let uri =
-        Platform.OS === 'android'
-          ? profilePic.path
-          : profilePic.path.replace('file://', '');
+        Platform.OS === 'android' ? pic.path : pic.path.replace('file://', '');
       let uriSplit = uri.split('/');
       let name = uriSplit[uriSplit.length - 1];
 
@@ -101,7 +232,7 @@ export default function UpdateProfileScreen() {
       formData.append('fileType', 'avatar');
       formData.append('file', {
         name,
-        type: profilePic.mime,
+        type: pic.mime,
         uri,
       });
 
@@ -120,6 +251,7 @@ export default function UpdateProfileScreen() {
       if (res.data) {
         const result = await ProfileService.updatePhoto(res.data.fileId);
         console.log(result, 'save ID');
+        getProfile();
         navigation.goBack();
       }
     } catch (error) {
@@ -157,7 +289,57 @@ export default function UpdateProfileScreen() {
             </HStack>
           </TouchableOpacity>
 
-          <VStack space="2.5" px="4">
+          <SectionList
+            px="4"
+            sections={sectionsDataProfile}
+            renderItem={({item}) =>
+              item.data && item.data.length > 0 ? (
+                <Row flex={1}>
+                  {item.data.map(ditem => (
+                    <Box key={ditem.label} flex={1}>
+                      <Text color="gray.500" fontSize="sm">
+                        {ditem.label}
+                      </Text>
+                      {ditem.value ? (
+                        <Text>{ditem.value}</Text>
+                      ) : (
+                        <Text color="gray.500" italic>
+                          ~ Not Set
+                        </Text>
+                      )}
+                    </Box>
+                  ))}
+                </Row>
+              ) : (
+                <Row>
+                  <Box>
+                    <Text color="gray.500" fontSize="sm">
+                      {item.label}
+                    </Text>
+                    {item.value ? (
+                      <Text>{item.value}</Text>
+                    ) : (
+                      <Text color="gray.500" italic>
+                        ~ Not Set
+                      </Text>
+                    )}
+                  </Box>
+                </Row>
+              )
+            }
+            renderSectionHeader={({section: {title}}) => (
+              <Box mb="4" mt="5">
+                <Text fontWeight="medium" fontSize="lg">
+                  {title}
+                </Text>
+              </Box>
+            )}
+            ItemSeparatorComponent={() => <Divider mt={2} mb={2} />}
+            keyExtractor={(item, index) => item.label + index}
+            ListFooterComponent={<Box height="50" />}
+          />
+
+          {/* <VStack space="2.5" px="4">
             <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
               {t('label.accountInformation')}
             </Text>
@@ -338,12 +520,12 @@ export default function UpdateProfileScreen() {
                 onChangeText={setAddress}
               />
             </VStack>
-          </VStack>
-          <VStack space="2.5" px="4">
+          </VStack> */}
+          {/* <VStack space="2.5" px="4">
             <Button isLoading={isLoading} onPress={handleUpdatePhotoProfile}>
               Update Photo Profile
             </Button>
-          </VStack>
+          </VStack> */}
         </VStack>
         <Box pb={100} />
       </ScrollView>

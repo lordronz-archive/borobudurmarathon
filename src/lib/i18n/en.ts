@@ -64,6 +64,7 @@ export default {
   },
   label: {
     accountInformation: 'Account Information',
+    personalData: 'Personal Data',
     addressInformation: 'Address Information',
   },
   profile: {

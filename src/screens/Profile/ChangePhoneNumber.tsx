@@ -44,28 +44,36 @@ export default function ChangePhoneNumberScreen() {
       return;
     }
     if ('0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !== phoneNumber) {
-      const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-      console.info('SendOTP result: ', sendOtpRes);
-      navigation.navigate('PhoneNumberValidation', {
-        phoneNumber,
-        onSuccess: async () => {
-          try {
-            setIsLoading(true);
-            Toast.show({
-              description: 'Success',
-            });
-            setIsLoading(false);
-            navigation.goBack();
-          } catch (err) {
-            Toast.show({
-              title: 'Failed to send otp',
-              description: 'Phone already used by another user',
-            });
-            console.info(err, getErrorMessage(err), 'Failed to send otp');
-            setIsLoading(false);
-          }
-        },
-      });
+      AuthService.sendOTP({phoneNumber})
+        .then(sendOtpRes => {
+          console.info('SendOTP result: ', sendOtpRes);
+          navigation.navigate('PhoneNumberValidation', {
+            phoneNumber,
+            onSuccess: async () => {
+              try {
+                setIsLoading(true);
+                Toast.show({
+                  description: 'Success',
+                });
+                setIsLoading(false);
+                navigation.goBack();
+              } catch (err) {
+                Toast.show({
+                  title: 'Failed to send otp',
+                  description: 'Phone already used by another user',
+                });
+                console.info(err, getErrorMessage(err), 'Failed to send otp');
+                setIsLoading(false);
+              }
+            },
+          });
+        })
+        .catch(err => {
+          Toast.show({
+            title: 'Failed to send otp',
+            description: getErrorMessage(err),
+          });
+        });
     } else {
       Toast.show({
         title: "It's your current phone number",

@@ -42,9 +42,10 @@ export default function useInit() {
 
         const profile = await getProfile();
 
-        checkAccount(res.data, profile);
+        if (profile) {
+          checkAccount(res.data, profile);
+        }
         setLoginType(res.data.login);
-
       } else {
         console.info('AuthService.checkSession res empty');
         navigation.replace('Auth');
@@ -59,7 +60,7 @@ export default function useInit() {
     try {
       const resProfile = await ProfileService.getMemberDetail();
 
-      console.info('resProfile', resProfile);
+      // console.info('resProfile', resProfile);
       console.info('###resProfile###', JSON.stringify(resProfile));
       dispatch({
         type: EAuthUserAction.LOGIN,
@@ -207,30 +208,58 @@ export default function useInit() {
     }
     if (Number(data.authEmail) === 0) {
       // verify email
-      navigation.navigate('EmailValidation', {
-        email: data.email,
-        onSuccess: () => {
-          checkAccount({...data, authEmail: '1'}, profile);
-        },
-      });
-    } else if (Number(data.authTelephone) === 0) {
-      const phoneNumber = profile.linked.zmemAuusId[0].auusPhone
-        ? profile.linked.zmemAuusId[0].auusPhone
-        : profile.linked.mbspZmemId[0].mbspNumber
-        ? '0' + profile.linked.mbspZmemId[0].mbspNumber
-        : null;
-
-      if (phoneNumber) {
-        const sendOtpRes = await AuthService.sendOTP({phoneNumber});
-        console.info('SendOTP result: ', sendOtpRes);
-        navigation.navigate('PhoneNumberValidation', {
-          phoneNumber,
-          onSuccess: () => {
-            checkAccount({...data, authTelephone: 1}, profile);
-          },
+      AuthService.verificationEmail()
+        .then(() => {
+          navigation.navigate('EmailValidation', {
+            email: data.email,
+            onSuccess: () => {
+              setDemoVerifyEmail(false);
+              checkAccount({...data, authEmail: '1'}, profile);
+            },
+          });
+        })
+        .catch(err => {
+          toast.show({
+            title: 'Failed to send otp',
+            variant: 'subtle',
+            description: getErrorMessage(err),
+          });
         });
+    } else if (Number(data.authTelephone) === 0) {
+      if (profile.linked.zmemAuusId[0].auusPhone) {
+        // dianggap valid aja dulu
+        checkAccount({...data, authTelephone: 1}, profile);
       } else {
-        navigation.replace('ChooseCitizen');
+        // const phoneNumber = profile.linked.zmemAuusId[0].auusPhone
+        //   ? profile.linked.zmemAuusId[0].auusPhone
+        //   : profile.linked.mbspZmemId[0].mbspNumber
+        //   ? '0' + profile.linked.mbspZmemId[0].mbspNumber
+        //   : null;
+        const phoneNumber = profile.linked.mbspZmemId[0].mbspNumber
+          ? '0' + profile.linked.mbspZmemId[0].mbspNumber
+          : null;
+
+        if (phoneNumber) {
+          AuthService.sendOTP({phoneNumber})
+            .then(sendOtpRes => {
+              console.info('SendOTP result: ', sendOtpRes);
+              navigation.navigate('PhoneNumberValidation', {
+                phoneNumber,
+                onSuccess: () => {
+                  checkAccount({...data, authTelephone: 1}, profile);
+                },
+              });
+            })
+            .catch(err => {
+              toast.show({
+                title: 'Failed to send otp',
+                variant: 'subtle',
+                description: getErrorMessage(err),
+              });
+            });
+        } else {
+          navigation.replace('ChooseCitizen');
+        }
       }
     } else if (data.login === 'Kompas' && Number(data.consent) === 0) {
       navigation.replace('DataConfirmation');
@@ -238,13 +267,13 @@ export default function useInit() {
       navigation.replace('InputProfile');
     } else {
       getProfile();
-      // navigation.replace('Main', {screen: 'Home'});
-      // if (!toast.isActive('welcome')) {
-      //   toast.show({
-      //     id: 'welcome',
-      //     description: 'Welcome',
-      //   });
-      // }
+      navigation.replace('Main', {screen: 'Home'});
+      if (!toast.isActive('welcome')) {
+        toast.show({
+          id: 'welcome',
+          description: 'Welcome, ' + profile.data[0].zmemFullName,
+        });
+      }
     }
   };
 

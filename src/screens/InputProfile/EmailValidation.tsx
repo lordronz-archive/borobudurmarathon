@@ -103,6 +103,7 @@ export default function EmailValidationScreen({route}: Props) {
       setIsLoading(false);
     }
   };
+  const isDisabledButton = !otpCode;
 
   return (
     <VStack px="4" flex="1">
@@ -168,7 +169,13 @@ export default function EmailValidationScreen({route}: Props) {
           )}
         </VStack>
       </Box>
-      <Button h="12" mb="3" onPress={validatePhoneNumber} isLoading={isLoading}>
+      <Button
+        h="12"
+        mb="3"
+        onPress={validatePhoneNumber}
+        isLoading={isLoading}
+        disabled={isDisabledButton}
+        bg={isDisabledButton ? 'gray.400' : undefined}>
         {t('confirm')}
       </Button>
     </VStack>

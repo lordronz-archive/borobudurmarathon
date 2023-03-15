@@ -51,18 +51,6 @@ const AuthService = {
   //   }
   // },
 
-  // resetPassword: async function (resetData: any) {
-  //   try {
-  //     return await httpRequest.post(
-  //       apiConfig.apiUrl.apis.member.resetPassword.path,
-  //       {data: {email: resetData.username}},
-  //     );
-  //   } catch (error) {
-  //     console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-  //     const msg = error as any;
-  //     throw new AuthenticationError(msg.status, msg.data.status.error.message);
-  //   }
-  // },
   sendOTP: async function (phoneData: any) {
     if (!phoneData.countryCode) {
       phoneData.countryCode = 62;

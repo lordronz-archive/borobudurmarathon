@@ -10,7 +10,7 @@ export function getErrorMessage(err: any) {
     } else if (err.response.message) {
       errMessage = err.response.message;
     } else {
-      errMessage = JSON.stringify(err);
+      // errMessage = JSON.stringify(err);
     }
   } else if (err && err.data) {
     if (err.data && err.data.message) {
@@ -18,7 +18,7 @@ export function getErrorMessage(err: any) {
     } else if (err.data && err.data.status && err.data.status?.error?.message) {
       errMessage = err.data.status?.error?.message;
     } else {
-      errMessage = JSON.stringify(err);
+      // errMessage = JSON.stringify(err);
     }
   } else if (err.message) {
     errMessage = err.message;
@@ -27,7 +27,7 @@ export function getErrorMessage(err: any) {
   } else if (err.error) {
     errMessage = err.error;
   } else {
-    errMessage = JSON.stringify(err);
+    // errMessage = JSON.stringify(err);
   }
   return errMessage;
 }

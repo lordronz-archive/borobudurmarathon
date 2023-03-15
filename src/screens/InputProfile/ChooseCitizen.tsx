@@ -196,6 +196,7 @@ export default function ChooseCitizenScreen({route}: Props) {
 
     try {
       let resValidation;
+      console.info('profile', profile);
       if (!isVerifyLater) {
         resValidation = await httpRequest({
           url: 'https://repository.race.id/validator',
@@ -210,7 +211,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             dataToValidate: {
               idNumber: profile.mbsdIDNumber,
               name: accountInformation.name,
-              birthDate: '1999-06-07',
+              birthDate: profile.mbsdBirthDate,
               birthPlace: profile.mbsdBirthPlace,
             },
           },
@@ -220,6 +221,15 @@ export default function ChooseCitizenScreen({route}: Props) {
       console.log('resValidation', resValidation);
 
       if (
+        resValidation &&
+        resValidation.data &&
+        resValidation.data.isProcessing
+      ) {
+        toast.show({
+          title: 'Processing',
+          description: 'Your ID still in processing to validate.',
+        });
+      } else if (
         (resValidation && resValidation.data && resValidation.data.isValid) ||
         isVerifyLater
       ) {
@@ -240,12 +250,33 @@ export default function ChooseCitizenScreen({route}: Props) {
         } else {
           setProfileAfterVerifyPhoneSuccess();
         }
+      } else if (
+        resValidation &&
+        resValidation.data &&
+        !resValidation.data.isValid
+      ) {
+        toast.show({
+          title: 'Invalid ID',
+          description:
+            resValidation.data.message || 'Please check your ID and try again',
+        });
+        setIsOpenNotReadable(true);
+        setValidationTry(v => v + 1);
       } else {
+        toast.show({
+          title: 'Invalid ID',
+          description: 'Please recheck your ID and try again',
+        });
         setIsOpenNotReadable(true);
         setValidationTry(v => v + 1);
       }
     } catch (err) {
+      toast.show({
+        title: 'Failed',
+        description: 'Please try again later',
+      });
       console.info(err, getErrorMessage(err), 'Failed confirm profile');
+      setValidationTry(v => v + 1);
     } finally {
       setIsOpen(false);
     }
@@ -691,14 +722,20 @@ export default function ChooseCitizenScreen({route}: Props) {
                     competition event.
                   </Text>
                 </VStack>
-                <Text fontSize={'12px'} fontWeight={600} underline>
-                  See more info
-                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    // navigation.navigate('InformationVerifyLater');
+                  }}>
+                  <Text fontSize={'12px'} fontWeight={600} underline>
+                    See more info
+                  </Text>
+                </TouchableOpacity>
               </HStack>
             </Checkbox>
           )}
         </Box>
       )}
+
       <HStack my={3} space={'10px'}>
         {stepCount > 1 && (
           <Button
@@ -717,6 +754,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             <ArrowBackIcon color={'#1E1E1E'} />
           </Button>
         )}
+
         <Button
           flex={1}
           h="12"
@@ -732,14 +770,14 @@ export default function ChooseCitizenScreen({route}: Props) {
                     description: 'Please complete the required data.',
                   });
                 }
-              }
-              if (profileStep === 2) {
+              } else if (profileStep === 2) {
                 if (
                   profile.mbsdIDNumber &&
                   profile.mbsdGender &&
                   profile.mbsdBirthDate &&
                   profile.mbsdBirthPlace &&
-                  profile.mbsdBloodType
+                  (profile.mbsdBloodType !== null ||
+                    profile.mbsdBloodType !== undefined)
                 ) {
                   setProfileStep(v => v + 1);
                 } else {
@@ -748,8 +786,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                     description: 'Please complete the required data.',
                   });
                 }
-              }
-              if (profileStep === 3) {
+              } else if (profileStep === 3) {
                 if (profile.mbsdAddress && isAgreeTermsAndCondition) {
                   handleConfirm();
                 } else {

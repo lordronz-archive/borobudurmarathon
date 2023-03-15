@@ -142,14 +142,14 @@ export default function SignInEmailScreen() {
               placeholder="Enter your email here"
               label="Email"
               value={email}
-              onChangeText={t => setEmail(t)}
+              onChangeText={text => setEmail(text)}
             />
             <TextInput
               placeholder="Enter your password here"
               label="Password"
               type="password"
               value={password}
-              onChangeText={t => setPassword(t)}
+              onChangeText={text => setPassword(text)}
             />
           </VStack>
         </VStack>
@@ -169,6 +169,17 @@ export default function SignInEmailScreen() {
             underline
             onPress={() => navigation.navigate('RegisterEmail')}>
             {t('auth.registerViaEmail')}
+          </Text>
+        </HStack>
+        <HStack space="1" mt={15} justifyContent="center">
+          <Text
+            fontWeight={600}
+            color="#EB1C23"
+            fontSize={12}
+            textAlign="center"
+            underline
+            onPress={() => navigation.navigate('ForgotPassword')}>
+            Forgot password?
           </Text>
         </HStack>
       </Box>

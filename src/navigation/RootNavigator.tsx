@@ -29,12 +29,15 @@ import AboutUsScreen from '../screens/Information/AboutUs';
 import SearchLocationScreen from '../screens/InputProfile/SearchLocation';
 import SignInEmailScreen from '../screens/Auth/SignInEmail';
 import RegisterEmailScreen from '../screens/Auth/RegisterEmail';
+import ForgotPasswordScreen from '../screens/Auth/ForgotPassword';
 
 export type RootStackParamList = {
   Initial: undefined;
   Auth: undefined;
   SignInEmail: undefined;
   RegisterEmail: undefined;
+  ForgotPassword: undefined;
+
   SignInWithKompas: undefined;
   DataConfirmation: undefined;
   InputProfile:
@@ -118,6 +121,11 @@ function RootNavigator() {
         <Stack.Screen
           name="EmailValidation"
           component={EmailValidationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPasswordScreen}
           options={{headerShown: false}}
         />
         <Stack.Group>

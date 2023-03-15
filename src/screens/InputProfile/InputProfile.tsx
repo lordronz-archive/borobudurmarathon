@@ -252,6 +252,7 @@ export default function InputProfileScreen() {
               label="Gender"
               onValueChange={setGender}
               value={mbsdGender}
+              hideSearch
             />
             <DateInput
               placeholder="DD MMM YYYY"

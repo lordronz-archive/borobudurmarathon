@@ -455,6 +455,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                   ]}
                   placeholder="Choose gender"
                   label="Gender"
+                  hideSearch
                   value={profile.mbsdGender}
                   onValueChange={val =>
                     setProfile(oldVal => ({

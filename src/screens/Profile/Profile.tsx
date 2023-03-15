@@ -85,11 +85,10 @@ export default function MyProfile() {
       params: {page: 'about'},
     },
     {
-      key: 'about',
+      key: 'partner',
       icon: <IconUserGroup color={colors.black} size={6} />,
       name: 'Partner',
       route: 'Partner',
-      params: {page: 'about'},
     },
   ];
 

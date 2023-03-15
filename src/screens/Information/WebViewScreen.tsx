@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View} from 'react-native';
 import WebView from 'react-native-webview';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {Box, IconButton, ArrowBackIcon, useTheme} from 'native-base';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import LoadingBlock from '../../components/loading/LoadingBlock';
 
 const urls: any = {
   // faq: 'https://borobudurmarathon.com',
@@ -22,6 +23,8 @@ export default function WebViewScreen() {
     ? params.customUrl
     : urls[params?.page || 'default'];
   const {colors} = useTheme();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <View style={{flex: 1}}>
@@ -46,7 +49,8 @@ export default function WebViewScreen() {
           }}
         />
       </Box>
-      <WebView source={{uri: url}} />
+      <WebView source={{uri: url}} onLoadEnd={() => setIsLoading(false)} />
+      {isLoading && <LoadingBlock />}
     </View>
   );
 }

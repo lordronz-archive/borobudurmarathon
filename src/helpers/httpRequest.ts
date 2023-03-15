@@ -30,13 +30,13 @@ console.info('config.apiUrl.href.href', config.apiUrl.href.href);
 
 // this will check if cookies are there for every request and send request
 httpRequest.interceptors.request.use(async (axiosConfig: any) => {
-  if (!axiosConfig.headers.Cookie) {
-    const cookieString = await getCookiesString();
+  // if (!axiosConfig.headers.Cookie) {
+  //   const cookieString = await getCookiesString();
 
-    if (cookieString) {
-      axiosConfig.headers.Cookie = cookieString;
-    }
-  }
+  //   if (cookieString) {
+  //     axiosConfig.headers.Cookie = cookieString;
+  //   }
+  // }
   return axiosConfig;
 });
 

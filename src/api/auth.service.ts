@@ -248,9 +248,9 @@ const AuthService = {
         {
           data: credential,
         },
-        {
-          withCredentials: true,
-        },
+        // {
+        //   withCredentials: true,
+        // },
         // {
         //   headers: {
         //     Authorization:

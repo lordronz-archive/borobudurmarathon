@@ -267,7 +267,7 @@ export default function useInit() {
     } else if (data.login === 'Kompas' && Number(data.consent) === 0) {
       navigation.replace('DataConfirmation');
     } else if (Number(data.authProfile) === 0) {
-      navigation.replace('InputProfile');
+      navigation.replace('ChooseCitizen');
     } else {
       getProfile();
       navigation.replace('Main', {screen: 'Home'});

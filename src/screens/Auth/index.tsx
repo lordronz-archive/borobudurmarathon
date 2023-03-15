@@ -38,7 +38,7 @@ export default function AuthScreen() {
   const toast = useToast();
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {getProfile, clearCookies} = useInit();
+  const {getProfile, init} = useInit();
   const {
     isShowModal,
     showModal,
@@ -194,7 +194,8 @@ export default function AuthScreen() {
             console.info('cookiesString isNotRegistered true', cookiesString);
 
             if (cookiesString) {
-              getProfile();
+              // getProfile();
+              init();
             } else {
               toast.show({
                 title: 'Failed to get cookies',
@@ -232,14 +233,13 @@ export default function AuthScreen() {
             uri,
           }}
           onError={() => setIsLoading(false)}
-          // thirdPartyCookiesEnabled={true}
           onLoadEnd={async event => {
             console.info('authorizationCode###event', event);
             await sleep(1000);
             const cookiesString = await getCookiesString();
-            console.info('cookiesString', cookiesString);
+            console.info('authorizationCode###cookiesString', cookiesString);
             if (cookiesString) {
-              getProfile();
+              init();
             } else {
               setIsNotRegistered(true);
             }

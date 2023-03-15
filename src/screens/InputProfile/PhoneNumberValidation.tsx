@@ -12,7 +12,7 @@ import {
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import config from '../../config';
-import I18n from '../../lib/i18n';
+import {useTranslation} from 'react-i18next';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -22,6 +22,7 @@ type Props = NativeStackScreenProps<
 export default function PhoneNumberValidationScreen({route}: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {t} = useTranslation();
   const {phoneNumber} = route.params as {phoneNumber?: string};
   const {onSuccess} = route.params as {onSuccess?: any};
 
@@ -115,22 +116,22 @@ export default function PhoneNumberValidationScreen({route}: Props) {
       <Box flex="10">
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
-          <Heading>{I18n.t('auth.phoneValidationTitle')}</Heading>
+          <Heading>{t('auth.phoneValidationTitle')}</Heading>
           <Text fontWeight={400} color="#768499" fontSize={11}>
-            {I18n.t('auth.phoneValidationSubtitle')}
+            {t('auth.phoneValidationSubtitle')}
           </Text>
         </VStack>
         <Box mt={26} mb="3">
           <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-            {I18n.t('auth.phoneValidation8DigitCode')}{' '}
+            {t('auth.phoneValidation8DigitCode')}{' '}
             <Text bold>{phoneNumber}</Text>
           </Text>
         </Box>
         <VStack space="2.5">
           <VStack space="1.5">
             <TextInput
-              placeholder={I18n.t('auth.emailValidationPlaceholder')}
-              label={I18n.t('auth.emailValidationLabel')}
+              placeholder={t('auth.emailValidationPlaceholder')}
+              label={t('auth.emailValidationLabel')}
               onChangeText={setOtpCode}
               isInvalid={!isValid}
               errorMessage={errMessage}
@@ -143,7 +144,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
             color="#1E1E1E"
             fontSize={12}
             textAlign="center">
-            {I18n.t('auth.emailValidationNoReceive')}
+            {t('auth.emailValidationNoReceive')}
           </Text>
           {seconds > 0 ? (
             <Text
@@ -151,7 +152,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
               color="#1E1E1E"
               fontSize={12}
               textAlign="center">
-              {I18n.t('pleaseWait')}{' '}
+              {t('pleaseWait')}{' '}
               <Text
                 fontWeight={600}
                 color="#EB1C23"
@@ -159,7 +160,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
                 textAlign="center">
                 {seconds}
               </Text>{' '}
-              {I18n.t('seconds')} {I18n.t('auth.emailValidationBeforeResend')}
+              {t('seconds')} {t('auth.emailValidationBeforeResend')}
             </Text>
           ) : (
             <Button variant={'ghost'} onPress={resendOTP}>
@@ -168,14 +169,14 @@ export default function PhoneNumberValidationScreen({route}: Props) {
                 color="#EB1C23"
                 fontSize={12}
                 textAlign="center">
-                {I18n.t('auth.emailValidationResend')}
+                {t('auth.emailValidationResend')}
               </Text>
             </Button>
           )}
         </VStack>
       </Box>
       <Button h="12" mb="3" onPress={validatePhoneNumber} isLoading={isLoading}>
-        {I18n.t('confirm')}
+        {t('confirm')}
       </Button>
     </VStack>
   );

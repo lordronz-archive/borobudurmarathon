@@ -3,6 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import moment from 'moment';
 import {Divider, FlatList, Flex, Image, Text, Toast} from 'native-base';
 import React, {ComponentType, useEffect, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
 import CategoryButton from '../../../components/buttons/CategoryButton';
@@ -58,6 +59,7 @@ export default function SectionListMyEvent() {
   const IsFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {t} = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Transaction>();
   const [eventL, setEvent] = useState<EventProperties[]>([]);
@@ -229,10 +231,10 @@ export default function SectionListMyEvent() {
           alt="Data empty"
         />
         <Text textAlign={'center'} fontSize={'lg'} fontWeight={'bold'} mb={1}>
-          {I18n.t('dataEmpty')}
+          {t('dataEmpty')}
         </Text>
         <Text textAlign={'center'} fontSize={'sm'} color={'gray.400'}>
-          {I18n.t('dataEmptyDesc')}
+          {t('dataEmptyDesc')}
         </Text>
       </Flex>
     );

@@ -21,7 +21,6 @@ import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import I18n from '../../lib/i18n';
 import {useAuthUser} from '../../context/auth.context';
 import WebView from 'react-native-webview';
 import config from '../../config';
@@ -31,12 +30,14 @@ import {getParameterByName} from '../../helpers/url';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import useInit from '../../hooks/useInit';
 import {useDemo} from '../../context/demo.context';
+import {useTranslation} from 'react-i18next';
 
 export default function AuthScreen() {
   console.info('===render AuthScreen');
   const route = useRoute();
   const toast = useToast();
   const {colors} = useTheme();
+  const {t} = useTranslation();
   const {getProfile, clearCookies} = useInit();
   const {
     isShowModal,
@@ -273,10 +274,10 @@ export default function AuthScreen() {
         <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
           <VStack space="3" alignItems="center" justifyContent="center">
             <Heading textAlign={'center'}>
-              {I18n.t('welcomeTo') + ' Borobudur Marathon'}
+              {t('welcomeTo') + ' Borobudur Marathon'}
             </Heading>
             <Text fontWeight={400} textAlign={'center'} color="#768499">
-              {I18n.t('auth.description')}
+              {t('auth.description')}
             </Text>
             <Text>{initialCookieString}</Text>
 
@@ -315,7 +316,7 @@ export default function AuthScreen() {
             }}
             startIcon={<KompasIcon size="lg" px="6" />}>
             <Text color="white" px="12">
-              {I18n.t('auth.signInWith') + ' Kompas.id'}
+              {t('auth.signInWith') + ' Kompas.id'}
             </Text>
           </Button>
           <Center mt="2">
@@ -324,7 +325,7 @@ export default function AuthScreen() {
                 justifyContent={'center'}
                 alignItems="center"
                 fontWeight={400}>
-                {I18n.t('auth.dontHaveAccount')}{' '}
+                {t('auth.dontHaveAccount')}{' '}
               </Text>
               <Link
                 onPress={() => {
@@ -335,7 +336,7 @@ export default function AuthScreen() {
                   color: 'red.600',
                   fontWeight: 600,
                 }}>
-                {I18n.t('auth.registerViaEmail')}
+                {t('auth.registerViaEmail')}
               </Link>
             </HStack>
           </Center>

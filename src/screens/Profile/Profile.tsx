@@ -45,7 +45,7 @@ export default function MyProfile() {
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
   const onCloseModalLogout = () => setIsOpenModalLogout(false);
   const cancelLogoutRef = React.useRef(null);
-  const [, setIsLangOpen] = useState(false);
+  const [, setIsLangOpen] = React.useState(false);
 
   const menus: {
     key: string;

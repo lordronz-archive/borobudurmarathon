@@ -19,15 +19,16 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {useAuthUser} from '../../context/auth.context';
-import I18n from '../../lib/i18n';
 import moment from 'moment';
 import {ProfileService} from '../../api/profile.service';
 import {useDemo} from '../../context/demo.context';
+import {useTranslation} from 'react-i18next';
 
 export default function DataConfirmationScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {user} = useAuthUser();
+  const {t} = useTranslation();
   const toast = useToast();
   const {setDemoConsent} = useDemo();
   const [isLoadingAction, setIsLoadingAction] = useState(false);
@@ -68,8 +69,8 @@ export default function DataConfirmationScreen() {
               label: 'Gender',
               value:
                 user?.linked.mbsdZmemId[0].mbsdGender === 1
-                  ? I18n.t('gender.male')
-                  : I18n.t('gender.female'),
+                  ? t('gender.male')
+                  : t('gender.female'),
             },
             {
               label: 'Blood Type',
@@ -162,13 +163,13 @@ export default function DataConfirmationScreen() {
       <Box flex="10">
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5" px="4">
-          <Heading>{I18n.t('consent.title')}</Heading>
+          <Heading>{t('consent.title')}</Heading>
           {/* <Text fontWeight={400} color="#768499" fontSize={11}>
-            {I18n.t('consent.subtitle')}
+            {t('consent.subtitle')}
           </Text> */}
           <Box>
             <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-              {I18n.t('consent.description')}
+              {t('consent.description')}
             </Text>
           </Box>
         </VStack>

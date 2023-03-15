@@ -7,7 +7,6 @@ import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import I18n from '../../lib/i18n';
 import {getErrorMessage, getErrorStd} from '../../helpers/errorHandler';
 import useInit from '../../hooks/useInit';
 import WebView from 'react-native-webview';
@@ -15,6 +14,7 @@ import config from '../../config';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {IAuthResponseData} from '../../types/auth.type';
 import {useAuthUser} from '../../context/auth.context';
+import {useTranslation} from 'react-i18next';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -22,6 +22,7 @@ export default function SignInEmailScreen() {
   const toast = useToast();
   const {getProfile, checkAccount} = useInit();
   const {setLoginType} = useAuthUser();
+  const {t} = useTranslation();
 
   // const [email, setEmail] = useState<string>();
   // const [password, setPassword] = useState<string>();
@@ -169,12 +170,12 @@ export default function SignInEmailScreen() {
             textAlign="center"
             underline
             onPress={() => navigation.navigate('RegisterEmail')}>
-            {I18n.t('auth.registerViaEmail')}
+            {t('auth.registerViaEmail')}
           </Text>
         </HStack>
       </Box>
       <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
-        {I18n.t('auth.signin')}
+        {t('auth.signin')}
       </Button>
     </VStack>
   );

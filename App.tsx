@@ -20,6 +20,28 @@ import {DemoProvider} from './src/context/demo.context';
 import RootNavigator from './src/navigation/RootNavigator';
 import {useEffect} from 'react';
 
+import i18n from 'i18next';
+import {initReactI18next} from 'react-i18next';
+import en from './src/lib/i18n/en';
+import id from './src/lib/i18n/id';
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    // the translations
+    // (tip move them in a JSON file and import them,
+    // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
+    resources: {
+      en: {translation: en},
+      id: {translation: id},
+    },
+    lng: 'en', // if you're using a language detector, do not define the lng option
+    fallbackLng: 'en',
+
+    interpolation: {
+      escapeValue: false, // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+    },
+  });
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 

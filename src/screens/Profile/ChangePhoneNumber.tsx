@@ -15,13 +15,14 @@ import {AuthService} from '../../api/auth.service';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
-import I18n from '../../lib/i18n';
 import {useAuthUser} from '../../context/auth.context';
 import {getErrorMessage} from '../../helpers/errorHandler';
+import {useTranslation} from 'react-i18next';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {t} = useTranslation();
   const {colors} = useTheme();
   const {user} = useAuthUser();
 
@@ -76,12 +77,12 @@ export default function ChangePhoneNumberScreen() {
 
   return (
     <View>
-      <Header title={I18n.t('profile.changePhoneNumber')} left="back" />
+      <Header title={t('profile.changePhoneNumber')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
           <VStack space="2.5" px="4">
             <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
-              {I18n.t('label.accountInformation')}
+              {t('label.accountInformation')}
             </Text>
             <VStack space="1.5">
               <TextInput
@@ -96,7 +97,7 @@ export default function ChangePhoneNumberScreen() {
         </VStack>
         <Box px="4">
           <Button h="12" onPress={sendPhoneOTP} isLoading={isLoading}>
-            {I18n.t('profile.sendOtp')}
+            {t('profile.sendOtp')}
           </Button>
         </Box>
         <Box pb={100} />

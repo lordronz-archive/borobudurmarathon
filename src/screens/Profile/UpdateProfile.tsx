@@ -15,17 +15,18 @@ import SelectInput from '../../components/form/SelectInput';
 import DateInput from '../../components/form/DateInput';
 import countries from '../../helpers/countries';
 import Header from '../../components/header/Header';
-import I18n from '../../lib/i18n';
 import {getShortCodeName} from '../../helpers/name';
 import {useAuthUser} from '../../context/auth.context';
 import ImagePicker from '../../components/modal/ImagePicker';
 import httpRequest from '../../helpers/httpRequest';
 import {ProfileService} from '../../api/profile.service';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   const [isShowImagePickerModal, setIsShowImagePickerModal] =
     useState<boolean>(false);
@@ -130,7 +131,7 @@ export default function UpdateProfileScreen() {
 
   return (
     <View>
-      <Header title={I18n.t('profile.title')} left="back" />
+      <Header title={t('profile.title')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
           <TouchableOpacity onPress={() => setIsShowImagePickerModal(true)}>
@@ -158,7 +159,7 @@ export default function UpdateProfileScreen() {
 
           <VStack space="2.5" px="4">
             <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
-              {I18n.t('label.accountInformation')}
+              {t('label.accountInformation')}
             </Text>
             <VStack space="1.5">
               <TextInput
@@ -315,7 +316,7 @@ export default function UpdateProfileScreen() {
           </VStack>
           <VStack space="2.5" px="4">
             <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
-              {I18n.t('label.addressInformation')}
+              {t('label.addressInformation')}
             </Text>
             <VStack space="1.5">
               <TextInput

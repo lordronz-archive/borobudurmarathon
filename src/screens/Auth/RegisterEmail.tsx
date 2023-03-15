@@ -8,14 +8,15 @@ import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import SelectInput from '../../components/form/SelectInput';
-import I18n from '../../lib/i18n';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {useDebounce} from 'use-debounce';
+import {useTranslation} from 'react-i18next';
 
 export default function RegisterEmailScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const toast = useToast();
+  const {t} = useTranslation();
 
   const [fullname, setFullname] = useState<string>();
   const [gender, setGender] = useState<string>();
@@ -139,12 +140,12 @@ export default function RegisterEmailScreen() {
             textAlign="center"
             underline
             onPress={() => navigation.navigate('SignInEmail')}>
-            {I18n.t('auth.signinViaEmail')}
+            {t('auth.signinViaEmail')}
           </Text>
         </HStack>
       </Box>
       <Button h="12" mb="3" onPress={() => signup()} isLoading={loading}>
-        {I18n.t('auth.register')}
+        {t('auth.register')}
       </Button>
     </VStack>
   );

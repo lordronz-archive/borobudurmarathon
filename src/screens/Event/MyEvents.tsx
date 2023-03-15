@@ -15,12 +15,13 @@ import {Heading} from '../../components/text/Heading';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import SectionListMyEvent from './components/SectionListMyEvent';
-import I18n from '../../lib/i18n';
+import {useTranslation} from 'react-i18next';
 
 export default function MyEvents() {
   const {colors} = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {t} = useTranslation();
 
   return (
     <View backgroundColor={colors.white} flex={1}>
@@ -35,9 +36,9 @@ export default function MyEvents() {
       <Box px="4">
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
-          <Heading>{I18n.t('myEvent.title')}</Heading>
+          <Heading>{t('myEvent.title')}</Heading>
           <Text fontWeight={400} color="#768499" fontSize={11}>
-            {I18n.t('myEvent.subtitle')}
+            {t('myEvent.subtitle')}
           </Text>
         </VStack>
       </Box>

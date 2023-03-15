@@ -20,7 +20,7 @@ export default function SignInEmailScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const toast = useToast();
-  const {getProfile, checkAccount} = useInit();
+  const {init} = useInit();
   const {setLoginType} = useAuthUser();
   const {t} = useTranslation();
 
@@ -113,13 +113,12 @@ export default function SignInEmailScreen() {
           style={{marginTop: 20}}
           onLoadEnd={() => {
             setTimeout(() => {
-              checkAccount(loggingInData);
-
-              getProfile();
+              init();
             }, 500);
           }}
           contentMode="mobile"
           thirdPartyCookiesEnabled={true}
+          sharedCookiesEnabled={true}
         />
         <LoadingBlock text="Authenticating. Please wait..." />
       </Box>

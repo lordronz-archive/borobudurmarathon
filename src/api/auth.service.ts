@@ -379,6 +379,7 @@ const AuthService = {
     try {
       const res = await httpRequest.get(
         config.apiUrl.apis.member.checkSession.path,
+        {withCredentials: true},
       );
 
       if (res) {

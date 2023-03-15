@@ -110,15 +110,14 @@ export default function RegisterEmailScreen() {
     }
   };
 
-  // const isDisabled =
-  //   !ptmmFullName ||
-  //   !gender ||
-  //   !password ||
-  //   !confirmPassword ||
-  //   !email ||
-  //   isEmailCanUse === false ||
-  //   password !== confirmPassword;
-  const isDisabled = false;
+  const isDisabled =
+    !form.ptmmFullName ||
+    !form.ptmmGender ||
+    !form.ptmmPassword ||
+    !confirmPassword ||
+    !form.ptmmEmail ||
+    isEmailCanUse === false ||
+    form.ptmmPassword !== confirmPassword;
 
   return (
     <VStack px="4" flex="1">

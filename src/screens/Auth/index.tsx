@@ -207,6 +207,7 @@ export default function AuthScreen() {
           }}
           contentMode="mobile"
           thirdPartyCookiesEnabled={true}
+          sharedCookiesEnabled={true}
         />
 
         {isLoading && (
@@ -233,19 +234,23 @@ export default function AuthScreen() {
             uri,
           }}
           onError={() => setIsLoading(false)}
-          onLoadEnd={async event => {
-            console.info('authorizationCode###event', event);
-            await sleep(1000);
-            const cookiesString = await getCookiesString();
-            console.info('authorizationCode###cookiesString', cookiesString);
-            if (cookiesString) {
+          onLoadEnd={() => {
+            setTimeout(() => {
               init();
-            } else {
-              setIsNotRegistered(true);
-            }
+            }, 500);
+            // console.info('authorizationCode###event', event);
+            // await sleep(1000);
+            // const cookiesString = await getCookiesString();
+            // console.info('authorizationCode###cookiesString', cookiesString);
+            // if (cookiesString) {
+            //   init();
+            // } else {
+            //   setIsNotRegistered(true);
+            // }
           }}
           contentMode="mobile"
           thirdPartyCookiesEnabled={true}
+          sharedCookiesEnabled={true}
           // javaScriptEnabled={true}
           // injectedJavaScript={jsCode}
           // onMessage={event =>

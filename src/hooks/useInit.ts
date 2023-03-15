@@ -40,6 +40,7 @@ export default function useInit() {
       const res = await AuthService.checkSession();
 
       if (res) {
+        setLoginType(res.data.login);
         console.info('AuthService.checkSession', res);
 
         const profile = await getProfile();
@@ -47,7 +48,6 @@ export default function useInit() {
         if (profile) {
           checkAccount(res.data, profile);
         }
-        setLoginType(res.data.login);
       } else {
         console.info('AuthService.checkSession res empty');
         navigation.replace('Auth');

@@ -195,7 +195,7 @@ export default function useInit() {
           checkAccount({...data, authEmail: '1'});
         },
       });
-    } else if (Number(data.consent) === 0) {
+    } else if (data.login === 'Kompas' && Number(data.consent) === 0) {
       navigation.replace('DataConfirmation');
     } else if (Number(data.authProfile) === 0) {
       navigation.replace('InputProfile');

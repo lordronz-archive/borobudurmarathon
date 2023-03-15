@@ -17,7 +17,11 @@ export default function Breadcrumbs(props: Props) {
   return (
     <HStack paddingY={'12px'}>
       {props.titles.map((title, i) => (
-        <VStack flex="1" alignItems={'center'} justifyContent={'center'}>
+        <VStack
+          flex="1"
+          alignItems={'center'}
+          justifyContent={'center'}
+          key={i}>
           <HStack>
             <Box
               rounded={'full'}

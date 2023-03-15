@@ -16,13 +16,14 @@ import {useAuthUser} from '../../context/auth.context';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {EventService} from '../../api/event.service';
 import {GetGalleryResponse} from '../../types/gallery.type';
-import I18n from '../../lib/i18n';
+import {useTranslation} from 'react-i18next';
 // import useuser from '../../hooks/useuser';
 
 export default function WelcomeScreen() {
   const {user} = useAuthUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {t} = useTranslation();
   const [galleries, setGalleries] = useState<GetGalleryResponse>();
 
   // const user = useuser();
@@ -73,7 +74,7 @@ export default function WelcomeScreen() {
             <Box flex="1" justifyContent={'space-between'} px="4">
               <Box py="8">
                 <Text mb={6} color="#EB1C23" fontWeight={600}>
-                  {I18n.t('hi')},{' '}
+                  {t('hi')},{' '}
                   {!user.data[0].zmemFullName
                     .split(' ')[0]
                     .match(/^m[uo]c?hamm?[ae]d$/im) ||
@@ -82,11 +83,11 @@ export default function WelcomeScreen() {
                     : user.data[0].zmemFullName.split(' ')[1]}
                 </Text>
                 <Heading fontWeight={600} fontSize={20}>
-                  {I18n.t('welcomeTo')} Borobudur Marathon
+                  {t('welcomeTo')} Borobudur Marathon
                 </Heading>
               </Box>
               <Text py="4" fontSize={10}>
-                {I18n.t('partOf')} Borobudur Marathon!
+                {t('partOf')} Borobudur Marathon!
               </Text>
             </Box>
             <Box backgroundColor={'#EB1C23'} height={2} />
@@ -182,7 +183,7 @@ export default function WelcomeScreen() {
         onPress={() => navigation.navigate('Main', {screen: 'Home'})}
         rightIcon={<ChevronRightIcon />}
         _stack={{flex: '1', justifyContent: 'space-between', px: '4'}}>
-        {I18n.t('journey')}
+        {t('journey')}
       </Button>
     </VStack>
   );

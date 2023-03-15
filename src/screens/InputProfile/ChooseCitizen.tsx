@@ -36,7 +36,7 @@ import IconLocation from '../../assets/icons/IconLocation';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
-import I18n from '../../lib/i18n';
+import {useTranslation} from 'react-i18next';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -44,6 +44,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const {user} = useAuthUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {t} = useTranslation();
 
   const {
     step,
@@ -97,31 +98,30 @@ export default function ChooseCitizenScreen({route}: Props) {
 
   const stepProperties = [
     {
-      title: I18n.t('auth.chooseCitizenTitle'),
-      subtitle: I18n.t('auth.chooseCitizenSubtitle'),
+      title: t('auth.chooseCitizenTitle'),
+      subtitle: t('auth.chooseCitizenSubtitle'),
     },
     {
-      title:
-        citizen === 'WNI' ? I18n.t('auth.uploadIdTitle') : 'Upload Passport',
+      title: citizen === 'WNI' ? t('auth.uploadIdTitle') : 'Upload Passport',
       subtitle:
         citizen === 'WNI'
-          ? I18n.t('auth.uploadIdSubtitle')
+          ? t('auth.uploadIdSubtitle')
           : 'Upload your Passport and please make sure still readable',
     },
     {
-      note: I18n.t('step') + ' 1 ' + I18n.t('auth.of3Step'),
-      title: I18n.t('account'),
-      subtitle: I18n.t('auth.accountFormDesc'),
+      note: t('step') + ' 1 ' + t('auth.of3Step'),
+      title: t('account'),
+      subtitle: t('auth.accountFormDesc'),
     },
     {
-      note: I18n.t('step') + ' 2 ' + I18n.t('auth.of3Step'),
+      note: t('step') + ' 2 ' + t('auth.of3Step'),
       title: 'Personal Data',
-      subtitle: I18n.t('auth.accountFormDesc'),
+      subtitle: t('auth.accountFormDesc'),
     },
     {
-      note: I18n.t('step') + ' 3 ' + I18n.t('auth.of3Step'),
+      note: t('step') + ' 3 ' + t('auth.of3Step'),
       title: 'Address Information',
-      subtitle: I18n.t('auth.accountFormDesc'),
+      subtitle: t('auth.accountFormDesc'),
     },
   ];
 
@@ -317,7 +317,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 borderWidth="2"
                 borderRadius="10px">
                 <IconIndonesia />
-                <Text>{I18n.t('auth.selectCitizenCard')}</Text>
+                <Text>{t('auth.selectCitizenCard')}</Text>
               </Box>
             </TouchableOpacity>
             <TouchableOpacity
@@ -332,7 +332,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 borderWidth="2"
                 borderRadius="10px">
                 <IconWNA />
-                <Text>{I18n.t('auth.selectCitizenCardWna')}</Text>
+                <Text>{t('auth.selectCitizenCardWna')}</Text>
               </Box>
             </TouchableOpacity>
           </VStack>
@@ -371,12 +371,12 @@ export default function ChooseCitizenScreen({route}: Props) {
                   borderRadius="10px"
                   borderStyle={'dashed'}>
                   <IconUpload />
-                  <Text>{I18n.t('auth.uploadId')}</Text>
+                  <Text>{t('auth.uploadId')}</Text>
                 </Box>
               )}
             </TouchableOpacity>
             <Text color="#768499" fontSize={10}>
-              {I18n.t('auth.maxIdSize')}
+              {t('auth.maxIdSize')}
             </Text>
             <ImagePicker
               setVisible={setVisible}
@@ -414,7 +414,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 <TextInput
                   placeholder="Enter your phone number"
                   label="Phone number"
-                  helperText={I18n.t('auth.willSendToPhone')}
+                  helperText={t('auth.willSendToPhone')}
                   value={accountInformation.phoneNumber}
                   onChangeText={val =>
                     setAccountInformation(oldVal => ({
@@ -455,6 +455,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                   ]}
                   placeholder="Choose gender"
                   label="Gender"
+                  hideSearch
                   value={profile.mbsdGender}
                   onValueChange={val =>
                     setProfile(oldVal => ({
@@ -775,7 +776,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             }
           }}
           isLoading={isLoading}>
-          {profileStep === 3 ? I18n.t('confirm') : I18n.t('next')}
+          {profileStep === 3 ? t('confirm') : t('next')}
         </Button>
       </HStack>
       <VerifyID

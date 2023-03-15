@@ -1,11 +1,11 @@
 import {Box, Button, ScrollView, Text, View, VStack} from 'native-base';
 import React from 'react';
 import Header from '../../components/header/Header';
-import I18n from '../../lib/i18n';
 import {useAuthUser} from '../../context/auth.context';
 import Pdf from 'react-native-pdf';
 import {StyleProp, ViewStyle} from 'react-native';
 import IconDownload from '../../assets/icons/IconDownload';
+import {useTranslation} from 'react-i18next';
 
 const PDF_STYLE: StyleProp<ViewStyle> = {
   width: '100%',
@@ -14,6 +14,7 @@ const PDF_STYLE: StyleProp<ViewStyle> = {
 
 export default function CertificatesScreen() {
   const {user: _user} = useAuthUser();
+  const {t} = useTranslation();
   const source = {
     uri: 'https://my.borobudurmarathon.com/dev.titudev.com/api//e-certificate/MTEzMDAxNzAtMzMyLTEyNjM=',
     cache: true,
@@ -21,7 +22,7 @@ export default function CertificatesScreen() {
 
   return (
     <View>
-      <Header title={I18n.t('certificates')} left="back" />
+      <Header title={t('certificates')} left="back" />
       <ScrollView>
         <VStack px="4" space="4">
           <Box h="300px">

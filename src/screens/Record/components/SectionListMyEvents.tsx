@@ -7,9 +7,11 @@ import {EventService} from '../../../api/event.service';
 import {Activity, Datum} from '../../../types/activity.type';
 import {averagePace} from '../../../helpers/averagePace';
 import I18n from '../../../lib/i18n';
+import {useTranslation} from 'react-i18next';
 
 export default function SectionListMyEvents() {
   const {user} = useAuthUser();
+  const {t} = useTranslation();
 
   const [activities, setActivities] = useState<Activity>();
   const [isLoading, setIsLoading] = useState(true);
@@ -56,10 +58,10 @@ export default function SectionListMyEvents() {
           alt="Empty data"
         />
         <Text textAlign={'center'} fontSize={'lg'} fontWeight={'bold'} mb={1}>
-          {I18n.t('dataEmpty')}
+          {t('dataEmpty')}
         </Text>
         <Text textAlign={'center'} fontSize={'sm'} color={'gray.400'}>
-          {I18n.t('dataEmptyDesc')}
+          {t('dataEmptyDesc')}
         </Text>
       </Flex>
     );

@@ -5,7 +5,8 @@ import httpRequest from '../helpers/httpRequest';
 import config from '../config';
 import base64 from 'react-native-base64';
 import Config from 'react-native-config';
-import {IBindMemberToKompas} from '../types/auth.type';
+import {IAuthResponse, IBindMemberToKompas} from '../types/auth.type';
+import Base64 from '../helpers/base64';
 
 type AuthorizeKompasResponse = {
   code: number;
@@ -230,7 +231,7 @@ const AuthService = {
       throw new AuthenticationError(msg.status, msg.data.status.error.message);
     }
   },
-  signIn: async function (signInData: any) {
+  signIn: async function (signInData: any): Promise<IAuthResponse> {
     console.log('Auth service started...');
     // const requestData: AxiosRequestConfig = {
     //   method: "post",
@@ -254,9 +255,35 @@ const AuthService = {
     // try {
     // console.log('CRED: ', credential);
     try {
-      return await httpRequest.post(config.apiUrl.apis.member.login.path, {
-        data: credential,
-      });
+      const res = await httpRequest.post(
+        config.apiUrl.apis.member.login.path,
+        {
+          data: credential,
+        },
+        {
+          withCredentials: true,
+        },
+        // {
+        //   headers: {
+        //     Authorization:
+        //       'Basic ' +
+        //       Base64.btoa(Config.CLIENT_ID + ':' + Config.CLIENT_SECRET),
+        //   },
+        // },
+      );
+
+      console.info('login resultssss', res);
+      console.info('login resultssss HEADERS', res.headers);
+      console.info(
+        'login resultssss HEADERS set-cookie',
+        res.headers['set-cookie'],
+      );
+
+      if (res && res.data) {
+        return res.data;
+      } else {
+        throw new AuthenticationError(500, 'No Response');
+      }
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
       const msg = error as any;
@@ -358,9 +385,18 @@ const AuthService = {
     // }
   },
 
-  checkSession: async function () {
+  checkSession: async function (): Promise<IAuthResponse> {
     try {
-      return await httpRequest.get(config.apiUrl.apis.member.checkSession.path);
+      const res = await httpRequest.get(
+        config.apiUrl.apis.member.checkSession.path,
+      );
+
+      if (res) {
+        return res.data;
+      } else {
+        const msg = {message: 'Empty response'};
+        throw msg;
+      }
     } catch (error) {
       const msg = error as any;
       throw msg;

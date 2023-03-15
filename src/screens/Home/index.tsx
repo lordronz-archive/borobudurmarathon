@@ -7,7 +7,6 @@ import useInit from '../../hooks/useInit';
 import {useAuthUser} from '../../context/auth.context';
 import {getShortCodeName} from '../../helpers/name';
 import SectionListEvent from './components/SectionListEvent';
-import I18n from '../../lib/i18n';
 import SectionFeaturedEvents from './components/SectionFeaturedEvents';
 import {TouchableOpacity} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -16,6 +15,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import IconInformationCircle from '../../assets/icons/IconInformationCircle';
 import SummaryRecord from './components/SummaryRecord';
 import IconHamburgerMenu from '../../assets/icons/IconHamburgerMenu';
+import {useTranslation} from 'react-i18next';
 
 export default function HomeScreen() {
   const isFocused = useIsFocused();
@@ -23,12 +23,13 @@ export default function HomeScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {checkLogin} = useInit();
   const {user} = useAuthUser();
+  const {t} = useTranslation();
 
-  useEffect(() => {
-    if (isFocused) {
-      checkLogin();
-    }
-  }, [isFocused]);
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     checkLogin('Main');
+  //   }
+  // }, [isFocused]);
 
   return (
     <ScrollView>
@@ -40,7 +41,7 @@ export default function HomeScreen() {
           alignItems="center">
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('Main', {screen: I18n.t('tab.more')})
+              navigation.navigate('Main', {screen: t('tab.more')})
             }>
             <Flex alignContent={'center'} direction="row" alignItems={'center'}>
               <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
@@ -55,7 +56,7 @@ export default function HomeScreen() {
                 {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
               <Text fontSize={'lg'} mx={2} fontWeight={700}>
-                {I18n.t('Hello')}, {user?.data[0].zmemFullName}
+                {t('Hello')}, {user?.data[0].zmemFullName}
               </Text>
             </Flex>
           </TouchableOpacity>

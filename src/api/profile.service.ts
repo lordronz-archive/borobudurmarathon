@@ -37,8 +37,6 @@ const ProfileService = {
       const res = await httpRequest.get('/member_resource/member/', {
         withCredentials: true,
       });
-      //   await ApiService.getCookies();
-      // console.log('Member detail plus cookies : ', res, cookies);
       return res.data;
     } catch (error) {
       console.log('Error getting member detail : ', error);

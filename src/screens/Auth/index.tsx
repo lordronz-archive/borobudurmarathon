@@ -6,7 +6,6 @@ import {
   Button,
   Center,
   HStack,
-  Image,
   Link,
   Text,
   VStack,
@@ -22,7 +21,6 @@ import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import I18n from '../../lib/i18n';
 import {useAuthUser} from '../../context/auth.context';
 import WebView from 'react-native-webview';
 import config from '../../config';
@@ -32,13 +30,15 @@ import {getParameterByName} from '../../helpers/url';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import useInit from '../../hooks/useInit';
 import {useDemo} from '../../context/demo.context';
+import {useTranslation} from 'react-i18next';
 
 export default function AuthScreen() {
-  console.info('render AuthScreen');
+  console.info('===render AuthScreen');
   const route = useRoute();
   const toast = useToast();
   const {colors} = useTheme();
-  const {getProfile} = useInit();
+  const {t} = useTranslation();
+  const {getProfile, clearCookies} = useInit();
   const {
     isShowModal,
     showModal,
@@ -55,7 +55,8 @@ export default function AuthScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const {state} = useAuthUser();
+  const [initialCookieString, setInitialCookieString] = useState<string>();
+  const {state, setLoginType} = useAuthUser();
   const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   console.info('#Auth -- state', state);
@@ -69,6 +70,17 @@ export default function AuthScreen() {
       setAuthorizationCode(params.authorization_code);
     }
   }, [params?.authorization_code]);
+
+  useEffect(() => {
+    getCookie();
+  }, []);
+
+  const getCookie = async () => {
+    const strCookie = await getCookiesString();
+    if (strCookie) {
+      setInitialCookieString(strCookie);
+    }
+  };
 
   const redirect_uri = 'bormar://auth-me';
   // 'https://account.kompas.id/sso/check?redirect_uri=https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth&client_id=3&state=borobudur_marathon&scope=nama%20lengkap,%20alamat,%20Alamat%20email%20dan%20mengirimkan%20pesan&response_type=code';
@@ -89,6 +101,8 @@ export default function AuthScreen() {
   };
 
   const openAuthLink = async () => {
+    setLoginType('Kompas');
+
     try {
       Linking.openURL(url);
       return;
@@ -175,7 +189,6 @@ export default function AuthScreen() {
             uri,
           }}
           onError={() => setIsLoading(false)}
-          thirdPartyCookiesEnabled={true}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
             console.info('cookiesString isNotRegistered true', cookiesString);
@@ -192,6 +205,7 @@ export default function AuthScreen() {
             }
           }}
           contentMode="mobile"
+          thirdPartyCookiesEnabled={true}
         />
 
         {isLoading && (
@@ -218,9 +232,9 @@ export default function AuthScreen() {
             uri,
           }}
           onError={() => setIsLoading(false)}
-          thirdPartyCookiesEnabled={true}
+          // thirdPartyCookiesEnabled={true}
           onLoadEnd={async event => {
-            console.info('###event', event);
+            console.info('authorizationCode###event', event);
             await sleep(1000);
             const cookiesString = await getCookiesString();
             console.info('cookiesString', cookiesString);
@@ -230,10 +244,15 @@ export default function AuthScreen() {
               setIsNotRegistered(true);
             }
           }}
+          contentMode="mobile"
+          thirdPartyCookiesEnabled={true}
           // javaScriptEnabled={true}
           // injectedJavaScript={jsCode}
           // onMessage={event =>
-          //   console.log('###Received: ', event.nativeEvent.data)
+          //   console.log(
+          //     'authorizationCode###Received: ',
+          //     event.nativeEvent.data,
+          //   )
           // }
           // onNavigationStateChange={async event => {
           //   console.info('event', event);
@@ -255,11 +274,14 @@ export default function AuthScreen() {
         <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
           <VStack space="3" alignItems="center" justifyContent="center">
             <Heading textAlign={'center'}>
-              {I18n.t('welcomeTo') + ' Borobudur Marathon'}
+              {t('welcomeTo') + ' Borobudur Marathon'}
             </Heading>
             <Text fontWeight={400} textAlign={'center'} color="#768499">
-              {I18n.t('auth.description')}
+              {t('auth.description')}
             </Text>
+            <Text>{initialCookieString}</Text>
+
+            <Button onPress={clearCookies}>Clear Cookies</Button>
           </VStack>
         </HStack>
         <VStack flex="1" justifyContent={'center'} space="1.5">
@@ -294,7 +316,7 @@ export default function AuthScreen() {
             }}
             startIcon={<KompasIcon size="lg" px="6" />}>
             <Text color="white" px="12">
-              {I18n.t('auth.signInWith') + ' Kompas.id'}
+              {t('auth.signInWith') + ' Kompas.id'}
             </Text>
           </Button>
           <Center mt="2">
@@ -303,7 +325,7 @@ export default function AuthScreen() {
                 justifyContent={'center'}
                 alignItems="center"
                 fontWeight={400}>
-                {I18n.t('auth.dontHaveAccount')}{' '}
+                {t('auth.dontHaveAccount')}{' '}
               </Text>
               <Link
                 onPress={() => {
@@ -314,7 +336,7 @@ export default function AuthScreen() {
                   color: 'red.600',
                   fontWeight: 600,
                 }}>
-                {I18n.t('auth.registerViaEmail')}
+                {t('auth.registerViaEmail')}
               </Link>
             </HStack>
           </Center>

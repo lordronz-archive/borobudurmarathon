@@ -4,8 +4,9 @@ import {IMemberDetailResponse} from '../types/profile.type';
 export enum EAuthUserAction {
   LOGIN = 'LOGIN',
   LOGOUT = 'LOGOUT',
+  SET_LOGIN_TYPE = 'SET_LOGIN_TYPE',
 }
-type State = {user?: IMemberDetailResponse};
+type State = {user?: IMemberDetailResponse; loginType?: 'Email' | 'Kompas'};
 type Action = {type: EAuthUserAction; payload?: State};
 type Dispatch = (action: Action) => void;
 
@@ -20,6 +21,9 @@ function authUserReducer(state: State, action: Action) {
     }
     case EAuthUserAction.LOGOUT: {
       return {...state, user: undefined};
+    }
+    case EAuthUserAction.SET_LOGIN_TYPE: {
+      return {...state, loginType: action.payload?.loginType};
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -51,6 +55,13 @@ function useAuthUser() {
     ...context,
     isLoggedIn: context.state.user ? true : false,
     user: context.state.user,
+    setLoginType: (type: 'Email' | 'Kompas') =>
+      context.dispatch({
+        type: EAuthUserAction.SET_LOGIN_TYPE,
+        payload: {
+          loginType: type,
+        },
+      }),
   };
 }
 

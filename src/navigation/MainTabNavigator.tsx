@@ -11,11 +11,13 @@ import MyRecords from '../screens/Record/MyRecords';
 import {useTheme} from 'native-base';
 import IconMore from '../assets/icons/IconMore';
 import I18n from '../lib/i18n';
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
   const {colors} = useTheme();
+  const {t} = useTranslation();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -32,7 +34,7 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name={I18n.t('tab.myEvents')}
+        name={t('tab.myEvents')}
         component={MyEvents}
         options={{
           headerShown: false,
@@ -42,7 +44,7 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name={I18n.t('tab.records')}
+        name={t('tab.records')}
         component={MyRecords}
         options={{
           headerShown: false,
@@ -52,7 +54,7 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name={I18n.t('tab.more')}
+        name={t('tab.more')}
         component={MyProfile}
         options={{
           headerShown: false,

@@ -25,7 +25,7 @@ import {TouchableOpacity} from 'react-native';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
-import I18n from '../../lib/i18n';
+import {useTranslation} from 'react-i18next';
 
 type Price = {
   id: string;
@@ -60,6 +60,7 @@ export default function EventRegisterScreen() {
   const {user} = useAuthUser();
 
   const toast = useToast();
+  const {t} = useTranslation();
 
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
@@ -377,9 +378,9 @@ export default function EventRegisterScreen() {
             setIsOpen(false);
             navigation.navigate('Main', {screen: 'My Events'});
           }}
-          title={I18n.t('registration.registrationSuccess')}
-          content={I18n.t('registration.registrationSuccessDesc')}
-          buttonContent={I18n.t('registration.checkEventBtn')}
+          title={t('registration.registrationSuccess')}
+          content={t('registration.registrationSuccessDesc')}
+          buttonContent={t('registration.checkEventBtn')}
         />
       </VStack>
       {isLoading && (

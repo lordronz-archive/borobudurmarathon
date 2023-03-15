@@ -7,26 +7,81 @@ import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import I18n from '../../lib/i18n';
 import {getErrorMessage, getErrorStd} from '../../helpers/errorHandler';
+import useInit from '../../hooks/useInit';
+import WebView from 'react-native-webview';
+import config from '../../config';
+import LoadingBlock from '../../components/loading/LoadingBlock';
+import {IAuthResponseData} from '../../types/auth.type';
+import {useAuthUser} from '../../context/auth.context';
+import {useTranslation} from 'react-i18next';
 
 export default function SignInEmailScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const toast = useToast();
+  const {getProfile, checkAccount} = useInit();
+  const {setLoginType} = useAuthUser();
+  const {t} = useTranslation();
 
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  // const [email, setEmail] = useState<string>();
+  // const [password, setPassword] = useState<string>();
+  const [email, setEmail] = useState<string>('aditia.prasetio12@gmail.com');
+  const [password, setPassword] = useState<string>('Aditia_054');
   const [loading, setLoading] = useState(false);
 
+  const [loggingInData, setLoggingInData] = useState<IAuthResponseData>();
+
   const signin = async () => {
+    setLoginType('Email');
     try {
       setLoading(true);
-      const result = await AuthService.signIn({
+      const body = {
         username: email,
         password: password,
-      });
-      console.info(result);
+      };
+      const result = await AuthService.signIn(body);
+      console.info('login result', result);
+
+      setLoggingInData(result.data);
+      // var request = new XMLHttpRequest();
+      // request.onreadystatechange = e => {
+      //   if (request.readyState !== 4) {
+      //     return;
+      //   }
+
+      //   // Get the raw header string
+      //   const headers = request.getAllResponseHeaders();
+      //   console.info('XMLHttpRequest====headers', headers);
+
+      //   console.warn('XMLHttpRequest====response', request.response);
+      //   if (request.status === 200) {
+      //     console.log('XMLHttpRequest====success', request.responseText);
+      //   } else {
+      //     console.warn('XMLHttpRequest====error', e);
+      //   }
+      // };
+
+      // request.open(
+      //   'POST',
+      //   config.apiUrl.href.href + config.apiUrl.apis.member.login.path,
+      // );
+      // request.setRequestHeader(
+      //   'Content-Type',
+      //   'application/json;charset=UTF-8',
+      // );
+      // // request.setRequestHeader(
+      // //   'Content-type',
+      // //   'application/x-www-form-urlencoded',
+      // // );
+      // request.send(
+      //   JSON.stringify({data: {email: body.username, password: body.password}}),
+      // );
+
+      // const resCheckSession = await AuthService.checkSession();
+      // console.info('resCheckSession', resCheckSession);
+
+      // checkAccount(result.data);
     } catch (e) {
       const errStd = getErrorStd(e);
       if (errStd.errorCode === 409) {
@@ -45,6 +100,33 @@ export default function SignInEmailScreen() {
       setLoading(false);
     }
   };
+
+  if (loggingInData) {
+    // get cookies
+    return (
+      <Box flex={1}>
+        <WebView
+          source={{
+            uri: config.apiUrl.href.href + config.apiUrl.apis.member.login.path,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({data: {email, password}}),
+            method: 'POST',
+          }}
+          style={{marginTop: 20}}
+          onLoadEnd={() => {
+            setTimeout(() => {
+              checkAccount(loggingInData);
+
+              getProfile();
+            }, 500);
+          }}
+          contentMode="mobile"
+          thirdPartyCookiesEnabled={true}
+        />
+        <LoadingBlock text="Authenticating. Please wait..." />
+      </Box>
+    );
+  }
 
   return (
     <VStack px="4" flex="1">
@@ -88,12 +170,12 @@ export default function SignInEmailScreen() {
             textAlign="center"
             underline
             onPress={() => navigation.navigate('RegisterEmail')}>
-            {I18n.t('auth.registerViaEmail')}
+            {t('auth.registerViaEmail')}
           </Text>
         </HStack>
       </Box>
       <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
-        {I18n.t('auth.signin')}
+        {t('auth.signin')}
       </Button>
     </VStack>
   );

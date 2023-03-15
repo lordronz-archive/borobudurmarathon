@@ -194,7 +194,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const handleConfirm = async () => {
     setIsOpen(true);
 
-    identityImage.fileId = '7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG';
+    // identityImage.fileId = '7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG';
     // ini contoh yg masih processing NjabOxzEq8AQJTFvSCy1JqHXIro50kxe
     // ini yg error 7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG
 

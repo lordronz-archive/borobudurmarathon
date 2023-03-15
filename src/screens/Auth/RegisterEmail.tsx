@@ -125,9 +125,9 @@ export default function RegisterEmailScreen() {
       <Box flex="10">
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
-          <Heading>Register via Email</Heading>
+          <Heading>{t('auth.registerViaEmail')}</Heading>
           <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
-            Register your new account here
+            {t('auth.registerNewAccount')}
           </Text>
         </VStack>
         <VStack space="2.5">

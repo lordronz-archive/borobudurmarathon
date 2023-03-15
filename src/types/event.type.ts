@@ -186,6 +186,7 @@ export interface EventFieldsEntity {
     | 'Option'
     | 'Date'
     | 'Hidden';
+  static?: boolean;
 }
 export interface PaymentsEntity {
   evptAccountNumber?: null;

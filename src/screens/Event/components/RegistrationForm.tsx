@@ -5,6 +5,7 @@ import TextInput from '../../../components/form/TextInput';
 import ApiService from '../../../api/api.service';
 import countries from '../../../helpers/countries';
 import DateInput from '../../../components/form/DateInput';
+import {Box, Text} from 'native-base';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -13,6 +14,7 @@ export default function RegistrationForm(
     value: string;
     helperText?: React.ReactNode;
     required?: boolean;
+    static?: boolean;
   },
 ) {
   const opts = (
@@ -36,6 +38,23 @@ export default function RegistrationForm(
   const getListOptions = async () => {
     setOptions((await getOptions(props)) ?? opts);
   };
+
+  if (props.static) {
+    return (
+      <Box key={props.evhfLabel} flex={1}>
+        <Text color="gray.500" fontSize="sm">
+          {props.evhfLabel}
+        </Text>
+        {props.value ? (
+          <Text>{props.value}</Text>
+        ) : (
+          <Text color="gray.500" italic>
+            ~ Not Set
+          </Text>
+        )}
+      </Box>
+    );
+  }
 
   if (props.evhfType === 'Option') {
     return (

@@ -302,7 +302,7 @@ export default function AuthScreen() {
             h="12"
             mb="3"
             onPress={() => navigation.navigate('SignInEmail')}>
-            Sign In via Email
+            {t('auth.signinViaEmail')}
           </Button>
           <Button
             backgroundColor={'#00559A'}

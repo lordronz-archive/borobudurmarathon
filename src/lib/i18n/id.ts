@@ -11,9 +11,12 @@ export default {
   account: 'Akun',
   step: 'Langkah',
   auth: {
+    forgotPassword: 'Lupa password?',
     description:
       'Ayo bergabung menjadi bagian dari komunitas Borobudur Marathon. Event lari terbesar di Jawa Tengah, Indonesia.',
     signInWith: 'Masuk dengan',
+    signInWithRegistered: 'Masuk dengan email yang telah anda daftarkan disini',
+    registerNewAccount: 'Buat akun baru anda disini',
     emailValidationTitle: 'Validasi Email',
     emailValidationSubtitle: 'Harap verifikasi alamat email Anda',
     emailValidation8DigitCode:

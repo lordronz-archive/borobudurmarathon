@@ -65,15 +65,28 @@ export default function EventRegisterScreen() {
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
 
-  const fields = useMemo<EventFieldsEntity[]>(
-    () =>
+  const fields = useMemo<EventFieldsEntity[]>(() => {
+    const fieldResult =
       params.event.fields && Array.isArray(params.event.fields)
         ? params.event.fields
         : params.event.fields && typeof params.event.fields === 'object'
         ? (Object.values(params.event.fields) as EventFieldsEntity[])
-        : ([] as EventFieldsEntity[]),
-    [params.event.fields],
-  );
+        : ([] as EventFieldsEntity[]);
+
+    bannedField.forEach(bF => {
+      let findIndex = fields.findIndex(f => f.evhfName === bF);
+      if (findIndex !== -1) {
+        fieldResult[findIndex].static = true;
+      }
+    });
+
+    fieldResult.sort((x, y) => {
+      // true values first
+      return x === y ? 0 : x ? -1 : 1;
+    });
+
+    return fieldResult;
+  }, [params.event.fields]);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [fieldsData, setFieldsData] = React.useState<any>({});
@@ -91,26 +104,66 @@ export default function EventRegisterScreen() {
       return;
     }
     console.info(fields);
-    if (fields.find(f => f.evhfName === 'evpaName')) {
+    let findIndex = fields.findIndex(f => f.evhfName === 'evpaName');
+    if (findIndex !== -1) {
       data.evpaName = user?.data[0].zmemFullName;
+      data.static = true;
     }
-    if (fields.find(f => f.evhfName === 'evpaPhone')) {
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaPhone');
+    if (findIndex !== -1) {
       data.evpaPhone = user?.linked?.zmemAuusId?.[0]?.auusPhone;
     }
-    if (fields.find(f => f.evhfName === 'evpaEmail')) {
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaEmail');
+    if (findIndex !== -1) {
       data.evpaEmail = user?.linked?.zmemAuusId?.[0]?.auusEmail;
     }
-    if (fields.find(f => f.evhfName === 'evpaAddress')) {
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaAddress');
+    if (findIndex !== -1) {
       data.evpaAddress = user?.linked?.mbsdZmemId?.[0]?.mbsdAddress;
     }
-    if (fields.find(f => f.evhfName === 'evpaCity')) {
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaCity');
+    if (findIndex !== -1) {
       data.evpaCity = user?.linked?.mbsdZmemId?.[0]?.mbsdCity;
     }
-    if (fields.find(f => f.evhfName === 'evpaProvinces')) {
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaProvinces');
+    if (findIndex !== -1) {
       data.evpaProvinces = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
     }
-    if (fields.find(f => f.evhfName === 'evpaProvinsi')) {
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaProvinsi');
+    if (findIndex !== -1) {
       data.evpaProvinsi = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaNationality');
+    if (findIndex !== -1) {
+      data.evpaNationality = user?.linked?.mbsdZmemId?.[0]?.mbsdNationality;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaBirthPlace');
+    if (findIndex !== -1) {
+      data.evpaBirthPlace = user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaBirthDate');
+    if (findIndex !== -1) {
+      data.evpaBirthDate = user?.linked?.mbsdZmemId?.[0]?.mbsdBirthDate;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaCountry');
+    if (findIndex !== -1) {
+      data.evpaCountry = user?.linked?.mbsdZmemId?.[0]?.mbsdCountry;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaGender');
+    if (findIndex !== -1) {
+      data.evpaGender = user?.linked?.mbsdZmemId?.[0]?.mbsdGender;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaIDNumberType');
+    if (findIndex !== -1) {
+      data.evpaIDNumberType = user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumberType;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaIDNumber');
+    if (findIndex !== -1) {
+      data.evpaIDNumber = user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumber;
+    }
+    findIndex = fields.findIndex(f => f.evhfName === 'evpaBloodType');
+    if (findIndex !== -1) {
+      data.evpaBloodType = user?.linked?.mbsdZmemId?.[0]?.mbsdBloodType;
     }
     if (fields.find(f => f.evhfName.toLowerCase().includes('jersey'))) {
       data.evpaJersey = {...data.evpaJersey};
@@ -151,6 +204,9 @@ export default function EventRegisterScreen() {
       ),
       evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
       evpaGender: user?.linked.mbsdZmemId[0].mbsdGender,
+      evpaIDNumberType: user?.linked.mbsdZmemId[0].mbsdIDNumberType,
+      evpaIDNumber: user?.linked.mbsdZmemId[0].mbsdIDNumber,
+      evpaBloodType: user?.linked.mbsdZmemId[0].mbsdBloodType,
     };
 
     console.info(payload.evpaBirthDate);
@@ -178,8 +234,8 @@ export default function EventRegisterScreen() {
     try {
       let res: any;
       if (
-        params.event.data.evnhType === '7' ||
-        params.event.data.evnhType === '1'
+        params.event.data.evnhType.toString() === '7' ||
+        params.event.data.evnhType.toString() === '1'
       ) {
         res = await EventService.registerEvent(payload);
       } else {

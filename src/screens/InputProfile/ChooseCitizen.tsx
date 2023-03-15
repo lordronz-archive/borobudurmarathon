@@ -194,7 +194,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const handleConfirm = async () => {
     setIsOpen(true);
 
-    identityImage.fileId = 'NjabOxzEq8AQJTFvSCy1JqHXIro50kxe';
+    identityImage.fileId = '7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG';
     // ini contoh yg masih processing NjabOxzEq8AQJTFvSCy1JqHXIro50kxe
     // ini yg error 7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG
 
@@ -224,70 +224,80 @@ export default function ChooseCitizenScreen({route}: Props) {
 
       console.log('resValidation', resValidation);
 
-      // if (
-      //   resValidation &&
-      //   resValidation.data &&
-      //   resValidation.data.isProcessing
-      // ) {
-      //   toast.show({
-      //     title: 'Processing',
-      //     description: 'Your ID still in processing to validate.',
-      //   });
-      // } else if (
-      //   (resValidation && resValidation.data && resValidation.data.isValid) ||
-      //   isVerifyLater
-      // ) {
-      //   if (
-      //     '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !==
-      //     accountInformation.phoneNumber
-      //   ) {
-      //     try {
-      //       const sendOtpRes = await AuthService.sendOTP({
-      //         phoneNumber: accountInformation.phoneNumber,
-      //       });
-      //       console.info('SendOTP result: ', sendOtpRes);
-      //       navigation.navigate('PhoneNumberValidation', {
-      //         phoneNumber: accountInformation.phoneNumber,
-      //         onSuccess: () => {
-      //           setProfileAfterVerifyPhoneSuccess();
-      //         },
-      //       });
-      //     } catch (err) {
-      //       toast.show({
-      //         title: 'Failed to send otp',
-      //         description: getErrorMessage(err),
-      //       });
-      //     }
-      //   } else {
-      //     setProfileAfterVerifyPhoneSuccess();
-      //   }
-      // } else if (
-      //   resValidation &&
-      //   resValidation.data &&
-      //   !resValidation.data.isValid
-      // ) {
-      //   toast.show({
-      //     title: 'Invalid ID',
-      //     description:
-      //       resValidation.data.message || 'Please check your ID and try again',
-      //   });
-      //   setIsOpenNotReadable(true);
-      //   setValidationTry(v => v + 1);
-      // } else {
-      //   toast.show({
-      //     title: 'Invalid ID',
-      //     description: 'Please recheck your ID and try again',
-      //   });
-      //   setIsOpenNotReadable(true);
-      //   setValidationTry(v => v + 1);
-      // }
-    } catch (err) {
-      toast.show({
-        title: 'Failed',
-        description: 'Please try again later',
-      });
-      console.info(err, getErrorMessage(err), 'Failed confirm profile');
-      setValidationTry(v => v + 1);
+      if (
+        resValidation &&
+        resValidation.data &&
+        resValidation.data.isProcessing
+      ) {
+        toast.show({
+          title: 'Processing',
+          description: 'Your ID still in processing to validate.',
+        });
+      } else if (
+        (resValidation && resValidation.data && resValidation.data.isValid) ||
+        isVerifyLater
+      ) {
+        if (
+          '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !==
+          accountInformation.phoneNumber
+        ) {
+          try {
+            const sendOtpRes = await AuthService.sendOTP({
+              phoneNumber: accountInformation.phoneNumber,
+            });
+            console.info('SendOTP result: ', sendOtpRes);
+            navigation.navigate('PhoneNumberValidation', {
+              phoneNumber: accountInformation.phoneNumber,
+              onSuccess: () => {
+                setProfileAfterVerifyPhoneSuccess();
+              },
+            });
+          } catch (err) {
+            toast.show({
+              title: 'Failed to send otp',
+              description: getErrorMessage(err),
+            });
+          }
+        } else {
+          setProfileAfterVerifyPhoneSuccess();
+        }
+      } else if (
+        resValidation &&
+        resValidation.data &&
+        !resValidation.data.isValid
+      ) {
+        toast.show({
+          title: 'Invalid ID',
+          description:
+            resValidation.data.message || 'Please check your ID and try again',
+        });
+        setIsOpenNotReadable(true);
+        setValidationTry(v => v + 1);
+      } else {
+        toast.show({
+          title: 'Invalid ID',
+          description: 'Please recheck your ID and try again',
+        });
+        setIsOpenNotReadable(true);
+        setValidationTry(v => v + 1);
+      }
+    } catch (err: any) {
+      if (err.status === 400) {
+        toast.show({
+          title: 'Invalid ID',
+          description:
+            getErrorMessage(err) || 'Please check your ID and try again',
+        });
+        setIsOpenNotReadable(true);
+        setValidationTry(v => v + 1);
+      } else {
+        toast.show({
+          title: 'Failed',
+          description: 'Please try again later',
+        });
+        console.info(err, getErrorMessage(err), 'Failed confirm profile');
+        setValidationTry(v => v + 1);
+      }
     } finally {
       setIsOpen(false);
     }
@@ -321,6 +331,17 @@ export default function ChooseCitizenScreen({route}: Props) {
     }
   };
 
+  const isDisabledButton = () => {
+    if (profileStep === 1) {
+      return !citizen;
+    } else if (profileStep === 2) {
+      return !identityImage;
+    } else if (profileStep === 3) {
+      return !isAgreeTermsAndCondition;
+    } else {
+      return false;
+    }
+  };
   console.log(isAgreeTermsAndCondition);
 
   return (
@@ -824,8 +845,8 @@ export default function ChooseCitizenScreen({route}: Props) {
             }
           }}
           isLoading={isLoading}
-          disabled={!isAgreeTermsAndCondition}
-          bg={!isAgreeTermsAndCondition ? 'gray.400' : undefined}>
+          disabled={isDisabledButton()}
+          bg={isDisabledButton() ? 'gray.400' : undefined}>
           {profileStep === 3 ? t('confirm') : t('next')}
         </Button>
       </HStack>
@@ -846,13 +867,13 @@ export default function ChooseCitizenScreen({route}: Props) {
         isOpen={isOpenNotReadable}
         onClose={() => {
           setIsOpenNotReadable(false);
-          nextStep();
-          setStepCount(v => v + 1);
+          // nextStep();
+          // setStepCount(v => v + 1);
         }}
         onPress={() => {
           setIsOpenNotReadable(false);
-          nextStep();
-          setStepCount(v => v + 1);
+          // nextStep();
+          // setStepCount(v => v + 1);
         }}
         title={'Your ID is not readable'}
         content={

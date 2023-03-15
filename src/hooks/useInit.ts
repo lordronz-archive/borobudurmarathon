@@ -187,6 +187,15 @@ export default function useInit() {
   };
 
   const checkAccount = (data: IAuthResponseData) => {
+    if (isShowDemoVerifyEmail) {
+      data.authEmail = '0';
+    }
+    if (isShowDemoConsent) {
+      data.consent = '0';
+    }
+    if (isShowDemoNewUser) {
+      data.authProfile = 0;
+    }
     if (Number(data.authEmail) === 0) {
       // verify email
       navigation.navigate('EmailValidation', {

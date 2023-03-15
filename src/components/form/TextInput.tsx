@@ -3,6 +3,7 @@ import {
   FormControl,
   HStack,
   Input,
+  Spinner,
   Text,
   WarningOutlineIcon,
 } from 'native-base';
@@ -18,6 +19,8 @@ type TextInputProps = {
   label?: string;
   value?: string;
   required?: boolean;
+  loading?: boolean;
+  rightIcon?: any;
   _inputProps?: IInputProps;
   type?: 'text' | 'password';
   onChangeText?: (text: string) => void;
@@ -34,7 +37,7 @@ export default function TextInput(props: TextInputProps) {
             <Text>{props.label}</Text>
           </HStack>
           {props.required && (
-            <Text color="primary.900" italic ml="2">
+            <Text color="primary.900" italic ml="2" fontSize="xs">
               Required
             </Text>
           )}
@@ -46,7 +49,11 @@ export default function TextInput(props: TextInputProps) {
           value={props.value}
           onChangeText={props.onChangeText}
           InputRightElement={
-            props.type === 'password' ? (
+            props.loading ? (
+              <Spinner size="sm" />
+            ) : props.rightIcon ? (
+              props.rightIcon
+            ) : props.type === 'password' ? (
               <Icon
                 name={!show ? 'eye' : 'eye-off'}
                 onPress={() => setShow(s => !s)}
@@ -58,8 +65,14 @@ export default function TextInput(props: TextInputProps) {
           {...(props._inputProps || {})}
         />
       </Box>
-      <FormControl.HelperText>{props.helperText}</FormControl.HelperText>
-      <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+      <FormControl.HelperText pl="1" mt="1" mb="1.5">
+        {props.helperText}
+      </FormControl.HelperText>
+      <FormControl.ErrorMessage
+        pl="1"
+        mt="0"
+        mb="1.5"
+        leftIcon={<WarningOutlineIcon size="xs" />}>
         {props.errorMessage}
       </FormControl.ErrorMessage>
     </FormControl>

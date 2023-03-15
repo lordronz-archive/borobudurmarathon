@@ -28,6 +28,7 @@ export default {
     phoneValidation8DigitCode:
       'Masukkan 8 digit kode yang kami kirim ke nomor ini',
     dontHaveAccount: 'Belum punya akun?',
+    haveAccount: 'Sudah punya akun?',
     register: 'Daftar',
     registerViaEmail: 'Daftar via Email',
     signin: 'Masuk',

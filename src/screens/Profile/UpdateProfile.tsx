@@ -23,6 +23,7 @@ import {useTranslation} from 'react-i18next';
 import moment from 'moment';
 import useInit from '../../hooks/useInit';
 import {showBloodName} from '../../assets/data/blood';
+import { cleanPhoneNumber } from '../../helpers/phoneNumber';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
@@ -101,7 +102,7 @@ export default function UpdateProfileScreen() {
         },
         {
           label: 'Phone Number',
-          value: user?.linked.mbsdZmemId[0].mbsdPhone,
+          value: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone),
         },
       ],
     },

@@ -37,7 +37,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
-import { BLOOD_OPTIONS } from '../../assets/data/blood';
+import {BLOOD_OPTIONS} from '../../assets/data/blood';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -95,6 +95,33 @@ export default function ChooseCitizenScreen({route}: Props) {
     );
 
     return () => backHandler.remove();
+  }, []);
+
+  useEffect(() => {
+    setProfile({
+      mbsdIDNumber: user?.linked.mbsdZmemId[0].mbsdIDNumber || '',
+      mbsdBirthDate: user?.linked.mbsdZmemId[0].mbsdBirthDate || '',
+      mbsdBirthPlace: user?.linked.mbsdZmemId[0].mbsdBirthPlace || '',
+      mbsdGender: user?.linked.mbsdZmemId[0].mbsdGender
+        ? String(user?.linked.mbsdZmemId[0].mbsdGender)
+        : '0',
+      mbsdBloodType: user?.linked.mbsdZmemId[0].mbsdBloodType
+        ? Number(user?.linked.mbsdZmemId[0].mbsdBloodType)
+        : 0,
+      mbsdNationality: user?.linked.mbsdZmemId[0].mbsdNationality || '',
+      mbsdCountry: user?.linked.mbsdZmemId[0].mbsdCountry || '',
+      mbsdCity: user?.linked.mbsdZmemId[0].mbsdCity || '',
+      mbsdProvinces: user?.linked.mbsdZmemId[0].mbsdProvinces || '',
+      mbsdAddress: user?.linked.mbsdZmemId[0].mbsdAddress || '',
+      mbsdRawAddress: user?.linked.mbsdZmemId[0].mbsdAddress || '',
+      mbsdIDNumberType: user?.linked.mbsdZmemId[0].mbsdIDNumberType
+        ? Number(user?.linked.mbsdZmemId[0].mbsdIDNumberType)
+        : 0,
+      mbsdFile: 0,
+      mmedEducation: user?.linked.mmedZmemId[0].mmedEducation || '',
+      mmedOccupation: user?.linked.mmedZmemId[0].mmedOccupation || '',
+      mmedIncome: user?.linked.mmedZmemId[0].mmedIncome || '',
+    });
   }, []);
 
   const stepProperties = [
@@ -239,15 +266,15 @@ export default function ChooseCitizenScreen({route}: Props) {
         isVerifyLater
       ) {
         console.info(
-          'user?.linked?.mbspZmemId?.[0]?.mbspNumber',
-          user?.linked?.mbspZmemId?.[0]?.mbspNumber,
+          'user?.linked?.zmemAuusId?.[0]?.auusPhone',
+          user?.linked?.zmemAuusId?.[0]?.auusPhone,
         );
         console.info(
           'accountInformation.phoneNumber',
           accountInformation.phoneNumber,
         );
         if (
-          '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !==
+          '0' + user?.linked?.zmemAuusId?.[0]?.auusPhone !==
           accountInformation.phoneNumber
         ) {
           try {
@@ -328,7 +355,6 @@ export default function ChooseCitizenScreen({route}: Props) {
       if (accountInformation && accountInformation.phoneNumber) {
         profileData = {
           ...profileData,
-          mbsdPhone: accountInformation.phoneNumber,
           mbsdFullName: accountInformation.name,
         };
       }

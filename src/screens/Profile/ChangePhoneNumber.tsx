@@ -18,6 +18,7 @@ import Header from '../../components/header/Header';
 import {useAuthUser} from '../../context/auth.context';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {useTranslation} from 'react-i18next';
+import { cleanPhoneNumber } from '../../helpers/phoneNumber';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
@@ -43,7 +44,10 @@ export default function ChangePhoneNumberScreen() {
       setIsLoading(false);
       return;
     }
-    if ('0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !== phoneNumber) {
+    if (
+      cleanPhoneNumber(user?.linked?.zmemAuusId?.[0]?.auusPhone) !==
+      cleanPhoneNumber(phoneNumber)
+    ) {
       AuthService.sendOTP({phoneNumber})
         .then(sendOtpRes => {
           console.info('SendOTP result: ', sendOtpRes);

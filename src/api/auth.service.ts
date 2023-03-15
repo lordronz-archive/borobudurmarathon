@@ -87,11 +87,11 @@ const AuthService = {
       throw new AuthenticationError(msg.status, msg.data.status.error.message);
     }
   },
-  checkEmail: async function (emailForm: any) {
+  checkEmail: async function (email: any) {
     try {
       return await httpRequest.post(config.apiUrl.apis.member.checkEmail.path, {
         data: {
-          email: emailForm.email,
+          email,
         },
       });
     } catch (error) {
@@ -122,8 +122,10 @@ const AuthService = {
         data: basicData,
       });
     } catch (error) {
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      console.info('error signup', JSON.stringify(error));
+      // const msg = error as any;
+      // throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   setprofile: async function (personalData: any) {

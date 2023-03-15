@@ -23,6 +23,7 @@ import moment from 'moment';
 import {ProfileService} from '../../api/profile.service';
 import {useDemo} from '../../context/demo.context';
 import {useTranslation} from 'react-i18next';
+import { cleanPhoneNumber } from '../../helpers/phoneNumber';
 
 export default function DataConfirmationScreen() {
   const navigation =
@@ -43,7 +44,7 @@ export default function DataConfirmationScreen() {
         },
         {
           label: 'Phone Number',
-          value: user?.linked.mbsdZmemId[0].mbsdPhone,
+          value: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone),
         },
         {
           label: 'Birthday',

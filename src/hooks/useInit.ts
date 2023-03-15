@@ -14,6 +14,7 @@ import {IMemberDetailResponse, IProfile} from '../types/profile.type';
 import {useDemo} from '../context/demo.context';
 import {IAuthResponseData} from '../types/auth.type';
 import config from '../config';
+import {cleanPhoneNumber} from '../helpers/phoneNumber';
 
 export default function useInit() {
   const route = useRoute();
@@ -226,6 +227,15 @@ export default function useInit() {
             description: getErrorMessage(err),
           });
         });
+    } else if (data.login === 'Kompas' && Number(data.consent) === 0) {
+      navigation.replace('DataConfirmation');
+    } else if (Number(data.authProfile) === 0) {
+      // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)
+      // if (profile.linked.mbsdZmemId && profile.linked.mbsdZmemId[0]) {
+      //   checkAccount({...data, authProfile: 1}, profile);
+      // } else {
+      navigation.replace('ChooseCitizen');
+      // }
     } else if (Number(data.authTelephone) === 0) {
       if (!config.isPhoneVerificationRequired) {
         checkAccount({...data, authTelephone: 1}, profile);
@@ -233,14 +243,9 @@ export default function useInit() {
         // dianggap valid aja dulu
         checkAccount({...data, authTelephone: 1}, profile);
       } else {
-        // const phoneNumber = profile.linked.zmemAuusId[0].auusPhone
-        //   ? profile.linked.zmemAuusId[0].auusPhone
-        //   : profile.linked.mbspZmemId[0].mbspNumber
-        //   ? '0' + profile.linked.mbspZmemId[0].mbspNumber
-        //   : null;
-        const phoneNumber = profile.linked.mbspZmemId[0].mbspNumber
-          ? '0' + profile.linked.mbspZmemId[0].mbspNumber
-          : null;
+        const phoneNumber = cleanPhoneNumber(
+          profile.linked.zmemAuusId[0].auusPhone,
+        );
 
         if (phoneNumber) {
           AuthService.sendOTP({phoneNumber})
@@ -264,10 +269,6 @@ export default function useInit() {
           navigation.replace('ChooseCitizen');
         }
       }
-    } else if (data.login === 'Kompas' && Number(data.consent) === 0) {
-      navigation.replace('DataConfirmation');
-    } else if (Number(data.authProfile) === 0) {
-      navigation.replace('ChooseCitizen');
     } else {
       getProfile();
       navigation.replace('Main', {screen: 'Home'});

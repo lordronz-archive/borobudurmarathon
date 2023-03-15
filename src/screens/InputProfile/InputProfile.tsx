@@ -24,6 +24,7 @@ import {TouchableOpacity} from 'react-native';
 import {useAuthUser} from '../../context/auth.context';
 import {MasterLocationResponse} from '../../types/profile.type';
 import {ProfileService} from '../../api/profile.service';
+import { cleanPhoneNumber } from '../../helpers/phoneNumber';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -127,7 +128,10 @@ export default function InputProfileScreen() {
     }
 
     try {
-      if ('0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !== phoneNumber) {
+      if (
+        cleanPhoneNumber(user?.linked?.zmemAuusId?.[0]?.auusPhone) !==
+        cleanPhoneNumber(phoneNumber)
+      ) {
         const sendOtpRes = await AuthService.sendOTP({phoneNumber});
         console.info('SendOTP result: ', sendOtpRes);
         navigation.navigate('PhoneNumberValidation', {

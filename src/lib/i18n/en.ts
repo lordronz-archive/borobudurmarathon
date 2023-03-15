@@ -26,6 +26,7 @@ export default {
     phoneValidationSubtitle: 'We need to validate your phone number',
     phoneValidation8DigitCode: 'Enter 8 digit code that we send to this number',
     dontHaveAccount: "Didn't have an account?",
+    haveAccount: 'Already have an account?',
     register: 'Register',
     registerViaEmail: 'Register via Email',
     signin: 'Sign In',

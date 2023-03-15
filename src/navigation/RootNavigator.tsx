@@ -30,6 +30,7 @@ import SearchLocationScreen from '../screens/InputProfile/SearchLocation';
 import SignInEmailScreen from '../screens/Auth/SignInEmail';
 import RegisterEmailScreen from '../screens/Auth/RegisterEmail';
 import ForgotPasswordScreen from '../screens/Auth/ForgotPassword';
+import EmailVerificationWhenRegisterScreen from '../screens/InputProfile/EmailVerificationWhenRegister';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -61,6 +62,7 @@ export type RootStackParamList = {
     | undefined;
   PhoneNumberValidation?: {phoneNumber?: string; onSuccess: () => void};
   EmailValidation?: {email?: string; onSuccess: () => void};
+  EmailVerificationWhenRegister?: {email?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
   ChooseCitizen: undefined;
   SearchLocation: undefined;
@@ -121,6 +123,11 @@ function RootNavigator() {
         <Stack.Screen
           name="EmailValidation"
           component={EmailValidationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EmailVerificationWhenRegister"
+          component={EmailVerificationWhenRegisterScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

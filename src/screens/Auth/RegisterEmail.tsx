@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, HStack, Text, Toast, useToast, VStack} from 'native-base';
+import {Box, Button, HStack, Icon, Text, useToast, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -18,34 +18,47 @@ export default function RegisterEmailScreen() {
   const toast = useToast();
   const {t} = useTranslation();
 
-  const [fullname, setFullname] = useState<string>();
-  const [gender, setGender] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [emailWillBeCheck] = useDebounce(email, 1000);
+  const [errors, setErrors] = useState<any>({});
 
-  const [password, setPassword] = useState<string>();
+  const [form, setForm] = useState<{
+    ptmmFullName: string;
+    ptmmGender: string;
+    ptmmPassword: string;
+    ptmmEmail: string;
+    ptmmLanguage: '1';
+  }>({});
+
+  const [emailWillBeCheck] = useDebounce(form.ptmmEmail, 500);
+  const [isEmailCanUse, setIsEmailCanUse] = useState<boolean | undefined>();
+
   const [confirmPassword, setConfirmPassword] = useState<string>();
+
   const [loading, setLoading] = useState(false);
+  const [isLoadingCheckEmail, setIsLoadingCheckEmail] = useState(false);
 
   useEffect(() => {
     checkEmail();
-  }, []);
+  }, [emailWillBeCheck]);
 
   const checkEmail = () => {
-    if (!email || (email && email.length <= 5)) {
+    if (!form.ptmmEmail || (form.ptmmEmail && form.ptmmEmail.length <= 5)) {
       return false;
     }
+    console.info('emailWillBeCheck', emailWillBeCheck);
+    setIsLoadingCheckEmail(true);
     AuthService.checkEmail(emailWillBeCheck)
       .then(res => {
-        toast.show({
-          title: 'Success',
-        });
+        console.info('AuthService.checkEmail', JSON.stringify(res));
+        setIsEmailCanUse(true);
+        setIsLoadingCheckEmail(false);
       })
-      .catch(err => {
-        toast.show({
-          title: 'Failed',
-          description: getErrorMessage(err),
-        });
+      .catch(() => {
+        setIsEmailCanUse(false);
+        setIsLoadingCheckEmail(false);
+        // toast.show({
+        //   title: 'Failed',
+        //   description: getErrorMessage(err),
+        // });
       });
   };
 
@@ -53,25 +66,59 @@ export default function RegisterEmailScreen() {
     try {
       setLoading(true);
       const result = await AuthService.signup({
-        ptmmFullname: fullname,
-        ptmmGender: gender,
-        ptmmPassword: password,
-        ptmmEmail: email,
+        ...form,
+        ptmmLanguage: 1,
       });
       console.info('register result', result);
 
+      toast.show({
+        description: 'OTP has been sent to your email',
+        placement: 'top',
+      });
+
       // navigation.navigate('Initial');
-    } catch (e) {
-      console.error(e);
+      navigation.navigate('EmailVerificationWhenRegister', {
+        email: form.ptmmEmail,
+        onSuccess: () => {
+          navigation.navigate('SignInEmail');
+        },
+      });
+    } catch (err: any) {
+      if (err?.data?.status?.error?.errors) {
+        let objErrors = {};
+        for (const errItem of err?.data?.status?.error?.errors || []) {
+          if (errItem.length > 0) {
+            objErrors = {
+              ...objErrors,
+              [errItem[0].field]: errItem[0].message,
+            };
+          }
+        }
+        console.info('objErrors', objErrors);
+
+        setErrors({
+          ...objErrors,
+        });
+      }
       toast.show({
         title: 'Failed to register',
-        description: getErrorMessage(e),
+        description: getErrorMessage(err),
         placement: 'top',
       });
     } finally {
       setLoading(false);
     }
   };
+
+  // const isDisabled =
+  //   !ptmmFullName ||
+  //   !gender ||
+  //   !password ||
+  //   !confirmPassword ||
+  //   !email ||
+  //   isEmailCanUse === false ||
+  //   password !== confirmPassword;
+  const isDisabled = false;
 
   return (
     <VStack px="4" flex="1">
@@ -88,8 +135,10 @@ export default function RegisterEmailScreen() {
             <TextInput
               placeholder="Enter your full name here"
               label="Full Name"
-              value={fullname}
-              onChangeText={setFullname}
+              value={form.ptmmFullName}
+              onChangeText={val => setForm({...form, ptmmFullName: val})}
+              isInvalid={!!errors.ptmmFullName}
+              errorMessage={errors.ptmmFullName}
             />
             <SelectInput
               items={[
@@ -98,23 +147,45 @@ export default function RegisterEmailScreen() {
               ]}
               placeholder="Choose gender"
               label="Gender"
-              onValueChange={setGender}
-              value={gender}
+              onValueChange={val => setForm({...form, ptmmGender: val})}
+              value={form.ptmmGender}
               hideSearch
+              isInvalid={!!errors.ptmmGender}
+              errorMessage={errors.ptmmGender}
             />
             <TextInput
               placeholder="Enter your email here"
               label="Email"
-              helperText="We will send verification code to this email for validation"
-              onChangeText={setEmail}
-              value={email}
+              helperText={
+                isEmailCanUse === undefined
+                  ? 'We will send verification code to this email for validation'
+                  : undefined
+              }
+              onChangeText={val => {
+                const newEmail = val?.toLowerCase();
+                if (!newEmail) {
+                  setIsEmailCanUse(undefined);
+                }
+                setForm({...form, ptmmEmail: newEmail});
+              }}
+              value={form.ptmmEmail}
+              loading={isLoadingCheckEmail}
+              // isInvalid={isEmailCanUse === false}
+              // errorMessage="Email already taken. Use another email."
+              isInvalid={!!errors.ptmmEmail}
+              errorMessage={errors.ptmmEmail}
+              // rightIcon={
+              //   isEmailCanUse === true ? (
+              //     <Icon name="check-circle" size={20} />
+              //   ) : undefined
+              // }
             />
             <TextInput
               placeholder="Enter your password here"
               label="Password"
               type="password"
-              onChangeText={setPassword}
-              value={password}
+              onChangeText={val => setForm({...form, ptmmPassword: val})}
+              value={form.ptmmPassword}
             />
             <TextInput
               placeholder="Enter your password to confirm"
@@ -122,6 +193,12 @@ export default function RegisterEmailScreen() {
               type="password"
               onChangeText={setConfirmPassword}
               value={confirmPassword}
+              isInvalid={
+                !!form.ptmmPassword &&
+                !!confirmPassword &&
+                form.ptmmPassword !== confirmPassword
+              }
+              errorMessage="Password and Confirm Password is not same"
             />
           </VStack>
         </VStack>
@@ -131,7 +208,7 @@ export default function RegisterEmailScreen() {
             color="#1E1E1E"
             fontSize={12}
             textAlign="center">
-            Already have an Account?
+            {t('auth.haveAccount')}
           </Text>
           <Text
             fontWeight={600}
@@ -144,7 +221,13 @@ export default function RegisterEmailScreen() {
           </Text>
         </HStack>
       </Box>
-      <Button h="12" mb="3" onPress={() => signup()} isLoading={loading}>
+      <Button
+        h="12"
+        mb="3"
+        onPress={() => signup()}
+        isLoading={loading}
+        disabled={isDisabled}
+        bg={isDisabled ? 'gray.400' : undefined}>
         {t('auth.register')}
       </Button>
     </VStack>

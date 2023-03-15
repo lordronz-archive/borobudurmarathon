@@ -5,12 +5,16 @@ import InAppBrowser from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import config from '../../config';
+import {useAuthUser} from '../../context/auth.context';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import useInit from '../../hooks/useInit';
 
 export default function LogoutScreen(props: Props) {
   const {colors} = useTheme();
   const {logout} = useInit();
+  const {
+    state: {loginType},
+  } = useAuthUser();
   const [state, setState] = useState<
     'logout-kompas' | 'logout-kompas-webview' | 'logout-bormar-webview'
   >('logout-kompas-webview');
@@ -165,7 +169,14 @@ export default function LogoutScreen(props: Props) {
           originWhitelist={['*']}
           // injectedJavaScript={jsCode}
           onLoadEnd={() => {
-            setState('logout-kompas');
+            if (loginType === 'Kompas') {
+              setState('logout-kompas');
+            } else {
+              logout(
+                () => {},
+                () => {},
+              );
+            }
             // props.onLoadEnd
           }}
           renderLoading={() => (
@@ -179,7 +190,9 @@ export default function LogoutScreen(props: Props) {
         text={
           state === 'logout-kompas-webview'
             ? 'Logout Kompas. Please wait...'
-            : 'Logout Bormar. Please wait...'
+            : state === 'logout-bormar-webview'
+            ? 'Logout Bormar. Please wait...'
+            : 'Logout. Please wait...'
         }
       />
     </View>

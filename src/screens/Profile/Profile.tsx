@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Box,
   Text,
@@ -26,13 +26,11 @@ import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
 import {getShortCodeName} from '../../helpers/name';
-import Logout from './Logout';
 import {TouchableOpacity} from 'react-native';
 import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import IconUserGroup from '../../assets/icons/IconUserGroup';
 import IconPhone from '../../assets/icons/IconPhone';
-import useInit from '../../hooks/useInit';
 import Config from 'react-native-config';
 import config from '../../config';
 
@@ -40,9 +38,7 @@ export default function MyProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
-  const {logout} = useInit();
   const {user} = useAuthUser();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // logout
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
@@ -96,18 +92,6 @@ export default function MyProfile() {
       params: {page: 'about'},
     },
   ];
-
-  if (isLoggingOut) {
-    return (
-      <Logout
-        onLoadEnd={() => {
-          // navigation.navigate('VerifyLater');
-          logout(setIsLoggingOut, onCloseModalLogout);
-          // logout(setIsLoggingOut, onCloseModalLogout);
-        }}
-      />
-    );
-  }
 
   return (
     <>

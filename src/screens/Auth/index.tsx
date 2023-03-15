@@ -55,7 +55,7 @@ export default function AuthScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [initialCookieString, setInitialCookieString] = useState<string>();
-  const {state} = useAuthUser();
+  const {state, setLoginType} = useAuthUser();
   const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   console.info('#Auth -- state', state);
@@ -100,6 +100,8 @@ export default function AuthScreen() {
   };
 
   const openAuthLink = async () => {
+    setLoginType('Kompas');
+
     try {
       Linking.openURL(url);
       return;

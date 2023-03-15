@@ -20,6 +20,8 @@ export default function useInit() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const {setLoginType} = useAuthUser();
+
   const {
     isShowDemoVerifyEmail,
     setDemoVerifyEmail,
@@ -39,6 +41,7 @@ export default function useInit() {
         console.info('AuthService.checkSession', res);
 
         checkAccount(res.data);
+        setLoginType(res.data.login);
 
         getProfile();
       } else {

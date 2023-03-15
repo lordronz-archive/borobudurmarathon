@@ -260,6 +260,9 @@ const AuthService = {
         {
           data: credential,
         },
+        {
+          withCredentials: true,
+        },
         // {
         //   headers: {
         //     Authorization:
@@ -271,6 +274,10 @@ const AuthService = {
 
       console.info('login resultssss', res);
       console.info('login resultssss HEADERS', res.headers);
+      console.info(
+        'login resultssss HEADERS set-cookie',
+        res.headers['set-cookie'],
+      );
 
       if (res && res.data) {
         return res.data;

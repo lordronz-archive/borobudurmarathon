@@ -132,9 +132,9 @@ export default function SignInEmailScreen() {
       <Box flex="10">
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
-          <Heading>Sign In via Email</Heading>
+          <Heading>{t('auth.signinViaEmail')}</Heading>
           <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
-            Sign in with the email you registered here
+            {t('auth.signInWithRegistered')}
           </Text>
         </VStack>
         <VStack space="2.5">
@@ -160,7 +160,7 @@ export default function SignInEmailScreen() {
             color="#1E1E1E"
             fontSize={12}
             textAlign="center">
-            Didn{"'"}t have an Account?
+            {t('auth.dontHaveAccount')}
           </Text>
           <Text
             fontWeight={600}
@@ -180,7 +180,7 @@ export default function SignInEmailScreen() {
             textAlign="center"
             underline
             onPress={() => navigation.navigate('ForgotPassword')}>
-            Forgot password?
+            {t('auth.forgotPassword')}
           </Text>
         </HStack>
       </Box>

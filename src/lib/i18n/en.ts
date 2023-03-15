@@ -11,9 +11,12 @@ export default {
   account: 'Account',
   step: 'Step',
   auth: {
+    forgotPassword: 'Forgot password?',
     description:
       "Let's join and be part of the Borobudur Marathon community. The biggest running event in Central Java, Indonesia.",
     signInWith: 'Sign in with',
+    signInWithRegistered: 'Sign in with the email you registered here',
+    registerNewAccount: 'Register your new account here',
     emailValidationTitle: 'Email Validation',
     emailValidationSubtitle: 'Please verify your email address ',
     emailValidation8DigitCode: 'Enter 8 digit code that we send to ',

@@ -237,6 +237,14 @@ export default function ChooseCitizenScreen({route}: Props) {
         (resValidation && resValidation.data && resValidation.data.isValid) ||
         isVerifyLater
       ) {
+        console.info(
+          'user?.linked?.mbspZmemId?.[0]?.mbspNumber',
+          user?.linked?.mbspZmemId?.[0]?.mbspNumber,
+        );
+        console.info(
+          'accountInformation.phoneNumber',
+          accountInformation.phoneNumber,
+        );
         if (
           '0' + user?.linked?.mbspZmemId?.[0]?.mbspNumber !==
           accountInformation.phoneNumber
@@ -257,6 +265,7 @@ export default function ChooseCitizenScreen({route}: Props) {
               title: 'Failed to send otp',
               description: getErrorMessage(err),
             });
+            setProfileStep(1);
           }
         } else {
           setProfileAfterVerifyPhoneSuccess();
@@ -306,18 +315,26 @@ export default function ChooseCitizenScreen({route}: Props) {
   const setProfileAfterVerifyPhoneSuccess = async () => {
     try {
       setIsLoading(true);
-      const profileData =
+      let profileData: any =
         citizen === 'WNI'
           ? {
               ...profile,
               mbsdNationality: 'Indonesian',
               mbsdCountry: 'Indonesia',
+              mbsdIDNumberType: 3,
             }
-          : profile;
+          : {...profile, mbsdIDNumberType: 1};
+      if (accountInformation && accountInformation.phoneNumber) {
+        profileData = {
+          ...profileData,
+          mbsdPhone: accountInformation.phoneNumber,
+          mbsdFullName: accountInformation.name,
+        };
+      }
       const res = await AuthService.setprofile(profileData);
       console.info('Setprofile result: ', res);
 
-      navigation.navigate('Welcome');
+      navigation.replace('Welcome');
     } catch (err) {
       Toast.show({
         title: 'Failed to save',
@@ -332,14 +349,29 @@ export default function ChooseCitizenScreen({route}: Props) {
   };
 
   const isDisabledButton = () => {
-    if (profileStep === 1) {
+    if (step === 'profile') {
+      if (profileStep === 1) {
+        return !accountInformation.name || !accountInformation.phoneNumber;
+      } else if (profileStep === 2) {
+        return (
+          !profile.mbsdIDNumber ||
+          !profile.mbsdGender ||
+          !profile.mbsdBirthDate ||
+          !profile.mbsdBirthPlace ||
+          !(
+            profile.mbsdBloodType !== null ||
+            profile.mbsdBloodType !== undefined
+          )
+        );
+      } else if (profileStep === 3) {
+        return !profile.mbsdAddress || !isAgreeTermsAndCondition;
+      } else {
+        return false;
+      }
+    } else if (step === 'choose-citizen') {
       return !citizen;
-    } else if (profileStep === 2) {
-      return !identityImage;
-    } else if (profileStep === 3) {
-      return !isAgreeTermsAndCondition;
-    } else {
-      return false;
+    } else if (step === 'upload-id') {
+      return !identityImage || (identityImage && !identityImage.data);
     }
   };
   console.log(isAgreeTermsAndCondition);

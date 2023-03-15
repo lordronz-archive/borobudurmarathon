@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, Text, Toast, VStack} from 'native-base';
+import {Box, Button, Text, Toast, VStack, useToast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -22,6 +22,7 @@ type Props = NativeStackScreenProps<
 export default function PhoneNumberValidationScreen({route}: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const toast = useToast();
   const {t} = useTranslation();
   const {phoneNumber} = route.params as {phoneNumber?: string};
   const {onSuccess} = route.params as {onSuccess?: any};
@@ -31,6 +32,15 @@ export default function PhoneNumberValidationScreen({route}: Props) {
   const [seconds, setSeconds] = useState(30);
   const [errMessage, setErrMessage] = useState<string>();
   const [isValid, setIsValid] = useState(true);
+
+  useEffect(() => {
+    if (!phoneNumber) {
+      toast.show({
+        description: 'Phone number not found',
+      });
+      navigation.goBack();
+    }
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -175,7 +185,13 @@ export default function PhoneNumberValidationScreen({route}: Props) {
           )}
         </VStack>
       </Box>
-      <Button h="12" mb="3" onPress={validatePhoneNumber} isLoading={isLoading}>
+      <Button
+        h="12"
+        mb="3"
+        onPress={validatePhoneNumber}
+        isLoading={isLoading}
+        disabled={!phoneNumber || !otpCode}
+        bg={!phoneNumber || !otpCode ? 'gray.400' : undefined}>
         {t('confirm')}
       </Button>
     </VStack>

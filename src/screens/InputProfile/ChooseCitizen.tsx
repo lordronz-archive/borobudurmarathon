@@ -37,6 +37,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
+import { BLOOD_OPTIONS } from '../../assets/data/blood';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -586,56 +587,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                   }
                 />
                 <SelectInput
-                  items={[
-                    {
-                      label: 'O',
-                      value: '0',
-                    },
-                    {
-                      label: 'O+',
-                      value: '1',
-                    },
-                    {
-                      label: 'O-',
-                      value: '2',
-                    },
-                    {
-                      label: 'A',
-                      value: '3',
-                    },
-                    {
-                      label: 'A+',
-                      value: '4',
-                    },
-                    {
-                      label: 'A-',
-                      value: '5',
-                    },
-                    {
-                      label: 'B',
-                      value: '6',
-                    },
-                    {
-                      label: 'B+',
-                      value: '7',
-                    },
-                    {
-                      label: 'B-',
-                      value: '8',
-                    },
-                    {
-                      label: 'AB',
-                      value: '9',
-                    },
-                    {
-                      label: 'AB+',
-                      value: '10',
-                    },
-                    {
-                      label: 'AB-',
-                      value: '11',
-                    },
-                  ]}
+                  items={BLOOD_OPTIONS}
                   value={profile.mbsdBloodType?.toString()}
                   placeholder="Choose blood type"
                   label="Blood Type"

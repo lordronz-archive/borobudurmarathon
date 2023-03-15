@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import moment from 'moment';
 import useInit from '../../hooks/useInit';
+import {showBloodName} from '../../assets/data/blood';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
@@ -152,7 +153,7 @@ export default function UpdateProfileScreen() {
             },
             {
               label: 'Blood Type',
-              value: user?.linked.mbsdZmemId[0].mbsdBloodType,
+              value: showBloodName(user?.linked.mbsdZmemId[0].mbsdBloodType),
             },
           ],
         },

@@ -1,6 +1,7 @@
 import apiUrl from './api';
 
 export default {
+  isPhoneVerificationRequired: false,
   bypassPhoneVerification: false,
   bypassEmailVerification: false,
   inAppBrowser: true,

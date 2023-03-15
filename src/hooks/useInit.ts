@@ -13,6 +13,7 @@ import CookieManager from '@react-native-cookies/cookies';
 import {IMemberDetailResponse, IProfile} from '../types/profile.type';
 import {useDemo} from '../context/demo.context';
 import {IAuthResponseData} from '../types/auth.type';
+import config from '../config';
 
 export default function useInit() {
   const route = useRoute();
@@ -226,7 +227,9 @@ export default function useInit() {
           });
         });
     } else if (Number(data.authTelephone) === 0) {
-      if (profile.linked.zmemAuusId[0].auusPhone) {
+      if (!config.isPhoneVerificationRequired) {
+        checkAccount({...data, authTelephone: 1}, profile);
+      } else if (profile.linked.zmemAuusId[0].auusPhone) {
         // dianggap valid aja dulu
         checkAccount({...data, authTelephone: 1}, profile);
       } else {

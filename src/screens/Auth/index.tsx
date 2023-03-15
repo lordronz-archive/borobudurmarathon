@@ -279,9 +279,9 @@ export default function AuthScreen() {
             <Text fontWeight={400} textAlign={'center'} color="#768499">
               {t('auth.description')}
             </Text>
-            <Text>{initialCookieString}</Text>
+            {/* <Text>{initialCookieString}</Text>
 
-            <Button onPress={clearCookies}>Clear Cookies</Button>
+            <Button onPress={clearCookies}>Clear Cookies</Button> */}
           </VStack>
         </HStack>
         <VStack flex="1" justifyContent={'center'} space="1.5">

@@ -38,6 +38,7 @@ import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
+import { cleanPhoneNumber } from '../../helpers/phoneNumber';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -261,6 +262,9 @@ export default function ChooseCitizenScreen({route}: Props) {
           title: 'Processing',
           description: 'Your ID still in processing to validate.',
         });
+        setTimeout(() => {
+          handleConfirm();
+        }, 3000);
       } else if (
         (resValidation && resValidation.data && resValidation.data.isValid) ||
         isVerifyLater
@@ -274,8 +278,8 @@ export default function ChooseCitizenScreen({route}: Props) {
           accountInformation.phoneNumber,
         );
         if (
-          '0' + user?.linked?.zmemAuusId?.[0]?.auusPhone !==
-          accountInformation.phoneNumber
+          cleanPhoneNumber(user?.linked?.zmemAuusId?.[0]?.auusPhone) !==
+          cleanPhoneNumber(accountInformation.phoneNumber)
         ) {
           try {
             const sendOtpRes = await AuthService.sendOTP({

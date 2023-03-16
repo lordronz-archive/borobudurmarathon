@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>342957496715-oqk2u4vkjpcpp1s1ke43megdmn5n8198.apps.googleusercontent.com</string>
+	<string>482980199995-g7qnpr3eq03ks6dh97gk48ac31jt67o7.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.342957496715-oqk2u4vkjpcpp1s1ke43megdmn5n8198</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>342957496715-ca8bfmspm7dui3ua44tdotr4rsg86fu7.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.482980199995-g7qnpr3eq03ks6dh97gk48ac31jt67o7</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBB3Yy7EKji5CQedVKBln3quWXq1IUi3Kw</string>
+	<string>AIzaSyB8y1KJNFdOX4HazT3H-Rrr3-1d6L1Ps4c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>342957496715</string>
+	<string>482980199995</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.borobudurmarathon.app</string>
 	<key>PROJECT_ID</key>
-	<string>borobudur-marathon-d96d1</string>
+	<string>borobudur-marathon</string>
 	<key>STORAGE_BUCKET</key>
-	<string>borobudur-marathon-d96d1.appspot.com</string>
+	<string>borobudur-marathon.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:342957496715:ios:9614fd67f2fde894f7b78e</string>
+	<string>1:482980199995:ios:8ad8490f0aeb1ba97ea61e</string>
 </dict>
 </plist>

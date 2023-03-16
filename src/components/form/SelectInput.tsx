@@ -1,4 +1,12 @@
-import {Box, FormControl, Input, Select, WarningOutlineIcon} from 'native-base';
+import {
+  Box,
+  FormControl,
+  HStack,
+  Input,
+  Select,
+  Text,
+  WarningOutlineIcon,
+} from 'native-base';
 import React from 'react';
 import {
   type NativeSyntheticEvent,
@@ -20,6 +28,7 @@ type SelectInputProps = {
   onValueChange?: (text: string) => void;
   isOpen?: boolean;
   setIsOpen?: () => void;
+  required?: boolean;
 };
 
 export default function SelectInput(props: SelectInputProps) {
@@ -36,7 +45,17 @@ export default function SelectInput(props: SelectInputProps) {
   return (
     <FormControl isInvalid={props.isInvalid}>
       <Box borderWidth={1} borderColor="#C5CDDB" borderRadius={5} px={3} pb={0}>
-        <FormControl.Label mb={-1.5}>{props.label}</FormControl.Label>
+        <FormControl.Label flexWrap={'wrap'}>
+          <HStack>
+            {props.required && <Text color="primary.900">* </Text>}
+            <Text>{props.label}</Text>
+          </HStack>
+          {props.required && (
+            <Text color="primary.900" italic ml="2" fontSize="xs">
+              Required
+            </Text>
+          )}
+        </FormControl.Label>
         <Select
           placeholder={props.placeholder}
           variant="unstyled"

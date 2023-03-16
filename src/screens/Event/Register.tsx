@@ -8,7 +8,7 @@ import {
   Divider,
   useToast,
   Center,
-  // Button,
+  Button,
   Spinner,
   HStack,
 } from 'native-base';
@@ -21,12 +21,10 @@ import {EventFieldsEntity} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import Congratulation from '../../components/modal/Congratulation';
-import {TouchableOpacity} from 'react-native';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
-import Button from '../../components/buttons/Button';
 
 type Price = {
   id: string;
@@ -83,6 +81,19 @@ export default function EventRegisterScreen() {
         fieldResult[findIndex].static = true;
       }
     });
+    const jerseyIndex = fieldResult.findIndex(f =>
+      f.evhfName.toLowerCase().includes('jersey'),
+    );
+    if (jerseyIndex !== -1) {
+      fieldResult[jerseyIndex].helperText = (
+        <Text>
+          For more information about size,{' '}
+          <Text textDecorationLine={'underline'} color="primary.900">
+            See jersey size chart
+          </Text>
+        </Text>
+      );
+    }
 
     const fieldTop = fieldResult.filter(item => item.static);
     const fieldBottom = fieldResult.filter(item => !item.static);
@@ -172,21 +183,18 @@ export default function EventRegisterScreen() {
     if (findIndex !== -1) {
       data.evpaBloodType = user?.linked?.mbsdZmemId?.[0]?.mbsdBloodType;
     }
-    if (fields.find(f => f.evhfName.toLowerCase().includes('jersey'))) {
-      data.evpaJersey = {...data.evpaJersey};
-      data.evpaJersey.helperText = (
-        <Text>
-          For more information about size,{' '}
-          <Text textDecorationLine={'underline'} color="primary.900">
-            See jersey size chart
-          </Text>
-        </Text>
-      );
-    }
-    console.info(fields);
+    data.evpaEvnhId = params.event.data.evnhId;
+    data.evpaEvncId = params.selectedCategoryId;
     setFieldsData({...fieldsData, ...data});
     setAutofilled(true);
-  }, [autofilled, fields, fieldsData, user]);
+  }, [
+    autofilled,
+    fields,
+    fieldsData,
+    params.event.data.evnhId,
+    params.selectedCategoryId,
+    user,
+  ]);
 
   const register = async () => {
     setIsLoading(true);
@@ -215,8 +223,6 @@ export default function EventRegisterScreen() {
       evpaIDNumber: user?.linked.mbsdZmemId[0].mbsdIDNumber,
       evpaBloodType: user?.linked.mbsdZmemId[0].mbsdBloodType,
     };
-
-    console.info(payload.evpaBirthDate);
 
     fields.forEach((f: EventFieldsEntity) => {
       if (
@@ -301,6 +307,13 @@ export default function EventRegisterScreen() {
     }))
     .filter(cat => cat.id === params.selectedCategoryId);
 
+  const isRequiredFilled = () => {
+    const requiredFields = fields
+      .filter(v => v.evhfIsRequired.toString() === '1')
+      .map(v => v.evhfName);
+    return requiredFields.every(v => v in fieldsData && !!fieldsData[v]);
+  };
+
   return (
     <ScrollView>
       <Header title="Form Registration" left="back" />
@@ -357,8 +370,11 @@ export default function EventRegisterScreen() {
                     setFieldsData({...fieldsData, [field.evhfName]: val});
                   }}
                   value={fieldsData[field.evhfName]}
-                  helperText={fieldsData[field.evhfName]?.helperText}
-                  required={!!field.evhfIsRequired}
+                  helperText={field.helperText}
+                  required={
+                    field.evhfIsRequired.toString() === '1' ||
+                    field.evhfIsRequired.toString() === 'true'
+                  }
                 />
               ))}
           </VStack>
@@ -417,7 +433,7 @@ export default function EventRegisterScreen() {
           <Button
             h="12"
             isLoading={isLoading}
-            isDisabled={checkbox[0] !== 'agreed'}
+            isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
             onPress={() => {
               if (checkbox[0] !== 'agreed') {
                 toast.show({

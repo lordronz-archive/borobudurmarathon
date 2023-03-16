@@ -36,47 +36,64 @@ export default function TextInput(props: TextInputProps) {
   const [show, setShow] = useState(false);
   return (
     <FormControl isInvalid={props.isInvalid}>
-      <Box borderWidth={1} borderColor="#C5CDDB" borderRadius={5} px={3} pb={2}>
+      <Box
+        borderWidth={1}
+        borderColor="#C5CDDB"
+        borderRadius={'4px'}
+        px={'12px'}
+        py={'6px'}>
         <FormControl.Label flexWrap={'wrap'}>
           <HStack>
             {props.required && <Text color="primary.900">* </Text>}
-            <Text>{props.label}</Text>
+            <Text style={{fontSize: 12, color: '#768499'}}>{props.label}</Text>
           </HStack>
           {props.required && (
-            <Text color="primary.900" italic ml="2" fontSize="xs">
+            <Text
+              style={{fontSize: 12, color: 'primary.900'}}
+              italic
+              ml="2"
+              fontSize="xs">
               Required
             </Text>
           )}
         </FormControl.Label>
-        <BaseTextInput
-          placeholder={props.placeholder}
-          // variant="unstyled"
-          // _input={{paddingX: 0, paddingY: 0}}
-          value={props.value}
-          onChangeText={props.onChangeText}
-          // InputRightElement={
-          //   props.loading ? (
-          //     <Spinner size="sm" />
-          //   ) : props.rightIcon ? (
-          //     props.rightIcon
-          //   ) : props.type === 'password' ? (
-          //     <Icon
-          //       name={!show ? 'eye' : 'eye-off'}
-          //       onPress={() => setShow(s => !s)}
-          //       size={20}
-          //     />
-          //   ) : undefined
-          // }
-          secureTextEntry={props.type === 'password' && !show}
-          textContentType={
-            show || props.type !== 'password' ? undefined : 'password'
-          }
-          // type={show || props.type !== 'password' ? 'text' : 'password'}
-          {...(props._inputProps || {})}
-        />
-        <View style={{position: 'absolute', right: 0, padding: 16}}>
+        <HStack alignItems={'center'}>
+          <BaseTextInput
+            style={{
+              flex: 1,
+              paddingVertical: 2,
+              paddingHorizontal: 0,
+              fontSize: 14,
+              color: '#1E1E1E',
+            }}
+            placeholderTextColor={'#9FACBF'}
+            placeholder={props.placeholder}
+            // variant="unstyled"
+            // _input={{paddingX: 0, paddingY: 0}}
+            value={props.value}
+            onChangeText={props.onChangeText}
+            // InputRightElement={
+            //   props.loading ? (
+            //     <Spinner size="sm" />
+            //   ) : props.rightIcon ? (
+            //     props.rightIcon
+            //   ) : props.type === 'password' ? (
+            //     <Icon
+            //       name={!show ? 'eye' : 'eye-off'}
+            //       onPress={() => setShow(s => !s)}
+            //       size={20}
+            //     />
+            //   ) : undefined
+            // }
+            secureTextEntry={props.type === 'password' && !show}
+            textContentType={
+              show || props.type !== 'password' ? undefined : 'password'
+            }
+            // type={show || props.type !== 'password' ? 'text' : 'password'}
+            {...(props._inputProps || {})}
+          />
           {props.loading ? (
-            <Spinner size="sm" />
+            <Spinner size="sm" style={{paddingLeft: 10}} />
           ) : props.rightIcon ? (
             props.rightIcon
           ) : props.type === 'password' ? (
@@ -84,9 +101,10 @@ export default function TextInput(props: TextInputProps) {
               name={!show ? 'eye' : 'eye-off'}
               onPress={() => setShow(s => !s)}
               size={20}
+              style={{paddingLeft: 10}}
             />
           ) : undefined}
-        </View>
+        </HStack>
       </Box>
       <FormControl.HelperText pl="1" mt="1" mb="1.5">
         {props.helperText}

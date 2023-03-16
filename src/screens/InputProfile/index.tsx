@@ -10,6 +10,7 @@ import {
   SectionList,
   Divider,
   useToast,
+  HStack,
 } from 'native-base';
 import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
@@ -23,7 +24,7 @@ import moment from 'moment';
 import {ProfileService} from '../../api/profile.service';
 import {useDemo} from '../../context/demo.context';
 import {useTranslation} from 'react-i18next';
-import { cleanPhoneNumber } from '../../helpers/phoneNumber';
+import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 
 export default function DataConfirmationScreen() {
   const navigation =
@@ -226,23 +227,17 @@ export default function DataConfirmationScreen() {
           ListFooterComponent={<Box height="50" />}
         />
       </Box>
-      <Button.Group flex="1" px="4">
+      <HStack my={3} px="4">
         <BMButton
           variant="outline"
-          flex="1"
-          h="12"
           onPress={handleNoAddNewProfile}
           isLoading={isLoadingAction}>
           No, Add New Profile
         </BMButton>
-        <BMButton
-          flex="1"
-          h="12"
-          onPress={handleUseExisting}
-          isLoading={isLoadingAction}>
+        <BMButton onPress={handleUseExisting} isLoading={isLoadingAction}>
           Yes, Sure
         </BMButton>
-      </Button.Group>
+      </HStack>
     </VStack>
   );
 }

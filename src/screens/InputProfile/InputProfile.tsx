@@ -56,6 +56,7 @@ export default function InputProfileScreen() {
   const [checkbox, setCheckbox] = useState<string[]>([]);
 
   useEffect(() => {
+    navigation.replace('ChooseCitizen');
     (async () => {
       const {data: loc} = await ProfileService.getLocation();
       setLocations(loc);

@@ -8,7 +8,7 @@ import {
   Divider,
   useToast,
   Center,
-  Button,
+  // Button,
   Spinner,
   HStack,
 } from 'native-base';
@@ -26,6 +26,7 @@ import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
+import Button from '../../components/buttons/Button';
 
 type Price = {
   id: string;

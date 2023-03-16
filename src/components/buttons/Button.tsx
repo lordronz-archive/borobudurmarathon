@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button as NBButton} from 'native-base';
-import {type GestureResponderEvent} from 'react-native';
+// import {Button as NBButton} from 'native-base';
+import {type GestureResponderEvent, Button as NBButton} from 'react-native';
 
 export type ButtonProps = {
   variant?: 'solid' | 'outline';

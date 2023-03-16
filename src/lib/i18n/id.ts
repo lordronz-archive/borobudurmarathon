@@ -56,6 +56,7 @@ export default {
     checkEventBtn: 'Cek Event Saya',
   },
   tab: {
+    home: 'Beranda',
     myEvents: 'Event Saya',
     records: 'Catatan',
     more: 'Info',
@@ -79,6 +80,8 @@ export default {
     buttonUpdate: 'Ubah Profil',
     changePhoneNumber: 'Ubah Nomor Handphone',
     sendOtp: 'Kirim OTP',
+    changeLanguage: 'Ubah Bahasa',
+    language: 'Bahasa',
   },
   consent: {
     title: 'Konfirmasi Data',

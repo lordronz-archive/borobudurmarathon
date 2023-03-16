@@ -24,7 +24,7 @@ export default function MainTabNavigator() {
         tabBarActiveTintColor: colors.primary[900],
       }}>
       <Tab.Screen
-        name="Home"
+        name={t('tab.home')}
         component={HomeScreen}
         options={{
           headerShown: false,

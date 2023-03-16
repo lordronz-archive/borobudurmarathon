@@ -16,6 +16,9 @@ import {
   Pressable,
   AlertDialog,
   Toast,
+  useDisclose,
+  Actionsheet,
+  CheckCircleIcon,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -34,6 +37,11 @@ import IconPhone from '../../assets/icons/IconPhone';
 import Config from 'react-native-config';
 import config from '../../config';
 import IconGlobe from '../../assets/icons/IconGlobe';
+import i18next from 'i18next';
+import {useTranslation} from 'react-i18next';
+import {LanguageID} from '../../types/language.type';
+import httpRequest from '../../helpers/httpRequest';
+import IconEnglish from '../../assets/icons/IconEnglish';
 
 export default function MyProfile() {
   const navigation =
@@ -46,6 +54,8 @@ export default function MyProfile() {
   const onCloseModalLogout = () => setIsOpenModalLogout(false);
   const cancelLogoutRef = React.useRef(null);
   const [, setIsLangOpen] = React.useState(false);
+  const {t} = useTranslation();
+  const {isOpen, onOpen, onClose} = useDisclose();
 
   const menus: {
     key: string;
@@ -58,20 +68,20 @@ export default function MyProfile() {
     {
       key: 'edit-profile',
       icon: <IconSingleUser color={colors.black} size={6} />,
-      name: 'View Profile',
+      name: t('profile.viewProfile'),
       route: 'UpdateProfile',
     },
     {
       key: 'edit-phone',
       icon: <IconPhone color={colors.black} size={6} />,
-      name: 'Change Phone Number',
+      name: t('profile.changePhoneNumber'),
       route: 'UpdatePhone',
     },
     {
       key: 'language',
       icon: <IconGlobe color={colors.black} size={6} />,
-      name: 'Language',
-      onPress: () => setIsLangOpen(true),
+      name: t('profile.language'),
+      onPress: onOpen,
     },
     {
       key: 'faqs',
@@ -100,6 +110,15 @@ export default function MyProfile() {
       route: 'Partner',
     },
   ];
+
+  const changeLanguage = async (langId: LanguageID) => {
+    i18next.changeLanguage(langId === LanguageID.EN ? 'en' : 'id');
+    const url =
+      config.apiUrl.href.href +
+      config.apiUrl.apis.member.setLanguage.path +
+      langId;
+    await httpRequest.get(url);
+  };
 
   return (
     <>
@@ -220,6 +239,58 @@ export default function MyProfile() {
               </HStack>
             </TouchableOpacity>
           ))}
+          <Actionsheet isOpen={isOpen} onClose={onClose} hideDragIndicator>
+            <Actionsheet.Content borderTopRadius="0">
+              <Box
+                w="100%"
+                h={60}
+                px={4}
+                justifyContent="center"
+                alignItems="center"
+                fontWeight="bold">
+                <Text
+                  fontSize="20"
+                  color="gray.900"
+                  _dark={{
+                    color: 'gray.300',
+                  }}>
+                  {t('profile.changeLanguage')}
+                </Text>
+              </Box>
+              <Actionsheet.Item onPress={() => changeLanguage(LanguageID.EN)}>
+                <HStack
+                  w={i18next.language === 'en' ? '85%' : '100%'}
+                  alignItems="center"
+                  justifyContent="space-between">
+                  <HStack alignItems="center" space={2}>
+                    <Image
+                      source={require('../../assets/images/english.png')}
+                    />
+                    <Text>English</Text>
+                  </HStack>
+                  {i18next.language === 'en' && (
+                    <CheckCircleIcon color="#55C95A" />
+                  )}
+                </HStack>
+              </Actionsheet.Item>
+              <Actionsheet.Item onPress={() => changeLanguage(LanguageID.ID)}>
+                <HStack
+                  w={i18next.language === 'id' ? '85%' : '100%'}
+                  alignItems="center"
+                  justifyContent="space-between">
+                  <HStack alignItems="center" space={2}>
+                    <Image
+                      source={require('../../assets/images/indonesia.png')}
+                    />
+                    <Text>Indonesia</Text>
+                  </HStack>
+                  {i18next.language === 'id' && (
+                    <CheckCircleIcon color="#55C95A" />
+                  )}
+                </HStack>
+              </Actionsheet.Item>
+            </Actionsheet.Content>
+          </Actionsheet>
         </Box>
       </ScrollView>
 

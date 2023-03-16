@@ -99,6 +99,13 @@ export default function ChooseCitizenScreen({route}: Props) {
   }, []);
 
   useEffect(() => {
+    setAccountInformation({
+      name: user?.linked.mbsdZmemId[0].mbsdFullName || '',
+      phoneNumber: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone) || '',
+      birthdate: user?.linked.mbsdZmemId[0].mbsdBirthDate
+        ? new Date(user?.linked.mbsdZmemId[0].mbsdBirthDate)
+        : undefined,
+    });
     setProfile({
       mbsdIDNumber: user?.linked.mbsdZmemId[0].mbsdIDNumber || '',
       mbsdBirthDate: user?.linked.mbsdZmemId[0].mbsdBirthDate || '',
@@ -123,6 +130,11 @@ export default function ChooseCitizenScreen({route}: Props) {
       mmedOccupation: user?.linked.mmedZmemId[0].mmedOccupation || '',
       mmedIncome: user?.linked.mmedZmemId[0].mmedIncome || '',
     });
+    setCitizen(
+      user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
+        ? 'WNI'
+        : 'WNA',
+    );
   }, []);
 
   const stepProperties = [
@@ -223,7 +235,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const handleConfirm = async () => {
     setIsOpen(true);
 
-    // identityImage.fileId = '7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG';
+    identityImage.fileId = 'NjabOxzEq8AQJTFvSCy1JqHXIro50kxe';
     // ini contoh yg masih processing NjabOxzEq8AQJTFvSCy1JqHXIro50kxe
     // ini yg error 7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG
 
@@ -302,6 +314,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         } else {
           setProfileAfterVerifyPhoneSuccess();
         }
+        setIsOpen(false);
       } else if (
         resValidation &&
         resValidation.data &&
@@ -314,6 +327,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         });
         setIsOpenNotReadable(true);
         setValidationTry(v => v + 1);
+        setIsOpen(false);
       } else {
         toast.show({
           title: 'Invalid ID',
@@ -321,6 +335,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         });
         setIsOpenNotReadable(true);
         setValidationTry(v => v + 1);
+        setIsOpen(false);
       }
     } catch (err: any) {
       if (err.status === 400) {
@@ -339,7 +354,6 @@ export default function ChooseCitizenScreen({route}: Props) {
         console.info(err, getErrorMessage(err), 'Failed confirm profile');
         setValidationTry(v => v + 1);
       }
-    } finally {
       setIsOpen(false);
     }
   };

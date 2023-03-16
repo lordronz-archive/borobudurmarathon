@@ -1,6 +1,6 @@
 import {Toast, useTheme} from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {Alert, Linking, View} from 'react-native';
+import {Alert, Linking, View, Platform} from 'react-native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
 import LoadingBlock from '../../components/loading/LoadingBlock';
@@ -17,7 +17,7 @@ export default function LogoutScreen(props: Props) {
   } = useAuthUser();
   const [state, setState] = useState<
     'logout-kompas' | 'logout-kompas-webview' | 'logout-bormar-webview'
-  >('logout-kompas-webview');
+  >(loginType === 'Email' ? 'logout-bormar-webview' : 'logout-kompas-webview');
 
   // const redirect_uri = 'bormar://auth-me';
   // 'https://account.kompas.id/sso/check?redirect_uri=https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth&client_id=3&state=borobudur_marathon&scope=nama%20lengkap,%20alamat,%20Alamat%20email%20dan%20mengirimkan%20pesan&response_type=code';
@@ -81,10 +81,20 @@ export default function LogoutScreen(props: Props) {
     console.info('openLogoutLinkInApp');
     try {
       if (await InAppBrowser.isAvailable()) {
+        InAppBrowser.close();
         InAppBrowser.closeAuth();
+
+        if (Platform.OS === 'android') {
+          setTimeout(() => {
+            logout(
+              () => {},
+              () => {},
+            );
+          }, 800);
+        }
         const result = await InAppBrowser.openAuth(url, redirect_uri, {
           // iOS Properties
-          dismissButtonStyle: 'cancel',
+          dismissButtonStyle: 'done',
           preferredBarTintColor: colors.primary[900],
           preferredControlTintColor: 'white',
           readerMode: false,
@@ -111,13 +121,17 @@ export default function LogoutScreen(props: Props) {
             endExit: 'slide_out_right',
           },
         });
-        await sleep(800);
-        InAppBrowser.closeAuth();
 
-        logout(
-          () => {},
-          () => {},
-        );
+        if (Platform.OS === 'ios') {
+          await sleep(800);
+          InAppBrowser.closeAuth();
+          InAppBrowser.close();
+
+          logout(
+            () => {},
+            () => {},
+          );
+        }
 
         // if (result.type === 'success') {
         //     logout(
@@ -140,6 +154,8 @@ export default function LogoutScreen(props: Props) {
         title: 'Failed to open authentication URL',
         description: getErrorMessage(error),
       });
+      InAppBrowser.closeAuth();
+      InAppBrowser.close();
     }
   };
 

@@ -9,9 +9,9 @@ export function convertOption(val: string | number, field: string) {
       return t('female');
     }
   } else if (field === 'evpaIDNumberType') {
-    if (val === 3) {
+    if (val === 1) {
       return 'KTP';
-    } else if (val === 1) {
+    } else if (val === 3) {
       return 'Passport';
     }
   } else if (field === 'evpaBloodType') {

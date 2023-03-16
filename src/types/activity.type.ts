@@ -29,6 +29,9 @@ export interface Datum {
   mmacKilocalories: number;
   mmacCreatedTime: string;
   links: Links;
+
+  // added by frontend
+  averagePace?: string;
 }
 
 export interface Links {}

@@ -41,7 +41,15 @@ type ILinked = {
     mregStatus: number;
     mregCreatedTime: string; // '2022-07-08 17:54:22';
   }[];
-  mrvrZmemId: number[];
+  mrvrZmemId: {
+    id: number;
+    mrvrId: number;
+    mrvrTrnsId: number;
+    mrvrOrderId: string; // 'LESAPC00';
+    mrvrZmemId: number;
+    mrvrEventId: number;
+    mrvrCreatedTime: string; // '2021-11-20 09:34:08';
+  }[];
   lptrZmemId: number[];
   mappZmemId: number[];
   minvZmemId: number[];

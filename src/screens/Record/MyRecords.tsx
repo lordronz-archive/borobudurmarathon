@@ -7,6 +7,7 @@ import {
   ScrollView,
   Divider,
   Image,
+  Alert,
 } from 'native-base';
 import React from 'react';
 import BackHeader from '../../components/header/BackHeader';
@@ -24,6 +25,7 @@ export default function MyEvents() {
 
   return (
     <ScrollView backgroundColor={colors.white} flex={1}>
+      <Alert status="warning">Coming Soon</Alert>
       <Image
         borderRadius={8}
         source={require('../../assets/images/welcome-card-img.png')}

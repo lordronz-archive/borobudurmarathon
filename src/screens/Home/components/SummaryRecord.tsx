@@ -1,7 +1,18 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Flex, VStack, Divider, Text} from 'native-base';
+import useActivity from '../../../hooks/useActivities';
 
 export default function SummaryRecord() {
+  const {fetchList, bestRecord} = useActivity();
+
+  useEffect(() => {
+    fetchList();
+  }, []);
+
+  if (!bestRecord) {
+    return <></>;
+  }
+
   return (
     <Flex mx="3" direction="row" justify="space-evenly" alignItems={'center'}>
       <VStack alignItems="center">
@@ -9,7 +20,13 @@ export default function SummaryRecord() {
           Time
         </Text>
         <Text py="1" fontWeight={500} fontSize={18}>
-          00:00:00
+          {`${bestRecord.mmacTimeHour
+            .toString()
+            .padStart(2, '0')}:${bestRecord.mmacTimeMinute
+            .toString()
+            .padStart(2, '0')}:${bestRecord.mmacTimeSecond
+            .toString()
+            .padStart(2, '0')}`}
         </Text>
       </VStack>
       <Divider
@@ -28,7 +45,7 @@ export default function SummaryRecord() {
           Distance
         </Text>
         <Text py="1" fontWeight={500} fontSize={18}>
-          0{' '}
+          {bestRecord.mmacDistance}{' '}
           <Text fontWeight={600} color={'#768499'} fontSize={12}>
             km
           </Text>
@@ -50,7 +67,7 @@ export default function SummaryRecord() {
           Pace
         </Text>
         <Text py="1" fontWeight={500} fontSize={18}>
-          00:00
+          {bestRecord.averagePace}
           <Text fontWeight={600} color={'#768499'} fontSize={12}>
             /km
           </Text>

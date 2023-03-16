@@ -4,6 +4,9 @@ export const averagePace = (
   totalSecond: number,
   distance: number,
 ) => {
+  if (!distance) {
+    distance = 1;
+  }
   const paceSeconds =
     (totalHour * 60 * 60 + totalMinute * 60 + totalSecond) / distance;
   const minutes = Math.floor(paceSeconds / 60);

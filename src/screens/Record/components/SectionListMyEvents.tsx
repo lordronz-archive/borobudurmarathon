@@ -1,31 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {View, Flex, Image, Text, FlatList} from 'native-base';
+import React, {useEffect} from 'react';
+import {View, Flex, Image, Text, FlatList, Spinner} from 'native-base';
 import Section from '../../../components/section/Section';
 import RecordCard from './RecordCard';
-import {useAuthUser} from '../../../context/auth.context';
-import {EventService} from '../../../api/event.service';
-import {Activity, Datum} from '../../../types/activity.type';
-import {averagePace} from '../../../helpers/averagePace';
-import I18n from '../../../lib/i18n';
+import {Datum} from '../../../types/activity.type';
 import {useTranslation} from 'react-i18next';
+import useActivity from '../../../hooks/useActivities';
 
 export default function SectionListMyEvents() {
-  const {user} = useAuthUser();
   const {t} = useTranslation();
 
-  const [activities, setActivities] = useState<Activity>();
-  const [isLoading, setIsLoading] = useState(true);
+  const {isLoading, activities, fetchList} = useActivity();
 
   useEffect(() => {
-    if (user) {
-      (async () => {
-        console.info('Fetch activities');
-        const res: any = await EventService.getGarminActivities('28328');
-        setActivities(res.data);
-        setIsLoading(false);
-      })();
-    }
-  }, [user]);
+    fetchList();
+  }, []);
 
   const _renderItem = ({item: activity}: {item: Datum}) => {
     return (
@@ -38,18 +26,15 @@ export default function SectionListMyEvents() {
           .toString()
           .padStart(2, '0')}`}
         distanceInKm={activity.mmacDistance}
-        averagePacePerKm={averagePace(
-          activity.mmacTimeHour,
-          activity.mmacTimeMinute,
-          activity.mmacTimeSecond,
-          activity.mmacDistance,
-        )}
+        averagePacePerKm={activity.averagePace || ''}
       />
     );
   };
 
   const _renderEmpty = () => {
-    return (
+    return isLoading ? (
+      <Spinner size="lg" />
+    ) : (
       <Flex my={5} flex={1}>
         <Image
           source={require('../../../assets/images/hiasan-not-found.png')}
@@ -74,7 +59,7 @@ export default function SectionListMyEvents() {
         subtitle="All records of my borobudur marathon events">
         <FlatList
           refreshing={isLoading}
-          data={activities?.data}
+          data={activities}
           ListEmptyComponent={_renderEmpty}
           renderItem={_renderItem}
           keyExtractor={item => item.mmacId.toString()}

@@ -1,26 +1,32 @@
-import React from 'react';
-import {Flex, VStack, Divider, Text, HStack} from 'native-base';
-import IconRun from '../../../assets/icons/IconRun';
-import IconTimer from '../../../assets/icons/IconTimer';
-import IconMap from '../../../assets/icons/IconMap';
+import React, {useEffect} from 'react';
+import {Flex, VStack, Divider, Text} from 'native-base';
+import useActivity from '../../../hooks/useActivities';
 
 export default function BestRecord() {
+  const {fetchList, bestRecord} = useActivity();
+
+  useEffect(() => {
+    fetchList();
+  }, []);
+
+  // if (!bestRecord?) {
+  //   return <></>;
+  // }
+
   return (
-    <Flex
-      mx="3"
-      direction="row"
-      justify="space-evenly"
-      alignItems={'center'}
-      py="2">
-      <VStack alignItems="flex-start">
-        <HStack alignItems={'center'} space="1">
-          <IconTimer />
-          <Text py="2" color={'#768499'} fontSize={12}>
-            Time
-          </Text>
-        </HStack>
+    <Flex mx="3" direction="row" justify="space-evenly" alignItems={'center'}>
+      <VStack alignItems="center">
+        <Text py="2" color={'#768499'} fontSize={12}>
+          Time
+        </Text>
         <Text py="1" fontWeight={500} fontSize={18}>
-          00:00:00
+          {`${(bestRecord?.mmacTimeHour || '').toString().padStart(2, '0')}:${(
+            bestRecord?.mmacTimeMinute || ''
+          )
+            .toString()
+            .padStart(2, '0')}:${(bestRecord?.mmacTimeSecond || '')
+            .toString()
+            .padStart(2, '0')}`}
         </Text>
       </VStack>
       <Divider
@@ -34,15 +40,12 @@ export default function BestRecord() {
           bg: 'muted.50',
         }}
       />
-      <VStack alignItems="flex-start">
-        <HStack alignItems={'center'} space="1">
-          <IconMap />
-          <Text py="2" color={'#768499'} fontSize={12}>
-            Distance
-          </Text>
-        </HStack>
+      <VStack alignItems="center">
+        <Text py="2" color={'#768499'} fontSize={12}>
+          Distance
+        </Text>
         <Text py="1" fontWeight={500} fontSize={18}>
-          0{' '}
+          {bestRecord?.mmacDistance || 0}{' '}
           <Text fontWeight={600} color={'#768499'} fontSize={12}>
             km
           </Text>
@@ -59,15 +62,12 @@ export default function BestRecord() {
           bg: 'muted.50',
         }}
       />
-      <VStack alignItems="flex-start">
-        <HStack alignItems={'center'} space="1">
-          <IconRun />
-          <Text py="2" color={'#768499'} fontSize={12}>
-            Avg. Pace
-          </Text>
-        </HStack>
+      <VStack alignItems="center">
+        <Text py="2" color={'#768499'} fontSize={12}>
+          Pace
+        </Text>
         <Text py="1" fontWeight={500} fontSize={18}>
-          00:00
+          {bestRecord?.averagePace || 0}
           <Text fontWeight={600} color={'#768499'} fontSize={12}>
             /km
           </Text>

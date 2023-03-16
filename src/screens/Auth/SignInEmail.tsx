@@ -185,12 +185,14 @@ export default function SignInEmailScreen() {
           </Text>
         </HStack>
       </Box>
-      <Button
-        onPress={() => signin()}
-        isLoading={loading}
-        disabled={isDisabledButton}>
-        {t('auth.signin')}
-      </Button>
+      <HStack my={3}>
+        <Button
+          onPress={() => signin()}
+          isLoading={loading}
+          disabled={isDisabledButton}>
+          {t('auth.signin')}
+        </Button>
+      </HStack>
     </VStack>
   );
 }

@@ -1,4 +1,4 @@
-import { Spinner } from 'native-base';
+import {Spinner} from 'native-base';
 import React from 'react';
 // import {Button as NBButton} from 'native-base';
 import {
@@ -32,6 +32,7 @@ export default function Button({
       <View
         style={[
           {
+            flex: 1,
             borderColor: '#f2f2f2',
             backgroundColor: variant === 'solid' ? 'gray' : 'white',
           },
@@ -63,6 +64,7 @@ export default function Button({
         onPress={onPress}
         style={[
           {
+            flex: 1,
             borderColor: '#C5CDDB',
             backgroundColor: variant === 'solid' ? '#EB1C23' : 'white',
           },

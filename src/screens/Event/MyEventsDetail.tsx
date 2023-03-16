@@ -494,6 +494,7 @@ export default function MyEventDetail() {
                           onChangeText={val => setCouponCode(val)}
                           value={couponCode}
                           style={{
+                            color: '#1E1E1E',
                             borderWidth: 1,
                             borderStyle: 'solid',
                             borderColor: '#C5CDDB',

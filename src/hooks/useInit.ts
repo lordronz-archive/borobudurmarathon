@@ -204,9 +204,20 @@ export default function useInit() {
   const checkAccount = async (
     data: IAuthResponseData,
     profile: IMemberDetailResponse,
+    replace?: {
+      isShowDemoVerifyEmail?: boolean;
+      isShowDemoConsent?: boolean;
+      isShowDemoNewUser?: boolean;
+    },
   ) => {
+    console.info('checkAccount: data', data);
+    console.info('checkAccount: replace', data);
     if (isShowDemoVerifyEmail) {
-      data.authEmail = '0';
+      if (replace && replace.isShowDemoVerifyEmail) {
+        data.authEmail = '1';
+      } else {
+        data.authEmail = '0';
+      }
     }
     if (isShowDemoConsent) {
       data.consent = '0';
@@ -222,7 +233,10 @@ export default function useInit() {
             email: data.email,
             onSuccess: () => {
               setDemoVerifyEmail(false);
-              checkAccount({...data, authEmail: '1'}, profile);
+
+              checkAccount({...data, authEmail: '1'}, profile, {
+                isShowDemoVerifyEmail: true,
+              });
             },
           });
         })
@@ -233,7 +247,7 @@ export default function useInit() {
             description: getErrorMessage(err),
           });
         });
-    } else if (data.login === 'Kompas' && Number(data.consent) === 0) {
+    } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
       navigation.replace('DataConfirmation');
     } else if (Number(data.authProfile) === 0) {
       // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)

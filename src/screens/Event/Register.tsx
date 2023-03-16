@@ -84,12 +84,15 @@ export default function EventRegisterScreen() {
       }
     });
 
-    fieldResult.sort((x, y) => {
-      // true values first
-      return x.static === y.static ? 0 : x ? -1 : 1;
-    });
+    const fieldTop = fieldResult.filter(item => item.static);
+    const fieldBottom = fieldResult.filter(item => !item.static);
 
-    return fieldResult;
+    // fieldResult.sort((x, y) => {
+    //   // true values first
+    //   return x.static === y.static ? 0 : x ? -1 : 1;
+    // });
+
+    return [...fieldTop, ...fieldBottom];
   }, [params.event.fields]);
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -375,7 +378,7 @@ export default function EventRegisterScreen() {
           </Checkbox.Group>
         </Box>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{paddingHorizontal: 20, paddingVertical: 5}}
           onPress={async () => {
             let obj: any = {};
@@ -402,7 +405,8 @@ export default function EventRegisterScreen() {
           <Center>
             <Text color="primary.900">Set Dummy Data</Text>
           </Center>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
         <HStack px="4" justifyContent={'space-between'} alignItems={'center'}>
           <Text>Total Payment</Text>
           <Text fontSize={18} fontWeight={700}>{`IDR ${Number(

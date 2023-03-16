@@ -6,7 +6,7 @@ export enum EAuthUserAction {
   LOGOUT = 'LOGOUT',
   SET_LOGIN_TYPE = 'SET_LOGIN_TYPE',
 }
-type State = {user?: IMemberDetailResponse; loginType?: 'Email' | 'Kompas'};
+type State = {user?: IMemberDetailResponse; loginType?: 'Email' | 'KompasId'};
 type Action = {type: EAuthUserAction; payload?: State};
 type Dispatch = (action: Action) => void;
 
@@ -55,7 +55,7 @@ function useAuthUser() {
     ...context,
     isLoggedIn: context.state.user ? true : false,
     user: context.state.user,
-    setLoginType: (type: 'Email' | 'Kompas') =>
+    setLoginType: (type: 'Email' | 'KompasId') =>
       context.dispatch({
         type: EAuthUserAction.SET_LOGIN_TYPE,
         payload: {

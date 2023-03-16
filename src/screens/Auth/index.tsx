@@ -103,7 +103,7 @@ export default function AuthScreen() {
   };
 
   const openAuthLink = async () => {
-    setLoginType('Kompas');
+    setLoginType('KompasId');
 
     try {
       Linking.openURL(url);

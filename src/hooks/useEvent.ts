@@ -22,7 +22,7 @@ export default function useEvent() {
     setIsLoading(true);
     EventService.getEvents()
       .then(res => {
-        // console.info('res getEvents', JSON.stringify(res));
+        console.info('res getEvents', JSON.stringify(res));
         if (res.data) {
           setResEvent(res);
         }

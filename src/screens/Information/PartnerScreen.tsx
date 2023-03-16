@@ -8,6 +8,8 @@ import {EventService} from '../../api/event.service';
 import {ISponsorData} from '../../types/sponsor.type';
 import i18next from 'i18next';
 import EmptyMessage from '../../components/EmptyMessage';
+import useEvent from '../../hooks/useEvent';
+import moment from 'moment';
 
 // function getPriority(val: number | string): 'high' | 'medium' | 'low' {
 //   val = Number(val);
@@ -46,6 +48,7 @@ type IGroupSponsor = {
 };
 export default function PartnerScreen() {
   const {colors} = useTheme();
+  const {events} = useEvent();
   const [sponsors, setSponsors] = useState<IGroupSponsor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>();
   console.info('sponsors', JSON.stringify(sponsors));
@@ -53,7 +56,17 @@ export default function PartnerScreen() {
 
   const fetchList = () => {
     setIsLoading(true);
-    EventService.getSponsors({filter: {}})
+    const eventIds = events
+      .filter(
+        item =>
+          item.evnhStatus &&
+          !moment(item.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
+            moment(),
+          ),
+      )
+      .map(item => item.evnhId);
+    console.info('eventIds', eventIds);
+    EventService.getSponsors(eventIds)
       .then(res => {
         res.data.data.sort((a, b) => Number(a.ehspOrder) - Number(b.ehspOrder));
         const list = res.data.data.reduce(

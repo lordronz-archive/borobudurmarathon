@@ -900,11 +900,31 @@ export default function ChooseCitizenScreen({route}: Props) {
         isOpen={isOpenNotReadable}
         onClose={() => {
           setIsOpenNotReadable(false);
+          console.info('validationTry', validationTry);
+          if (validationTry < 5) {
+            setStep('upload-id');
+            setStepCount(2);
+            setProfileStep(1);
+            setIdentityImage({
+              fileId: '',
+              data: undefined,
+            });
+          }
           // nextStep();
           // setStepCount(v => v + 1);
         }}
         onPress={() => {
           setIsOpenNotReadable(false);
+          console.info('validationTry', validationTry);
+          if (validationTry < 5) {
+            setStep('upload-id');
+            setStepCount(2);
+            setProfileStep(1);
+            setIdentityImage({
+              fileId: '',
+              data: undefined,
+            });
+          }
           // nextStep();
           // setStepCount(v => v + 1);
         }}

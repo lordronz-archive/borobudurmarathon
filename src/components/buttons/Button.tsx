@@ -27,6 +27,24 @@ export default function Button({
   disabled,
   ...rest
 }: ButtonProps) {
+  const renderChildren = () =>
+    isLoading ? (
+      <View style={{flexDirection: 'row'}}>
+        <Spinner size="sm" color="white" />
+      </View>
+    ) : typeof children === 'string' ? (
+      <Text
+        style={{
+          color: variant === 'solid' ? 'white' : '#EB1C23',
+          ..._text,
+        }}>
+        {children}
+      </Text>
+    ) : (
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        {children}
+      </View>
+    );
   if (isLoading || disabled) {
     return (
       <View
@@ -42,20 +60,7 @@ export default function Button({
             alignItems: typeof children === 'string' ? 'center' : undefined,
           },
         ]}>
-        {typeof children === 'string' ? (
-          <Text
-            style={{
-              color: variant === 'solid' ? 'white' : '#EB1C23',
-              ..._text,
-            }}>
-            {children}
-          </Text>
-        ) : (
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            {isLoading ? <Spinner /> : false}
-            {children}
-          </View>
-        )}
+        {renderChildren()}
       </View>
     );
   } else {
@@ -74,25 +79,7 @@ export default function Button({
             alignItems: typeof children === 'string' ? 'center' : 'center',
           },
         ]}>
-        {typeof children === 'string' ? (
-          <Text
-            style={{
-              color: variant === 'solid' ? 'white' : '#EB1C23',
-              ..._text,
-            }}>
-            {children}
-          </Text>
-        ) : (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            {isLoading ? <Spinner /> : false}
-            {children}
-          </View>
-        )}
+        {renderChildren()}
       </TouchableOpacity>
     );
   }

@@ -15,6 +15,7 @@ import {useDemo} from '../context/demo.context';
 import {IAuthResponseData} from '../types/auth.type';
 import config from '../config';
 import {cleanPhoneNumber} from '../helpers/phoneNumber';
+import i18next from 'i18next';
 
 export default function useInit() {
   const route = useRoute();
@@ -68,6 +69,10 @@ export default function useInit() {
         type: EAuthUserAction.LOGIN,
         payload: {user: resProfile},
       });
+
+      await i18next.changeLanguage(
+        +resProfile.data[0].zmemLanguage === 1 ? 'en' : 'id',
+      );
 
       return resProfile;
       // if (cookie) {

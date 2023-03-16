@@ -55,6 +55,7 @@ export default {
     checkEventBtn: 'Check My Event',
   },
   tab: {
+    home: 'Home',
     myEvents: 'My Events',
     records: 'Records',
     more: 'More',
@@ -78,6 +79,8 @@ export default {
     buttonUpdate: 'Update Profile',
     changePhoneNumber: 'Change Phone Number',
     sendOtp: 'Send OTP',
+    changeLanguage: 'Change Language',
+    language: 'Language',
   },
   consent: {
     title: 'Data Confirmation',

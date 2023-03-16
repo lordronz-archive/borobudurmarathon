@@ -24,7 +24,7 @@ import {TouchableOpacity} from 'react-native';
 import {useAuthUser} from '../../context/auth.context';
 import {MasterLocationResponse} from '../../types/profile.type';
 import {ProfileService} from '../../api/profile.service';
-import { cleanPhoneNumber } from '../../helpers/phoneNumber';
+import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 
 export default function InputProfileScreen() {
   const navigation =

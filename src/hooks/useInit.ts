@@ -15,7 +15,7 @@ import {useDemo} from '../context/demo.context';
 import {IAuthResponseData} from '../types/auth.type';
 import config from '../config';
 import {cleanPhoneNumber} from '../helpers/phoneNumber';
-import i18next, { t } from 'i18next';
+import i18next, {t} from 'i18next';
 
 export default function useInit() {
   const route = useRoute();
@@ -203,9 +203,20 @@ export default function useInit() {
   const checkAccount = async (
     data: IAuthResponseData,
     profile: IMemberDetailResponse,
+    replace?: {
+      isShowDemoVerifyEmail?: boolean;
+      isShowDemoConsent?: boolean;
+      isShowDemoNewUser?: boolean;
+    },
   ) => {
+    console.info('checkAccount: data', data);
+    console.info('checkAccount: replace', data);
     if (isShowDemoVerifyEmail) {
-      data.authEmail = '0';
+      if (replace && replace.isShowDemoVerifyEmail) {
+        data.authEmail = '1';
+      } else {
+        data.authEmail = '0';
+      }
     }
     if (isShowDemoConsent) {
       data.consent = '0';
@@ -221,7 +232,10 @@ export default function useInit() {
             email: data.email,
             onSuccess: () => {
               setDemoVerifyEmail(false);
-              checkAccount({...data, authEmail: '1'}, profile);
+
+              checkAccount({...data, authEmail: '1'}, profile, {
+                isShowDemoVerifyEmail: true,
+              });
             },
           });
         })

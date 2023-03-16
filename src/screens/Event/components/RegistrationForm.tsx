@@ -5,7 +5,8 @@ import TextInput from '../../../components/form/TextInput';
 import ApiService from '../../../api/api.service';
 import countries from '../../../helpers/countries';
 import DateInput from '../../../components/form/DateInput';
-import {Box, Text} from 'native-base';
+import {Box, Row, Text} from 'native-base';
+import {convertOption} from '../../../helpers/convertOption';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -15,6 +16,7 @@ export default function RegistrationForm(
     helperText?: React.ReactNode;
     required?: boolean;
     static?: boolean;
+    data?: (EventFieldsEntity & {value: string})[];
   },
 ) {
   const opts = (
@@ -40,20 +42,51 @@ export default function RegistrationForm(
   };
 
   if (props.static) {
-    return (
-      <Box key={props.evhfLabel} flex={1}>
-        <Text color="gray.500" fontSize="sm">
-          {props.evhfLabel}
-        </Text>
-        {props.value ? (
-          <Text>{props.value}</Text>
-        ) : (
-          <Text color="gray.500" italic>
-            ~ Not Set
+    return props.data && props.data.length > 0 ? (
+      <Row flex={1}>
+        {props.data.map(dprops => (
+          <Box key={dprops.evhfLabel} flex={1}>
+            <Text color="gray.500" fontSize="sm">
+              {dprops.evhfLabel}
+            </Text>
+            {dprops.value ? (
+              <Text>{dprops.value}</Text>
+            ) : (
+              <Text color="gray.500" italic>
+                ~ Not Set
+              </Text>
+            )}
+          </Box>
+        ))}
+      </Row>
+    ) : (
+      <Row>
+        <Box>
+          <Text color="gray.500" fontSize="sm">
+            {props.evhfLabel}
           </Text>
-        )}
-      </Box>
+          {props.value ? (
+            <Text>{convertOption(props.value, props.evhfName)}</Text>
+          ) : (
+            <Text color="gray.500" italic>
+              ~ Not Set
+            </Text>
+          )}
+        </Box>
+      </Row>
     );
+    // <Box key={props.evhfLabel} flex={1}>
+    //   <Text color="gray.500" fontSize="sm">
+    //     {props.evhfLabel}
+    //   </Text>
+    //   {props.value ? (
+    //     <Text>{props.value}</Text>
+    //   ) : (
+    //     <Text color="gray.500" italic>
+    //       ~ Not Set
+    //     </Text>
+    //   )}
+    // </Box>
   }
 
   if (props.evhfType === 'Option') {
@@ -65,6 +98,7 @@ export default function RegistrationForm(
         onValueChange={props.onValueChange}
         value={props.value}
         helperText={props.helperText}
+        hideSearch={options.length <= 10}
       />
     );
   } else if (['number', 'phone'].includes(props.evhfType.toLowerCase())) {

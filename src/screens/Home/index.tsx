@@ -85,7 +85,6 @@ export default function HomeScreen() {
             bg: 'muted.50',
           }}
         />
-        {/* <Section title="Featured Events" mx="4" my={3} /> */}
 
         <SectionFeaturedEvents />
 

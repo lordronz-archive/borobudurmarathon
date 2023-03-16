@@ -50,6 +50,9 @@ const bannedField = [
   'evpaBirthDate',
   'evpaCountry',
   'evpaGender',
+  'evpaIDNumberType',
+  'evpaIDNumber',
+  'evpaBloodType',
 ];
 
 export default function EventRegisterScreen() {
@@ -75,7 +78,7 @@ export default function EventRegisterScreen() {
         : ([] as EventFieldsEntity[]);
 
     bannedField.forEach(bF => {
-      let findIndex = fields.findIndex(f => f.evhfName === bF);
+      let findIndex = fieldResult.findIndex(f => f.evhfName === bF);
       if (findIndex !== -1) {
         fieldResult[findIndex].static = true;
       }
@@ -83,7 +86,7 @@ export default function EventRegisterScreen() {
 
     fieldResult.sort((x, y) => {
       // true values first
-      return x === y ? 0 : x ? -1 : 1;
+      return x.static === y.static ? 0 : x ? -1 : 1;
     });
 
     return fieldResult;
@@ -341,10 +344,7 @@ export default function EventRegisterScreen() {
           <VStack space="1.5">
             {fields
               .filter(
-                f =>
-                  f.evhfName !== 'evpaEvnhId' &&
-                  f.evhfName !== 'evpaEvncId' &&
-                  !bannedField.includes(f.evhfName),
+                f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
               )
               .map(field => (
                 <RegistrationForm

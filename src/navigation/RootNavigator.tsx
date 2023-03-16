@@ -24,13 +24,13 @@ import CertificatesScreen from '../screens/Profile/Certificates';
 import PartnerScreen from '../screens/Information/PartnerScreen';
 import ChooseCitizenScreen from '../screens/InputProfile/ChooseCitizen';
 import EmailValidationScreen from '../screens/InputProfile/EmailValidation';
-import VerifyLaterScreen from '../screens/InputProfile/VerifyLater';
 import AboutUsScreen from '../screens/Information/AboutUs';
 import SearchLocationScreen from '../screens/InputProfile/SearchLocation';
 import SignInEmailScreen from '../screens/Auth/SignInEmail';
 import RegisterEmailScreen from '../screens/Auth/RegisterEmail';
 import ForgotPasswordScreen from '../screens/Auth/ForgotPassword';
 import EmailVerificationWhenRegisterScreen from '../screens/InputProfile/EmailVerificationWhenRegister';
+import InfoVerifyLaterScreen from '../screens/Information/InfoVerifyLater';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -73,7 +73,7 @@ export type RootStackParamList = {
   Certificates: undefined;
   UpdatePhone: undefined;
   Welcome: undefined;
-  VerifyLater: undefined;
+  InfoVerifyLater: undefined;
 
   FAQ: undefined;
   Partner: undefined;
@@ -142,8 +142,8 @@ function RootNavigator() {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="VerifyLater"
-            component={VerifyLaterScreen}
+            name="InfoVerifyLater"
+            component={InfoVerifyLaterScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen

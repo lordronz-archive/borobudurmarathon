@@ -53,6 +53,7 @@ export default function BannerNew(props: IProps) {
           // onSnapToItem={index => console.log('current index:', index)}
           renderItem={({item, index}) => (
             <Box
+              key={index}
               shadow="2"
               bg="white"
               mx={4}

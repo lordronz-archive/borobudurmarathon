@@ -782,7 +782,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 </VStack>
                 <TouchableOpacity
                   onPress={() => {
-                    // navigation.navigate('InformationVerifyLater');
+                    navigation.navigate('InfoVerifyLater');
                   }}>
                   <Text fontSize={'12px'} fontWeight={600} underline>
                     See more info

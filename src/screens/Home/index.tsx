@@ -53,12 +53,18 @@ export default function HomeScreen() {
                 {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
               <Text fontSize={'lg'} mx={2} fontWeight={700}>
-                {t('Hello')}, {user?.data[0].zmemFullName}
+                {t('Hello')},{' '}
+                {user?.data[0].zmemFullName &&
+                user?.data[0].zmemFullName.length > 15
+                  ? user?.data[0].zmemFullName.substring(0, 12) + '...'
+                  : user?.data[0].zmemFullName}
               </Text>
             </Flex>
           </TouchableOpacity>
           <Row>
-            <TouchableOpacity style={{padding: 5}}>
+            <TouchableOpacity
+              style={{padding: 5}}
+              onPress={() => navigation.navigate('FAQ')}>
               <IconInformationCircle size="xl" color="black" />
             </TouchableOpacity>
             <TouchableOpacity

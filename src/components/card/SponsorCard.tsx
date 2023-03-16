@@ -16,7 +16,7 @@ export default function SponsorCard(props: Props) {
 
       {props.items.map(item => (
         <Center px="10" key={item.description}>
-          <Box width="80%" alignItems="center" py="3">
+          <Box width="60%" alignItems="center" py="3">
             {typeof item.logo === 'string' ? (
               <Image
                 alt={item.description}

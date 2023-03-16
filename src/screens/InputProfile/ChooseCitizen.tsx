@@ -102,38 +102,38 @@ export default function ChooseCitizenScreen({route}: Props) {
 
   useEffect(() => {
     setAccountInformation({
-      name: user?.linked.mbsdZmemId[0].mbsdFullName || '',
+      name: user?.linked.mbsdZmemId?.[0].mbsdFullName || '',
       phoneNumber: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone) || '',
-      birthdate: user?.linked.mbsdZmemId[0].mbsdBirthDate
-        ? new Date(user?.linked.mbsdZmemId[0].mbsdBirthDate)
+      birthdate: user?.linked.mbsdZmemId?.[0].mbsdBirthDate
+        ? new Date(user?.linked.mbsdZmemId?.[0].mbsdBirthDate)
         : undefined,
     });
     setProfile({
-      mbsdIDNumber: user?.linked.mbsdZmemId[0].mbsdIDNumber || '',
-      mbsdBirthDate: user?.linked.mbsdZmemId[0].mbsdBirthDate || '',
-      mbsdBirthPlace: user?.linked.mbsdZmemId[0].mbsdBirthPlace || '',
-      mbsdGender: user?.linked.mbsdZmemId[0].mbsdGender
-        ? String(user?.linked.mbsdZmemId[0].mbsdGender)
+      mbsdIDNumber: user?.linked.mbsdZmemId?.[0].mbsdIDNumber || '',
+      mbsdBirthDate: user?.linked.mbsdZmemId?.[0].mbsdBirthDate || '',
+      mbsdBirthPlace: user?.linked.mbsdZmemId?.[0].mbsdBirthPlace || '',
+      mbsdGender: user?.linked.mbsdZmemId?.[0].mbsdGender
+        ? String(user?.linked.mbsdZmemId?.[0].mbsdGender)
         : '0',
-      mbsdBloodType: user?.linked.mbsdZmemId[0].mbsdBloodType
-        ? Number(user?.linked.mbsdZmemId[0].mbsdBloodType)
+      mbsdBloodType: user?.linked.mbsdZmemId?.[0].mbsdBloodType
+        ? Number(user?.linked.mbsdZmemId?.[0].mbsdBloodType)
         : 0,
-      mbsdNationality: user?.linked.mbsdZmemId[0].mbsdNationality || '',
-      mbsdCountry: user?.linked.mbsdZmemId[0].mbsdCountry || '',
-      mbsdCity: user?.linked.mbsdZmemId[0].mbsdCity || '',
-      mbsdProvinces: user?.linked.mbsdZmemId[0].mbsdProvinces || '',
-      mbsdAddress: user?.linked.mbsdZmemId[0].mbsdAddress || '',
-      mbsdRawAddress: user?.linked.mbsdZmemId[0].mbsdAddress || '',
-      mbsdIDNumberType: user?.linked.mbsdZmemId[0].mbsdIDNumberType
-        ? Number(user?.linked.mbsdZmemId[0].mbsdIDNumberType)
+      mbsdNationality: user?.linked.mbsdZmemId?.[0].mbsdNationality || '',
+      mbsdCountry: user?.linked.mbsdZmemId?.[0].mbsdCountry || '',
+      mbsdCity: user?.linked.mbsdZmemId?.[0].mbsdCity || '',
+      mbsdProvinces: user?.linked.mbsdZmemId?.[0].mbsdProvinces || '',
+      mbsdAddress: user?.linked.mbsdZmemId?.[0].mbsdAddress || '',
+      mbsdRawAddress: user?.linked.mbsdZmemId?.[0].mbsdAddress || '',
+      mbsdIDNumberType: user?.linked.mbsdZmemId?.[0].mbsdIDNumberType
+        ? Number(user?.linked.mbsdZmemId?.[0].mbsdIDNumberType)
         : 0,
       mbsdFile: 0,
-      mmedEducation: user?.linked.mmedZmemId[0].mmedEducation || '',
-      mmedOccupation: user?.linked.mmedZmemId[0].mmedOccupation || '',
-      mmedIncome: user?.linked.mmedZmemId[0].mmedIncome || '',
+      mmedEducation: user?.linked.mmedZmemId?.[0].mmedEducation || '',
+      mmedOccupation: user?.linked.mmedZmemId?.[0].mmedOccupation || '',
+      mmedIncome: user?.linked.mmedZmemId?.[0].mmedIncome || '',
     });
     setCitizen(
-      user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
+      user?.linked.mbsdZmemId?.[0].mbsdNationality === 'Indonesian'
         ? 'WNI'
         : 'WNA',
     );
@@ -501,7 +501,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                     source={{
                       uri: identityImage.data.path,
                     }}
-                    resizeMode={'cover'}
+                    resizeMode={'contain'}
                     size={'full'}
                     alt="ID Image"
                   />
@@ -538,6 +538,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                   });
                 }
               }}
+              width={320}
+              height={200}
             />
           </VStack>
         )}
@@ -798,10 +800,13 @@ export default function ChooseCitizenScreen({route}: Props) {
         {stepCount > 1 && (
           <TouchableOpacity
             style={{
+              width: '15%',
               backgroundColor: '#E7F3FC',
               borderRadius: 8,
               paddingVertical: 12,
               paddingHorizontal: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
             onPress={() => {
               if (profileStep > 1) {

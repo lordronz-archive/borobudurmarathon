@@ -15,7 +15,7 @@ import {useDemo} from '../context/demo.context';
 import {IAuthResponseData} from '../types/auth.type';
 import config from '../config';
 import {cleanPhoneNumber} from '../helpers/phoneNumber';
-import i18next from 'i18next';
+import i18next, {t} from 'i18next';
 import {Platform} from 'react-native';
 
 export default function useInit() {
@@ -277,7 +277,7 @@ export default function useInit() {
       }
     } else {
       getProfile();
-      navigation.replace('Main', {screen: 'Home'});
+      navigation.replace('Main', {screen: t('tab.home')});
       if (!toast.isActive('welcome')) {
         toast.show({
           id: 'welcome',

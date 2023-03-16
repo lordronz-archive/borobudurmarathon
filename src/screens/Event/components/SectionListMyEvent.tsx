@@ -1,17 +1,16 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import moment from 'moment';
-import {Divider, FlatList, Flex, Image, Text, Toast} from 'native-base';
+import {Divider, FlatList, Toast} from 'native-base';
 import React, {ComponentType, useEffect, useState} from 'react';
-import { useTranslation } from 'react-i18next';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
 import CategoryButton from '../../../components/buttons/CategoryButton';
 import MyEventCard from '../../../components/card/MyEventCard';
+import EmptyMessage from '../../../components/EmptyMessage';
 import Section from '../../../components/section/Section';
 import {getErrorMessage} from '../../../helpers/errorHandler';
 import httpRequest from '../../../helpers/httpRequest';
-import I18n from '../../../lib/i18n';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {Datum, EventProperties, Transaction} from '../../../types/event.type';
 
@@ -59,7 +58,6 @@ export default function SectionListMyEvent() {
   const IsFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {t} = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Transaction>();
   const [eventL, setEvent] = useState<EventProperties[]>([]);
@@ -222,22 +220,7 @@ export default function SectionListMyEvent() {
   };
 
   const _renderEmpty = () => {
-    return (
-      <Flex my={5} flex={1}>
-        <Image
-          source={require('../../../assets/images/hiasan-not-found.png')}
-          alignSelf={'center'}
-          mb={1}
-          alt="Data empty"
-        />
-        <Text textAlign={'center'} fontSize={'lg'} fontWeight={'bold'} mb={1}>
-          {t('dataEmpty')}
-        </Text>
-        <Text textAlign={'center'} fontSize={'sm'} color={'gray.400'}>
-          {t('dataEmptyDesc')}
-        </Text>
-      </Flex>
-    );
+    return <EmptyMessage />;
   };
 
   return (

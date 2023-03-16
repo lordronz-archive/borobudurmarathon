@@ -1,60 +1,35 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import moment from 'moment';
-import {Box, FlatList, Flex, Image, Spinner, Text, Toast} from 'native-base';
+import {Box, FlatList, Flex, Image, Spinner, Text} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity} from 'react-native';
-import {EventService} from '../../../api/event.service';
 import CategoryButton from '../../../components/buttons/CategoryButton';
 import EventCard from '../../../components/card/EventCard';
 import Section from '../../../components/section/Section';
 import datetime from '../../../helpers/datetime';
-import {getErrorMessage} from '../../../helpers/errorHandler';
-import I18n from '../../../lib/i18n';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {
-  EventProperties,
-  EventPropertiesDetail,
-  EVENT_TYPES,
-} from '../../../types/event.type';
+import useEvent from '../../../hooks/useEvent';
+import {EventPropertiesDetail, EVENT_TYPES} from '../../../types/event.type';
 
 export default function SectionListEvent() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<EventProperties[]>([]);
+  const {isLoading, events, fetchList} = useEvent();
   // const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
   const [selectedEventCategory, setSelectedEventCategory] = useState<{
     id: number | null;
     value: string;
   }>();
-  let filteredEvents = [...data];
+  let filteredEvents = [...events];
   if (selectedEventCategory && selectedEventCategory.id) {
     filteredEvents = filteredEvents.filter(
       item => Number(item.evnhType) === Number(selectedEventCategory.id),
     );
   }
-
-  const fetchList = () => {
-    setIsLoading(true);
-    EventService.getEvents()
-      .then(res => {
-        // console.info('res getEvents', JSON.stringify(res));
-        if (res.data) {
-          setData(res.data);
-        }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        Toast.show({
-          title: 'Failed to get events',
-          description: getErrorMessage(err),
-        });
-        setIsLoading(false);
-      });
-  };
+  console.info('filteredEvents', JSON.stringify(filteredEvents));
 
   useEffect(() => {
     fetchList();

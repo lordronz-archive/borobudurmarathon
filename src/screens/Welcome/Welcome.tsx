@@ -180,7 +180,7 @@ export default function WelcomeScreen() {
         mb="3"
         backgroundColor={'#1E1E1E'}
         borderRadius={8}
-        onPress={() => navigation.navigate('Main', {screen: 'Home'})}
+        onPress={() => navigation.replace('Main', {screen: t('tab.home')})}
         rightIcon={<ChevronRightIcon />}
         _stack={{flex: '1', justifyContent: 'space-between', px: '4'}}>
         {t('journey')}

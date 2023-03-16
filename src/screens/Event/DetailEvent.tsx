@@ -32,6 +32,9 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
 import httpRequest from '../../helpers/httpRequest';
 import Button from '../../components/buttons/Button';
+import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
+import RNShare, {ShareOptions} from 'react-native-share';
+import {Alert} from 'react-native';
 
 type Price = {
   id: string;
@@ -162,6 +165,54 @@ export default function DetailEvent() {
       });
   }, []);
 
+  const buildLink = async () => {
+    const link = await buildShortDynamicLink('events' + '/' + params.id, {
+      title: event?.data.evnhName || '',
+      descriptionText:
+        (event?.data.evnhDescription || '').substring(0, 50) || '',
+      imageUrl: event?.data.evnhThumbnail || '',
+    });
+    return link;
+  };
+
+  const shareHandler = async () => {
+    let builtLink;
+    try {
+      builtLink = await buildLink();
+    } catch (err) {
+      Toast.show({
+        title: 'Failed to build link',
+        description: getErrorMessage(err),
+      });
+      Alert.alert('Failed to build link', getErrorMessage(err));
+    }
+
+    if (!builtLink) {
+      return;
+    }
+
+    const shareOptions: ShareOptions = {
+      title: 'Share',
+      message: `${event?.data.evnhName} ${builtLink}`,
+    };
+
+    try {
+      RNShare.open(shareOptions)
+        .then(res => {
+          console.log('===>Share', res);
+        })
+        .catch(err => {
+          err && console.log(err);
+        });
+    } catch (error) {
+      console.error('FAiled to share');
+      Toast.show({
+        title: 'Failed to share',
+        description: getErrorMessage(error),
+      });
+    }
+  };
+
   return (
     <VStack>
       <ScrollView backgroundColor={'#fff'}>
@@ -169,10 +220,15 @@ export default function DetailEvent() {
           title=""
           left="back"
           right={
-            <IconButton
-              icon={<ShareIcon color="black" />}
-              borderRadius="full"
-            />
+            isLoading ? (
+              <Spinner size="sm" />
+            ) : (
+              <IconButton
+                onPress={shareHandler}
+                icon={<ShareIcon color="black" />}
+                borderRadius="full"
+              />
+            )
           }
         />
         <Stack mx={4}>

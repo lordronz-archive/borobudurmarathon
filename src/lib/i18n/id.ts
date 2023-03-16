@@ -36,6 +36,7 @@ export default {
     registerViaEmail: 'Daftar via Email',
     signin: 'Masuk',
     signinViaEmail: 'Masuk Via Email',
+    signout: 'Keluar',
     uploadId: 'Ketuk untuk Mengunggah',
     maxIdSize: 'Ukuran file maksimum adalah 5MB dalam format .jpg',
     uploadIdSubtitle: 'Harap unggah KTP Anda dan pastikan terlihat jelas',

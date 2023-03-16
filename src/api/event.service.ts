@@ -313,10 +313,11 @@ const EventService = {
       // );
     }
   },
-  getSponsors: async function () {
+  getSponsors: async function (eventIds: number[]) {
     try {
       const res = (await ApiService.get(
-        config.apiUrl.resources.sponsor.path,
+        config.apiUrl.resources.sponsor.path +
+          `?filter[ehspEvnhId][in]=${eventIds.join(',')}`,
       )) as {data: ISponsorResponse};
 
       return res;

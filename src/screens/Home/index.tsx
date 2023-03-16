@@ -1,16 +1,15 @@
 import {Avatar, Box, Divider, Flex, Row, ScrollView, Text} from 'native-base';
-import React, {useEffect} from 'react';
+import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 
-import useInit from '../../hooks/useInit';
 import {useAuthUser} from '../../context/auth.context';
 import {getShortCodeName} from '../../helpers/name';
 import SectionListEvent from './components/SectionListEvent';
 import SectionFeaturedEvents from './components/SectionFeaturedEvents';
 import {TouchableOpacity} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import IconInformationCircle from '../../assets/icons/IconInformationCircle';
 import SummaryRecord from './components/SummaryRecord';
@@ -18,10 +17,8 @@ import IconHamburgerMenu from '../../assets/icons/IconHamburgerMenu';
 import {useTranslation} from 'react-i18next';
 
 export default function HomeScreen() {
-  const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {checkLogin} = useInit();
   const {user} = useAuthUser();
   const {t} = useTranslation();
 
@@ -68,7 +65,7 @@ export default function HomeScreen() {
               style={{padding: 7}}
               onPress={() => {
                 navigation.navigate('Main', {
-                  screen: 'More',
+                  screen: t('tab.more'),
                 });
               }}>
               <IconHamburgerMenu size="lg" color="black" />
@@ -88,7 +85,6 @@ export default function HomeScreen() {
             bg: 'muted.50',
           }}
         />
-        {/* <Section title="Featured Events" mx="4" my={3} /> */}
 
         <SectionFeaturedEvents />
 

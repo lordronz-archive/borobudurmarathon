@@ -16,6 +16,7 @@ import {IAuthResponseData} from '../types/auth.type';
 import config from '../config';
 import {cleanPhoneNumber} from '../helpers/phoneNumber';
 import i18next from 'i18next';
+import {Platform} from 'react-native';
 
 export default function useInit() {
   const route = useRoute();
@@ -204,9 +205,9 @@ export default function useInit() {
     data: IAuthResponseData,
     profile: IMemberDetailResponse,
   ) => {
-    if (isShowDemoVerifyEmail) {
-      data.authEmail = '0';
-    }
+    // if (isShowDemoVerifyEmail) {
+    //   data.authEmail = '0';
+    // }
     if (isShowDemoConsent) {
       data.consent = '0';
     }
@@ -308,12 +309,14 @@ export default function useInit() {
 
   const clearCookies = async () => {
     await CookieManager.clearAll();
-    await CookieManager.clearByName(
-      'https://my.borobudurmarathon.com',
-      'PHPSESSID',
-      true,
-    );
-    await CookieManager.clearByName('https://kompas.id', 'USER_DATA', true);
+    if (Platform.OS === 'ios') {
+      await CookieManager.clearByName(
+        'https://my.borobudurmarathon.com',
+        'PHPSESSID',
+        true,
+      );
+      await CookieManager.clearByName('https://kompas.id', 'USER_DATA', true);
+    }
     SessionService.removeSession();
 
     // const cookies = await getCookiesString();

@@ -8,15 +8,18 @@ type Props = {
   visible: boolean;
   setVisible: (value: boolean) => void;
   onChange: (img: any) => void;
+  width?: number;
+  height?: number;
 };
 const ImagePicker = (props: Props) => {
   const {visible, setVisible, onChange} = props;
 
   const openGalery = () => {
     ImageCropPicker.openPicker({
-      width: 300,
-      height: 300,
+      width: props.width || 300,
+      height: props.height || 300,
       cropping: true,
+      freeStyleCropEnabled: true,
     })
       .then(image => {
         onChange(image);
@@ -29,9 +32,10 @@ const ImagePicker = (props: Props) => {
 
   const openCamera = () => {
     ImageCropPicker.openCamera({
-      width: 300,
-      height: 300,
+      width: props.width || 300,
+      height: props.height || 300,
       cropping: true,
+      freeStyleCropEnabled: true,
     })
       .then(image => {
         onChange(image);

@@ -501,7 +501,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                     source={{
                       uri: identityImage.data.path,
                     }}
-                    resizeMode={'cover'}
+                    resizeMode={'contain'}
                     size={'full'}
                     alt="ID Image"
                   />
@@ -538,6 +538,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                   });
                 }
               }}
+              width={320}
+              height={200}
             />
           </VStack>
         )}

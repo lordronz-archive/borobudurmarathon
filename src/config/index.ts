@@ -1,3 +1,4 @@
+import Config from 'react-native-config';
 import apiUrl from './api';
 
 export default {
@@ -5,7 +6,8 @@ export default {
   bypassPhoneVerification: false,
   bypassEmailVerification: false,
   inAppBrowser: true,
-  isDev: true,
+  isDev: Config.IS_DEV === 'TRUE',
+  isShowFeatureCertificate: false,
   debug: true,
   // isProduction: process.env.NODE_ENV === 'production',
   jobApiUrl: {

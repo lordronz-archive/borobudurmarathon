@@ -34,6 +34,7 @@ export default {
     registerViaEmail: 'Register via Email',
     signin: 'Sign In',
     signinViaEmail: 'Sign In Via Email',
+    signout: 'Sign Out',
     uploadId: 'Tap to Upload',
     maxIdSize: 'Maximum file size is 5MB in .jpg format with clear images',
     uploadIdSubtitle:

@@ -52,7 +52,6 @@ export default function MyProfile() {
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
   const onCloseModalLogout = () => setIsOpenModalLogout(false);
   const cancelLogoutRef = React.useRef(null);
-  const [, setIsLangOpen] = React.useState(false);
   const {t} = useTranslation();
   const {isOpen, onOpen, onClose} = useDisclose();
 
@@ -124,7 +123,7 @@ export default function MyProfile() {
       <ScrollView backgroundColor={colors.white}>
         <Box alignItems="flex-start" padding={1}>
           <IconButton
-            onPress={() => navigation.navigate('Main', {screen: 'Home'})}
+            onPress={() => navigation.navigate('Main', {screen: t('tab.home')})}
             icon={<ArrowBackIcon />}
             borderRadius="full"
             _icon={{
@@ -168,41 +167,67 @@ export default function MyProfile() {
               </Text>
             </VStack>
           </HStack>
+          {!config.isShowFeatureCertificate && (
+            <Box
+              marginX={0}
+              marginTop={0}
+              marginBottom={7}
+              backgroundColor={colors.white}>
+              <Image
+                alt="hiasan"
+                source={require('../../assets/images/hiasan-color.png')}
+                position="absolute"
+                right={0}
+                top={-90}
+                zIndex={10}
+              />
+              <Image
+                alt="hiasan"
+                source={require('../../assets/images/hiasan-shadow.png')}
+                position="absolute"
+                right={0}
+                top={-95}
+                zIndex={0}
+              />
+            </Box>
+          )}
         </Pressable>
 
-        <Pressable onPress={() => navigation.navigate('Certificates')}>
-          <Box
-            marginX={3}
-            marginTop={5}
-            marginBottom={7}
-            borderWidth={1}
-            borderColor={colors.gray[300]}
-            borderRadius={8}
-            backgroundColor={colors.white}
-            shadow="1">
-            <VStack padding={3} justifyContent="space-between">
-              <IconBadge color={colors.primary[900]} size="lg" />
-              <Text marginTop={3} fontWeight={600}>
-                View Certificate
-              </Text>
-            </VStack>
-            <Image
-              alt="hiasan"
-              source={require('../../assets/images/hiasan-color.png')}
-              position="absolute"
-              right={0}
-              bottom={0}
-              zIndex={10}
-            />
-            <Image
-              alt="hiasan"
-              source={require('../../assets/images/hiasan-shadow.png')}
-              position="absolute"
-              right={10}
-              zIndex={0}
-            />
-          </Box>
-        </Pressable>
+        {config.isShowFeatureCertificate && (
+          <Pressable onPress={() => navigation.navigate('Certificates')}>
+            <Box
+              marginX={3}
+              marginTop={5}
+              marginBottom={7}
+              borderWidth={1}
+              borderColor={colors.gray[300]}
+              borderRadius={8}
+              backgroundColor={colors.white}
+              shadow="1">
+              <VStack padding={3} justifyContent="space-between">
+                <IconBadge color={colors.primary[900]} size="lg" />
+                <Text marginTop={3} fontWeight={600}>
+                  View Certificate
+                </Text>
+              </VStack>
+              <Image
+                alt="hiasan"
+                source={require('../../assets/images/hiasan-color.png')}
+                position="absolute"
+                right={0}
+                bottom={0}
+                zIndex={10}
+              />
+              <Image
+                alt="hiasan"
+                source={require('../../assets/images/hiasan-shadow.png')}
+                position="absolute"
+                right={10}
+                zIndex={0}
+              />
+            </Box>
+          </Pressable>
+        )}
 
         <Box borderTopColor={colors.gray[500]}>
           {menus.map((menu, index) => (
@@ -306,7 +331,7 @@ export default function MyProfile() {
             setIsOpenModalLogout(true);
             // setIsLoggingOut(true);
           }}>
-          Sign Out
+          {t('auth.signout')}
         </Button>
 
         {config.isDev && (
@@ -333,8 +358,7 @@ export default function MyProfile() {
 
         <Center marginTop={5}>
           <Text color={colors.gray[500]} fontSize="xs">
-            Version App v{Config.APP_VERSION_NAME} (build:{' '}
-            {Config.APP_VERSIONC_CODE})
+            v{Config.APP_VERSION_NAME} (build: {Config.APP_VERSION_BUILD})
           </Text>
 
           {config.isDev && (

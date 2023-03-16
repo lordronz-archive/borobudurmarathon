@@ -29,7 +29,18 @@ type ILinked = {
     auusVerification: number; // 1 or 0
     auusConsent: number; // 1 or 0
   }[];
-  mregZmemId: number[];
+  mregZmemId: {
+    id: number;
+    mregId: number;
+    mregTrnsId: number;
+    mregOrderId: string; // 'SENGON3F6';
+    mregZmemId: number;
+    mregEventId: number;
+    mregEvncId: number;
+    mregType: string; // 'MNB';
+    mregStatus: number;
+    mregCreatedTime: string; // '2022-07-08 17:54:22';
+  }[];
   mrvrZmemId: number[];
   lptrZmemId: number[];
   mappZmemId: number[];

@@ -205,9 +205,9 @@ export default function useInit() {
     data: IAuthResponseData,
     profile: IMemberDetailResponse,
   ) => {
-    // if (isShowDemoVerifyEmail) {
-    //   data.authEmail = '0';
-    // }
+    if (isShowDemoVerifyEmail) {
+      data.authEmail = '0';
+    }
     if (isShowDemoConsent) {
       data.consent = '0';
     }

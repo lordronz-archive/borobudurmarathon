@@ -15,7 +15,6 @@ import {
   Toast,
   View,
   VStack,
-  Button,
   Center,
   Spinner,
 } from 'native-base';
@@ -32,6 +31,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
 import httpRequest from '../../helpers/httpRequest';
+import Button from '../../components/buttons/Button';
 
 type Price = {
   id: string;

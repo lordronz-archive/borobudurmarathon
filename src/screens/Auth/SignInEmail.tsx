@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, HStack, Text, useToast, VStack} from 'native-base';
+import {Box, HStack, Text, useToast, VStack} from 'native-base';
 import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -15,6 +15,7 @@ import LoadingBlock from '../../components/loading/LoadingBlock';
 import {IAuthResponseData} from '../../types/auth.type';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
+import Button from '../../components/buttons/Button';
 
 export default function SignInEmailScreen() {
   const navigation =

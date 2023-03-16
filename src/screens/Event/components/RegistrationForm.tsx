@@ -99,6 +99,7 @@ export default function RegistrationForm(
         value={props.value}
         helperText={props.helperText}
         hideSearch={options.length <= 10}
+        required={props.required}
       />
     );
   } else if (['number', 'phone'].includes(props.evhfType.toLowerCase())) {

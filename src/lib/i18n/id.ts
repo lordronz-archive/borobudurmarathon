@@ -10,6 +10,9 @@ export default {
   dataEmptyDesc: 'Tidak ada data untuk ditampilkan',
   account: 'Akun',
   step: 'Langkah',
+  termsAndConditionsAgreement:
+    'Dengan melanjutkan saya mengerti, mengetahui, dan bersedia untuk mematuhi semua syarat & ketentuan Borobudur Marathon.',
+  seeMoreInfo: 'Lihat informasi lebih lanjut',
   auth: {
     forgotPassword: 'Lupa password?',
     description:
@@ -83,6 +86,13 @@ export default {
     sendOtp: 'Kirim OTP',
     changeLanguage: 'Ubah Bahasa',
     language: 'Bahasa',
+    verifyProfileLaterInfo:
+      'Verifikasi profil secara otomatis tidak berhasil. Kami akan memeriksa kartu identitas/paspor yang telah Anda kirimkan secara manual. Verifikasi manual ini akan memakan waktu maksimal 2x24 jam.',
+    verifyIdLater: 'Verifikasi Identitas Nanti',
+    verifyIdLaterInfo: 'Informasi Verifikasi Identitas Nanti',
+    verifyProfileDataLater: 'Verifikasi Data Profil Nanti?',
+    ifProfileNotValidated:
+      'Jika data profil Anda tidak divalidasi, Anda tidak dapat mendaftarkan diri di kompetisi.',
   },
   consent: {
     title: 'Konfirmasi Data',

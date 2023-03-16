@@ -762,8 +762,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             onChange={setIsAgreeTermsAndCondition}
             isDisabled={isLoading}>
             <Text fontSize={'12px'} fontWeight={600} ml={'10px'} flex={1}>
-              By continuing I understand, know, and am willing to comply with
-              all the terms & conditions of the borobudur marathon.
+              {t('termsAndConditionsAgreement')}
             </Text>
           </Checkbox>
           {validationTry >= 3 && (
@@ -775,11 +774,10 @@ export default function ChooseCitizenScreen({route}: Props) {
               <HStack flex={1}>
                 <VStack ml={'10px'} flex={1}>
                   <Text fontSize={'12px'} fontWeight={600}>
-                    Verify profile data later?
+                    {t('profile.verifyProfileDataLater')}
                   </Text>
                   <Text fontSize={'10px'} fontWeight={400}>
-                    If your profile data isn’t validated you can’t register for
-                    competition event.
+                    {t('profile.ifProfileNotValidated')}
                   </Text>
                 </VStack>
                 <TouchableOpacity
@@ -787,7 +785,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                     navigation.navigate('InfoVerifyLater');
                   }}>
                   <Text fontSize={'12px'} fontWeight={600} underline>
-                    See more info
+                    {t('seeMoreInfo')}
                   </Text>
                 </TouchableOpacity>
               </HStack>

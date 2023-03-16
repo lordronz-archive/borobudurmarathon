@@ -313,10 +313,10 @@ const EventService = {
       // );
     }
   },
-  getSponsors: async function () {
+  getSponsors: async function (query: object) {
     try {
       const res = (await ApiService.get(
-        config.apiUrl.resources.sponsor.path,
+        config.apiUrl.resources.sponsor.path + '?' + qs(query, false),
       )) as {data: ISponsorResponse};
 
       return res;

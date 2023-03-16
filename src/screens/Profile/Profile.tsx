@@ -41,7 +41,6 @@ import i18next from 'i18next';
 import {useTranslation} from 'react-i18next';
 import {LanguageID} from '../../types/language.type';
 import httpRequest from '../../helpers/httpRequest';
-import IconEnglish from '../../assets/icons/IconEnglish';
 
 export default function MyProfile() {
   const navigation =
@@ -264,6 +263,7 @@ export default function MyProfile() {
                   justifyContent="space-between">
                   <HStack alignItems="center" space={2}>
                     <Image
+                      alt="English"
                       source={require('../../assets/images/english.png')}
                     />
                     <Text>English</Text>
@@ -280,6 +280,7 @@ export default function MyProfile() {
                   justifyContent="space-between">
                   <HStack alignItems="center" space={2}>
                     <Image
+                      alt="Indonesia"
                       source={require('../../assets/images/indonesia.png')}
                     />
                     <Text>Indonesia</Text>

@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {useTheme, ScrollView, Box, Image} from 'native-base';
+import {useTheme, ScrollView, Box, Center, Spinner} from 'native-base';
 import Header from '../../components/header/Header';
 import ListSponsorCard, {
   ISponsorItem,
 } from '../../components/card/ListSponsorCard';
 import {EventService} from '../../api/event.service';
 import {ISponsorData} from '../../types/sponsor.type';
+import i18next from 'i18next';
+import EmptyMessage from '../../components/EmptyMessage';
 
 // function getPriority(val: number | string): 'high' | 'medium' | 'low' {
 //   val = Number(val);
@@ -18,6 +20,25 @@ import {ISponsorData} from '../../types/sponsor.type';
 //   }
 // }
 
+const PRIORITY: any = {
+  Komite: 'high',
+  Official: 'medium',
+  'Co-Sponsor': 'low',
+};
+
+function getTitle(val: string) {
+  console.info('------val', val);
+  // console.info('JSON.parse(val)', JSON.parse(val));
+  try {
+    return JSON.parse(val);
+  } catch {
+    return {
+      en: val,
+      id: val,
+    };
+  }
+}
+
 type IGroupSponsor = {
   title: string;
   priority: 'high' | 'medium' | 'low' | string;
@@ -26,18 +47,22 @@ type IGroupSponsor = {
 export default function PartnerScreen() {
   const {colors} = useTheme();
   const [sponsors, setSponsors] = useState<IGroupSponsor[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>();
+  console.info('sponsors', JSON.stringify(sponsors));
+  console.info('i18next.language', i18next.language);
 
   const fetchList = () => {
-    EventService.getSponsors()
+    setIsLoading(true);
+    EventService.getSponsors({filter: {}})
       .then(res => {
+        res.data.data.sort((a, b) => Number(a.ehspOrder) - Number(b.ehspOrder));
         const list = res.data.data.reduce(
           (acc: IGroupSponsor[], curr: ISponsorData) => {
-            const findIndex = acc.findIndex(
-              item => item.priority === curr.ehspGroup,
-            );
+            const priority = PRIORITY[curr.ehspGroup];
+            const findIndex = acc.findIndex(item => item.priority === priority);
             if (findIndex > -1) {
               acc[findIndex].items.push({
-                title: curr.ehspTitle,
+                title: getTitle(curr.ehspTitle)[i18next.language],
                 description: curr.ehspDescription,
                 logo: curr.ehspBanner,
                 url: curr.ehspUrl,
@@ -45,10 +70,10 @@ export default function PartnerScreen() {
             } else {
               acc.push({
                 title: curr.ehspGroup,
-                priority: curr.ehspGroup,
+                priority: priority,
                 items: [
                   {
-                    title: curr.ehspTitle,
+                    title: getTitle(curr.ehspTitle)[i18next.language],
                     description: curr.ehspDescription,
                     logo: curr.ehspBanner,
                     url: curr.ehspUrl,
@@ -61,9 +86,11 @@ export default function PartnerScreen() {
           [],
         );
         setSponsors([...list]);
+        setIsLoading(false);
       })
       .catch(err => {
         console.info('fetchList Sponsors err', err);
+        setIsLoading(false);
       });
   };
 
@@ -75,16 +102,24 @@ export default function PartnerScreen() {
     <ScrollView backgroundColor={colors.white}>
       <Header title="" left="back" />
 
-      {/* {sponsors.map(sponsor => (
+      {isLoading && (
+        <Center>
+          <Spinner />
+        </Center>
+      )}
+
+      {!isLoading && sponsors.length === 0 ? <EmptyMessage /> : false}
+
+      {sponsors.map(sponsor => (
         <ListSponsorCard
           key={sponsor.title}
           title={sponsor.title}
           priority={sponsor.priority as any}
           items={sponsor.items}
         />
-      ))} */}
+      ))}
 
-      <ListSponsorCard
+      {/* <ListSponsorCard
         title="Komite"
         priority="high"
         items={[
@@ -255,7 +290,7 @@ export default function PartnerScreen() {
             ),
           },
         ]}
-      />
+      /> */}
 
       <Box height="50" />
     </ScrollView>

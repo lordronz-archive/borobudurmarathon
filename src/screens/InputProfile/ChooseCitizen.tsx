@@ -38,7 +38,7 @@ import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
-import { cleanPhoneNumber } from '../../helpers/phoneNumber';
+import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 

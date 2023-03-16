@@ -169,7 +169,7 @@ export default function LogoutScreen(props: Props) {
           originWhitelist={['*']}
           // injectedJavaScript={jsCode}
           onLoadEnd={() => {
-            if (loginType === 'Kompas') {
+            if (loginType === 'KompasId') {
               setState('logout-kompas');
             } else {
               logout(

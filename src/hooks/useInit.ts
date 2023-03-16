@@ -246,7 +246,7 @@ export default function useInit() {
             description: getErrorMessage(err),
           });
         });
-    } else if (data.login === 'Kompas' && Number(data.consent) === 0) {
+    } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
       navigation.replace('DataConfirmation');
     } else if (Number(data.authProfile) === 0) {
       // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)

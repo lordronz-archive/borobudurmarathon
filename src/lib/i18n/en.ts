@@ -10,6 +10,9 @@ export default {
   dataEmptyDesc: 'No data to display',
   account: 'Account',
   step: 'Step',
+  termsAndConditionsAgreement:
+    'By continuing I understand, know, and am willing to comply with all the terms & conditions of the Borobudur Marathon.',
+  seeMoreInfo: 'See more info',
   auth: {
     forgotPassword: 'Forgot password?',
     description:
@@ -83,6 +86,13 @@ export default {
     sendOtp: 'Send OTP',
     changeLanguage: 'Change Language',
     language: 'Language',
+    verifyProfileLaterInfo:
+      'Automatic profile verification was not successful. We will check the identity card/passport you have sent earlier. This manual verification will take a maximum of 2x24 hours.',
+    verifyIdLater: 'Verify ID Later',
+    verifyIdLaterInfo: 'Verify Profile Later Info',
+    verifyProfileDataLater: 'Verify Profile Data Later?',
+    ifProfileNotValidated:
+      "If your profile data isn't validated you can't register for competition event.",
   },
   consent: {
     title: 'Data Confirmation',

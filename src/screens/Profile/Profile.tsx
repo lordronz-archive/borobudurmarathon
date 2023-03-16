@@ -294,7 +294,7 @@ export default function MyProfile() {
                     <Text>English</Text>
                   </HStack>
                   {i18next.language === 'en' && (
-                    <CheckCircleIcon color="#55C95A" />
+                    <CheckCircleIcon color="primary.900" />
                   )}
                 </HStack>
               </Actionsheet.Item>
@@ -311,7 +311,7 @@ export default function MyProfile() {
                     <Text>Indonesia</Text>
                   </HStack>
                   {i18next.language === 'id' && (
-                    <CheckCircleIcon color="#55C95A" />
+                    <CheckCircleIcon color="primary.900" />
                   )}
                 </HStack>
               </Actionsheet.Item>

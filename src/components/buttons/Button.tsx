@@ -27,38 +27,73 @@ export default function Button({
   disabled,
   ...rest
 }: ButtonProps) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[
-        isLoading || disabled
-          ? {
-              borderColor: '#f2f2f2',
-              backgroundColor: variant === 'solid' ? '#f2f2f2' : 'white',
-            }
-          : {
-              borderColor: '#C5CDDB',
-              backgroundColor: variant === 'solid' ? '#EB1C23' : 'white',
-            },
-        {
-          padding: 14,
-          borderRadius: 8,
-          alignItems: typeof children === 'string' ? 'center' : undefined,
-        },
-      ]}>
-      {typeof children === 'string' ? (
-        <Text
-          style={{color: variant === 'solid' ? 'white' : '#EB1C23', ..._text}}>
-          {children}
-        </Text>
-      ) : (
-        <View style={{flexDirection: 'row'}}>
-          {isLoading ? <Spinner /> : false}
-          {children}
-        </View>
-      )}
-    </TouchableOpacity>
-  );
+  if (isLoading || disabled) {
+    return (
+      <View
+        style={[
+          {
+            borderColor: '#f2f2f2',
+            backgroundColor: variant === 'solid' ? 'gray' : 'white',
+          },
+          {
+            padding: 14,
+            borderRadius: 8,
+            alignItems: typeof children === 'string' ? 'center' : undefined,
+          },
+        ]}>
+        {typeof children === 'string' ? (
+          <Text
+            style={{
+              color: variant === 'solid' ? 'white' : '#EB1C23',
+              ..._text,
+            }}>
+            {children}
+          </Text>
+        ) : (
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            {isLoading ? <Spinner /> : false}
+            {children}
+          </View>
+        )}
+      </View>
+    );
+  } else {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={[
+          {
+            borderColor: '#C5CDDB',
+            backgroundColor: variant === 'solid' ? '#EB1C23' : 'white',
+          },
+          {
+            padding: 14,
+            borderRadius: 8,
+            alignItems: typeof children === 'string' ? 'center' : 'center',
+          },
+        ]}>
+        {typeof children === 'string' ? (
+          <Text
+            style={{
+              color: variant === 'solid' ? 'white' : '#EB1C23',
+              ..._text,
+            }}>
+            {children}
+          </Text>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            {isLoading ? <Spinner /> : false}
+            {children}
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  }
   // return (
   //   <NBButton
   //     title={typeof children === 'string' ? children : 'Next'}

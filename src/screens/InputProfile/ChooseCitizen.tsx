@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native';
 import {
   ArrowBackIcon,
   Box,
-  Button,
   Checkbox,
   HStack,
   Image,
@@ -39,6 +38,8 @@ import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
+import Button from '../../components/buttons/Button';
+import {useDemo} from '../../context/demo.context';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -46,6 +47,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const {user} = useAuthUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const {demoKTPVerification} = useDemo();
   const {t} = useTranslation();
 
   const {
@@ -235,7 +237,11 @@ export default function ChooseCitizenScreen({route}: Props) {
   const handleConfirm = async () => {
     setIsOpen(true);
 
-    // identityImage.fileId = 'NjabOxzEq8AQJTFvSCy1JqHXIro50kxe';
+    if (demoKTPVerification === 'processing') {
+      identityImage.fileId = 'NjabOxzEq8AQJTFvSCy1JqHXIro50kxe';
+    } else if (demoKTPVerification === 'invalid') {
+      identityImage.fileId = '7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG';
+    }
     // ini contoh yg masih processing NjabOxzEq8AQJTFvSCy1JqHXIro50kxe
     // ini yg error 7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG
 
@@ -721,20 +727,12 @@ export default function ChooseCitizenScreen({route}: Props) {
                       </VStack>
                     </Box>
                     <Button
-                      bgColor={'#fff'}
-                      borderStyle={'solid'}
-                      borderWidth={1}
-                      borderRadius={8}
-                      borderColor={'#EB1C23'}
-                      color={'#EB1C23'}
                       onPress={() => navigation.navigate('SearchLocation')}>
-                      <Text color={'#EB1C23'}>
-                        {profile.mbsdCity &&
-                        profile.mbsdProvinces &&
-                        profile.mbsdAddress
-                          ? 'Edit'
-                          : 'Choose your address'}
-                      </Text>
+                      {profile.mbsdCity &&
+                      profile.mbsdProvinces &&
+                      profile.mbsdAddress
+                        ? 'Edit'
+                        : 'Choose your address'}
                     </Button>
                   </Box>
                 ) : (
@@ -798,10 +796,13 @@ export default function ChooseCitizenScreen({route}: Props) {
 
       <HStack my={3} space={'10px'}>
         {stepCount > 1 && (
-          <Button
-            h="12"
-            backgroundColor={'#E7F3FC'}
-            borderRadius={'8px'}
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#E7F3FC',
+              borderRadius: 8,
+              paddingVertical: 12,
+              paddingHorizontal: 5,
+            }}
             onPress={() => {
               if (profileStep > 1) {
                 setProfileStep(v => (v > 1 ? v - 1 : v));
@@ -809,10 +810,9 @@ export default function ChooseCitizenScreen({route}: Props) {
                 prevStep();
                 setStepCount(v => (v > 1 ? v - 1 : v));
               }
-            }}
-            isLoading={isLoading}>
+            }}>
             <ArrowBackIcon color={'#1E1E1E'} />
-          </Button>
+          </TouchableOpacity>
         )}
 
         <Button

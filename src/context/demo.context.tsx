@@ -1,17 +1,24 @@
 import React from 'react';
 
+export const KTP_DEMO_DATA = {
+  processing: 'NjabOxzEq8AQJTFvSCy1JqHXIro50kxe',
+  invalid: '7Gu3xhcXkjUHBf3HOPRemqLAY7VyImTG',
+};
+
 export enum EDemoAction {
   SHOW_MODAL = 'SHOW_MODAL',
   HIDE_MODAL = 'HIDE_MODAL',
   SET_DEMO_VERIFY_EMAIL = 'SET_DEMO_VERIFY_EMAIL',
   SET_DEMO_CONSENT = 'SET_DEMO_CONSENT',
   SET_DEMO_NEW_USER = 'SET_DEMO_NEW_USER',
+  SET_DEMO_KTP_VERIFICATION = 'SET_DEMO_KTP_VERIFICATION',
 }
 type State = {
   isShowModal?: boolean;
   isShowDemoVerifyEmail?: boolean;
   isShowDemoConsent?: boolean;
   isShowDemoNewUser?: boolean;
+  demoKTPVerification?: 'processing' | 'invalid';
 };
 type Action = {type: EDemoAction; payload?: State};
 type Dispatch = (action: Action) => void;
@@ -46,6 +53,12 @@ function demoReducer(state: State, action: Action) {
         isShowDemoNewUser: action.payload?.isShowDemoNewUser,
       };
     }
+    case EDemoAction.SET_DEMO_KTP_VERIFICATION: {
+      return {
+        ...state,
+        demoKTPVerification: action.payload?.demoKTPVerification,
+      };
+    }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -58,6 +71,7 @@ function DemoProvider({children}: {children: React.ReactNode}) {
     isShowDemoVerifyEmail: false,
     isShowDemoConsent: false,
     isShowDemoNewUser: false,
+    demoKTPVerification: undefined,
   });
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
@@ -95,6 +109,13 @@ function useDemo() {
         type: EDemoAction.SET_DEMO_NEW_USER,
         payload: {
           isShowDemoNewUser: val,
+        },
+      }),
+    setDemoKTPVerification: (val: 'processing' | 'invalid' | undefined) =>
+      context.dispatch({
+        type: EDemoAction.SET_DEMO_KTP_VERIFICATION,
+        payload: {
+          demoKTPVerification: val,
         },
       }),
   };

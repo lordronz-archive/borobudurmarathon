@@ -49,6 +49,8 @@ export default function AuthScreen() {
     setDemoConsent,
     isShowDemoNewUser,
     setDemoNewUser,
+    setDemoKTPVerification,
+    demoKTPVerification,
   } = useDemo();
   const params: {authorization_code: string} = route.params as any;
   console.info('route', route);
@@ -382,6 +384,42 @@ export default function AuthScreen() {
                 Flow New User
               </Checkbox>
             </FormControl>
+
+            {isShowDemoNewUser && <Text>----------</Text>}
+
+            {isShowDemoNewUser && (
+              <FormControl>
+                <Checkbox
+                  onChange={() => {
+                    if (demoKTPVerification === 'processing') {
+                      setDemoKTPVerification(undefined);
+                    } else {
+                      setDemoKTPVerification('processing');
+                    }
+                  }}
+                  isChecked={demoKTPVerification === 'processing'}
+                  value="demo-consent">
+                  Demo KTP Processing
+                </Checkbox>
+              </FormControl>
+            )}
+
+            {isShowDemoNewUser && (
+              <FormControl>
+                <Checkbox
+                  onChange={() => {
+                    if (demoKTPVerification === 'invalid') {
+                      setDemoKTPVerification(undefined);
+                    } else {
+                      setDemoKTPVerification('invalid');
+                    }
+                  }}
+                  isChecked={demoKTPVerification === 'invalid'}
+                  value="demo-consent">
+                  Demo KTP Invalid
+                </Checkbox>
+              </FormControl>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Button.Group space={2}>

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, HStack, Icon, Text, useToast, VStack} from 'native-base';
+import {Box, HStack, Text, useToast, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -11,6 +11,9 @@ import SelectInput from '../../components/form/SelectInput';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {useDebounce} from 'use-debounce';
 import {useTranslation} from 'react-i18next';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Button from '../../components/buttons/Button';
+import Icon from 'react-native-vector-icons/Feather';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -26,7 +29,13 @@ export default function RegisterEmailScreen() {
     ptmmPassword: string;
     ptmmEmail: string;
     ptmmLanguage: '1';
-  }>({});
+  }>({
+    ptmmFullName: '',
+    ptmmGender: '',
+    ptmmPassword: '',
+    ptmmEmail: '',
+    ptmmLanguage: '1',
+  });
 
   const [emailWillBeCheck] = useDebounce(form.ptmmEmail, 500);
   const [isEmailCanUse, setIsEmailCanUse] = useState<boolean | undefined>();
@@ -121,7 +130,9 @@ export default function RegisterEmailScreen() {
 
   return (
     <VStack px="4" flex="1">
-      <Box flex="10">
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        style={{flex: 1}}>
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
           <Heading>{t('auth.registerViaEmail')}</Heading>
@@ -169,15 +180,19 @@ export default function RegisterEmailScreen() {
               }}
               value={form.ptmmEmail}
               loading={isLoadingCheckEmail}
-              // isInvalid={isEmailCanUse === false}
-              // errorMessage="Email already taken. Use another email."
-              isInvalid={!!errors.ptmmEmail}
-              errorMessage={errors.ptmmEmail}
-              // rightIcon={
-              //   isEmailCanUse === true ? (
-              //     <Icon name="check-circle" size={20} />
-              //   ) : undefined
-              // }
+              isInvalid={!!errors.ptmmEmail || isEmailCanUse === false}
+              errorMessage={
+                errors.ptmmEmail || 'Email already taken. Use another email.'
+              }
+              rightIcon={
+                isEmailCanUse === true ? (
+                  <Icon
+                    name="check-circle"
+                    size={20}
+                    style={{paddingLeft: 10}}
+                  />
+                ) : undefined
+              }
             />
             <TextInput
               placeholder="Enter your password here"
@@ -219,16 +234,15 @@ export default function RegisterEmailScreen() {
             {t('auth.signinViaEmail')}
           </Text>
         </HStack>
-      </Box>
-      <Button
-        h="12"
-        mb="3"
-        onPress={() => signup()}
-        isLoading={loading}
-        disabled={isDisabled}
-        bg={isDisabled ? 'gray.400' : undefined}>
-        {t('auth.register')}
-      </Button>
+      </KeyboardAwareScrollView>
+      <HStack my={3}>
+        <Button
+          onPress={() => signup()}
+          isLoading={loading}
+          disabled={isDisabled}>
+          {t('auth.register')}
+        </Button>
+      </HStack>
     </VStack>
   );
 }

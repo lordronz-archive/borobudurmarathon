@@ -16,6 +16,7 @@ import {IAuthResponseData} from '../../types/auth.type';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import Button from '../../components/buttons/Button';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -130,7 +131,9 @@ export default function SignInEmailScreen() {
 
   return (
     <VStack px="4" flex="1">
-      <Box flex="10">
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        style={{flex: 1}}>
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
           <Heading>{t('auth.signinViaEmail')}</Heading>
@@ -184,7 +187,7 @@ export default function SignInEmailScreen() {
             {t('auth.forgotPassword')}
           </Text>
         </HStack>
-      </Box>
+      </KeyboardAwareScrollView>
       <HStack my={3}>
         <Button
           onPress={() => signin()}

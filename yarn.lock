@@ -7499,6 +7499,13 @@ react-native-config@^1.4.11:
   resolved "https://registry.npmjs.org/react-native-config/-/react-native-config-1.4.11.tgz"
   integrity sha512-PdBFnfR3pljUNrJu4B2wiJ9TbAiz1J1WcG5KP8AFBqZi8ve5MV/CTCDnANaGrqhOxkBDJV73D/SrMENHe7TKBg==
 
+react-native-document-picker@^8.1.4:
+  version "8.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-8.1.4.tgz#75a7e08d499c88fd9db5370efb3338cd6a921509"
+  integrity sha512-1GJ6jKTxmoT3jyQQjH6cBXZDLLAjCe+f3JE//bfm1+CFa12ziM4wkv8o6sVzbqQWbFr98Mvnx9VKptmUNTXVWQ==
+  dependencies:
+    invariant "^2.2.4"
+
 react-native-gesture-handler@^2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.9.0.tgz#2f63812e523c646f25b9ad660fc6f75948e51241"

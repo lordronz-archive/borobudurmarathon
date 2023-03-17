@@ -26,6 +26,9 @@ import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import ViewProfile from '../InputProfile/components/ViewProfile';
+import httpRequest from '../../helpers/httpRequest';
+import {DocumentPickerResponse} from 'react-native-document-picker';
+import {Platform} from 'react-native';
 
 type Price = {
   id: string;
@@ -117,6 +120,8 @@ export default function EventRegisterScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [checkbox, setCheckbox] = useState<string[]>([]);
 
+  const [files, setFiles] = useState<{[key: string]: DocumentPickerResponse}>();
+
   useEffect(() => {
     const data: {[key: string]: any} = {};
     if (!user || autofilled || fields.length < 1) {
@@ -202,7 +207,7 @@ export default function EventRegisterScreen() {
     let valid = true;
     let toastDescription = '';
 
-    const payload = {
+    let payload = {
       ...fieldsData,
       evpaEvnhId: params.event.data.evnhId,
       evpaEvncId: params.selectedCategoryId,
@@ -243,6 +248,38 @@ export default function EventRegisterScreen() {
         description: toastDescription,
       });
       return;
+    }
+
+    if (files) {
+      for (const entry of Object.entries(files)) {
+        let formData = new FormData();
+        formData.append('fileType', 'identity');
+        let uri =
+          Platform.OS === 'android'
+            ? entry[1].uri
+            : entry[1].uri.replace('file://', '');
+        formData.append('file', {
+          name: entry[1].name,
+          type: entry[1].type,
+          uri,
+        });
+
+        const res = await httpRequest({
+          url: 'https://repository.race.id/private',
+          method: 'POST',
+          headers: {
+            Authorization: 'Api-Key=C00l&@lm!ghTyyA4pp',
+            'Content-Type': 'multipart/form-data',
+          },
+          data: formData,
+        });
+
+        console.log(res, 'upload ID');
+        if (res && res.data && res.data.fileId) {
+          console.log(res.data.fileId, 'fileId');
+        }
+        payload = {...payload, [entry[0]]: res.data.fileId};
+      }
     }
 
     try {
@@ -378,6 +415,12 @@ export default function EventRegisterScreen() {
                     field.evhfIsRequired.toString() === '1' ||
                     field.evhfIsRequired.toString() === 'true'
                   }
+                  setFileResponse={
+                    field.evhfType === 'File'
+                      ? a => setFiles({...files, [field.evhfName]: a})
+                      : undefined
+                  }
+                  file={files ? files[field.evhfName] : undefined}
                 />
               ))}
           </VStack>

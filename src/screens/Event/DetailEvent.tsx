@@ -36,6 +36,7 @@ import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
 import {Alert} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {parseStringToArray} from '../../helpers/parser';
 
 type Price = {
   id: string;
@@ -90,39 +91,46 @@ export default function DetailEvent() {
   const prices: Price[] = (event?.categories || []).map(cat => ({
     id: cat.evncId,
     name: cat.evncName,
-    description: [
-      cat.evncMaxDistance,
-      cat.evncMaxDistancePoint
-        ? cat.evncMaxDistancePoint + ' point'
-        : undefined,
-      cat.evncVrReps,
-      'Sisa Kuota: ' +
-        (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
-        Number(cat.evncQuotaRegistration)
-          ? (
-              Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
-            ).toLocaleString('id-ID') +
-            '/' +
-            Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-          : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
-      datetime.getDateRangeString(
-        cat.evncStartDate,
-        cat.evncVrEndDate || undefined,
-        'short',
-        'short',
-      ),
-    ]
-      .filter(item => item)
-      .join(', '),
+    description: cat.evncDesc
+      ? cat.evncDesc
+      : [
+          // cat.evncVrReps,
+          'Quota: ' +
+            (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
+            Number(cat.evncQuotaRegistration)
+              ? (
+                  Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
+                ).toLocaleString('id-ID') +
+                '/' +
+                Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
+              : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
+          datetime.getDateRangeString(
+            cat.evncStartDate,
+            cat.evncVrEndDate || undefined,
+            'short',
+            'short',
+          ),
+          cat.evncMaxDistance
+            ? 'Distance: ' + cat.evncMaxDistance + ' km'
+            : undefined,
+          cat.evncMaxDistancePoint
+            ? cat.evncMaxDistancePoint + ' point'
+            : undefined,
+        ]
+          .filter(item => item)
+          .join(', '),
     originalPrice: Number(cat.evncPrice),
     finalPrice: Number(cat.evncPrice),
-    benefits: [
-      'Medal',
-      'Jersey (Merchandise)',
-      'Local UMKM Merchandise',
-      'Free Ongkir',
-      'This is Dummy Data',
-    ],
+    benefits: parseStringToArray<{id: string; label: string}>(
+      cat.envcBenefit,
+    ).map(item => item.label),
+    // benefits: [
+    //   'Medal',
+    //   'Jersey (Merchandise)',
+    //   'Local UMKM Merchandise',
+    //   'Free Ongkir',
+    //   'This is Dummy Data',
+    // ],
   }));
   // [
   //   {

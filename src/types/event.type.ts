@@ -149,14 +149,18 @@ export interface CategoriesEntity {
   evncVrEndDate?: null;
   evncVrReps?: null;
   evncVrStartDate?: null;
+
+  envcBenefit?: string;
+  evncDesc?: string;
+  envHold?: string; // '39'
 }
 export interface EventPropertiesDetail {
-  evnhDescription?: null;
+  evnhDescription?: string;
   evnhEndDate: string;
   evnhId: string;
   evnhName: string;
-  evnhNote?: null;
-  evnhPlace?: null;
+  evnhNote?: string;
+  evnhPlace?: string;
   evnhQuotaConfirmation: string;
   evnhQuotaRegistration: string;
   evnhRegistrationEnd: string;
@@ -165,11 +169,15 @@ export interface EventPropertiesDetail {
   evnhStartDate: string;
   evnhStatus: string;
   evnhStatusPublish: string;
-  evnhThumbnail?: null;
+  evnhThumbnail?: string;
   evnhTimeLimitConfirmation: string;
   evnhTimeLimitRegistration: string;
   evnhTransactionExpired: string;
   evnhType: string;
+
+  envhBallot?: string; // '0'
+  envhCategory?: string;
+  evnhSizeChart?: string;
 }
 export interface EventFieldsEntity {
   evhfEvnhId: string;

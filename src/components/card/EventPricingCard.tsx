@@ -61,7 +61,7 @@ export default function EventPricingCard({
   };
 
   return (
-    <TouchableOpacity onPress={onSelect} style={{width:'100%'}}>
+    <TouchableOpacity onPress={onSelect} style={{width: '100%'}}>
       <Box alignItems="center" w={'100%'} my={3}>
         <Box
           rounded="lg"
@@ -118,13 +118,15 @@ export default function EventPricingCard({
               )}
             </Flex>
           </Box>
-          <Stack my={4}>
-            <Text color={'#768499'}>Benefit :</Text>
-            <FlatList
-              data={benefits}
-              renderItem={({item}) => _renderBenefitsItem(item)}
-            />
-          </Stack>
+          {benefits.length > 0 && (
+            <Stack my={4}>
+              <Text color={'#768499'}>Benefit :</Text>
+              <FlatList
+                data={benefits}
+                renderItem={({item}) => _renderBenefitsItem(item)}
+              />
+            </Stack>
+          )}
         </Box>
       </Box>
     </TouchableOpacity>

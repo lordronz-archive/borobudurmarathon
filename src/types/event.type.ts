@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import {ReactNode} from 'react';
 
 // LIST EVENT
 export interface GetEventsResponse {
@@ -187,9 +187,10 @@ export interface EventFieldsEntity {
     | 'Phone'
     | 'Option'
     | 'Date'
-    | 'Hidden';
+    | 'Hidden'
+    | 'File';
   static?: boolean;
-  helperText?: ReactNode
+  helperText?: ReactNode;
 }
 export interface PaymentsEntity {
   evptAccountNumber?: null;

@@ -51,6 +51,9 @@ export default function RegisterEmailScreen() {
 
   const checkEmail = () => {
     if (!form.ptmmEmail || (form.ptmmEmail && form.ptmmEmail.length <= 5)) {
+      if (!form.ptmmEmail) {
+        setIsEmailCanUse(false);
+      }
       return false;
     }
     console.info('emailWillBeCheck', emailWillBeCheck);
@@ -172,11 +175,7 @@ export default function RegisterEmailScreen() {
                   : undefined
               }
               onChangeText={val => {
-                const newEmail = val?.toLowerCase();
-                if (!newEmail) {
-                  setIsEmailCanUse(undefined);
-                }
-                setForm({...form, ptmmEmail: newEmail});
+                setForm({...form, ptmmEmail: val});
               }}
               value={form.ptmmEmail}
               loading={isLoadingCheckEmail}

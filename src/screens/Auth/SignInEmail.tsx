@@ -36,8 +36,9 @@ export default function SignInEmailScreen() {
     setLoginType('Email');
     try {
       setLoading(true);
+      setEmail(email?.toLowerCase());
       const body = {
-        username: email,
+        username: email?.toLowerCase(),
         password: password,
       };
       const result = await AuthService.signIn(body);
@@ -147,7 +148,7 @@ export default function SignInEmailScreen() {
               placeholder="Enter your email here"
               label="Email"
               value={email}
-              onChangeText={text => setEmail(text?.toLowerCase())}
+              onChangeText={setEmail}
               _inputProps={{textContentType: 'emailAddress'}}
             />
             <TextInput

@@ -49,7 +49,7 @@ export default function TextInput(props: TextInputProps) {
           </HStack>
           {props.required && (
             <Text
-              style={{fontSize: 12, color: 'primary.900'}}
+              style={{fontSize: 12, color: '#EB1C23'}}
               italic
               ml="2"
               fontSize="xs">

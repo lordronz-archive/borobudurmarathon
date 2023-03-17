@@ -84,20 +84,20 @@ export default function MyProfile() {
     {
       key: 'faqs',
       icon: <IconInfo color={colors.black} size={6} />,
-      name: 'FAQs',
+      name: t('info.faqs'),
       route: 'FAQ',
     },
     {
       key: 'tnc',
       icon: <IconFileDocument color={colors.black} size={6} />,
-      name: 'Terms Conditions',
+      name: t('info.termsAndConditions'),
       route: 'WebView',
       params: {page: 'tnc'},
     },
     {
       key: 'about',
       icon: <IconInfo color={colors.black} size={6} />,
-      name: 'About Us',
+      name: t('info.aboutUs'),
       route: 'AboutUs',
       params: {page: 'about'},
     },

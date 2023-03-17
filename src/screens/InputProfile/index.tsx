@@ -25,6 +25,7 @@ import {ProfileService} from '../../api/profile.service';
 import {useDemo} from '../../context/demo.context';
 import {useTranslation} from 'react-i18next';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
+import ViewProfile from './components/ViewProfile';
 
 export default function DataConfirmationScreen() {
   const navigation =
@@ -35,91 +36,91 @@ export default function DataConfirmationScreen() {
   const {setDemoConsent} = useDemo();
   const [isLoadingAction, setIsLoadingAction] = useState(false);
 
-  const sectionsDataProfile = [
-    {
-      title: 'Account & Personal Data',
-      data: [
-        {
-          label: 'Name',
-          value: user?.data[0].zmemFullName,
-        },
-        {
-          label: 'Phone Number',
-          value: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone),
-        },
-        {
-          label: 'Birthday',
-          data: [
-            {
-              label: 'Place Of Birth',
-              value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
-            },
-            {
-              label: 'Date of Birth',
-              value: user?.linked.mbsdZmemId[0].mbsdBirthDate
-                ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
-                    'DD MMMM yyyy',
-                  )
-                : undefined,
-            },
-          ],
-        },
-        {
-          label: 'Gender Blood',
-          data: [
-            {
-              label: 'Gender',
-              value:
-                user?.linked.mbsdZmemId[0].mbsdGender === 1
-                  ? t('gender.male')
-                  : t('gender.female'),
-            },
-            {
-              label: 'Blood Type',
-              value: user?.linked.mbsdZmemId[0].mbsdBloodType,
-            },
-          ],
-        },
-        {
-          label: 'Country Nationality',
-          data: [
-            {
-              label: 'Country',
-              value: user?.linked.mbsdZmemId[0].mbsdNationality,
-            },
-            {
-              label: 'Nationality',
-              value: user?.linked.mbsdZmemId[0].mbsdCountry,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Address Info',
-      data: [
-        user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
-          ? {
-              label: 'Province City',
-              data: [
-                {
-                  label: 'Province',
-                  value: user?.linked.mbsdZmemId[0].mbsdProvinces,
-                },
-                {
-                  label: 'City',
-                  value: user?.linked.mbsdZmemId[0].mbsdCity,
-                },
-              ],
-            }
-          : {label: '', value: ''},
-        {
-          label: 'Address',
-          value: user?.linked.mbsdZmemId[0].mbsdAddress,
-        },
-      ].filter(item => item && item.label),
-    },
-  ];
+  // const sectionsDataProfile = [
+  //   {
+  //     title: 'Account & Personal Data',
+  //     data: [
+  //       {
+  //         label: 'Name',
+  //         value: user?.data[0].zmemFullName,
+  //       },
+  //       {
+  //         label: 'Phone Number',
+  //         value: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone),
+  //       },
+  //       {
+  //         label: 'Birthday',
+  //         data: [
+  //           {
+  //             label: 'Place Of Birth',
+  //             value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
+  //           },
+  //           {
+  //             label: 'Date of Birth',
+  //             value: user?.linked.mbsdZmemId[0].mbsdBirthDate
+  //               ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
+  //                   'DD MMMM yyyy',
+  //                 )
+  //               : undefined,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         label: 'Gender Blood',
+  //         data: [
+  //           {
+  //             label: 'Gender',
+  //             value:
+  //               user?.linked.mbsdZmemId[0].mbsdGender === 1
+  //                 ? t('gender.male')
+  //                 : t('gender.female'),
+  //           },
+  //           {
+  //             label: 'Blood Type',
+  //             value: user?.linked.mbsdZmemId[0].mbsdBloodType,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         label: 'Country Nationality',
+  //         data: [
+  //           {
+  //             label: 'Country',
+  //             value: user?.linked.mbsdZmemId[0].mbsdNationality,
+  //           },
+  //           {
+  //             label: 'Nationality',
+  //             value: user?.linked.mbsdZmemId[0].mbsdCountry,
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: 'Address Info',
+  //     data: [
+  //       user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
+  //         ? {
+  //             label: 'Province City',
+  //             data: [
+  //               {
+  //                 label: 'Province',
+  //                 value: user?.linked.mbsdZmemId[0].mbsdProvinces,
+  //               },
+  //               {
+  //                 label: 'City',
+  //                 value: user?.linked.mbsdZmemId[0].mbsdCity,
+  //               },
+  //             ],
+  //           }
+  //         : {label: '', value: ''},
+  //       {
+  //         label: 'Address',
+  //         value: user?.linked.mbsdZmemId[0].mbsdAddress,
+  //       },
+  //     ].filter(item => item && item.label),
+  //   },
+  // ];
 
   const handleNoAddNewProfile = () => {
     AuthService.deleteprofile()
@@ -177,55 +178,7 @@ export default function DataConfirmationScreen() {
         </VStack>
 
         <Box height="2" mt="5" mb="2" bgColor="gray.200" />
-        <SectionList
-          px="4"
-          sections={sectionsDataProfile}
-          renderItem={({item}) =>
-            item.data && item.data.length > 0 ? (
-              <Row flex={1}>
-                {item.data.map(ditem => (
-                  <Box key={ditem.label} flex={1}>
-                    <Text color="gray.500" fontSize="sm">
-                      {ditem.label}
-                    </Text>
-                    {ditem.value ? (
-                      <Text>{ditem.value}</Text>
-                    ) : (
-                      <Text color="gray.500" italic>
-                        ~ Not Set
-                      </Text>
-                    )}
-                  </Box>
-                ))}
-              </Row>
-            ) : (
-              <Row>
-                <Box>
-                  <Text color="gray.500" fontSize="sm">
-                    {item.label}
-                  </Text>
-                  {item.value ? (
-                    <Text>{item.value}</Text>
-                  ) : (
-                    <Text color="gray.500" italic>
-                      ~ Not Set
-                    </Text>
-                  )}
-                </Box>
-              </Row>
-            )
-          }
-          renderSectionHeader={({section: {title}}) => (
-            <Box mb="4" mt="5">
-              <Text bold fontSize="lg">
-                {title}
-              </Text>
-            </Box>
-          )}
-          ItemSeparatorComponent={() => <Divider mt={2} mb={2} />}
-          keyExtractor={(item, index) => item.label + index}
-          ListFooterComponent={<Box height="50" />}
-        />
+        <ViewProfile />
       </Box>
       <HStack my={3} px="4">
         <BMButton

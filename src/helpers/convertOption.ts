@@ -2,7 +2,7 @@ import {t} from 'i18next';
 import {showBloodName} from '../assets/data/blood';
 
 export function convertOption(val: string | number, field: string) {
-  if (field === 'evpaGender') {
+  if (field === 'evpaGender' || field === 'mbsdGender') {
     if (val === 1 || val === '1') {
       return t('male');
     } else {
@@ -14,7 +14,7 @@ export function convertOption(val: string | number, field: string) {
     } else if (val === 3) {
       return 'Passport';
     }
-  } else if (field === 'evpaBloodType') {
+  } else if (field === 'evpaBloodType' || field === 'mbsdBloodType') {
     return showBloodName(String(val));
   }
   return val;

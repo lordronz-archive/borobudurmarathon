@@ -24,6 +24,7 @@ import moment from 'moment';
 import useInit from '../../hooks/useInit';
 import {showBloodName} from '../../assets/data/blood';
 import { cleanPhoneNumber } from '../../helpers/phoneNumber';
+import ViewProfile from '../InputProfile/components/ViewProfile';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
@@ -78,126 +79,126 @@ export default function UpdateProfileScreen() {
   // );
 
   // view only
-  const sectionsDataProfile: {
-    title: string;
-    data: {
-      label: string;
-      value?: any;
-      data?: {
-        label: string;
-        value?: any;
-      }[];
-    }[];
-  }[] = [
-    {
-      title: t('label.accountInformation'),
-      data: [
-        {
-          label: 'Name',
-          value: user?.data[0].zmemFullName,
-        },
-        {
-          label: 'Email',
-          value: user?.linked.mbsdZmemId[0].mbsdEmail,
-        },
-        {
-          label: 'Phone Number',
-          value: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone),
-        },
-      ],
-    },
-    {
-      title: t('label.personalData'),
-      data: [
-        {
-          label: 'Identity',
-          data: [
-            {
-              label: 'Type',
-              value:
-                user?.linked.mbsdZmemId[0].mbsdIDNumberType === 3
-                  ? 'KTP'
-                  : 'Passport',
-            },
-            {
-              label: 'ID Number',
-              value: user?.linked.mbsdZmemId[0].mbsdIDNumber,
-            },
-          ],
-        },
-        {
-          label: 'Birthday',
-          data: [
-            {
-              label: 'Place Of Birth',
-              value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
-            },
-            {
-              label: 'Date of Birth',
-              value: user?.linked.mbsdZmemId[0].mbsdBirthDate
-                ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
-                    'DD MMMM yyyy',
-                  )
-                : undefined,
-            },
-          ],
-        },
-        {
-          label: 'Gender Blood',
-          data: [
-            {
-              label: 'Gender',
-              value:
-                user?.linked.mbsdZmemId[0].mbsdGender === 1
-                  ? t('gender.male')
-                  : t('gender.female'),
-            },
-            {
-              label: 'Blood Type',
-              value: showBloodName(user?.linked.mbsdZmemId[0].mbsdBloodType),
-            },
-          ],
-        },
-        {
-          label: 'Country Nationality',
-          data: [
-            {
-              label: 'Country',
-              value: user?.linked.mbsdZmemId[0].mbsdNationality,
-            },
-            {
-              label: 'Nationality',
-              value: user?.linked.mbsdZmemId[0].mbsdCountry,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: t('label.addressInformation'),
-      data: [
-        user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
-          ? {
-              label: 'Province City',
-              data: [
-                {
-                  label: 'Province',
-                  value: user?.linked.mbsdZmemId[0].mbsdProvinces,
-                },
-                {
-                  label: 'City',
-                  value: user?.linked.mbsdZmemId[0].mbsdCity,
-                },
-              ],
-            }
-          : {label: '', value: ''},
-        {
-          label: 'Address',
-          value: user?.linked.mbsdZmemId[0].mbsdAddress,
-        },
-      ].filter(item => item && item.label),
-    },
-  ];
+  // const sectionsDataProfile: {
+  //   title: string;
+  //   data: {
+  //     label: string;
+  //     value?: any;
+  //     data?: {
+  //       label: string;
+  //       value?: any;
+  //     }[];
+  //   }[];
+  // }[] = [
+  //   {
+  //     title: t('label.accountInformation'),
+  //     data: [
+  //       {
+  //         label: 'Name',
+  //         value: user?.data[0].zmemFullName,
+  //       },
+  //       {
+  //         label: 'Email',
+  //         value: user?.linked.mbsdZmemId[0].mbsdEmail,
+  //       },
+  //       {
+  //         label: 'Phone Number',
+  //         value: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone),
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: t('label.personalData'),
+  //     data: [
+  //       {
+  //         label: 'Identity',
+  //         data: [
+  //           {
+  //             label: 'Type',
+  //             value:
+  //               user?.linked.mbsdZmemId[0].mbsdIDNumberType === 3
+  //                 ? 'KTP'
+  //                 : 'Passport',
+  //           },
+  //           {
+  //             label: 'ID Number',
+  //             value: user?.linked.mbsdZmemId[0].mbsdIDNumber,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         label: 'Birthday',
+  //         data: [
+  //           {
+  //             label: 'Place Of Birth',
+  //             value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
+  //           },
+  //           {
+  //             label: 'Date of Birth',
+  //             value: user?.linked.mbsdZmemId[0].mbsdBirthDate
+  //               ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
+  //                   'DD MMMM yyyy',
+  //                 )
+  //               : undefined,
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         label: 'Gender Blood',
+  //         data: [
+  //           {
+  //             label: 'Gender',
+  //             value:
+  //               user?.linked.mbsdZmemId[0].mbsdGender === 1
+  //                 ? t('gender.male')
+  //                 : t('gender.female'),
+  //           },
+  //           {
+  //             label: 'Blood Type',
+  //             value: showBloodName(user?.linked.mbsdZmemId[0].mbsdBloodType),
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         label: 'Country Nationality',
+  //         data: [
+  //           {
+  //             label: 'Country',
+  //             value: user?.linked.mbsdZmemId[0].mbsdNationality,
+  //           },
+  //           {
+  //             label: 'Nationality',
+  //             value: user?.linked.mbsdZmemId[0].mbsdCountry,
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: t('label.addressInformation'),
+  //     data: [
+  //       user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
+  //         ? {
+  //             label: 'Province City',
+  //             data: [
+  //               {
+  //                 label: 'Province',
+  //                 value: user?.linked.mbsdZmemId[0].mbsdProvinces,
+  //               },
+  //               {
+  //                 label: 'City',
+  //                 value: user?.linked.mbsdZmemId[0].mbsdCity,
+  //               },
+  //             ],
+  //           }
+  //         : {label: '', value: ''},
+  //       {
+  //         label: 'Address',
+  //         value: user?.linked.mbsdZmemId[0].mbsdAddress,
+  //       },
+  //     ].filter(item => item && item.label),
+  //   },
+  // ];
   // end view only
 
   function handleChangeProfilePic(image: any) {
@@ -291,7 +292,7 @@ export default function UpdateProfileScreen() {
             </HStack>
           </TouchableOpacity>
 
-          <SectionList
+          {/* <SectionList
             px="4"
             sections={sectionsDataProfile}
             renderItem={({item}) =>
@@ -339,7 +340,9 @@ export default function UpdateProfileScreen() {
             ItemSeparatorComponent={() => <Divider mt={2} mb={2} />}
             keyExtractor={(item, index) => item.label + index}
             ListFooterComponent={<Box height="50" />}
-          />
+          /> */}
+
+          <ViewProfile />
 
           {/* <VStack space="2.5" px="4">
             <Text fontWeight={600} color="#1E1E1E" fontSize={14}>

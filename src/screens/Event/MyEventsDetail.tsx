@@ -13,6 +13,7 @@ import {
   Actionsheet,
   AlertDialog,
 } from 'native-base';
+import AppButton from '../../components/buttons/Button';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
@@ -38,6 +39,7 @@ export default function MyEventDetail() {
   const screenWidth = Dimensions.get('window').width;
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false);
   const [isLoadingApplyCoupon, setIsLoadingApplyCoupon] =
     useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -396,8 +398,9 @@ export default function MyEventDetail() {
 
               {(status === 'Waiting Payment' ||
                 (status === 'Payment Expired' && !params.isBallot)) && (
-                <Button
+                <AppButton
                   onPress={() => {
+                    setIsLoadingButton(true);
                     status === 'Waiting Payment'
                       ? confirmPayment
                         ? detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
@@ -417,14 +420,18 @@ export default function MyEventDetail() {
                               ?.evpaEvncId,
                         });
                     setConfirmPayment(undefined);
+                    setIsLoadingButton(false);
                   }}
-                  width={'100%'}
-                  marginX={'22px'}
-                  marginTop={'12px'}
-                  paddingY={'12px'}
-                  borderRadius={8}
-                  alignSelf={'center'}
-                  bg={'#EB1C23'}>
+                  isLoading={isLoadingButton}
+                  style={{marginTop: 12, marginHorizontal: 22}}
+                  // width={'100%'}
+                  // marginX={'22px'}
+                  // marginTop={'12px'}
+                  // paddingY={'12px'}
+                  // borderRadius={8}
+                  // alignSelf={'center'}
+                  // bg={'#EB1C23'}
+                  >
                   <Text
                     fontWeight={500}
                     color={colors.white}
@@ -436,7 +443,7 @@ export default function MyEventDetail() {
                         : 'Choose Payment Method'
                       : 'Register Ulang Event'}
                   </Text>
-                </Button>
+                </AppButton>
               )}
 
               <Box

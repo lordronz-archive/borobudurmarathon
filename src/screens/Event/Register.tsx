@@ -16,7 +16,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
-import RegistrationForm, {getOptions} from './components/RegistrationForm';
+import RegistrationForm from './components/RegistrationForm';
 import {EventFieldsEntity} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
@@ -25,6 +25,7 @@ import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
+import ViewProfile from '../InputProfile/components/ViewProfile';
 
 type Price = {
   id: string;
@@ -344,7 +345,6 @@ export default function EventRegisterScreen() {
           }
         />
         <Divider
-          mb="2"
           height="8px"
           _light={{
             bg: '#E8ECF3',
@@ -353,15 +353,18 @@ export default function EventRegisterScreen() {
             bg: 'muted.50',
           }}
         />
-        <VStack space="2.5" px="4">
-          <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
-            Registration Information
+        <ViewProfile fields={bannedField} withoutMarginBottom />
+
+        <VStack space="2.5" px="4" mt="0">
+          <Text bold fontSize="lg">
+            Additional Information
           </Text>
           <VStack space="1.5">
             {fields
               .filter(
                 f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
               )
+              .filter(f => !bannedField.includes(f.evhfName))
               .map(field => (
                 <RegistrationForm
                   key={field.evhfId}

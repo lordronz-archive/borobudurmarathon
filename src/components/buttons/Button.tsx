@@ -15,6 +15,7 @@ export type ButtonProps = {
   onPress?: (event: GestureResponderEvent) => void;
   isLoading?: boolean;
   disabled?: boolean;
+  style?: any;
   [key: string]: any;
 };
 
@@ -25,6 +26,7 @@ export default function Button({
   _text,
   isLoading,
   disabled,
+  style,
   ...rest
 }: ButtonProps) {
   const renderChildren = () =>
@@ -59,6 +61,7 @@ export default function Button({
             borderRadius: 8,
             alignItems: typeof children === 'string' ? 'center' : undefined,
           },
+          style,
         ]}>
         {renderChildren()}
       </View>
@@ -78,6 +81,7 @@ export default function Button({
             borderRadius: 8,
             alignItems: typeof children === 'string' ? 'center' : 'center',
           },
+          style,
         ]}>
         {renderChildren()}
       </TouchableOpacity>

@@ -13,6 +13,9 @@ export default {
   termsAndConditionsAgreement:
     'By continuing I understand, know, and am willing to comply with all the terms & conditions of the Borobudur Marathon.',
   seeMoreInfo: 'See more info',
+  additionalInformation: 'Additional Information',
+  name: 'Name',
+  phoneNumber: 'Phone Number',
   auth: {
     forgotPassword: 'Forgot password?',
     description:
@@ -83,6 +86,7 @@ export default {
     viewProfile: 'View Profile',
     buttonUpdate: 'Update Profile',
     changePhoneNumber: 'Change Phone Number',
+    accountAndPersonalData: 'Account & Personal Data',
     sendOtp: 'Send OTP',
     changeLanguage: 'Change Language',
     language: 'Language',
@@ -93,6 +97,17 @@ export default {
     verifyProfileDataLater: 'Verify Profile Data Later?',
     ifProfileNotValidated:
       "If your profile data isn't validated you can't register for competition event.",
+    birthday: 'Birthday',
+    pob: 'Place of Birth',
+    dob: 'Date of Birth',
+    gender: 'Gender',
+    bloodType: 'Blood Type',
+    country: 'Country',
+    nationality: 'Nationality',
+    province: 'Province',
+    city: 'City',
+    address: 'Address',
+    chooseProfilePicture: 'Choose profile picture',
   },
   consent: {
     title: 'Data Confirmation',
@@ -101,9 +116,20 @@ export default {
     description:
       'We have detected that you have previously registered to the Borobudur Marathon Application. Do you still want to use your old profile?, below are your old profile.',
   },
+  event: {
+    registrationForm: 'Form Registration',
+    chooseSuitableCategory: 'Choose suitable category & pricing',
+    totalPayment: 'Total Payment',
+    registerNow: 'Register Now',
+  },
   gender: {
     male: 'Male',
     female: 'Female',
+  },
+  info: {
+    termsAndConditions: 'Terms and Conditions',
+    aboutUs: 'About Us',
+    faqs: 'FAQs',
   },
   certificates: 'Certificates',
   save: 'Save',

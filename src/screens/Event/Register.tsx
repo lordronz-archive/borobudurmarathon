@@ -354,7 +354,7 @@ export default function EventRegisterScreen() {
 
   return (
     <ScrollView>
-      <Header title="Form Registration" left="back" />
+      <Header title={t('event.registrationForm')} left="back" />
       <VStack space="4" pb="3">
         <EventRegistrationCard
           imgSrc={
@@ -394,7 +394,7 @@ export default function EventRegisterScreen() {
 
         <VStack space="2.5" px="4" mt="0">
           <Text bold fontSize="lg">
-            Additional Information
+            {t('additionalInformation')}
           </Text>
           <VStack space="1.5">
             {fields
@@ -434,8 +434,7 @@ export default function EventRegisterScreen() {
               value="agreed"
               _text={{fontSize: 12, flexWrap: 'wrap'}}
               isDisabled={isLoading}>
-              Dengan melanjutkan saya mengerti, mengetahui, dan bersedia tunduk
-              untuk segala persyaratan & ketentuan event borobudur marathon.
+              {t('termsAndConditionsAgreement')}
             </Checkbox>
           </Checkbox.Group>
         </Box>
@@ -470,7 +469,7 @@ export default function EventRegisterScreen() {
         </TouchableOpacity> */}
 
         <HStack px="4" justifyContent={'space-between'} alignItems={'center'}>
-          <Text>Total Payment</Text>
+          <Text>{t('event.totalPayment')}</Text>
           <Text fontSize={18} fontWeight={700}>{`IDR ${Number(
             prices[0].finalPrice || 0,
           )?.toLocaleString('id-ID')}`}</Text>
@@ -490,7 +489,7 @@ export default function EventRegisterScreen() {
               }
               register();
             }}>
-            Register Now
+            {t('event.registerNow')}
           </Button>
         </Box>
         <Congratulation

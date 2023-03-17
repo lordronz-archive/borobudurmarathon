@@ -31,11 +31,11 @@ export default function ViewProfile(props: Props) {
     }[];
   }[] = [
     {
-      title: 'Account & Personal Data',
+      title: t('profile.accountAndPersonalData'),
       data: [
         {
           fields: ['zmemFullName', 'evpaName'],
-          label: 'Name',
+          label: t('name'),
           value: user?.data[0].zmemFullName,
         },
         {
@@ -45,7 +45,7 @@ export default function ViewProfile(props: Props) {
         },
         {
           fields: ['auusPhone', 'evpaPhone'],
-          label: 'Phone Number',
+          label: t('phoneNumber'),
           value: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone),
         },
       ],
@@ -72,16 +72,16 @@ export default function ViewProfile(props: Props) {
           ],
         },
         {
-          label: 'Birthday',
+          label: t('profile.birthday'),
           data: [
             {
               fields: ['mbsdBirthPlace', 'evpaBirthPlace'],
-              label: 'Place Of Birth',
+              label: t('profile.pob'),
               value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
             },
             {
               fields: ['mbsdBirthDate', 'evpaBirthDate'],
-              label: 'Date of Birth',
+              label: t('profile.dob'),
               value: user?.linked.mbsdZmemId[0].mbsdBirthDate
                 ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
                     'DD MMMM yyyy',
@@ -95,7 +95,7 @@ export default function ViewProfile(props: Props) {
           data: [
             {
               fields: ['mbsdGender', 'evpaGender'],
-              label: 'Gender',
+              label: t('profile.gender'),
               value: convertOption(
                 user?.linked.mbsdZmemId[0].mbsdGender || '',
                 'mbsdGender',
@@ -106,7 +106,7 @@ export default function ViewProfile(props: Props) {
             },
             {
               fields: ['mbsdBloodType', 'evpaBloodType'],
-              label: 'Blood Type',
+              label: t('profile.bloodType'),
               value: convertOption(
                 user?.linked.mbsdZmemId[0].mbsdBloodType || '',
                 'mbsdBloodType',
@@ -119,12 +119,12 @@ export default function ViewProfile(props: Props) {
           data: [
             {
               fields: ['mbsdNationality', 'evpaNationality'],
-              label: 'Country',
+              label: t('profile.nationality'),
               value: user?.linked.mbsdZmemId[0].mbsdNationality,
             },
             {
               fields: ['mbsdCountry', 'evpaCountry'],
-              label: 'Nationality',
+              label: t('profile.country'),
               value: user?.linked.mbsdZmemId[0].mbsdCountry,
             },
           ],
@@ -140,12 +140,12 @@ export default function ViewProfile(props: Props) {
               data: [
                 {
                   fields: ['mbsdProvinces', 'evpaProvinces', 'evpaProvinsi'],
-                  label: 'Province',
+                  label: t('profile.province'),
                   value: user?.linked.mbsdZmemId[0].mbsdProvinces,
                 },
                 {
                   fields: ['mbsdCity', 'evpaCity'],
-                  label: 'City',
+                  label: t('profile.city'),
                   value: user?.linked.mbsdZmemId[0].mbsdCity,
                 },
               ],
@@ -153,7 +153,7 @@ export default function ViewProfile(props: Props) {
           : {label: '', value: ''},
         {
           fields: ['mbsdAddress', 'evpaAddress'],
-          label: 'Address',
+          label: t('profile.address'),
           value: user?.linked.mbsdZmemId[0].mbsdAddress,
         },
       ].filter(item => item && item.label),

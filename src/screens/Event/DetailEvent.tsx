@@ -35,6 +35,7 @@ import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
 import {Alert} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 type Price = {
   id: string;
@@ -54,6 +55,7 @@ export default function DetailEvent() {
   const [registeredEvent, setRegisteredEvent] = useState<string[]>([]);
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
+  const {t} = useTranslation();
 
   const informations: {icon: any; label: string; description: string}[] = [
     {
@@ -242,7 +244,7 @@ export default function DetailEvent() {
             {event?.data?.evnhName}
           </Text>
           <Text fontSize="sm" color={'#768499'} mb="2">
-            Update at Sept 24, 2022
+            Updated at Sept 24, 2022
           </Text>
         </Stack>
         <Image
@@ -293,7 +295,7 @@ export default function DetailEvent() {
 
         <Section
           title="Event Pricing"
-          subtitle="Choose suitable category & pricing"
+          subtitle={t('event.chooseSuitableCategory')}
           mx={4}
           my={3}>
           <Radio.Group name="exampleGroup">

@@ -13,6 +13,9 @@ export default {
   termsAndConditionsAgreement:
     'Dengan melanjutkan saya mengerti, mengetahui, dan bersedia untuk mematuhi semua syarat & ketentuan Borobudur Marathon.',
   seeMoreInfo: 'Lihat informasi lebih lanjut',
+  additionalInformation: 'Informasi Tambahan',
+  name: 'Nama',
+  phoneNumber: 'Nomor HP',
   auth: {
     forgotPassword: 'Lupa password?',
     description:
@@ -83,6 +86,7 @@ export default {
     viewProfile: 'Lihat Profil',
     buttonUpdate: 'Ubah Profil',
     changePhoneNumber: 'Ubah Nomor Handphone',
+    accountAndPersonalData: 'Akun & Data Pribadi',
     sendOtp: 'Kirim OTP',
     changeLanguage: 'Ubah Bahasa',
     language: 'Bahasa',
@@ -93,15 +97,37 @@ export default {
     verifyProfileDataLater: 'Verifikasi Data Profil Nanti?',
     ifProfileNotValidated:
       'Jika data profil Anda tidak divalidasi, Anda tidak dapat mendaftarkan diri di kompetisi.',
+    birthday: 'Tanggal Lahir',
+    pob: 'Tempat Lahir',
+    dob: 'Tanggal Lahir',
+    gender: 'Jenis Kelamin',
+    bloodType: 'Golongan Darah',
+    country: 'Negara',
+    nationality: 'Kebangsaan',
+    province: 'Provinsi',
+    city: 'Kota',
+    address: 'Alamat',
+    chooseProfilePicture: 'Pilih foto profil',
   },
   consent: {
     title: 'Konfirmasi Data',
     description:
       'Kami mendeteksi bahwa Anda sudah pernah mendaftar ke Aplikasi Borobudur Marathon. Apakah Anda ingin menggunakan data lama sebagai data profil? Di bawah ini adalah profil lama Anda.',
   },
+  event: {
+    registrationForm: 'Formulir Registrasi',
+    chooseSuitableCategory: 'Pilih kategori & harga yang sesuai',
+    totalPayment: 'Total Pembayaran',
+    registerNow: 'Daftar Sekarang',
+  },
   gender: {
     male: 'Laki-laki',
     female: 'Perempuan',
+  },
+  info: {
+    termsAndConditions: 'Syarat dan Ketentuan',
+    aboutUs: 'Tentang Kami',
+    faqs: 'Tanya Jawab',
   },
   certificates: 'Sertifikat',
   save: 'Simpan',

@@ -287,7 +287,7 @@ export default function UpdateProfileScreen() {
                 {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
               <VStack paddingLeft={2}>
-                <Text fontSize="md">Choose profile picture</Text>
+                <Text fontSize="md">{t('profile.chooseProfilePicture')}</Text>
               </VStack>
             </HStack>
           </TouchableOpacity>

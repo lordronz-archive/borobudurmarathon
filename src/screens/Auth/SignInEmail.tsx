@@ -148,6 +148,7 @@ export default function SignInEmailScreen() {
               label="Email"
               value={email}
               onChangeText={text => setEmail(text?.toLowerCase())}
+              _inputProps={{textContentType: 'emailAddress'}}
             />
             <TextInput
               placeholder="Enter your password here"

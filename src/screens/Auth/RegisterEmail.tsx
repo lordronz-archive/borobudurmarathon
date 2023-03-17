@@ -189,10 +189,11 @@ export default function RegisterEmailScreen() {
                   <Icon
                     name="check-circle"
                     size={20}
-                    style={{paddingLeft: 10}}
+                    style={{paddingLeft: 10, color: 'green'}}
                   />
                 ) : undefined
               }
+              _inputProps={{textContentType: 'emailAddress'}}
             />
             <TextInput
               placeholder="Enter your password here"

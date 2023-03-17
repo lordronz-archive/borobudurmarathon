@@ -7,6 +7,8 @@ import countries from '../../../helpers/countries';
 import DateInput from '../../../components/form/DateInput';
 import {Box, Row, Text} from 'native-base';
 import {convertOption} from '../../../helpers/convertOption';
+import FileInput from '../../../components/form/FileInput';
+import { DocumentPickerResponse } from 'react-native-document-picker';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -17,6 +19,8 @@ export default function RegistrationForm(
     required?: boolean;
     static?: boolean;
     data?: (EventFieldsEntity & {value: string})[];
+    setFileResponse?: (a: DocumentPickerResponse) => void;
+    file?: DocumentPickerResponse;
   },
 ) {
   const opts = (
@@ -143,6 +147,19 @@ export default function RegistrationForm(
           );
         }}
         helperText={props.helperText}
+      />
+    );
+  } else if (props.evhfType === 'File' && props.setFileResponse) {
+    return (
+      <FileInput
+        placeholder={`Enter ${props.evhfLabel}`}
+        label={props.evhfLabel}
+        onChangeText={props.onValueChange}
+        value={props.value}
+        helperText={props.helperText}
+        required={props.required}
+        setFileResponse={props.setFileResponse}
+        file={props.file}
       />
     );
   } else {

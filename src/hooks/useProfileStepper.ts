@@ -1,11 +1,17 @@
 import {createGlobalState} from 'react-hooks-global-state';
+import {ImageOrVideo} from 'react-native-image-crop-picker';
 
 type IAuthData = {
   citizen?: 'WNI' | 'WNA';
   step: 'choose-citizen' | 'upload-id' | 'profile';
   identityImage: {
     fileId: string;
-    data: any;
+    data?: {
+      mime: string;
+      path: string;
+      modificationDate?: string;
+    };
+    rawFile?: ImageOrVideo;
   };
   accountInformation: {
     name: string;

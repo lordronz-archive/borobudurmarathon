@@ -42,8 +42,12 @@ import Button from '../../components/buttons/Button';
 import {useDemo} from '../../context/demo.context';
 import {getIDNumberType} from '../../assets/data/ktpPassport';
 import {GENDER_OPTIONS} from '../../assets/data/gender';
+import ImageCropPicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
+
+const IMAGE_WIDTH = 1280;
+const IMAGE_HEIGHT = 640;
 
 export default function ChooseCitizenScreen({route}: Props) {
   const {user} = useAuthUser();
@@ -135,7 +139,8 @@ export default function ChooseCitizenScreen({route}: Props) {
       mmedIncome: user?.linked.mmedZmemId?.[0].mmedIncome || '',
     });
     setCitizen(
-      user?.linked.mbsdZmemId?.[0].mbsdNationality === 'Indonesian'
+      user?.linked.mbsdZmemId?.[0].mbsdNationality === 'Indonesian' ||
+        Number(user?.linked.mbsdZmemId?.[0].mbsdIDNumberType) === 1
         ? 'WNI'
         : 'WNA',
     );
@@ -170,7 +175,7 @@ export default function ChooseCitizenScreen({route}: Props) {
     },
   ];
 
-  function handleChangeProfilePic(image: any) {
+  function handleChangeIdentityFile(image: ImageOrVideo) {
     setIdentityImage(oldVal => ({
       ...oldVal,
       data: {
@@ -178,6 +183,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         path: image.path,
         modificationDate: image.modificationDate,
       },
+      rawFile: image,
     }));
   }
 
@@ -219,7 +225,7 @@ export default function ChooseCitizenScreen({route}: Props) {
 
       console.log(res, 'upload ID');
       if (res && res.data && res.data.fileId) {
-        Toast.show({title: 'Uploud ID Success'});
+        Toast.show({title: 'Upload ID Success'});
         console.log(res.data.fileId, 'fileId');
 
         setIdentityImage(oldVal => ({
@@ -375,9 +381,9 @@ export default function ChooseCitizenScreen({route}: Props) {
               ...profile,
               mbsdNationality: 'Indonesian',
               mbsdCountry: 'Indonesia',
-              mbsdIDNumberType: 3,
+              mbsdIDNumberType: getIDNumberType(citizen).id,
             }
-          : {...profile, mbsdIDNumberType: 1};
+          : {...profile, mbsdIDNumberType: getIDNumberType(citizen).value};
       if (accountInformation && accountInformation.phoneNumber) {
         profileData = {
           ...profileData,
@@ -398,6 +404,41 @@ export default function ChooseCitizenScreen({route}: Props) {
       resetStepper();
       setStepCount(1);
       setProfileStep(1);
+    }
+  };
+
+  const openCamera = () => {
+    ImageCropPicker.openCamera({
+      width: IMAGE_WIDTH,
+      height: IMAGE_HEIGHT,
+      cropping: true,
+      freeStyleCropEnabled: true,
+      mediaType: 'photo',
+    })
+      .then(image => {
+        console.info('openCamera image result', image);
+        onChangeFile(image);
+        setVisible(false);
+      })
+      .catch(err => {
+        toast.show({
+          description: getErrorMessage(err),
+        });
+        console.log('ERROR OPEN CAMERA =>>> ', err);
+        if (getErrorMessage(err).includes('simulator')) {
+          setVisible(true);
+        }
+      });
+  };
+
+  const onChangeFile = (image: ImageOrVideo) => {
+    if (image.size <= 5 * 1e6) {
+      handleChangeIdentityFile(image);
+    } else {
+      toast.show({
+        id: 'id-image-too-big',
+        description: 'ID Image is too big, maximum file size is 5 MB',
+      });
     }
   };
 
@@ -489,7 +530,9 @@ export default function ChooseCitizenScreen({route}: Props) {
           <VStack my="3" space="2">
             <TouchableOpacity
               style={{width: '100%', height: 200}}
-              onPress={() => setVisible(true)}>
+              onPress={() => {
+                openCamera();
+              }}>
               {identityImage && identityImage.data ? (
                 <Box
                   p="1"
@@ -526,12 +569,25 @@ export default function ChooseCitizenScreen({route}: Props) {
             <Text color="#768499" fontSize={10}>
               {t('auth.maxIdSize')}
             </Text>
+
+            {identityImage.rawFile ? (
+              <>
+                <Text color="#768499" fontSize={10}>
+                  ~ {identityImage.rawFile.width}x{identityImage.rawFile.height}
+                  px
+                  {/* ({identityImage.rawFile.mime}) */}
+                </Text>
+              </>
+            ) : (
+              false
+            )}
+
             <ImagePicker
               setVisible={setVisible}
               visible={visible}
               onChange={image => {
                 if (image.size <= 5 * 1e6) {
-                  handleChangeProfilePic(image);
+                  handleChangeIdentityFile(image);
                 } else {
                   toast.show({
                     id: 'id-image-too-big',
@@ -540,8 +596,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                   });
                 }
               }}
-              width={320}
-              height={200}
+              width={IMAGE_WIDTH}
+              height={IMAGE_HEIGHT}
             />
           </VStack>
         )}
@@ -914,6 +970,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             setIdentityImage({
               fileId: '',
               data: undefined,
+              rawFile: undefined,
             });
           }
           // nextStep();

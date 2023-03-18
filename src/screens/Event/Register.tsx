@@ -211,7 +211,8 @@ export default function EventRegisterScreen() {
       ...fieldsData,
       evpaEvnhId: params.event.data.evnhId,
       evpaEvncId: params.selectedCategoryId,
-      evpaName: user?.data[0].zmemFullName,
+      evpaName:
+        user?.data && user?.data.length > 0 ? user?.data[0].zmemFullName : null,
       evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
       evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
       evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
@@ -224,10 +225,10 @@ export default function EventRegisterScreen() {
         user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
       ),
       evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
-      evpaGender: user?.linked.mbsdZmemId[0].mbsdGender,
-      evpaIDNumberType: user?.linked.mbsdZmemId[0].mbsdIDNumberType,
-      evpaIDNumber: user?.linked.mbsdZmemId[0].mbsdIDNumber,
-      evpaBloodType: user?.linked.mbsdZmemId[0].mbsdBloodType,
+      evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
+      evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
+      evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
+      evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
     };
 
     fields.forEach((f: EventFieldsEntity) => {

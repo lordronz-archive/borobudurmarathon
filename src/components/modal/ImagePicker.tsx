@@ -1,10 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {Box, Button, Modal, Text} from 'native-base';
+import {Box, Button, Modal, Text, Toast} from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {TouchableOpacity} from 'react-native';
+import { getErrorMessage } from '../../helpers/errorHandler';
 
 type Props = {
+  title?: string;
   visible: boolean;
   setVisible: (value: boolean) => void;
   onChange: (img: any) => void;
@@ -27,6 +29,9 @@ const ImagePicker = (props: Props) => {
       })
       .catch(err => {
         console.log('ERROR OEPN GALERY =>>> ', err);
+        Toast.show({
+          description: getErrorMessage(err),
+        });
       });
   };
 
@@ -43,6 +48,9 @@ const ImagePicker = (props: Props) => {
       })
       .catch(err => {
         console.log('ERROR OPEN CAMERA =>>> ', err);
+        Toast.show({
+          description: getErrorMessage(err),
+        });
       });
   };
 
@@ -59,7 +67,7 @@ const ImagePicker = (props: Props) => {
           fontWeight={600}
           color={'#1E1E1E'}
           marginBottom={'12px'}>
-          Choose Profile Picture
+          {props.title || 'Choose Profile Picture'}
         </Text>
         <Box alignSelf={'flex-start'}>
           <TouchableOpacity onPress={openCamera} style={{marginVertical: 15}}>

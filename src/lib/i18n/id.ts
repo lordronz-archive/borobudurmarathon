@@ -44,7 +44,8 @@ export default {
     signinViaEmail: 'Masuk Via Email',
     signout: 'Keluar',
     uploadId: 'Ketuk untuk Mengunggah',
-    maxIdSize: 'Ukuran file maksimum adalah 5MB dalam format .jpg',
+    maxIdSize:
+      'Ukuran file maksimum adalah 5MB dalam format .jpg. Rekomendasi ukuran lebar minimal 1280px.',
     uploadIdSubtitle: 'Harap unggah KTP Anda dan pastikan terlihat jelas',
     uploadIdTitle: 'Unggah KTP',
     selectCitizenCard: 'Warga Negara Indonesia',

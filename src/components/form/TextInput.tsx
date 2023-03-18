@@ -72,6 +72,7 @@ export default function TextInput(props: TextInputProps) {
             // _input={{paddingX: 0, paddingY: 0}}
             value={props.value}
             onChangeText={props.onChangeText}
+            autoCapitalize="none"
             // InputRightElement={
             //   props.loading ? (
             //     <Spinner size="sm" />

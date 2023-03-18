@@ -43,7 +43,7 @@ export default {
     signout: 'Sign Out',
     uploadId: 'Tap to Upload',
     maxIdSize:
-      'Maximum file size is 5MB in .jpg format with clear images. Recommendation, mininum width 1280px',
+      'Maximum file size is 5MB in .jpg format with clear images. Recommendation, mininum width 1280px.',
     uploadIdSubtitle:
       'Please upload your National Identity Card and make sure its clearly visible',
     uploadIdTitle: 'Upload National ID Card',

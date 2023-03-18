@@ -284,10 +284,7 @@ export default function EventRegisterScreen() {
 
     try {
       let res: any;
-      if (
-        params.event.data.evnhType.toString() === '7' ||
-        params.event.data.evnhType.toString() === '1'
-      ) {
+      if (Number(params.event.data.envhBallot || 0) === 1) {
         res = await EventService.registerEvent(payload);
       } else {
         res = await EventService.registerVREvent(payload);

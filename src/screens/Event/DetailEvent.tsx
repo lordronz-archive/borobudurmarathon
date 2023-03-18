@@ -36,7 +36,10 @@ import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
 import {Alert} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {parseStringToArray} from '../../helpers/parser';
+import {
+  parseStringToArray,
+  parseUnknownDataToArray,
+} from '../../helpers/parser';
 
 type Price = {
   id: string;
@@ -121,9 +124,7 @@ export default function DetailEvent() {
           .join(', '),
     originalPrice: Number(cat.evncPrice),
     finalPrice: Number(cat.evncPrice),
-    benefits: parseStringToArray<{id: string; label: string}>(
-      cat.envcBenefit,
-    ).map(item => item.label),
+    benefits: parseUnknownDataToArray(cat.envcBenefit).map(item => item.label),
     // benefits: [
     //   'Medal',
     //   'Jersey (Merchandise)',
@@ -274,9 +275,9 @@ export default function DetailEvent() {
           sodales, suscipit dignissim leo ornare. */}
             {event?.data?.evnhDescription || 'No description'}
           </Text>
-          <Text mt="2" fontSize={14} fontWeight="600" color="#1E1E1E">
+          {/* <Text mt="2" fontSize={14} fontWeight="600" color="#1E1E1E">
             Read More
-          </Text>
+          </Text> */}
         </Stack>
         <Flex mx={4}>
           {informations.map((info, index) => (
@@ -370,7 +371,9 @@ export default function DetailEvent() {
                 });
               }
             }}>
-            {'Continue with ' + selected?.name}
+            {'Continue with ' +
+              selected?.name +
+              (Number(event.data.envhBallot || 0) === 1 ? ' ~' : '')}
           </Button>
         </Box>
       ) : (

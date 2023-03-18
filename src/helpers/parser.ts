@@ -12,3 +12,36 @@ export function parseStringToArray<T>(data?: string): T[] {
   }
   return [];
 }
+
+export function parseUnknownDataToArray(
+  data?: string,
+): {id: number | string; label: string}[] {
+  if (!data) {
+    return [];
+  }
+  try {
+    data = JSON.parse(data);
+  } catch (err) {
+    if (data) {
+      const exp = data.split(',');
+      if (exp.length > 0) {
+        return exp.map((item, index) => ({id: index, label: item}));
+      } else {
+        return [{id: 0, label: data}];
+      }
+    } else {
+      return [];
+    }
+  }
+  if (Array.isArray(data)) {
+    return data;
+  } else if (data) {
+    const exp = data.split(',');
+    if (exp.length > 0) {
+      return exp.map((item, index) => ({id: index, label: item}));
+    } else {
+      return [{id: 0, label: data}];
+    }
+  }
+  return [];
+}

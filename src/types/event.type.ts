@@ -150,9 +150,11 @@ export interface CategoriesEntity {
   evncVrReps?: null;
   evncVrStartDate?: null;
 
+  // baru ada
   envcBenefit?: string;
   evncDesc?: string;
   envHold?: string; // '39'
+  envhFuture?: string;
 }
 export interface EventPropertiesDetail {
   evnhDescription?: string;

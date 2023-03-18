@@ -154,7 +154,7 @@ export interface CategoriesEntity {
   envcBenefit?: string;
   evncDesc?: string;
   envHold?: string; // '39'
-  envhFuture?: string;
+  evnhCategory?: string;
 }
 export interface EventPropertiesDetail {
   evnhDescription?: string;
@@ -180,6 +180,7 @@ export interface EventPropertiesDetail {
   envhBallot?: string; // '0'
   envhCategory?: string;
   evnhSizeChart?: string;
+  envhFuture?: string;
 }
 export interface EventFieldsEntity {
   evhfEvnhId: string;

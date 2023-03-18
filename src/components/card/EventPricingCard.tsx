@@ -38,16 +38,15 @@ export default function EventPricingCard({
 
   if (originalPrice === finalPrice) {
     textOriginalPrice;
-    textFinalPrice = finalPrice.toLocaleString('id-ID');
   } else if (finalPrice < originalPrice) {
     // discount
     textOriginalPrice = originalPrice.toLocaleString('id-ID');
-    textFinalPrice = finalPrice.toLocaleString('id-ID');
     textDiscountPercentage = (
       ((originalPrice - finalPrice) / originalPrice) *
       100
     ).toFixed(2);
   }
+  textFinalPrice = finalPrice.toLocaleString('id-ID');
 
   const _renderBenefitsItem = (item: string) => {
     return (

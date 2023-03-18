@@ -65,9 +65,9 @@ export default function DetailEvent() {
     {
       icon: <IconTag size="5" mt="0.5" color="gray.500" />,
       label: 'Race Category',
-      description: (event?.categories || [])
-        .map(cat => cat.evncName)
-        .join(', '),
+      description: event?.data.envhCategory
+        ? event?.data.envhCategory
+        : (event?.categories || []).map(cat => cat.evncName).join(', '),
     },
     {
       icon: <IconCalendar size="5" mt="0.5" color="gray.500" />,
@@ -91,48 +91,57 @@ export default function DetailEvent() {
     },
   ];
 
-  const prices: Price[] = (event?.categories || []).map(cat => ({
-    id: cat.evncId,
-    name: cat.evncName,
-    description: cat.evncDesc
-      ? cat.evncDesc
-      : [
-          // cat.evncVrReps,
-          'Quota: ' +
-            (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
-            Number(cat.evncQuotaRegistration)
-              ? (
-                  Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
-                ).toLocaleString('id-ID') +
-                '/' +
-                Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-              : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
-          datetime.getDateRangeString(
-            cat.evncStartDate,
-            cat.evncVrEndDate || undefined,
-            'short',
-            'short',
-          ),
-          cat.evncMaxDistance
-            ? 'Distance: ' + cat.evncMaxDistance + ' km'
-            : undefined,
-          cat.evncMaxDistancePoint
-            ? cat.evncMaxDistancePoint + ' point'
-            : undefined,
-        ]
-          .filter(item => item)
-          .join(', '),
-    originalPrice: Number(cat.evncPrice),
-    finalPrice: Number(cat.evncPrice),
-    benefits: parseUnknownDataToArray(cat.envcBenefit).map(item => item.label),
-    // benefits: [
-    //   'Medal',
-    //   'Jersey (Merchandise)',
-    //   'Local UMKM Merchandise',
-    //   'Free Ongkir',
-    //   'This is Dummy Data',
-    // ],
-  }));
+  const prices: Price[] = (event?.categories || []).map(cat => {
+    const earlyBirdPrice = (event?.prices || []).find(
+      price => price.evcpEvncId === cat.evncId,
+    );
+    return {
+      id: cat.evncId,
+      name: cat.evncName,
+      description: cat.evncDesc
+        ? cat.evncDesc
+        : [
+            // cat.evncVrReps,
+            'Quota: ' +
+              (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
+              Number(cat.evncQuotaRegistration)
+                ? (
+                    Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
+                  ).toLocaleString('id-ID') +
+                  '/' +
+                  Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
+                : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
+            datetime.getDateRangeString(
+              cat.evncStartDate,
+              cat.evncVrEndDate || undefined,
+              'short',
+              'short',
+            ),
+            cat.evncMaxDistance
+              ? 'Distance: ' + cat.evncMaxDistance + ' km'
+              : undefined,
+            cat.evncMaxDistancePoint
+              ? cat.evncMaxDistancePoint + ' point'
+              : undefined,
+          ]
+            .filter(item => item)
+            .join(', '),
+      originalPrice: Number(cat.evncPrice),
+      finalPrice: earlyBirdPrice
+        ? earlyBirdPrice.evcpPrice
+        : Number(cat.evncPrice),
+      benefits: parseUnknownDataToArray(cat.envcBenefit).map(
+        item => item.label,
+      ),
+      // benefits: [
+      //   'Medal',
+      //   'Jersey (Merchandise)',
+      //   'Local UMKM Merchandise',
+      //   'Free Ongkir',
+      //   'This is Dummy Data',
+      // ],
+    };
+  });
   // [
   //   {
   //     raceCategory: 'Race Category',
@@ -247,13 +256,16 @@ export default function DetailEvent() {
             {(event?.data.evnhType
               ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
               : 'OTHER'
-            ).toUpperCase()}
+            ).toUpperCase() +
+              ' ' +
+              (Number(event?.data.envhFuture || 0) === 1 ? '~' : '')}
           </Text>
           <Text fontSize="xl" fontWeight={700} mb="2">
             {event?.data?.evnhName}
           </Text>
           <Text fontSize="sm" color={'#768499'} mb="2">
-            Updated at Sept 24, 2022
+            Updated at{' '}
+            {datetime.getDateString(event?.data.evnhRegistrationStart, 'short')}
           </Text>
         </Stack>
         <Image

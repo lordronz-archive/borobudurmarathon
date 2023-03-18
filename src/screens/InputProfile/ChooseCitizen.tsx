@@ -40,6 +40,8 @@ import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import Button from '../../components/buttons/Button';
 import {useDemo} from '../../context/demo.context';
+import {getIDNumberType} from '../../assets/data/ktpPassport';
+import {GENDER_OPTIONS} from '../../assets/data/gender';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -586,21 +588,12 @@ export default function ChooseCitizenScreen({route}: Props) {
                     setProfile(oldVal => ({
                       ...oldVal,
                       mbsdIDNumber: val,
-                      mbsdIDNumberType: citizen === 'WNA' ? 1 : 3,
+                      mbsdIDNumberType: getIDNumberType(citizen).id,
                     }))
                   }
                 />
                 <SelectInput
-                  items={[
-                    {
-                      label: 'Male',
-                      value: '1',
-                    },
-                    {
-                      label: 'Female',
-                      value: '2',
-                    },
-                  ]}
+                  items={GENDER_OPTIONS}
                   placeholder="Choose gender"
                   label="Gender"
                   hideSearch

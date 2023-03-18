@@ -16,6 +16,7 @@ export function parseStringToArray<T>(data?: string): T[] {
 export function parseUnknownDataToArray(
   data?: string,
 ): {id: number | string; label: string}[] {
+  console.info('parseUnknownDataToArray data', data);
   if (!data) {
     return [];
   }

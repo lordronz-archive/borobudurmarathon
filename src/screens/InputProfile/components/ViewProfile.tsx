@@ -5,6 +5,7 @@ import {useAuthUser} from '../../../context/auth.context';
 import moment from 'moment';
 import {t} from 'i18next';
 import {convertOption} from '../../../helpers/convertOption';
+import {showIDNumberTypeName} from '../../../assets/data/ktpPassport';
 
 type Props = {
   fields?: string[];
@@ -59,10 +60,9 @@ export default function ViewProfile(props: Props) {
             {
               fields: ['mbsdIDNumberType', 'evpaIDNumberType'],
               label: 'Type',
-              value:
-                user?.linked.mbsdZmemId[0].mbsdIDNumberType === 3
-                  ? 'KTP'
-                  : 'Passport',
+              value: showIDNumberTypeName(
+                String(user?.linked.mbsdZmemId[0].mbsdIDNumberType),
+              ),
             },
             {
               fields: ['mbsdIDNumber', 'evpaIDNumber'],

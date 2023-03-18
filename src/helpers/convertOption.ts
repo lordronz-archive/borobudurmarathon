@@ -1,21 +1,15 @@
 import {t} from 'i18next';
 import {showBloodName} from '../assets/data/blood';
+import {showGenderName} from '../assets/data/gender';
+import {showIDNumberTypeName} from '../assets/data/ktpPassport';
 
 export function convertOption(val: string | number, field: string) {
   if (field === 'evpaGender' || field === 'mbsdGender') {
-    if (val === 1 || val === '1') {
-      return t('male');
-    } else {
-      return t('female');
-    }
-  } else if (field === 'evpaIDNumberType') {
-    if (val === 1) {
-      return 'KTP';
-    } else if (val === 3) {
-      return 'Passport';
-    }
+    return showGenderName(val);
+  } else if (field === 'evpaIDNumberType' || 'mbsdIDNumberType') {
+    return showIDNumberTypeName(val);
   } else if (field === 'evpaBloodType' || field === 'mbsdBloodType') {
-    return showBloodName(String(val));
+    return showBloodName(val);
   }
   return val;
 }

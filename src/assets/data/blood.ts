@@ -49,6 +49,8 @@ export const BLOOD_OPTIONS = [
   },
 ];
 
-export function showBloodName(val: string | undefined) {
-  return BLOOD_OPTIONS.find(item => item.value === val)?.label;
+export function showBloodName(val: string | number | undefined) {
+  return (
+    BLOOD_OPTIONS.find(item => String(item.value) === String(val))?.label || val
+  );
 }

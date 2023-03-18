@@ -25,6 +25,9 @@ import {useAuthUser} from '../../context/auth.context';
 import {MasterLocationResponse} from '../../types/profile.type';
 import {ProfileService} from '../../api/profile.service';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
+import { ID_NUMBER_TYPE_OPTIONS } from '../../assets/data/ktpPassport';
+import { GENDER_OPTIONS } from '../../assets/data/gender';
+import { BLOOD_OPTIONS } from '../../assets/data/blood';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -216,20 +219,7 @@ export default function InputProfileScreen() {
           </Text>
           <VStack space="1.5">
             <SelectInput
-              items={[
-                {
-                  label: 'KTP',
-                  value: '1',
-                },
-                // {
-                //   label: 'SIM',
-                //   value: '2',
-                // },
-                // {
-                //   label: 'Passport',
-                //   value: '3',
-                // },
-              ]}
+              items={ID_NUMBER_TYPE_OPTIONS}
               placeholder="Choose identity type"
               label="Identity Type"
               onValueChange={setIDNumberType}
@@ -243,16 +233,7 @@ export default function InputProfileScreen() {
               value={mbsdIDNumber}
             />
             <SelectInput
-              items={[
-                {
-                  label: 'Male',
-                  value: '1',
-                },
-                {
-                  label: 'Female',
-                  value: '2',
-                },
-              ]}
+              items={GENDER_OPTIONS}
               placeholder="Choose gender"
               label="Gender"
               onValueChange={setGender}
@@ -275,56 +256,7 @@ export default function InputProfileScreen() {
               value={mbsdBirthPlace}
             />
             <SelectInput
-              items={[
-                {
-                  label: 'O',
-                  value: '0',
-                },
-                {
-                  label: 'O+',
-                  value: '1',
-                },
-                {
-                  label: 'O-',
-                  value: '2',
-                },
-                {
-                  label: 'A',
-                  value: '3',
-                },
-                {
-                  label: 'A+',
-                  value: '4',
-                },
-                {
-                  label: 'A-',
-                  value: '5',
-                },
-                {
-                  label: 'B',
-                  value: '6',
-                },
-                {
-                  label: 'B+',
-                  value: '7',
-                },
-                {
-                  label: 'B-',
-                  value: '8',
-                },
-                {
-                  label: 'AB',
-                  value: '9',
-                },
-                {
-                  label: 'AB+',
-                  value: '10',
-                },
-                {
-                  label: 'AB-',
-                  value: '11',
-                },
-              ]}
+              items={BLOOD_OPTIONS}
               placeholder="Choose blood type"
               label="Blood Type"
               onValueChange={setBloodType}

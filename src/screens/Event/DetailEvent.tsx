@@ -37,7 +37,6 @@ import RNShare, {ShareOptions} from 'react-native-share';
 import {Alert} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {
-  parseStringToArray,
   parseUnknownDataToArray,
 } from '../../helpers/parser';
 
@@ -128,9 +127,9 @@ export default function DetailEvent() {
             .join(', '),
       originalPrice: Number(cat.evncPrice),
       finalPrice: earlyBirdPrice
-        ? earlyBirdPrice.evcpPrice
+        ? Number(earlyBirdPrice.evcpPrice)
         : Number(cat.evncPrice),
-      benefits: parseUnknownDataToArray(cat.envcBenefit).map(
+      benefits: parseUnknownDataToArray(cat.evncBenefit).map(
         item => item.label,
       ),
       // benefits: [

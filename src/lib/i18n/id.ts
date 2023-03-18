@@ -12,7 +12,7 @@ export default {
   step: 'Langkah',
   termsAndConditionsAgreement:
     'Dengan melanjutkan saya mengerti, mengetahui, dan bersedia untuk mematuhi semua syarat & ketentuan Borobudur Marathon.',
-  seeMoreInfo: 'Lihat informasi lebih lanjut',
+  seeMoreInfo: 'Lihat info',
   additionalInformation: 'Informasi Tambahan',
   name: 'Nama',
   phoneNumber: 'Nomor HP',

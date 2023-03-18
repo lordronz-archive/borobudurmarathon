@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 export default function InfoVerifyLaterScreen() {
   const navigation =
@@ -16,7 +16,7 @@ export default function InfoVerifyLaterScreen() {
     <ScrollView backgroundColor={colors.white}>
       <Header title="Verify Profile Later Info" left="back" />
       <Box borderTopColor={colors.gray[500]} w="full">
-        <Box w="full" px="25px" py="32px">
+        <Box w="full" px="25px" py="10px">
           <Text fontWeight={400} fontSize="12px" mb="12px">
             {t('profile.verifyProfileLaterInfo')}
           </Text>

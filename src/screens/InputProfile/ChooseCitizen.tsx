@@ -6,6 +6,7 @@ import {
   HStack,
   Image,
   ScrollView,
+  Spinner,
   Text,
   Toast,
   useToast,
@@ -19,7 +20,13 @@ import {
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Breadcrumbs from '../../components/header/Breadcrumbs';
-import {Alert, BackHandler, Platform, TouchableOpacity} from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  Platform,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import IconIndonesia from '../../assets/icons/IconIndonesia';
 import IconWNA from '../../assets/icons/IconWNA';
 import useProfileStepper from '../../hooks/useProfileStepper';
@@ -566,6 +573,19 @@ export default function ChooseCitizenScreen({route}: Props) {
                 </Box>
               )}
             </TouchableOpacity>
+            {isLoading && (
+              <View
+                style={{
+                  width: '100%',
+                  height: 200,
+                  position: 'absolute',
+                  justifyContent: 'center',
+                  backgroundColor: '#f2f2f2',
+                  opacity: 0.5,
+                }}>
+                <Spinner />
+              </View>
+            )}
             <Text color="#768499" fontSize={10}>
               {t('auth.maxIdSize')}
             </Text>
@@ -822,9 +842,14 @@ export default function ChooseCitizenScreen({route}: Props) {
               isDisabled={isLoading}>
               <HStack flex={1}>
                 <VStack ml={'10px'} flex={1}>
-                  <Text fontSize={'12px'} fontWeight={600}>
-                    {t('profile.verifyProfileDataLater')}
-                  </Text>
+                  <HStack justifyContent="space-between">
+                    <Text fontSize={'12px'} fontWeight={600}>
+                      {t('profile.verifyProfileDataLater')}
+                    </Text>
+                    <Text fontSize={'11px'} fontWeight={600} underline>
+                      {t('seeMoreInfo')}
+                    </Text>
+                  </HStack>
                   <Text fontSize={'10px'} fontWeight={400}>
                     {t('profile.ifProfileNotValidated')}
                   </Text>
@@ -832,11 +857,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('InfoVerifyLater');
-                  }}>
-                  <Text fontSize={'12px'} fontWeight={600} underline>
-                    {t('seeMoreInfo')}
-                  </Text>
-                </TouchableOpacity>
+                  }}></TouchableOpacity>
               </HStack>
             </Checkbox>
           )}

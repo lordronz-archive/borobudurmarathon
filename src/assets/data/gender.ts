@@ -12,5 +12,10 @@ export const GENDER_OPTIONS = [
 ];
 
 export function showGenderName(val: string | number | undefined) {
-  return GENDER_OPTIONS.find(item => String(item.value) === String(val))?.label;
+  return (
+    GENDER_OPTIONS.find(
+      item =>
+        String(item.value) === String(val) || String(item.id) === String(val),
+    )?.label || val
+  );
 }

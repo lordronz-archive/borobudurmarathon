@@ -34,6 +34,10 @@ export const ID_NUMBER_TYPE_OPTIONS = [
 ];
 
 export function showIDNumberTypeName(val: string | number | undefined) {
-  return ID_NUMBER_TYPE_OPTIONS.find(item => String(item.value) === String(val))
-    ?.label;
+  return (
+    ID_NUMBER_TYPE_OPTIONS.find(
+      item =>
+        String(item.value) === String(val) || String(item.id) === String(val),
+    )?.label || val
+  );
 }

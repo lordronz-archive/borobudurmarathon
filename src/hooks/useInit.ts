@@ -346,7 +346,7 @@ export default function useInit() {
     // } else {
     //   toast.show({title: 'BERHASSSIIILL', placement: 'top'});
     // }
-    navigation.replace('Initial');
+    // navigation.replace('Initial');
   };
 
   return {

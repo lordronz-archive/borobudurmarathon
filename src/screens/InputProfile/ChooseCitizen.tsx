@@ -140,7 +140,9 @@ export default function ChooseCitizenScreen({route}: Props) {
       mbsdIDNumberType: user?.linked.mbsdZmemId?.[0].mbsdIDNumberType
         ? Number(user?.linked.mbsdZmemId?.[0].mbsdIDNumberType)
         : 0,
-      mbsdFile: 0,
+      mbsdFile: user?.linked.mbsdZmemId?.[0].mbsdFile
+        ? Number(user?.linked.mbsdZmemId?.[0].mbsdFile)
+        : 0,
       mmedEducation: user?.linked.mmedZmemId?.[0].mmedEducation || '',
       mmedOccupation: user?.linked.mmedZmemId?.[0].mmedOccupation || '',
       mmedIncome: user?.linked.mmedZmemId?.[0].mmedIncome || '',
@@ -386,11 +388,16 @@ export default function ChooseCitizenScreen({route}: Props) {
         citizen === 'WNI'
           ? {
               ...profile,
+              mbsdFile: identityImage.fileId,
               mbsdNationality: 'Indonesian',
               mbsdCountry: 'Indonesia',
               mbsdIDNumberType: getIDNumberType(citizen).id,
             }
-          : {...profile, mbsdIDNumberType: getIDNumberType(citizen).value};
+          : {
+              ...profile,
+              mbsdFile: identityImage.fileId,
+              mbsdIDNumberType: getIDNumberType(citizen).value,
+            };
       if (accountInformation && accountInformation.phoneNumber) {
         profileData = {
           ...profileData,

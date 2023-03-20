@@ -1,3 +1,5 @@
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Toast, useTheme} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Alert, Linking, View, Platform} from 'react-native';
@@ -8,8 +10,11 @@ import config from '../../config';
 import {useAuthUser} from '../../context/auth.context';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import useInit from '../../hooks/useInit';
+import {RootStackParamList} from '../../navigation/RootNavigator';
 
 export default function LogoutScreen(props: Props) {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   const {logout} = useInit();
   const {
@@ -88,7 +93,9 @@ export default function LogoutScreen(props: Props) {
           setTimeout(() => {
             logout(
               () => {},
-              () => {},
+              () => {
+                navigation.navigate('Initial');
+              },
             );
           }, 800);
         }
@@ -129,7 +136,9 @@ export default function LogoutScreen(props: Props) {
 
           logout(
             () => {},
-            () => {},
+            () => {
+              navigation.navigate('Initial');
+            },
           );
         }
 
@@ -190,7 +199,9 @@ export default function LogoutScreen(props: Props) {
             } else {
               logout(
                 () => {},
-                () => {},
+                () => {
+                  navigation.navigate('Initial');
+                },
               );
             }
             // props.onLoadEnd

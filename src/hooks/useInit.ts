@@ -53,8 +53,10 @@ export default function useInit() {
       } else {
         console.info('AuthService.checkSession res empty');
         navigation.replace('Auth');
+        clearCookies();
       }
     } catch (err) {
+      clearCookies();
       console.info('AuthService.checkSession catch', err);
       navigation.replace('Auth');
     }
@@ -318,7 +320,6 @@ export default function useInit() {
     });
 
     onCloseModalLogout();
-    navigation.navigate('Initial');
   };
 
   const clearCookies = async () => {

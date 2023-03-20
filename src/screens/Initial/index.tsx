@@ -38,7 +38,10 @@ export default function InitialScreen() {
           source={{
             uri,
           }}
-          onError={() => setIsLoadingWebView(false)}
+          onError={() => {
+            setIsLoadingWebView(false);
+            // navigation.navigate('Auth');
+          }}
           onLoadEnd={async () => {
             const cookiesString = await getCookiesString();
             console.info('Initial cookiesString', cookiesString);

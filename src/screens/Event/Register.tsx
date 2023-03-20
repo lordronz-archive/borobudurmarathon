@@ -29,6 +29,7 @@ import ViewProfile from '../InputProfile/components/ViewProfile';
 import httpRequest from '../../helpers/httpRequest';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import {Platform} from 'react-native';
+import {parseUnknownDataToArray} from '../../helpers/parser';
 
 type Price = {
   id: string;
@@ -304,44 +305,53 @@ export default function EventRegisterScreen() {
 
   const event = params.event;
   const prices: Price[] = (event?.categories || [])
-    .map(cat => ({
-      id: cat.evncId,
-      name: cat.evncName,
-      description: [
-        cat.evncMaxDistance,
-        cat.evncMaxDistancePoint
-          ? cat.evncMaxDistancePoint + ' point'
-          : undefined,
-        cat.evncVrReps,
-        'Sisa Kuota: ' +
-          (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
-          Number(cat.evncQuotaRegistration)
-            ? (
-                Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
-              ).toLocaleString('id-ID') +
-              '/' +
-              Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-            : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
-        datetime.getDateRangeString(
-          cat.evncStartDate,
-          cat.evncVrEndDate || undefined,
-          'short',
-          'short',
+    .filter(cat => cat.evncId === params.selectedCategoryId)
+    .map(cat => {
+      const earlyBirdPrice = (event?.prices || []).find(
+        price => price.evcpEvncId === cat.evncId,
+      );
+      return {
+        id: cat.evncId,
+        name: cat.evncName,
+        description: cat.evncDesc
+          ? cat.evncDesc
+          : [
+              // cat.evncVrReps,
+              'Quota: ' +
+                (Number(cat.evncQuotaRegistration) -
+                  Number(cat.evncUseQuota) !==
+                Number(cat.evncQuotaRegistration)
+                  ? (
+                      Number(cat.evncQuotaRegistration) -
+                      Number(cat.evncUseQuota)
+                    ).toLocaleString('id-ID') +
+                    '/' +
+                    Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
+                  : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
+              datetime.getDateRangeString(
+                cat.evncStartDate,
+                cat.evncVrEndDate || undefined,
+                'short',
+                'short',
+              ),
+              cat.evncMaxDistance
+                ? 'Distance: ' + cat.evncMaxDistance + ' km'
+                : undefined,
+              cat.evncMaxDistancePoint
+                ? cat.evncMaxDistancePoint + ' point'
+                : undefined,
+            ]
+              .filter(item => item)
+              .join(', '),
+        originalPrice: Number(cat.evncPrice),
+        finalPrice: earlyBirdPrice
+          ? Number(earlyBirdPrice.evcpPrice)
+          : Number(cat.evncPrice),
+        benefits: parseUnknownDataToArray(cat.evncBenefit).map(
+          item => item.label,
         ),
-      ]
-        .filter(item => item)
-        .join(', '),
-      originalPrice: Number(cat.evncPrice),
-      finalPrice: Number(cat.evncPrice),
-      benefits: [
-        'Medal',
-        'Jersey (Merchandise)',
-        'Local UMKM Merchandise',
-        'Free Ongkir',
-        'This is Dummy Data',
-      ],
-    }))
-    .filter(cat => cat.id === params.selectedCategoryId);
+      };
+    });
 
   const isRequiredFilled = () => {
     const requiredFields = fields
@@ -349,6 +359,19 @@ export default function EventRegisterScreen() {
       .map(v => v.evhfName);
     return requiredFields.every(v => v in fieldsData && !!fieldsData[v]);
   };
+
+  const originalPrice = prices[0].originalPrice;
+  const finalPrice = prices[0].finalPrice;
+  let textOriginalPrice;
+  let textFinalPrice;
+
+  if (originalPrice === finalPrice) {
+    textOriginalPrice;
+  } else if (finalPrice < originalPrice) {
+    // discount
+    textOriginalPrice = originalPrice.toLocaleString('id-ID');
+  }
+  textFinalPrice = finalPrice.toLocaleString('id-ID');
 
   return (
     <ScrollView>
@@ -468,9 +491,24 @@ export default function EventRegisterScreen() {
 
         <HStack px="4" justifyContent={'space-between'} alignItems={'center'}>
           <Text>{t('event.totalPayment')}</Text>
-          <Text fontSize={18} fontWeight={700}>{`IDR ${Number(
+          {/* <Text fontSize={18} fontWeight={700}>{`IDR ${Number(
             prices[0].finalPrice || 0,
-          )?.toLocaleString('id-ID')}`}</Text>
+          )?.toLocaleString('id-ID')}`}</Text> */}
+
+          <VStack>
+            {!!textOriginalPrice && (
+              <Text
+                color={'#768499'}
+                fontSize="sm"
+                fontWeight={400}
+                strikeThrough>
+                IDR {textOriginalPrice}
+              </Text>
+            )}
+            <Text color={'black'} fontSize="lg" fontWeight={700}>
+              IDR {textFinalPrice}
+            </Text>
+          </VStack>
         </HStack>
         <Box px="4">
           <Button

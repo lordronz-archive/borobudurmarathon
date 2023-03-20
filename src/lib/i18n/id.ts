@@ -1,5 +1,6 @@
 export default {
   welcomeTo: 'Selamat datang di',
+  welcome: 'Selamat datang',
   Hello: 'Halo',
   partOf: 'Sekarang Anda adalah bagian dari',
   journey: 'Jelajahi Lebih Lanjut',
@@ -16,8 +17,17 @@ export default {
   additionalInformation: 'Informasi Tambahan',
   name: 'Nama',
   phoneNumber: 'Nomor HP',
+  confirmation: 'Konfirmasi',
+  cancel: 'Batal',
+  sure: 'Iya',
+  required: 'Wajib diisi',
+  copy: 'Salin',
+  continue: 'Lanjut',
   auth: {
     forgotPassword: 'Lupa password?',
+    forgotPasswordTitle: 'Lupa Password',
+    forgotPasswordSubtitle: 'Reset password anda disini',
+    resetPassword: 'Reset Password',
     description:
       'Ayo bergabung menjadi bagian dari komunitas Borobudur Marathon. Event lari terbesar di Jawa Tengah, Indonesia.',
     signInWith: 'Masuk dengan',
@@ -56,6 +66,7 @@ export default {
     of3Step: 'dari 3 untuk Melengkapi Profil Anda',
     willSendToPhone:
       'Kami akan mengirimkan kode verifikasi ke nomor ini untuk validasi',
+    signoutConfirmation: 'Apakah anda yakin ingin keluar?',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',
@@ -82,6 +93,9 @@ export default {
     addressInformation: 'Informasi Alamat',
   },
   profile: {
+    completeProfile: 'Lengkapi Profil',
+    enterAllInfoToContinue:
+      'Masukkan semua informasi dibawah untuk melanjutkan',
     title: 'Profil',
     editProfile: 'Edit Profil',
     viewProfile: 'Lihat Profil',
@@ -120,6 +134,21 @@ export default {
     chooseSuitableCategory: 'Pilih kategori & harga yang sesuai',
     totalPayment: 'Total Pembayaran',
     registerNow: 'Daftar Sekarang',
+    registrationDate: 'Tanggal Pendaftaran',
+    place: 'Tempat',
+    quota: 'Kuota',
+    distance: 'Jarak',
+    featuredEvents: 'Event Unggulan',
+    expiredEvents: 'Event Terdahulu',
+    runningDate: 'Tanggal Berlari',
+    raceCategory: 'Kategori Lari',
+    updatedAt: 'Diperbarui pada',
+  },
+  payment: {
+    paymenInformation: 'Informasi Pembayaran',
+    ensurePayment:
+      'Untuk menyelesaikan pendaftaran event, mohon pastikan anda sudah melunasi pembayaran.',
+    completePaymentBefore: 'Selesaikan pembayaran sebelum',
   },
   gender: {
     male: 'Laki-laki',

@@ -8,6 +8,7 @@ import {
   WarningOutlineIcon,
 } from 'native-base';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   type NativeSyntheticEvent,
   type TextInputEndEditingEventData,
@@ -42,6 +43,8 @@ export default function SelectInput(props: SelectInputProps) {
     [setSearchValue],
   );
 
+  const {t} = useTranslation();
+
   return (
     <FormControl isInvalid={props.isInvalid}>
       <Box borderWidth={1} borderColor="#C5CDDB" borderRadius={5} px={3} pb={0}>
@@ -52,7 +55,7 @@ export default function SelectInput(props: SelectInputProps) {
           </HStack>
           {props.required && (
             <Text color="primary.900" italic ml="2" fontSize="xs">
-              Required
+              {t('required')}
             </Text>
           )}
         </FormControl.Label>

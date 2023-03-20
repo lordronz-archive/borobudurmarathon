@@ -9,6 +9,7 @@ import {
   Badge,
 } from 'native-base';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {ImageSourcePropType} from 'react-native';
 
 type CardEventProps = {
@@ -26,6 +27,8 @@ export default function CardEvent({
   image,
   isAvailable = true,
 }: CardEventProps) {
+  const {t} = useTranslation();
+
   return (
     <Box alignItems="flex-start" my={3} width="100%">
       <HStack flex={1}>
@@ -51,7 +54,7 @@ export default function CardEvent({
                 fontWeight: 'bold',
                 fontSize: 'xs',
               }}>
-              Expired Event
+              {t('event.expiredEvents')}
             </Badge>
           )}
           <Text
@@ -64,7 +67,7 @@ export default function CardEvent({
           <HStack space={1}>
             <VStack width="40%">
               <Text fontSize="xs" color="coolGray.500">
-                Registration Date
+                {t('event.registrationDate')}
               </Text>
               <Text fontSize="xs" color="coolGray.800">
                 {date}
@@ -72,7 +75,7 @@ export default function CardEvent({
             </VStack>
             <VStack width="50%">
               <Text fontSize="xs" color="coolGray.500">
-                Place
+                {t('event.place')}
               </Text>
               <Text
                 fontSize="xs"

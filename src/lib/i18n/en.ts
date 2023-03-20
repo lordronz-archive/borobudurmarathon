@@ -1,5 +1,6 @@
 export default {
   welcomeTo: 'Welcome to',
+  welcome: 'Welcome',
   Hello: 'Hello',
   partOf: 'You are now part of',
   journey: "Let's Start your Journey",
@@ -16,8 +17,17 @@ export default {
   additionalInformation: 'Additional Information',
   name: 'Name',
   phoneNumber: 'Phone Number',
+  confirmation: 'Confirmation',
+  cancel: 'Cancel',
+  sure: 'Yes, sure',
+  required: 'Required',
+  copy: 'Copy',
+  continue: 'Continue',
   auth: {
     forgotPassword: 'Forgot password?',
+    forgotPasswordTitle: 'Forgot Password',
+    forgotPasswordSubtitle: 'Reset your password here',
+    resetPassword: 'Reset Password',
     description:
       "Let's join and be part of the Borobudur Marathon community. The biggest running event in Central Java, Indonesia.",
     signInWith: 'Sign in with',
@@ -55,6 +65,7 @@ export default {
     of3Step: 'of 3 to Complete Profile',
     willSendToPhone:
       'We will send verification code to this number for validation',
+    signoutConfirmation: 'Are you sure want to sign out?',
   },
   registration: {
     registrationSuccess: 'Event Registration Success',
@@ -81,6 +92,8 @@ export default {
     addressInformation: 'Address Information',
   },
   profile: {
+    completeProfile: 'Complete Profile',
+    enterAllInfoToContinue: 'Enter all information below to continue',
     title: 'Profile',
     editProfile: 'Edit Profile',
     viewProfile: 'View Profile',
@@ -121,6 +134,21 @@ export default {
     chooseSuitableCategory: 'Choose suitable category & pricing',
     totalPayment: 'Total Payment',
     registerNow: 'Register Now',
+    registrationDate: 'Registration Date',
+    place: 'Place',
+    quota: 'Quota',
+    distance: 'Distance',
+    featuredEvents: 'Featured Events',
+    expiredEvents: 'Expired Events',
+    runningDate: 'Running Date',
+    raceCategory: 'Race Category',
+    updatedAt: 'Updated at',
+  },
+  payment: {
+    paymenInformation: 'Payment Information',
+    ensurePayment:
+      'To complete Event Registration please ensure you have paid registration fee.',
+    completePaymentBefore: 'Complete your payment before',
   },
   gender: {
     male: 'Male',

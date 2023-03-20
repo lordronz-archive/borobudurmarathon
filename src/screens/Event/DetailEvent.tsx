@@ -62,14 +62,14 @@ export default function DetailEvent() {
   const informations: {icon: any; label: string; description: string}[] = [
     {
       icon: <IconTag size="5" mt="0.5" color="gray.500" />,
-      label: 'Race Category',
+      label: t('event.raceCategory'),
       description: event?.data.envhCategory
         ? event?.data.envhCategory
         : (event?.categories || []).map(cat => cat.evncName).join(', '),
     },
     {
       icon: <IconCalendar size="5" mt="0.5" color="gray.500" />,
-      label: 'Registration Date',
+      label: t('event.registrationDate'),
       description: datetime.getDateRangeString(
         event?.data.evnhRegistrationStart,
         event?.data.evnhRegistrationEnd,
@@ -79,7 +79,7 @@ export default function DetailEvent() {
     },
     {
       icon: <IconRun size="5" mt="0.5" color="gray.500" />,
-      label: 'Running Date',
+      label: t('event.runningDate'),
       description: datetime.getDateRangeString(
         event?.data.evnhStartDate,
         event?.data.evnhEndDate,

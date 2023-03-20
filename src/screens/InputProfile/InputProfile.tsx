@@ -25,9 +25,10 @@ import {useAuthUser} from '../../context/auth.context';
 import {MasterLocationResponse} from '../../types/profile.type';
 import {ProfileService} from '../../api/profile.service';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
-import { ID_NUMBER_TYPE_OPTIONS } from '../../assets/data/ktpPassport';
-import { GENDER_OPTIONS } from '../../assets/data/gender';
-import { BLOOD_OPTIONS } from '../../assets/data/blood';
+import {ID_NUMBER_TYPE_OPTIONS} from '../../assets/data/ktpPassport';
+import {GENDER_OPTIONS} from '../../assets/data/gender';
+import {BLOOD_OPTIONS} from '../../assets/data/blood';
+import {useTranslation} from 'react-i18next';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -84,6 +85,8 @@ export default function InputProfileScreen() {
     mmedOccupation: '-',
     mmedIncome: '-',
   };
+
+  const {t} = useTranslation();
 
   const setProfile = async () => {
     setIsLoading(true);
@@ -184,9 +187,9 @@ export default function InputProfileScreen() {
         <Box px="4">
           <BackHeader onPress={() => navigation.goBack()} />
           <VStack space="1.5">
-            <Heading>Complete Profile</Heading>
+            <Heading>{t('profile.completeProfile')}</Heading>
             <Text fontWeight={400} color="#768499" fontSize={11}>
-              Enter all information below to continue
+              {t('profile.enterAllInfoToContinue')}
             </Text>
           </VStack>
         </Box>
@@ -196,7 +199,7 @@ export default function InputProfileScreen() {
             color="#1E1E1E"
             fontSize={14}
             fontFamily="Poppins-Bold">
-            Account Information
+            {t('label.accountInformation')}
           </Text>
           <VStack space="1.5">
             <TextInput placeholder="Enter your name" label="Name" />
@@ -215,7 +218,7 @@ export default function InputProfileScreen() {
             color="#1E1E1E"
             fontSize={14}
             fontFamily="Poppins-Bold">
-            Personal Data
+            {t('label.personalData')}
           </Text>
           <VStack space="1.5">
             <SelectInput
@@ -290,7 +293,7 @@ export default function InputProfileScreen() {
             color="#1E1E1E"
             fontSize={14}
             fontFamily="Poppins-Bold">
-            Address Information
+            {t('label.addressInformation')}
           </Text>
           <VStack space="1.5">
             <SelectInput
@@ -374,8 +377,7 @@ export default function InputProfileScreen() {
               value="agreed"
               _text={{fontSize: 12, px: 3}}
               isDisabled={isLoading}>
-              Dengan melanjutkan saya mengerti, mengetahui, dan bersedia tunduk
-              tunduk untuk segala persyaratan & ketentuan borobudur marathon.
+              {t('termsAndConditionsAgreement')}
             </Checkbox>
           </Checkbox.Group>
         </Box>
@@ -385,7 +387,7 @@ export default function InputProfileScreen() {
             onPress={setProfile}
             isLoading={isLoading}
             isDisabled={checkbox[0] !== 'agreed'}>
-            Continue
+            {t('continue')}
           </Button>
         </Box>
       </VStack>

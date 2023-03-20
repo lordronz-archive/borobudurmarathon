@@ -9,6 +9,7 @@ import {
   Divider,
 } from 'native-base';
 import React, {ReactNode} from 'react';
+import {useTranslation} from 'react-i18next';
 
 type EventRegistrationCardProps = {
   isAvailable?: boolean;
@@ -26,6 +27,7 @@ export default function EventRegistrationCard({
   imgSrc,
   registrationDate,
 }: EventRegistrationCardProps) {
+  const {t} = useTranslation();
   return (
     <Box alignItems="flex-start" my={0} mt={3} width="100%" px="4">
       <HStack flex={1}>
@@ -73,12 +75,12 @@ export default function EventRegistrationCard({
       <HStack space={2}>
         <VStack w={'50%'}>
           <Text fontSize="xs" color="coolGray.500">
-            Registration Date
+            {t('event.registrationDate')}
           </Text>
         </VStack>
         <VStack>
           <Text fontSize="xs" color="coolGray.500">
-            Running Date
+            {t('event.runningDate')}
           </Text>
         </VStack>
       </HStack>

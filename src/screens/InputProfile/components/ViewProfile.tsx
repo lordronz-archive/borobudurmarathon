@@ -108,7 +108,7 @@ export default function ViewProfile(props: Props) {
               fields: ['mbsdBloodType', 'evpaBloodType'],
               label: t('profile.bloodType'),
               value: convertOption(
-                user?.linked.mbsdZmemId[0].mbsdBloodType || '',
+                user?.linked.mbsdZmemId[0].mbsdBloodType || 0,
                 'mbsdBloodType',
               ),
             },

@@ -6,9 +6,7 @@ import {
   View,
   HStack,
   Avatar,
-  SectionList,
-  Row,
-  Divider,
+  Spinner,
 } from 'native-base';
 import React, {useState} from 'react';
 import {Platform, TouchableOpacity} from 'react-native';
@@ -20,10 +18,7 @@ import httpRequest from '../../helpers/httpRequest';
 import {ProfileService} from '../../api/profile.service';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import moment from 'moment';
 import useInit from '../../hooks/useInit';
-import {showBloodName} from '../../assets/data/blood';
-import { cleanPhoneNumber } from '../../helpers/phoneNumber';
 import ViewProfile from '../InputProfile/components/ViewProfile';
 
 export default function UpdateProfileScreen() {
@@ -202,6 +197,7 @@ export default function UpdateProfileScreen() {
   // end view only
 
   function handleChangeProfilePic(image: any) {
+    setIsShowImagePickerModal(false);
     console.log(image);
     setProfilePic({
       mime: image.mime,
@@ -269,7 +265,9 @@ export default function UpdateProfileScreen() {
       <Header title={t('profile.title')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
-          <TouchableOpacity onPress={() => setIsShowImagePickerModal(true)}>
+          <TouchableOpacity
+            onPress={() => setIsShowImagePickerModal(true)}
+            disabled={isLoading}>
             <HStack
               space={2}
               paddingLeft={3}
@@ -286,9 +284,13 @@ export default function UpdateProfileScreen() {
                 }}>
                 {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>
-              <VStack paddingLeft={2}>
-                <Text fontSize="md">{t('profile.chooseProfilePicture')}</Text>
-              </VStack>
+
+              <HStack paddingLeft={2}>
+                <Text fontSize="md" color={isLoading ? 'gray.500' : 'black'}>
+                  {t('profile.chooseProfilePicture')}
+                </Text>
+                {isLoading && <Spinner ml="2" size="sm" />}
+              </HStack>
             </HStack>
           </TouchableOpacity>
 

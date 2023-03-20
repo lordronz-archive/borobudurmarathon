@@ -53,10 +53,10 @@ export default function useInit() {
       } else {
         console.info('AuthService.checkSession res empty');
         navigation.replace('Auth');
-        clearCookies();
+        logout();
       }
     } catch (err) {
-      clearCookies();
+      logout();
       console.info('AuthService.checkSession catch', err);
       navigation.replace('Auth');
     }
@@ -304,22 +304,26 @@ export default function useInit() {
   };
 
   const logout = async (
-    setIsLoggingOut: (val: boolean) => void,
-    onCloseModalLogout: () => void,
+    setIsLoggingOut?: (val: boolean) => void,
+    onCloseModalLogout?: () => void,
   ) => {
     InAppBrowser.closeAuth();
     await clearCookies();
 
     dispatch({type: EAuthUserAction.LOGOUT});
 
-    setIsLoggingOut(false);
+    if (setIsLoggingOut) {
+      setIsLoggingOut(false);
+    }
 
     toast.show({
       id: 'logout',
       description: 'Logout successfully',
     });
 
-    onCloseModalLogout();
+    if (onCloseModalLogout) {
+      onCloseModalLogout();
+    }
   };
 
   const clearCookies = async () => {

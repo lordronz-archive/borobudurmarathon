@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
-import {Box, Center, Spinner, Toast} from 'native-base';
+import {Box, Toast} from 'native-base';
 import useInit from '../../hooks/useInit';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import config from '../../config';

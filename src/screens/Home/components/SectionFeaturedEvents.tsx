@@ -27,10 +27,11 @@ export default function SectionFeaturedEvents() {
         setIsLoading(false);
       })
       .catch(err => {
-        Toast.show({
-          title: 'Failed to get featured events',
-          description: getErrorMessage(err),
-        });
+        console.info('error fetch featured events', err);
+        // Toast.show({
+        //   title: 'Failed to get featured events',
+        //   description: getErrorMessage(err),
+        // });
         setIsLoading(false);
       });
   };

@@ -61,27 +61,25 @@ export default function CardEvent({
             fontFamily="Poppins-Medium">
             {title}
           </Text>
-          <HStack space={2}>
-            <VStack w={'50%'}>
+          <HStack space={1}>
+            <VStack width="40%">
               <Text fontSize="xs" color="coolGray.500">
                 Registration Date
               </Text>
-            </VStack>
-            <VStack>
-              <Text fontSize="xs" color="coolGray.500">
-                Place
-              </Text>
-            </VStack>
-          </HStack>
-          <HStack space={2}>
-            <VStack w={'50%'}>
               <Text fontSize="xs" color="coolGray.800">
                 {date}
               </Text>
             </VStack>
-            <VStack>
-              <Text fontSize="xs" color="coolGray.800">
-                {place.length > 15 ? place.substring(0, 15) + '...' : place}
+            <VStack width="50%">
+              <Text fontSize="xs" color="coolGray.500">
+                Place
+              </Text>
+              <Text
+                fontSize="xs"
+                color="coolGray.800"
+                ellipsizeMode="tail"
+                numberOfLines={1}>
+                {place}
               </Text>
             </VStack>
           </HStack>

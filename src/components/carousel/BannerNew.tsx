@@ -41,7 +41,8 @@ export default function BannerNew(props: IProps) {
           loop
           width={width}
           height={width / 1.45}
-          autoPlay={true}
+          autoPlay={props.entries.length > 1}
+          autoPlayInterval={5000}
           data={props.entries}
           modeConfig={{
             parallaxScrollingScale: 0.94,

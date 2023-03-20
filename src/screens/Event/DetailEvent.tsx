@@ -36,9 +36,8 @@ import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
 import {Alert} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {
-  parseUnknownDataToArray,
-} from '../../helpers/parser';
+import {parseUnknownDataToArray} from '../../helpers/parser';
+import IconLocation from '../../assets/icons/IconLocation';
 
 type Price = {
   id: string;
@@ -87,6 +86,11 @@ export default function DetailEvent() {
         'short',
         'short',
       ),
+    },
+    {
+      icon: <IconLocation size="5" mt="0.5" color="gray.500" />,
+      label: 'Place',
+      description: event?.data.evnhPlace || '',
     },
   ];
 
@@ -293,17 +297,17 @@ export default function DetailEvent() {
         <Flex mx={4}>
           {informations.map((info, index) => (
             <Box key={index}>
-              <HStack my={3}>
-                <Stack mr={3}>
+              <HStack my={3} space={3}>
+                <Stack>
                   <Box p={14} bgColor={'#F4F6F9'} borderRadius={'10'}>
                     {info.icon}
                   </Box>
                 </Stack>
-                <Stack>
+                <Stack w="80%">
                   <Text fontSize="sm" color={'#768499'} fontWeight={500}>
                     {info.label}
                   </Text>
-                  <Text fontSize="sm" fontWeight={400} mb="2">
+                  <Text fontSize="sm" fontWeight={400} mb="2" overflowX="">
                     {info.description}
                   </Text>
                 </Stack>

@@ -216,8 +216,9 @@ const EventService = {
 
       return res.data;
     } catch (error) {
+      console.info('ERROR getEvents ', error);
       const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      throw new ResponseError(msg.status, msg.error?.message);
     }
   },
   registerVREvent: async function (data: any) {

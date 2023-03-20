@@ -7,6 +7,7 @@ export default {
   bypassEmailVerification: false,
   inAppBrowser: true,
   isDev: Config.IS_DEV === 'TRUE',
+  // isDev: false,
   isShowFeatureCertificate: false,
   debug: true,
   // isProduction: process.env.NODE_ENV === 'production',

@@ -209,6 +209,7 @@ export default function InputProfileScreen() {
               helperText="We will send verification code to this number for validation"
               onChangeText={setPhoneNumber}
               value={phoneNumber}
+              keyboardType="numeric"
             />
           </VStack>
         </VStack>

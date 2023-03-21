@@ -654,6 +654,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                   label="Phone number"
                   helperText={t('auth.willSendToPhone')}
                   value={accountInformation.phoneNumber}
+                  keyboardType="numeric"
                   onChangeText={val =>
                     setAccountInformation(oldVal => ({
                       ...oldVal,

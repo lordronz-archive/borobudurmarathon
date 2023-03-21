@@ -83,7 +83,7 @@ export default function WelcomeScreen() {
                     : user.data[0].zmemFullName.split(' ')[1]}
                 </Text>
                 <Heading fontWeight={600} fontSize={20}>
-                  {t('welcomeTo')} Borobudur Marathon
+                  {t('welcomeTo') + '\n'} Borobudur Marathon
                 </Heading>
               </Box>
               <Text py="4" fontSize={10}>

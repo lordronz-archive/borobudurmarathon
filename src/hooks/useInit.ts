@@ -15,8 +15,9 @@ import {useDemo} from '../context/demo.context';
 import {IAuthResponseData} from '../types/auth.type';
 import config from '../config';
 import {cleanPhoneNumber} from '../helpers/phoneNumber';
-import i18next, {t} from 'i18next';
+import i18next from 'i18next';
 import {Platform} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 export default function useInit() {
   const route = useRoute();
@@ -25,6 +26,7 @@ export default function useInit() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const {setLoginType} = useAuthUser();
+  const {t} = useTranslation();
 
   const {
     isShowDemoVerifyEmail,
@@ -297,7 +299,7 @@ export default function useInit() {
       if (!toast.isActive('welcome')) {
         toast.show({
           id: 'welcome',
-          description: 'Welcome, ' + profile.data[0].zmemFullName,
+          description: `${t('welcome')}, ` + profile.data[0].zmemFullName,
         });
       }
     }

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   useTheme,
@@ -20,7 +20,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
 import IconInfo from '../../assets/icons/IconInfo';
 import {TouchableOpacity} from 'react-native';
-import {EVENT_TYPES, EventProperties} from '../../types/event.type';
+import {EVENT_TYPES} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import datetime from '../../helpers/datetime';
@@ -28,6 +28,7 @@ import moment from 'moment';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import IconCircleCheck from '../../assets/icons/IconCircleCheck';
 import WebView from 'react-native-webview';
+import {useTranslation} from 'react-i18next';
 
 export default function PaymentScreen() {
   const {onCopy} = useClipboard();
@@ -41,6 +42,8 @@ export default function PaymentScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [detailTransaction, setDetailTransaction] = useState<any>();
   const [activePayment, setActivePayment] = useState<any>();
+
+  const {t} = useTranslation();
 
   const fetchList = async () => {
     setIsLoading(true);
@@ -206,7 +209,7 @@ export default function PaymentScreen() {
                 </VStack>
                 <VStack width={'50%'}>
                   <Text fontWeight={400} color="#768499" fontSize={10}>
-                    Running date
+                    {t('event.runningDate')}
                   </Text>
                   <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
                     {datetime.getDateRangeString(
@@ -226,11 +229,10 @@ export default function PaymentScreen() {
                 borderBottomWidth={1}
                 borderBottomStyle={'solid'}>
                 <Text fontWeight={600} fontSize={14} color={'#1E1E1E'}>
-                  Payment Information
+                  {t('payment.paymentInformation')}
                 </Text>
                 <Text fontWeight={400} fontSize={11} color={'#768499'}>
-                  To complete Event Registration please ensure you have paid
-                  registration fee.
+                  {t('payment.ensurePayment')}
                 </Text>
               </VStack>
               <VStack>
@@ -240,7 +242,7 @@ export default function PaymentScreen() {
                   color={'#1E1E1E'}
                   paddingY={'12px'}
                   textAlign={'center'}>
-                  Complete your payment before
+                  {t('payment.completePaymentBefore')}
                 </Text>
                 <Box paddingY={'12px'} bg={'#F4F6F9'} borderRadius={5}>
                   <Text
@@ -320,7 +322,7 @@ export default function PaymentScreen() {
                                   fontWeight={600}
                                   color={'#3D52E6'}
                                   marginLeft={'8px'}>
-                                  Copy
+                                  {t('copy')}
                                 </Text>
                               </TouchableOpacity>
                             )}
@@ -370,7 +372,7 @@ export default function PaymentScreen() {
                     color="#768499"
                     fontSize={11}
                     textAlign={'center'}>
-                    {`Payment success. Don’t forget to attend “${detailTransaction?.linked?.trnsEventId?.[0]?.evnhName}”. See you there!`}
+                    {`Payment success. Don't forget to attend “${detailTransaction?.linked?.trnsEventId?.[0]?.evnhName}”. See you there!`}
                   </Text>
                 </Box>
               )}

@@ -375,8 +375,8 @@ export default function MyProfile() {
         onClose={onCloseModalLogout}>
         <AlertDialog.Content>
           <AlertDialog.CloseButton />
-          <AlertDialog.Header>Confirmation</AlertDialog.Header>
-          <AlertDialog.Body>Are you sure want to sign out?</AlertDialog.Body>
+          <AlertDialog.Header>{t('confirmation')}</AlertDialog.Header>
+          <AlertDialog.Body>{t('auth.signoutConfirmation')}</AlertDialog.Body>
           <AlertDialog.Footer>
             <Button.Group space={2}>
               <Button
@@ -385,7 +385,7 @@ export default function MyProfile() {
                 size="sm"
                 onPress={onCloseModalLogout}
                 ref={cancelLogoutRef}>
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 size="sm"
@@ -395,7 +395,7 @@ export default function MyProfile() {
                   onCloseModalLogout();
                   navigation.navigate('Logout');
                 }}>
-                Yes, Sure
+                {t('sure')}
               </Button>
             </Button.Group>
           </AlertDialog.Footer>

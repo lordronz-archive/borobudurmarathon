@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {EventService} from '../../../api/event.service';
 import BannerNew from '../../../components/carousel/BannerNew';
 import Section from '../../../components/section/Section';
@@ -36,6 +37,8 @@ export default function SectionFeaturedEvents() {
       });
   };
 
+  const {t} = useTranslation();
+
   useEffect(() => {
     fetchList();
   }, []);
@@ -45,7 +48,7 @@ export default function SectionFeaturedEvents() {
   }
 
   return (
-    <Section title="Featured Events" _title={{py: 2, px: 4}}>
+    <Section title={t('event.featuredEvents')} _title={{py: 2, px: 4}}>
       <BannerNew
         entries={data.map(item => ({
           title: item.evnhName,

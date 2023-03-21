@@ -404,6 +404,10 @@ export default function ChooseCitizenScreen({route}: Props) {
           mbsdFullName: accountInformation.name,
         };
       }
+      console.info(
+        'setProfileAfterVerifyPhoneSuccess-->profileData',
+        JSON.stringify(profileData),
+      );
       const res = await AuthService.setprofile(profileData);
       console.info('Setprofile result: ', res);
 

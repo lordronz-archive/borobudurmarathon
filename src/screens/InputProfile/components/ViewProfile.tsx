@@ -107,6 +107,7 @@ export default function ViewProfile(props: Props) {
             {
               fields: ['mbsdBloodType', 'evpaBloodType'],
               label: t('profile.bloodType'),
+              // value: user?.linked.mbsdZmemId[0].mbsdBloodType || 0,
               value: convertOption(
                 user?.linked.mbsdZmemId[0].mbsdBloodType || 0,
                 'mbsdBloodType',
@@ -202,7 +203,7 @@ export default function ViewProfile(props: Props) {
     });
     sectionsDataProfile = sectionsDataProfile.filter(item => item.show);
   }
-  console.info('sectionsDataProfile', sectionsDataProfile);
+  console.info('sectionsDataProfile', JSON.stringify(sectionsDataProfile));
 
   return (
     <SectionList

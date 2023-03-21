@@ -1,3 +1,5 @@
+import {t} from 'i18next';
+
 export const LIST_MONTH = [
   'Januari',
   'Februari',
@@ -54,11 +56,11 @@ function getDateString(
   if (now.getFullYear() === date.getFullYear()) {
     if (now.getMonth() === date.getMonth()) {
       if (now.getDate() === date.getDate()) {
-        return 'Hari ini';
+        return t('time.today');
       } else if (now.getDate() - date.getDate() === 1) {
-        return 'Kemarin';
+        return t('time.yesterday');
       } else if (date.getDate() - now.getDate() === 1) {
-        return 'Besok';
+        return t('time.tomorrow');
       }
     }
   }

@@ -148,6 +148,7 @@ export interface GetEventResponse {
   payments?: PaymentsEntity[] | null;
   prices?: any[] | null;
   product?: any[] | null;
+  linked?: Linked | null;
 }
 export interface CategoriesEntity {
   evncHold: string;

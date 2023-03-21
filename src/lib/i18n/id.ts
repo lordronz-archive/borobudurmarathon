@@ -163,4 +163,9 @@ export default {
   save: 'Simpan',
   next: 'Berikutnya',
   hi: 'Hai',
+  time: {
+    today: 'hari ini',
+    yesterday: 'kemarin',
+    tomorrow: 'besok',
+  },
 };

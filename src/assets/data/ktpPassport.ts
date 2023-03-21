@@ -2,13 +2,13 @@ export function getIDNumberType(iam: 'WNA' | 'WNI' | undefined | null) {
   if (iam === 'WNA') {
     return {
       id: 2,
-      label: 'KTP',
+      label: 'Passport',
       value: 2,
     };
   } else if (iam === 'WNI') {
     return {
       id: 1,
-      label: 'Passport',
+      label: 'KTP',
       value: 1,
     };
   } else {

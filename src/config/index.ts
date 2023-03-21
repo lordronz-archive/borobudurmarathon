@@ -7,7 +7,7 @@ export default {
   bypassEmailVerification: false,
   inAppBrowser: true,
   isDev: Config.IS_DEV === 'TRUE',
-  isShowDemoSettings: false,
+  isShowDemoSettings: true,
   // isDev: false,
   isShowFeatureCertificate: false,
   debug: true,
@@ -293,7 +293,7 @@ export default {
       event: {
         detail: {
           path: 'event/',
-          // path: 'member_event/',
+          // path: 'member_resource/member_event/',
         },
       },
     },

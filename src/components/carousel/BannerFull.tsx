@@ -37,7 +37,7 @@ export default function BannerFull(props: IProps) {
         itemHeight={width / 1.3}
         // autoPlay={props.entries.length > 1}
         // autoPlayInterval={5000}
-        data={[...props.entries, ...props.entries]}
+        data={props.entries}
         // modeConfig={{
         //   parallaxScrollingScale: 0.94,
         //   parallaxScrollingOffset: 54,
@@ -45,7 +45,7 @@ export default function BannerFull(props: IProps) {
         // }}
         // mode=""
         // scrollAnimationDuration={3000}
-        onSnapToItem={index => setActiveSlide(index)}
+        onSnapToItem={index => setActiveSlide(index % props.entries.length)}
         renderItem={({item, index}) => (
           <Image
             key={index}
@@ -63,13 +63,12 @@ export default function BannerFull(props: IProps) {
       <Pagination
         dotsLength={props.entries.length}
         activeDotIndex={activeSlide}
-        containerStyle={{backgroundColor: 'rgba(0, 0, 0, 0.75)'}}
+        containerStyle={{position: 'absolute', width: '100%', bottom: 0}}
         dotStyle={{
-          zIndex: 100,
-          width: 100,
-          height: 100,
-          borderRadius: 5,
-          marginHorizontal: 8,
+          width: 30,
+          height: 5,
+          borderRadius: 0,
+          marginHorizontal: 0,
           backgroundColor: 'rgba(255, 255, 255, 0.92)',
         }}
         inactiveDotStyle={

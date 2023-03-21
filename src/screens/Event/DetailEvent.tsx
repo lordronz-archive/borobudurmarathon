@@ -8,7 +8,6 @@ import {
   ScrollView,
   Stack,
   Text,
-  Image,
   Flex,
   HStack,
   Divider,
@@ -106,15 +105,15 @@ export default function DetailEvent() {
         ? cat.evncDesc
         : [
             // cat.evncVrReps,
-            'Quota: ' +
-              (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
-              Number(cat.evncQuotaRegistration)
-                ? (
-                    Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
-                  ).toLocaleString('id-ID') +
-                  '/' +
-                  Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-                : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
+            // 'Quota: ' +
+            //   (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
+            //   Number(cat.evncQuotaRegistration)
+            //     ? (
+            //         Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
+            //       ).toLocaleString('id-ID') +
+            //       '/' +
+            //       Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
+            //     : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
             datetime.getDateRangeString(
               cat.evncStartDate,
               cat.evncVrEndDate || undefined,
@@ -181,7 +180,7 @@ export default function DetailEvent() {
       });
     EventService.getEvent(params.id)
       .then(res => {
-        console.info('res get detail event', res);
+        console.info('res get detail event', JSON.stringify(res));
         setEvent(res);
         setIsLoading(false);
       })
@@ -288,12 +287,25 @@ export default function DetailEvent() {
           }
         /> */}
 
-        <BannerFull
-          entries={(event?.data ? [event?.data] : []).map(item => ({
-            title: item.evnhName,
-            imageUrl: item.evnhThumbnail,
-          }))}
-        />
+        {event?.linked &&
+        event.linked.eimgEvnhId &&
+        event.linked.eimgEvnhId.length > 0 ? (
+          <BannerFull
+            entries={
+              event.linked.eimgEvnhId.map(item => ({
+                title: item.eimgName,
+                imageUrl: item.eimgUrlImage,
+              }))
+              // (event?.data ? [event?.data] : [])
+              // .map(item => ({
+              //   title: item.evnhName,
+              //   imageUrl: item.evnhThumbnail,
+              // }))
+            }
+          />
+        ) : (
+          false
+        )}
 
         <Stack mx={4} mb={4}>
           {event?.data?.evnhDescription ? (

@@ -62,10 +62,12 @@ export const BLOOD_OPTIONS = [
 ];
 
 export function showBloodName(val: string | number | undefined) {
-  return (
+  console.info('val -->', val);
+  const res =
     BLOOD_OPTIONS.find(
       item =>
         String(item.value) === String(val) || String(item.id) === String(val),
-    )?.label || val
-  );
+    )?.label || val;
+  console.info('res -->', res);
+  return res;
 }

@@ -391,14 +391,14 @@ export default function ChooseCitizenScreen({route}: Props) {
               mbsdFile: identityImage.fileId,
               mbsdNationality: 'Indonesian',
               mbsdCountry: 'Indonesia',
-              mbsdIDNumberType: getIDNumberType(citizen).id,
+              mbsdIDNumberType: getIDNumberType(citizen).value,
             }
           : {
               ...profile,
               mbsdFile: identityImage.fileId,
               mbsdIDNumberType: getIDNumberType(citizen).value,
             };
-      if (accountInformation && accountInformation.phoneNumber) {
+      if (accountInformation && accountInformation.name) {
         profileData = {
           ...profileData,
           mbsdFullName: accountInformation.name,

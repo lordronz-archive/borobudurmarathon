@@ -163,4 +163,9 @@ export default {
   save: 'Save',
   next: 'Next',
   hi: 'Hi',
+  time: {
+    today: 'today',
+    yesterday: 'yesterday',
+    tomorrow: 'tomorrow',
+  },
 };

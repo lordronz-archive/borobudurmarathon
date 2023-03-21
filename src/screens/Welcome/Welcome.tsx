@@ -17,6 +17,7 @@ import LoadingBlock from '../../components/loading/LoadingBlock';
 import {EventService} from '../../api/event.service';
 import {GetGalleryResponse} from '../../types/gallery.type';
 import {useTranslation} from 'react-i18next';
+import {WelcomeService} from '../../api/welcome.service';
 // import useuser from '../../hooks/useuser';
 
 export default function WelcomeScreen() {
@@ -28,6 +29,9 @@ export default function WelcomeScreen() {
 
   // const user = useuser();
   useEffect(() => {
+    if (user?.data && user?.data.length > 0 && user?.data[0].zmemId) {
+      WelcomeService.updateLatestView(user?.data[0].zmemId);
+    }
     (async () => {
       const {data} = await EventService.getGallery();
       console.log('GALLERY', JSON.stringify(data));

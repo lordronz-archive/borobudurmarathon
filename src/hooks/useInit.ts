@@ -10,7 +10,7 @@ import {getErrorMessage} from '../helpers/errorHandler';
 import {AuthService} from '../api/auth.service';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import CookieManager from '@react-native-cookies/cookies';
-import {IMemberDetailResponse, IProfile} from '../types/profile.type';
+import {IMemberDetailResponse} from '../types/profile.type';
 import {useDemo} from '../context/demo.context';
 import {IAuthResponseData} from '../types/auth.type';
 import config from '../config';
@@ -18,6 +18,7 @@ import {cleanPhoneNumber} from '../helpers/phoneNumber';
 import i18next from 'i18next';
 import {Platform} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {WelcomeService} from '../api/welcome.service';
 
 export default function useInit() {
   const route = useRoute();
@@ -216,20 +217,24 @@ export default function useInit() {
   ) => {
     console.info('checkAccount: data', data);
     console.info('checkAccount: replace', data);
-    if (isShowDemoVerifyEmail) {
-      if (replace && replace.isShowDemoVerifyEmail) {
-        data.authEmail = '1';
-      } else {
-        data.authEmail = '0';
+    if (config.isShowDemoSettings) {
+      if (isShowDemoVerifyEmail) {
+        if (replace && replace.isShowDemoVerifyEmail) {
+          data.authEmail = '1';
+        } else {
+          data.authEmail = '0';
+        }
+      }
+      if (isShowDemoConsent) {
+        data.consent = '0';
+      }
+      if (isShowDemoNewUser) {
+        data.authProfile = 0;
       }
     }
-    if (isShowDemoConsent) {
-      data.consent = '0';
-    }
-    if (isShowDemoNewUser) {
-      data.authProfile = 0;
-    }
+    console.info('checkAccount, after demo settings', data);
     if (Number(data.authEmail) === 0) {
+      console.info('Number(data.authEmail) === 0');
       // verify email
       AuthService.verificationEmail()
         .then(() => {
@@ -239,7 +244,7 @@ export default function useInit() {
               setDemoVerifyEmail(false);
 
               checkAccount({...data, authEmail: '1'}, profile, {
-                isShowDemoVerifyEmail: true,
+                isShowDemoVerifyEmail: false,
               });
             },
           });
@@ -252,8 +257,10 @@ export default function useInit() {
           });
         });
     } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
+      console.info("data.login === 'KompasId' && Number(data.consent) === 0");
       navigation.replace('DataConfirmation');
     } else if (Number(data.authProfile) === 0) {
+      console.info('Number(data.authProfile) === 0');
       // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)
       // if (profile.linked.mbsdZmemId && profile.linked.mbsdZmemId[0]) {
       //   checkAccount({...data, authProfile: 1}, profile);
@@ -261,6 +268,7 @@ export default function useInit() {
       navigation.replace('ChooseCitizen');
       // }
     } else if (Number(data.authTelephone) === 0) {
+      console.info('Number(data.authTelephone) === 0');
       if (!config.isPhoneVerificationRequired) {
         checkAccount({...data, authTelephone: 1}, profile);
       } else if (profile.linked.zmemAuusId[0].auusPhone) {
@@ -294,8 +302,17 @@ export default function useInit() {
         }
       }
     } else {
+      console.info('checkAccount - else, will getProfile');
       getProfile();
-      navigation.replace('Main', {screen: t('tab.home')});
+
+      const isUserHasBeenOpenWelcome = await WelcomeService.getLatestView(
+        profile.data[0].zmemId,
+      );
+      if (isUserHasBeenOpenWelcome) {
+        navigation.replace('Main', {screen: t('tab.home')});
+      } else {
+        navigation.replace('Welcome');
+      }
       if (!toast.isActive('welcome')) {
         toast.show({
           id: 'welcome',

@@ -169,7 +169,7 @@ const EventService = {
     console.log('Event id to get : ', eventId);
     try {
       const res = await httpRequest.get(
-        config.apiUrl.apis.event.detail.path + '/' + eventId,
+        config.apiUrl.apis.event.detail.path + eventId,
       );
       return res.data;
     } catch (error) {
@@ -210,8 +210,11 @@ const EventService = {
       parameter.filter.evnhEmail = 'dev@borobudurmarathon.com';
     }
     try {
+      // const res = await httpRequest.get(
+      //   '/resources/event_header?' + qs(parameter, false),
+      // );
       const res = await httpRequest.get(
-        '/resources/event_header?' + qs(parameter, false),
+        '/member_resource/member_event?' + qs(parameter, false),
       );
 
       return res.data;

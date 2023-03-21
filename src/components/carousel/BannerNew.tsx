@@ -69,7 +69,7 @@ export default function BannerNew(props: IProps) {
                     key={index}
                     source={item.imageUrl ? {uri: item.imageUrl} : defaultImage}
                     alt={item.title || 'image'}
-                    resizeMode="contain"
+                    resizeMode="cover"
                     width="100%"
                     height="200"
                     borderTopRadius="lg"
@@ -78,7 +78,11 @@ export default function BannerNew(props: IProps) {
                     }}
                   />
                   <VStack padding={'12px'}>
-                    <Text fontWeight="500" fontSize="14px" marginBottom={'8px'}>
+                    <Text
+                      fontWeight="500"
+                      fontSize="14px"
+                      marginBottom={'8px'}
+                      numberOfLines={1}>
                       {item.title}
                     </Text>
                     {/* <Text color="gray.500">Offline · Oct 10 - Oct 21 2023</Text> */}

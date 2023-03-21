@@ -38,6 +38,7 @@ import {Alert} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 import IconLocation from '../../assets/icons/IconLocation';
+import BannerFull from '../../components/carousel/BannerFull';
 
 type Price = {
   id: string;
@@ -89,7 +90,7 @@ export default function DetailEvent() {
     },
     {
       icon: <IconLocation size="5" mt="0.5" color="gray.500" />,
-      label: 'Place',
+      label: t('event.place'),
       description: event?.data.evnhPlace || '',
     },
   ];
@@ -165,14 +166,19 @@ export default function DetailEvent() {
 
   useEffect(() => {
     setIsLoading(true);
-    httpRequest.get('member_resource/transaction').then(res => {
-      if (res.data) {
-        const registerEventId = res.data?.linked?.mregEventId?.map(
-          (item: any) => item.evnhId?.toString(),
-        );
-        setRegisteredEvent(registerEventId);
-      }
-    });
+    httpRequest
+      .get('member_resource/transaction')
+      .then(res => {
+        if (res.data) {
+          const registerEventId = res.data?.linked?.mregEventId?.map(
+            (item: any) => item.evnhId?.toString(),
+          );
+          setRegisteredEvent(registerEventId);
+        }
+      })
+      .catch(err => {
+        console.info('error get transaction', err);
+      });
     EventService.getEvent(params.id)
       .then(res => {
         console.info('res get detail event', res);
@@ -271,7 +277,7 @@ export default function DetailEvent() {
             {datetime.getDateString(event?.data.evnhRegistrationStart, 'short')}
           </Text>
         </Stack>
-        <Image
+        {/* <Image
           w={'100%'}
           minH={250}
           alt="fallback text"
@@ -280,16 +286,28 @@ export default function DetailEvent() {
               ? {uri: event?.data.evnhThumbnail}
               : require('../../assets/images/FeaturedEventImage.png')
           }
+        /> */}
+
+        <BannerFull
+          entries={(event?.data ? [event?.data] : []).map(item => ({
+            title: item.evnhName,
+            imageUrl: item.evnhThumbnail,
+          }))}
         />
+
         <Stack mx={4} mb={4}>
-          <Text fontSize="sm" color={'#1E1E1E'} mt={3}>
-            {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+          {event?.data?.evnhDescription ? (
+            <Text fontSize="sm" color={'#1E1E1E'} mt={3}>
+              {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
           maximus pulvinar ligula vel interdum. Duis rutrum, lacus non
           consectetur porta, nulla neque tristique justo, vitae sodales mauris
           nisl et quam. Etiam vel feugiat libero. Cras hendrerit leo ac turpis
           sodales, suscipit dignissim leo ornare. */}
-            {event?.data?.evnhDescription || 'No description'}
-          </Text>
+              {event?.data?.evnhDescription || 'No description'}
+            </Text>
+          ) : (
+            false
+          )}
           {/* <Text mt="2" fontSize={14} fontWeight="600" color="#1E1E1E">
             Read More
           </Text> */}

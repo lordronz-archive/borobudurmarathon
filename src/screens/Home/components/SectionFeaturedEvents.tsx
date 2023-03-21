@@ -1,13 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Toast} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {EventService} from '../../../api/event.service';
 import BannerNew from '../../../components/carousel/BannerNew';
 import Section from '../../../components/section/Section';
 import datetime from '../../../helpers/datetime';
-import {getErrorMessage} from '../../../helpers/errorHandler';
+import useEvent from '../../../hooks/useEvent';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {EventProperties, EVENT_TYPES} from '../../../types/event.type';
 
@@ -15,51 +14,57 @@ export default function SectionFeaturedEvents() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<EventProperties[]>([]);
+  const {featuredEvents} = useEvent();
+  // const [data, setData] = useState<EventProperties[]>([]);
 
-  const fetchList = () => {
-    setIsLoading(true);
-    EventService.getEvents(true)
-      .then(res => {
-        // console.info('res getEvents', JSON.stringify(res));
-        if (res.data) {
-          setData(res.data);
-        }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.info('error fetch featured events', err);
-        // Toast.show({
-        //   title: 'Failed to get featured events',
-        //   description: getErrorMessage(err),
-        // });
-        setIsLoading(false);
-      });
-  };
+  // const fetchList = () => {
+  // setIsLoading(true);
+  // EventService.getEvents(true)
+  //   .then(res => {
+  //     // console.info('res getEvents', JSON.stringify(res));
+  //     if (res.data) {
+  //       setData(res.data);
+  //     }
+  //     setIsLoading(false);
+  //   })
+  //   .catch(err => {
+  //     console.info('error fetch featured events', err);
+  //     // Toast.show({
+  //     //   title: 'Failed to get featured events',
+  //     //   description: getErrorMessage(err),
+  //     // });
+  //     setIsLoading(false);
+  //   });
+  // };
 
   const {t} = useTranslation();
 
-  useEffect(() => {
-    fetchList();
-  }, []);
+  // useEffect(() => {
+  //   fetchListFeaturedEvents();
+  // }, []);
 
-  if (data.length === 0) {
+  if (featuredEvents.length === 0) {
     return <></>;
   }
 
   return (
     <Section title={t('event.featuredEvents')} _title={{py: 2, px: 4}}>
       <BannerNew
-        entries={data.map(item => ({
-          title: item.evnhName,
-          eventType: EVENT_TYPES[item.evnhType]?.value || 'Other',
+        entries={featuredEvents.map(item => ({
+          title: item.evnhName || '',
+          eventType: item.evnhType
+            ? EVENT_TYPES[item.evnhType]?.value || 'Other'
+            : 'Other',
           date: datetime.getDateRangeString(
             item.evnhStartDate,
             item.evnhEndDate,
             'short',
             'short',
           ),
-          imageUrl: item.evnhThumbnail,
+          imageUrl:
+            item.eimgEvnhId && item.eimgEvnhId.length > 0
+              ? item.eimgEvnhId[0].eimgUrlImage
+              : undefined,
           id: item.evnhId,
         }))}
       />

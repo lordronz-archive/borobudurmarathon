@@ -334,7 +334,7 @@ export default function MyProfile() {
           {t('auth.signout')}
         </Button>
 
-        {config.isDev && (
+        {config.isShowDemoSettings && (
           <Button
             width="100%"
             backgroundColor={colors.white}

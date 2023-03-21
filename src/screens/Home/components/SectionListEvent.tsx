@@ -29,7 +29,7 @@ export default function SectionListEvent() {
       item => Number(item.evnhType) === Number(selectedEventCategory.id),
     );
   }
-  console.info('filteredEvents', JSON.stringify(filteredEvents));
+  // console.info('filteredEvents', JSON.stringify(filteredEvents));
 
   useEffect(() => {
     fetchList();

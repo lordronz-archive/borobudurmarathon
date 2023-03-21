@@ -293,6 +293,7 @@ export default {
       event: {
         detail: {
           path: 'event/',
+          // path: 'member_event/',
         },
       },
     },

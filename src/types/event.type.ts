@@ -37,6 +37,10 @@ export interface EventProperties {
   evnhTransactionExpired: number;
   evnhStatus: number;
   links: Links;
+  evnhFeatured: number; // 0 | 1;
+
+  // added by frontend
+  eimgEvnhId?: EImgEvnhIdEntity[] | null;
 }
 interface Links {
   evncEvnhId?: number[] | null;
@@ -55,6 +59,16 @@ interface Linked {
   ehaiEvnhId?: null[] | null;
   ehhdEvnhId?: null[] | null;
   ehtdEvnhId?: null[] | null;
+  eimgEvnhId?: EImgEvnhIdEntity[] | null;
+}
+interface EImgEvnhIdEntity {
+  id: number; // 1
+  eimgId: number; // 1
+  eimgEvnhId: number; // 358;
+  eimgName: string; // 'banner 1';
+  eimgDescription: string; // 'test';
+  eimgUrlImage: string; // 'https://borobudurmarathon.com/wp-content/uploads/2022/05/STRONGER-TO-VICTORYREV-1536x1024.jpg';
+  eimgCreatedTime: string; // '0001-01-01 00:00:00';
 }
 interface EvncEvnhIdEntity {
   id: number;

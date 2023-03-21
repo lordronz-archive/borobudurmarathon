@@ -519,7 +519,8 @@ export default function EventRegisterScreen() {
           <Button
             h="12"
             isLoading={isLoading}
-            isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
+            // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
+            isDisabled={checkbox[0] !== 'agreed'}
             onPress={() => {
               if (checkbox[0] !== 'agreed') {
                 toast.show({

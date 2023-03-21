@@ -9,6 +9,7 @@ import {
 } from 'native-base';
 // import {IInputProps} from 'native-base/lib/typescript/components/primitives/Input/types';
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   TextInput as BaseTextInput,
   TextInputAndroidProps,
@@ -34,6 +35,7 @@ type TextInputProps = {
 
 export default function TextInput(props: TextInputProps) {
   const [show, setShow] = useState(false);
+  const {t} = useTranslation();
   return (
     <FormControl isInvalid={props.isInvalid}>
       <Box
@@ -53,7 +55,7 @@ export default function TextInput(props: TextInputProps) {
               italic
               ml="2"
               fontSize="xs">
-              Required
+              {t('required')}
             </Text>
           )}
         </FormControl.Label>

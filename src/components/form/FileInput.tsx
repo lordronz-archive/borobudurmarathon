@@ -9,6 +9,7 @@ import {
 } from 'native-base';
 // import {IInputProps} from 'native-base/lib/typescript/components/primitives/Input/types';
 import React, {useCallback, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {TouchableOpacity} from 'react-native';
 import DocumentPicker, {
   DocumentPickerResponse,
@@ -46,6 +47,8 @@ export default function FileInput(props: FileInputProps) {
     }
   }, [props]);
 
+  const {t} = useTranslation();
+
   return (
     <FormControl isInvalid={props.isInvalid}>
       <Box
@@ -65,7 +68,7 @@ export default function FileInput(props: FileInputProps) {
               italic
               ml="2"
               fontSize="xs">
-              Required
+              {t('required')}
             </Text>
           )}
         </FormControl.Label>

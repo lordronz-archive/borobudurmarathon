@@ -59,9 +59,9 @@ export default function ForgotPasswordScreen() {
       <Box flex="10">
         <BackHeader onPress={() => navigation.goBack()} />
         <VStack space="1.5">
-          <Heading>Forgot Password</Heading>
+          <Heading>{t('auth.forgotPasswordTitle')}</Heading>
           <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
-            Reset your password here
+            {t('auth.forgotPasswordSubtitle')}
           </Text>
         </VStack>
         <VStack space="2.5">
@@ -88,7 +88,7 @@ export default function ForgotPasswordScreen() {
       </Box>
       <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
         {/* {t('profile.sendOtp')} */}
-        Reset Password
+        {t('auth.resetPassword')}
       </Button>
     </VStack>
   );

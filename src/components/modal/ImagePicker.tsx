@@ -41,6 +41,8 @@ const ImagePicker = (props: Props) => {
       height: props.height || 300,
       cropping: true,
       freeStyleCropEnabled: true,
+      mediaType: 'photo',
+      useFrontCamera: false,
     })
       .then(image => {
         onChange(image);

@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import {
   ArrowBackIcon,
   Box,
@@ -428,6 +428,7 @@ export default function ChooseCitizenScreen({route}: Props) {
       cropping: true,
       freeStyleCropEnabled: true,
       mediaType: 'photo',
+      useIsFocused: false,
     })
       .then(image => {
         console.info('openCamera image result', image);

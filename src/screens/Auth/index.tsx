@@ -292,7 +292,7 @@ export default function AuthScreen() {
           </VStack>
         </HStack>
         <VStack flex="1" justifyContent={'center'} space="1.5">
-          {config.isDev && (
+          {config.isShowDemoSettings && (
             <Button
               // backgroundColor={'#00559A'}
               variant="link"
@@ -350,91 +350,93 @@ export default function AuthScreen() {
         </VStack>
       </Box>
 
-      <Modal
-        isOpen={isShowModal}
-        onClose={() => hideModal()}
-        safeAreaTop={true}>
-        <Modal.Content maxWidth="350">
-          <Modal.CloseButton />
-          <Modal.Header>Demo Settings (Auto Save)</Modal.Header>
-          <Modal.Body>
-            <FormControl>
-              <Checkbox
-                onChange={() => setDemoVerifyEmail(!isShowDemoVerifyEmail)}
-                isChecked={isShowDemoVerifyEmail}
-                value="demo-verify-email">
-                Show Verify Email
-              </Checkbox>
-            </FormControl>
-
-            <FormControl>
-              <Checkbox
-                onChange={() => setDemoConsent(!isShowDemoConsent)}
-                isChecked={isShowDemoConsent}
-                value="demo-consent">
-                Show Consent Screen
-              </Checkbox>
-            </FormControl>
-
-            <FormControl>
-              <Checkbox
-                onChange={() => setDemoNewUser(!isShowDemoNewUser)}
-                isChecked={isShowDemoNewUser}
-                value="demo-consent">
-                Flow New User
-              </Checkbox>
-            </FormControl>
-
-            {isShowDemoNewUser && <Text>----------</Text>}
-
-            {isShowDemoNewUser && (
+      {config.isShowDemoSettings && (
+        <Modal
+          isOpen={isShowModal}
+          onClose={() => hideModal()}
+          safeAreaTop={true}>
+          <Modal.Content maxWidth="350">
+            <Modal.CloseButton />
+            <Modal.Header>Demo Settings (Auto Save)</Modal.Header>
+            <Modal.Body>
               <FormControl>
                 <Checkbox
-                  onChange={() => {
-                    if (demoKTPVerification === 'processing') {
-                      setDemoKTPVerification(undefined);
-                    } else {
-                      setDemoKTPVerification('processing');
-                    }
-                  }}
-                  isChecked={demoKTPVerification === 'processing'}
-                  value="demo-consent">
-                  Demo KTP Processing
+                  onChange={() => setDemoVerifyEmail(!isShowDemoVerifyEmail)}
+                  isChecked={isShowDemoVerifyEmail}
+                  value="demo-verify-email">
+                  Show Verify Email
                 </Checkbox>
               </FormControl>
-            )}
 
-            {isShowDemoNewUser && (
               <FormControl>
                 <Checkbox
-                  onChange={() => {
-                    if (demoKTPVerification === 'invalid') {
-                      setDemoKTPVerification(undefined);
-                    } else {
-                      setDemoKTPVerification('invalid');
-                    }
-                  }}
-                  isChecked={demoKTPVerification === 'invalid'}
+                  onChange={() => setDemoConsent(!isShowDemoConsent)}
+                  isChecked={isShowDemoConsent}
                   value="demo-consent">
-                  Demo KTP Invalid
+                  Show Consent Screen
                 </Checkbox>
               </FormControl>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button.Group space={2}>
-              <Button
-                variant="ghost"
-                colorScheme="blueGray"
-                onPress={() => {
-                  hideModal();
-                }}>
-                OK
-              </Button>
-            </Button.Group>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal>
+
+              <FormControl>
+                <Checkbox
+                  onChange={() => setDemoNewUser(!isShowDemoNewUser)}
+                  isChecked={isShowDemoNewUser}
+                  value="demo-consent">
+                  Flow New User
+                </Checkbox>
+              </FormControl>
+
+              {isShowDemoNewUser && <Text>----------</Text>}
+
+              {isShowDemoNewUser && (
+                <FormControl>
+                  <Checkbox
+                    onChange={() => {
+                      if (demoKTPVerification === 'processing') {
+                        setDemoKTPVerification(undefined);
+                      } else {
+                        setDemoKTPVerification('processing');
+                      }
+                    }}
+                    isChecked={demoKTPVerification === 'processing'}
+                    value="demo-consent">
+                    Demo KTP Processing
+                  </Checkbox>
+                </FormControl>
+              )}
+
+              {isShowDemoNewUser && (
+                <FormControl>
+                  <Checkbox
+                    onChange={() => {
+                      if (demoKTPVerification === 'invalid') {
+                        setDemoKTPVerification(undefined);
+                      } else {
+                        setDemoKTPVerification('invalid');
+                      }
+                    }}
+                    isChecked={demoKTPVerification === 'invalid'}
+                    value="demo-consent">
+                    Demo KTP Invalid
+                  </Checkbox>
+                </FormControl>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button.Group space={2}>
+                <Button
+                  variant="ghost"
+                  colorScheme="blueGray"
+                  onPress={() => {
+                    hideModal();
+                  }}>
+                  OK
+                </Button>
+              </Button.Group>
+            </Modal.Footer>
+          </Modal.Content>
+        </Modal>
+      )}
     </>
   );
 }

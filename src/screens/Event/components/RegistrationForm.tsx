@@ -8,7 +8,7 @@ import DateInput from '../../../components/form/DateInput';
 import {Box, Row, Text} from 'native-base';
 import {convertOption} from '../../../helpers/convertOption';
 import FileInput from '../../../components/form/FileInput';
-import { DocumentPickerResponse } from 'react-native-document-picker';
+import {DocumentPickerResponse} from 'react-native-document-picker';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -112,9 +112,7 @@ export default function RegistrationForm(
         placeholder={`Enter ${props.evhfLabel}`}
         label={props.evhfLabel}
         onChangeText={props.onValueChange}
-        _inputProps={{
-          keyboardType: 'numeric',
-        }}
+        keyboardType="numeric"
         value={props.value}
         helperText={props.helperText}
         required={props.required}
@@ -126,9 +124,7 @@ export default function RegistrationForm(
         placeholder={`Enter ${props.evhfLabel}`}
         label={props.evhfLabel}
         onChangeText={props.onValueChange}
-        _inputProps={{
-          keyboardType: 'email-address',
-        }}
+        keyboardType="numeric"
         value={props.value}
         helperText={props.helperText}
         required={props.required}

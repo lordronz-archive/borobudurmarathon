@@ -11,6 +11,7 @@ import {
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
+  KeyboardTypeOptions,
   TextInput as BaseTextInput,
   TextInputAndroidProps,
   TextInputIOSProps,
@@ -30,6 +31,7 @@ type TextInputProps = {
   rightIcon?: any;
   _inputProps?: TextInputAndroidProps | TextInputIOSProps;
   type?: 'text' | 'password';
+  keyboardType?: KeyboardTypeOptions;
   onChangeText?: (text: string) => void;
 };
 
@@ -75,6 +77,7 @@ export default function TextInput(props: TextInputProps) {
             value={props.value}
             onChangeText={props.onChangeText}
             autoCapitalize="none"
+            keyboardType={props.keyboardType}
             // InputRightElement={
             //   props.loading ? (
             //     <Spinner size="sm" />

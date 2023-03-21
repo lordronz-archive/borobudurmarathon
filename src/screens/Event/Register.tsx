@@ -28,6 +28,7 @@ import {useTranslation} from 'react-i18next';
 import ViewProfile from '../InputProfile/components/ViewProfile';
 import httpRequest from '../../helpers/httpRequest';
 import {DocumentPickerResponse} from 'react-native-document-picker';
+import ImageView from 'react-native-image-viewing';
 import {Platform} from 'react-native';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 
@@ -63,6 +64,7 @@ export default function EventRegisterScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [autofilled, setAutofilled] = useState(false);
+  const [openJersey, setOpenJersey] = useState(false);
 
   const {user} = useAuthUser();
 
@@ -93,7 +95,10 @@ export default function EventRegisterScreen() {
       fieldResult[jerseyIndex].helperText = (
         <Text>
           For more information about size,{' '}
-          <Text textDecorationLine={'underline'} color="primary.900">
+          <Text
+            textDecorationLine={'underline'}
+            color="primary.900"
+            onPress={() => setOpenJersey(true)}>
             See jersey size chart
           </Text>
         </Text>
@@ -541,6 +546,14 @@ export default function EventRegisterScreen() {
           buttonContent={t('registration.checkEventBtn')}
         />
       </VStack>
+      {event.data.evnhSizeChart && (
+        <ImageView
+          images={[{uri: event.data.evnhSizeChart}]}
+          imageIndex={0}
+          visible={openJersey}
+          onRequestClose={() => setOpenJersey(false)}
+        />
+      )}
       {isLoading && (
         <Box
           position="absolute"

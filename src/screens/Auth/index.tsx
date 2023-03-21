@@ -281,7 +281,8 @@ export default function AuthScreen() {
         <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
           <VStack space="3" alignItems="center" justifyContent="center">
             <Heading textAlign={'center'}>
-              {t('welcomeTo') + ' Borobudur Marathon'}
+              {t('welcomeTo') + '\n'}
+              Borobudur Marathon
             </Heading>
             <Text fontWeight={400} textAlign={'center'} color="#768499">
               {t('auth.description')}

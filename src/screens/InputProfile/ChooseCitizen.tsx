@@ -1,4 +1,4 @@
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {
   ArrowBackIcon,
   Box,
@@ -680,6 +680,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                       mbsdIDNumberType: getIDNumberType(citizen).id,
                     }))
                   }
+                  keyboardType={'numeric'}
                 />
                 <SelectInput
                   items={GENDER_OPTIONS}

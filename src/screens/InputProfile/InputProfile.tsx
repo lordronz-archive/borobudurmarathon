@@ -235,6 +235,7 @@ export default function InputProfileScreen() {
               helperText="Enter your KTP/SIM/Passport ID number"
               onChangeText={setIDNumber}
               value={mbsdIDNumber}
+              keyboardType={'numeric'}
             />
             <SelectInput
               items={GENDER_OPTIONS}

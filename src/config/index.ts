@@ -292,7 +292,8 @@ export default {
       },
       event: {
         detail: {
-          path: 'event/',
+          // path: 'event/',
+          path: 'member_zone/event/',
           // path: 'member_resource/member_event/',
         },
       },

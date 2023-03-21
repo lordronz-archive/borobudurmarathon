@@ -287,12 +287,10 @@ export default function DetailEvent() {
           }
         /> */}
 
-        {event?.linked &&
-        event.linked.eimgEvnhId &&
-        event.linked.eimgEvnhId.length > 0 ? (
+        {event?.banner && event?.banner.length > 0 ? (
           <BannerFull
             entries={
-              event.linked.eimgEvnhId.map(item => ({
+              event.banner.map(item => ({
                 title: item.eimgName,
                 imageUrl: item.eimgUrlImage,
               }))

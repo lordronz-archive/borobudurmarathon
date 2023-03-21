@@ -149,6 +149,15 @@ export interface GetEventResponse {
   prices?: any[] | null;
   product?: any[] | null;
   linked?: Linked | null;
+
+  banner?:
+    | {
+        eimgId: string;
+        eimgName: string;
+        eimgDescription: string;
+        eimgUrlImage: string; // 'https://steelytoe-files.s3.ap-southeast-1.amazonaws.com/2023/borobudur-2023/MAIN+EVENT+THUMBNAIL.jpg';
+      }[]
+    | null;
 }
 export interface CategoriesEntity {
   evncHold: string;

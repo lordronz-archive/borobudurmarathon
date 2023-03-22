@@ -15,6 +15,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Button from '../../components/buttons/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import AppContainer from '../../layout/AppContainer';
+import { getApiErrors } from '../../helpers/apiErrors';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -97,18 +98,9 @@ export default function RegisterEmailScreen() {
         },
       });
     } catch (err: any) {
-      if (err?.data?.status?.error?.errors) {
-        let objErrors = {};
-        for (const errItem of err?.data?.status?.error?.errors || []) {
-          if (errItem.length > 0) {
-            objErrors = {
-              ...objErrors,
-              [errItem[0].field]: errItem[0].message,
-            };
-          }
-        }
-        console.info('objErrors', objErrors);
-
+      const objErrors = getApiErrors(err);
+      console.info('objErrors', objErrors);
+      if (objErrors) {
         setErrors({
           ...objErrors,
         });

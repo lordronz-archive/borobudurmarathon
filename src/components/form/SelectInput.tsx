@@ -65,7 +65,15 @@ export default function SelectInput(props: SelectInputProps) {
               : props.items.length > 4
           }
           placeholder={props.placeholder}
-          boxStyles={{borderRadius: 0, borderWidth: 0, padding: 0}} //override default styles
+          boxStyles={{
+            borderRadius: 0,
+            borderWidth: 0,
+            padding: 0,
+            margin: 0,
+            marginTop: -8,
+            marginBottom: -5,
+          }} //override default styles
+          inputStyles={{margin: 0, padding: 0}}
           dropdownStyles={{borderRadius: 0, borderWidth: 0, padding: 0}}
           defaultOption={
             props.value != null

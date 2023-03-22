@@ -42,7 +42,7 @@ export default function ViewProfile(props: Props) {
         {
           fields: ['mbsdEmail', 'evpaEmail'],
           label: 'Email',
-          value: user?.linked.mbsdZmemId[0].mbsdEmail,
+          value: user?.linked.mbsdZmemId?.[0].mbsdEmail,
         },
         {
           fields: ['auusPhone', 'evpaPhone'],
@@ -61,13 +61,13 @@ export default function ViewProfile(props: Props) {
               fields: ['mbsdIDNumberType', 'evpaIDNumberType'],
               label: 'Type',
               value: showIDNumberTypeName(
-                String(user?.linked.mbsdZmemId[0].mbsdIDNumberType),
+                String(user?.linked.mbsdZmemId?.[0].mbsdIDNumberType),
               ),
             },
             {
               fields: ['mbsdIDNumber', 'evpaIDNumber'],
               label: 'ID Number',
-              value: user?.linked.mbsdZmemId[0].mbsdIDNumber,
+              value: user?.linked.mbsdZmemId?.[0].mbsdIDNumber,
             },
           ],
         },
@@ -77,13 +77,13 @@ export default function ViewProfile(props: Props) {
             {
               fields: ['mbsdBirthPlace', 'evpaBirthPlace'],
               label: t('profile.pob'),
-              value: user?.linked.mbsdZmemId[0].mbsdBirthPlace,
+              value: user?.linked.mbsdZmemId?.[0].mbsdBirthPlace,
             },
             {
               fields: ['mbsdBirthDate', 'evpaBirthDate'],
               label: t('profile.dob'),
-              value: user?.linked.mbsdZmemId[0].mbsdBirthDate
-                ? moment(user?.linked.mbsdZmemId[0].mbsdBirthDate).format(
+              value: user?.linked.mbsdZmemId?.[0].mbsdBirthDate
+                ? moment(user?.linked.mbsdZmemId?.[0].mbsdBirthDate).format(
                     'DD MMMM yyyy',
                   )
                 : undefined,
@@ -97,19 +97,19 @@ export default function ViewProfile(props: Props) {
               fields: ['mbsdGender', 'evpaGender'],
               label: t('profile.gender'),
               value: convertOption(
-                user?.linked.mbsdZmemId[0].mbsdGender || '',
+                user?.linked.mbsdZmemId?.[0].mbsdGender || '',
                 'mbsdGender',
               ),
-              // user?.linked.mbsdZmemId[0].mbsdGender === 1
+              // user?.linked.mbsdZmemId?.[0].mbsdGender === 1
               //   ? t('gender.male')
               //   : t('gender.female'),
             },
             {
               fields: ['mbsdBloodType', 'evpaBloodType'],
               label: t('profile.bloodType'),
-              // value: user?.linked.mbsdZmemId[0].mbsdBloodType || 0,
+              // value: user?.linked.mbsdZmemId?.[0].mbsdBloodType || 0,
               value: convertOption(
-                user?.linked.mbsdZmemId[0].mbsdBloodType || 0,
+                user?.linked.mbsdZmemId?.[0].mbsdBloodType || 0,
                 'mbsdBloodType',
               ),
             },
@@ -121,12 +121,12 @@ export default function ViewProfile(props: Props) {
             {
               fields: ['mbsdNationality', 'evpaNationality'],
               label: t('profile.nationality'),
-              value: user?.linked.mbsdZmemId[0].mbsdNationality,
+              value: user?.linked.mbsdZmemId?.[0].mbsdNationality,
             },
             {
               fields: ['mbsdCountry', 'evpaCountry'],
               label: t('profile.country'),
-              value: user?.linked.mbsdZmemId[0].mbsdCountry,
+              value: user?.linked.mbsdZmemId?.[0].mbsdCountry,
             },
           ],
         },
@@ -135,19 +135,19 @@ export default function ViewProfile(props: Props) {
     {
       title: t('label.addressInformation'),
       data: [
-        user?.linked.mbsdZmemId[0].mbsdNationality === 'Indonesian'
+        user?.linked.mbsdZmemId?.[0].mbsdNationality === 'Indonesian'
           ? {
               label: 'Province City',
               data: [
                 {
                   fields: ['mbsdProvinces', 'evpaProvinces', 'evpaProvinsi'],
                   label: t('profile.province'),
-                  value: user?.linked.mbsdZmemId[0].mbsdProvinces,
+                  value: user?.linked.mbsdZmemId?.[0].mbsdProvinces,
                 },
                 {
                   fields: ['mbsdCity', 'evpaCity'],
                   label: t('profile.city'),
-                  value: user?.linked.mbsdZmemId[0].mbsdCity,
+                  value: user?.linked.mbsdZmemId?.[0].mbsdCity,
                 },
               ],
             }
@@ -155,7 +155,7 @@ export default function ViewProfile(props: Props) {
         {
           fields: ['mbsdAddress', 'evpaAddress'],
           label: t('profile.address'),
-          value: user?.linked.mbsdZmemId[0].mbsdAddress,
+          value: user?.linked.mbsdZmemId?.[0].mbsdAddress,
         },
       ].filter(item => item && item.label),
     },

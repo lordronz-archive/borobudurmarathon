@@ -140,8 +140,8 @@ export default function PhoneNumberValidationScreen({route}: Props) {
         <VStack space="2.5">
           <VStack space="1.5">
             <TextInput
-              placeholder={t('auth.emailValidationPlaceholder')}
-              label={t('auth.emailValidationLabel')}
+              placeholder={t('auth.emailValidationPlaceholder') || ''}
+              label={t('auth.emailValidationLabel') || ''}
               onChangeText={setOtpCode}
               isInvalid={!isValid}
               errorMessage={errMessage}

@@ -318,11 +318,12 @@ export default function ChooseCitizenScreen({route}: Props) {
         ) {
           try {
             const sendOtpRes = await AuthService.sendOTP({
-              phoneNumber: accountInformation.phoneNumber,
+              phoneNumber: cleanPhoneNumber(accountInformation.phoneNumber),
             });
             console.info('SendOTP result: ', sendOtpRes);
             navigation.navigate('PhoneNumberValidation', {
-              phoneNumber: accountInformation.phoneNumber,
+              phoneNumber:
+                cleanPhoneNumber(accountInformation.phoneNumber) || '',
               onSuccess: () => {
                 setProfileAfterVerifyPhoneSuccess();
               },

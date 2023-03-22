@@ -12,7 +12,9 @@ function qs(obj: any, prefix: boolean | string) {
       v = obj[p];
     // str.push(typeof(v) == 'object' ? qs(v, k) : (k) + "=" + encodeURIComponent(v));
     str.push(
-      typeof v === 'object' ? qs(v, k) : k + '[like]' + '=' + '%25' + v + '%25',
+      typeof v === 'object'
+        ? qs(v, k)
+        : k + '[like]' + '=' + '%25' + encodeURIComponent(v) + '%25',
     );
   }
   return str.join('&');

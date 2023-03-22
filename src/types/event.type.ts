@@ -199,7 +199,7 @@ export interface EventPropertiesDetail {
   evnhTransactionExpired: string;
   evnhType: string;
 
-  envhBallot?: string; // '0'
+  evnhBallot?: string; // '0'
   envhCategory?: string;
   evnhSizeChart?: string;
   envhFuture?: string;

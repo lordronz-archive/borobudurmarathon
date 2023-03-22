@@ -18,7 +18,8 @@ import Header from '../../components/header/Header';
 import {useAuthUser} from '../../context/auth.context';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {useTranslation} from 'react-i18next';
-import { cleanPhoneNumber } from '../../helpers/phoneNumber';
+import {cleanPhoneNumber} from '../../helpers/phoneNumber';
+import useInit from '../../hooks/useInit';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
@@ -26,6 +27,7 @@ export default function ChangePhoneNumberScreen() {
   const {t} = useTranslation();
   const {colors} = useTheme();
   const {user} = useAuthUser();
+  const {getProfile} = useInit();
 
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
@@ -60,6 +62,7 @@ export default function ChangePhoneNumberScreen() {
                   description: 'Success',
                 });
                 setIsLoading(false);
+                getProfile();
                 navigation.goBack();
               } catch (err) {
                 Toast.show({

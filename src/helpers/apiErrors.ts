@@ -1,4 +1,4 @@
-export function getErrors(err: any) {
+export function getApiErrors(err: any): {[key: string]: string} | null {
   if (err?.data?.status?.error?.errors) {
     let objErrors = {};
     for (const errItem of err?.data?.status?.error?.errors || []) {
@@ -13,5 +13,5 @@ export function getErrors(err: any) {
 
     return objErrors;
   }
-  return {};
+  return null;
 }

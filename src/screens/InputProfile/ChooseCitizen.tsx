@@ -104,6 +104,8 @@ export default function ChooseCitizenScreen({route}: Props) {
   const [visible, setVisible] = useState(false);
   const toast = useToast();
   const cancelRef = React.useRef(null);
+  const cancelRefInvalid = React.useRef(null);
+  const cancelRefProcessing = React.useRef(null);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isOpenNotReadable, setIsOpenNotReadable] = React.useState(false);
   const [isOpenProcessing, setIsOpenProcessing] = useState(false);
@@ -314,6 +316,11 @@ export default function ChooseCitizenScreen({route}: Props) {
         resValidation.data &&
         resValidation.data.isProcessing
       ) {
+        console.info(
+          'resValidation.data.isProcessing TRUE',
+          JSON.stringify(resValidation.data),
+        );
+        console.info('validationTryProcessing', validationTryProcessing);
         // toast.show({
         //   title: 'Processing',
         //   description: 'Your ID still in processing to validate.',
@@ -323,8 +330,10 @@ export default function ChooseCitizenScreen({route}: Props) {
         setValidationTryProcessing(validationTryProcessing + 1);
 
         if (validationTryProcessing >= 5) {
+          console.info('validationTryProcessing >= 5', validationTryProcessing);
           setIsVerifyLater(true);
         } else {
+          console.info('validationTryProcessing', validationTryProcessing);
           setTimeout(() => {
             handleConfirm();
           }, 3000);
@@ -1000,16 +1009,16 @@ export default function ChooseCitizenScreen({route}: Props) {
         cancelRef={cancelRef}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        onPress={() => {
-          setIsOpen(false);
-        }}
+        // onPress={() => {
+        //   setIsOpen(false);
+        // }}
         isLoading
         title={'Verify your ID'}
         content={'Please wait a moment while we try to verify your ID'}
-        buttonContent={'Check My Event'}
+        // buttonContent={'Check My Event'}
       />
       <VerifyID
-        cancelRef={cancelRef}
+        cancelRef={cancelRefInvalid}
         isOpen={isOpenNotReadable}
         onClose={() => {
           setIsOpenNotReadable(false);
@@ -1049,7 +1058,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         buttonContent={'Close'}
       />
       <VerifyID
-        cancelRef={cancelRef}
+        cancelRef={cancelRefProcessing}
         isOpen={isOpenProcessing}
         isLoading
         onClose={

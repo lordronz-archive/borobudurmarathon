@@ -140,6 +140,7 @@ const AuthService = {
       //   data: personalData,
       // });
     } catch (error) {
+      console.info('error setprofile', JSON.stringify(error));
       const msg = error as any;
       throw new AuthenticationError(msg.status, msg.data.status.error.message);
     }

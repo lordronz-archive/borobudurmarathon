@@ -93,11 +93,12 @@ const ProfileService = {
   },
   getLocation: async function (parameter?: any) {
     try {
-      return await httpRequest.get<MasterLocationResponse>(
+      const url =
         config.steelytoeUrl.href +
-          config.steelytoeUrl.apis.masterLocation.path +
-          (parameter ? '?' + qs(parameter, false) : ''),
-      );
+        config.steelytoeUrl.apis.masterLocation.path +
+        (parameter ? '?' + qs(parameter, false) : '');
+      console.info('url');
+      return await httpRequest.get<MasterLocationResponse>(url);
     } catch (error) {
       const msg = error as any;
       throw msg;

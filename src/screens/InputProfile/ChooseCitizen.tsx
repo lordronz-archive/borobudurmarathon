@@ -1,4 +1,4 @@
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {
   ArrowBackIcon,
   Box,
@@ -54,6 +54,21 @@ import useInit from '../../hooks/useInit';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
+const PROCESSING_MESSAGES = [
+  {
+    title: 'Processing...',
+    content: 'Your ID still in processing to validate.',
+  },
+  {
+    title: 'We still check your ID',
+    content: 'Please wait... Your ID still in processing to validate.',
+  },
+  {
+    title: 'Please wait...',
+    content: 'We still processing to validate.',
+  },
+];
+
 const IMAGE_WIDTH = 1280;
 const IMAGE_HEIGHT = 640;
 
@@ -83,6 +98,7 @@ export default function ChooseCitizenScreen({route}: Props) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [validationTry, setValidationTry] = useState(1);
+  const [validationTryProcessing, setValidationTryProcessing] = useState(1);
   const [stepCount, setStepCount] = useState(1);
   const [profileStep, setProfileStep] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -90,6 +106,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const cancelRef = React.useRef(null);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isOpenNotReadable, setIsOpenNotReadable] = React.useState(false);
+  const [isOpenProcessing, setIsOpenProcessing] = useState(false);
   const [isAgreeTermsAndCondition, setIsAgreeTermsAndCondition] =
     React.useState<boolean>(false);
   const [isVerifyLater, setIsVerifyLater] = React.useState<boolean>(false);
@@ -254,7 +271,9 @@ export default function ChooseCitizenScreen({route}: Props) {
   };
 
   const handleConfirm = async () => {
-    setIsOpen(true);
+    if (!isOpenProcessing) {
+      setIsOpen(true);
+    }
 
     if (demoKTPVerification === 'processing') {
       identityImage.fileId = 'NjabOxzEq8AQJTFvSCy1JqHXIro50kxe';
@@ -295,13 +314,21 @@ export default function ChooseCitizenScreen({route}: Props) {
         resValidation.data &&
         resValidation.data.isProcessing
       ) {
-        toast.show({
-          title: 'Processing',
-          description: 'Your ID still in processing to validate.',
-        });
-        setTimeout(() => {
-          handleConfirm();
-        }, 3000);
+        // toast.show({
+        //   title: 'Processing',
+        //   description: 'Your ID still in processing to validate.',
+        // });
+        setIsOpen(false);
+        setIsOpenProcessing(true);
+        setValidationTryProcessing(validationTryProcessing + 1);
+
+        if (validationTryProcessing >= 5) {
+          setIsVerifyLater(true);
+        } else {
+          setTimeout(() => {
+            handleConfirm();
+          }, 3000);
+        }
       } else if (
         (resValidation && resValidation.data && resValidation.data.isValid) ||
         isVerifyLater
@@ -1018,6 +1045,34 @@ export default function ChooseCitizenScreen({route}: Props) {
         title={'Your ID is not readable'}
         content={
           "Sorry we can't verify your ID please re-upload your ID or select Verify ID later"
+        }
+        buttonContent={'Close'}
+      />
+      <VerifyID
+        cancelRef={cancelRef}
+        isOpen={isOpenProcessing}
+        isLoading
+        onClose={
+          validationTryProcessing >= 3
+            ? () => {
+                setIsOpenProcessing(false);
+              }
+            : undefined
+        }
+        onPress={
+          validationTryProcessing >= 3
+            ? () => {
+                setIsOpenProcessing(false);
+              }
+            : undefined
+        }
+        title={
+          PROCESSING_MESSAGES[validationTryProcessing % 3].title ||
+          'We still check your ID'
+        }
+        content={
+          PROCESSING_MESSAGES[validationTryProcessing % 3].content ||
+          'Your ID still in processing to validate.'
         }
         buttonContent={'Close'}
       />

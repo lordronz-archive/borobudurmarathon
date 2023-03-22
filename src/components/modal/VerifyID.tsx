@@ -9,8 +9,8 @@ type VerifyIDProps = {
   title?: React.ReactNode;
   content?: React.ReactNode;
   buttonContent?: React.ReactNode;
-  onClose: (a?: any) => any;
-  onPress: (a?: any) => any;
+  onClose?: (a?: any) => any;
+  onPress?: (a?: any) => any;
   isLoading?: boolean;
 };
 
@@ -45,11 +45,11 @@ const VerifyID = ({
                 {content}
               </Text>
             </Center>
-            {!isLoading && (
+            {onPress ? (
               <BMButton h="12" width="full" onPress={onPress}>
                 {buttonContent}
               </BMButton>
-            )}
+            ) : undefined}
           </Center>
         </AlertDialog.Body>
       </AlertDialog.Content>

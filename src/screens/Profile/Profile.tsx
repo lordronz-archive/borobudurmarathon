@@ -152,18 +152,36 @@ export default function MyProfile() {
               bg="gray.400"
               mx={2}
               source={{
-                uri: user?.data[0]?.zmemPhoto
-                  ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
-                  : undefined,
+                uri:
+                  user &&
+                  user.data &&
+                  user.data.length > 0 &&
+                  user?.data[0]?.zmemPhoto
+                    ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
+                    : undefined,
               }}>
-              {getShortCodeName(user?.data[0].zmemFullName || '')}
+              {getShortCodeName(
+                user &&
+                  user.data &&
+                  user.data.length > 0 &&
+                  user?.data[0].zmemFullName
+                  ? user?.data[0].zmemFullName
+                  : '',
+              )}
             </Avatar>
             <VStack paddingLeft={2}>
               <Text fontWeight="bold" fontSize="md">
-                {user?.data[0].zmemFullName}
+                {user && user.data && user.data.length > 0
+                  ? user?.data[0].zmemFullName
+                  : ''}
               </Text>
               <Text color={colors.gray[500]} fontSize="sm">
-                {user?.linked.zmemAuusId[0].auusEmail}
+                {user &&
+                user.linked &&
+                user?.linked.zmemAuusId.length > 0 &&
+                user?.linked.zmemAuusId[0].auusEmail
+                  ? user?.linked.zmemAuusId[0].auusEmail
+                  : ''}
               </Text>
             </VStack>
           </HStack>

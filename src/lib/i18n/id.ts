@@ -46,10 +46,10 @@ export default {
     phoneValidationSubtitle: 'Nomor telepon Anda akan kami validasi',
     phoneValidation8DigitCode:
       'Masukkan 8 digit kode yang kami kirim ke nomor ini',
-    dontHaveAccount: 'Belum punya akun?',
-    haveAccount: 'Sudah punya akun?',
+    dontHaveAccount: 'Belum memiliki akun?',
+    haveAccount: 'Sudah memiliki akun?',
     register: 'Daftar',
-    registerViaEmail: 'Daftar via Email',
+    registerViaEmail: 'Daftar di sini',
     signin: 'Masuk',
     signinViaEmail: 'Masuk Via Email',
     signout: 'Keluar',

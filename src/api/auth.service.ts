@@ -130,16 +130,17 @@ const AuthService = {
   },
   setprofile: async function (personalData: any) {
     try {
-      return await httpRequest.post(
-        config.apiUrl.apis.member.setProfileAutoApprove.path,
-        {
-          data: personalData,
-        },
-      );
-      // return await httpRequest.post(config.apiUrl.apis.member.setProfile.path, {
-      //   data: personalData,
-      // });
+      // return await httpRequest.post(
+      //   config.apiUrl.apis.member.setProfileAutoApprove.path,
+      //   {
+      //     data: personalData,
+      //   },
+      // );
+      return await httpRequest.post(config.apiUrl.apis.member.setProfile.path, {
+        data: personalData,
+      });
     } catch (error) {
+      console.info('error setprofile', JSON.stringify(error));
       const msg = error as any;
       throw new AuthenticationError(msg.status, msg.data.status.error.message);
     }

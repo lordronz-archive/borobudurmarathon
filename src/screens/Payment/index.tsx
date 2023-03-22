@@ -29,6 +29,7 @@ import LoadingBlock from '../../components/loading/LoadingBlock';
 import IconCircleCheck from '../../assets/icons/IconCircleCheck';
 import WebView from 'react-native-webview';
 import {useTranslation} from 'react-i18next';
+import AppContainer from '../../layout/AppContainer';
 
 export default function PaymentScreen() {
   const {onCopy} = useClipboard();
@@ -128,7 +129,7 @@ export default function PaymentScreen() {
   ];
 
   return (
-    <View backgroundColor={colors.white} flex={1}>
+    <AppContainer>
       <Header title="" left="back" />
       {isLoading ? (
         <LoadingBlock />
@@ -421,6 +422,6 @@ export default function PaymentScreen() {
           )}
         </>
       )}
-    </View>
+    </AppContainer>
   );
 }

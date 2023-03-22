@@ -258,7 +258,7 @@ export default function useInit() {
         });
     } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
       console.info("data.login === 'KompasId' && Number(data.consent) === 0");
-      navigation.replace('DataConfirmation');
+      navigation.navigate('DataConfirmation');
     } else if (Number(data.authProfile) === 0) {
       console.info('Number(data.authProfile) === 0');
       // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)

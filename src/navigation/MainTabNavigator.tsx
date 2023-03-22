@@ -10,8 +10,7 @@ import MyProfile from '../screens/Profile/Profile';
 import MyRecords from '../screens/Record/MyRecords';
 import {useTheme} from 'native-base';
 import IconMore from '../assets/icons/IconMore';
-import I18n from '../lib/i18n';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 

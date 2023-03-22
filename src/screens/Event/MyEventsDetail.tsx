@@ -29,6 +29,7 @@ import LoadingBlock from '../../components/loading/LoadingBlock';
 import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import httpRequest from '../../helpers/httpRequest';
+import AppContainer from '../../layout/AppContainer';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -313,7 +314,7 @@ export default function MyEventDetail() {
   };
 
   return (
-    <View backgroundColor={colors.white} flex={1}>
+    <AppContainer>
       <Header title="Detail Event" left="back" />
       {isLoading ? (
         <LoadingBlock />
@@ -699,6 +700,6 @@ export default function MyEventDetail() {
           </AlertDialog.Footer>
         </AlertDialog.Content>
       </AlertDialog>
-    </View>
+    </AppContainer>
   );
 }

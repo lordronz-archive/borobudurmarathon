@@ -17,6 +17,7 @@ import Header from '../../components/header/Header';
 import IconLocation from '../../assets/icons/IconLocation';
 import useProfileStepper from '../../hooks/useProfileStepper';
 import {TouchableOpacity} from 'react-native';
+import AppContainer from '../../layout/AppContainer';
 
 export default function SearchLocationScreen() {
   const {setProfile} = useProfileStepper();
@@ -60,50 +61,52 @@ export default function SearchLocationScreen() {
   }, [searchValue]);
 
   return (
-    <VStack px="4" flex="1">
-      <Header title="Search Location" left={'back'} />
-      <TextInput
-        placeholder={`Location Name`}
-        label={`Search Location`}
-        onChangeText={val => setSearch(val)}
-        value={search}
-        _inputProps={{InputLeftElement: <SearchIcon />}}
-      />
-      <Divider />
-      {isLoading ? (
-        <Spinner flex={1} color="primary.900" />
-      ) : (
-        <ScrollView>
-          {listLocation?.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={{
-                padding: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                setProfile(oldVal => ({
-                  ...oldVal,
-                  mbsdCity: item.mlocRegency,
-                  mbsdProvinces: item.mlocProvince,
-                  mbsdAddress: item.mlocName,
-                }));
-                navigation.goBack();
-              }}>
-              <IconLocation />
-              <VStack marginLeft={'16px'}>
-                <Text fontSize={'14px'} fontWeight={600} color={'#1E1E1E'}>
-                  {item.mlocVillage}
-                </Text>
-                <Text fontSize={'10px'} fontWeight={400} color={'#768499'}>
-                  {item.mlocName}
-                </Text>
-              </VStack>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      )}
-    </VStack>
+    <AppContainer>
+      <VStack px="4" flex="1">
+        <Header title="Search Location" left={'back'} />
+        <TextInput
+          placeholder={`Location Name`}
+          label={`Search Location`}
+          onChangeText={val => setSearch(val)}
+          value={search}
+          _inputProps={{InputLeftElement: <SearchIcon />}}
+        />
+        <Divider />
+        {isLoading ? (
+          <Spinner flex={1} color="primary.900" />
+        ) : (
+          <ScrollView>
+            {listLocation?.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={{
+                  padding: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  setProfile(oldVal => ({
+                    ...oldVal,
+                    mbsdCity: item.mlocRegency,
+                    mbsdProvinces: item.mlocProvince,
+                    mbsdAddress: item.mlocName,
+                  }));
+                  navigation.goBack();
+                }}>
+                <IconLocation />
+                <VStack marginLeft={'16px'}>
+                  <Text fontSize={'14px'} fontWeight={600} color={'#1E1E1E'}>
+                    {item.mlocVillage}
+                  </Text>
+                  <Text fontSize={'10px'} fontWeight={400} color={'#768499'}>
+                    {item.mlocName}
+                  </Text>
+                </VStack>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
+      </VStack>
+    </AppContainer>
   );
 }

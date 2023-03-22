@@ -13,6 +13,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import config from '../../config';
 import {useTranslation} from 'react-i18next';
+import AppContainer from '../../layout/AppContainer';
 
 type Props = NativeStackScreenProps<
   RootStackParamList,
@@ -109,78 +110,80 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
   const isDisabledButton = !otpCode;
 
   return (
-    <VStack px="4" flex="1">
-      <Box flex="10">
-        <BackHeader onPress={() => navigation.goBack()} />
-        <VStack space="1.5">
-          <Heading>{t('auth.emailValidationTitle')}</Heading>
-          <Text fontWeight={400} color="#768499" fontSize={11}>
-            {t('auth.emailValidationSubtitle')}
-          </Text>
-        </VStack>
-        <Box mt={26} mb="3">
-          <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-            {t('auth.emailValidation8DigitCode')}{' '}
-            <Text bold>{`"${email}"`}</Text>
-          </Text>
-        </Box>
-        <VStack space="2.5">
+    <AppContainer>
+      <VStack px="4" flex="1">
+        <Box flex="10">
+          <BackHeader onPress={() => navigation.goBack()} />
           <VStack space="1.5">
-            <TextInput
-              placeholder={t('auth.emailValidationPlaceholder')}
-              label={t('auth.emailValidationLabel')}
-              onChangeText={setOtpCode}
-              isInvalid={!isValid}
-              errorMessage={errMessage}
-            />
+            <Heading>{t('auth.emailValidationTitle')}</Heading>
+            <Text fontWeight={400} color="#768499" fontSize={11}>
+              {t('auth.emailValidationSubtitle')}
+            </Text>
           </VStack>
-        </VStack>
-        <VStack space="1" mt={22.64}>
-          <Text
-            fontWeight={400}
-            color="#1E1E1E"
-            fontSize={12}
-            textAlign="center">
-            {t('auth.emailValidationNoReceive')}
-          </Text>
-          {seconds > 0 ? (
+          <Box mt={26} mb="3">
+            <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
+              {t('auth.emailValidation8DigitCode')}{' '}
+              <Text bold>{`"${email}"`}</Text>
+            </Text>
+          </Box>
+          <VStack space="2.5">
+            <VStack space="1.5">
+              <TextInput
+                placeholder={t('auth.emailValidationPlaceholder') || ''}
+                label={t('auth.emailValidationLabel') || ''}
+                onChangeText={setOtpCode}
+                isInvalid={!isValid}
+                errorMessage={errMessage}
+              />
+            </VStack>
+          </VStack>
+          <VStack space="1" mt={22.64}>
             <Text
               fontWeight={400}
               color="#1E1E1E"
               fontSize={12}
               textAlign="center">
-              {t('pleaseWait')}{' '}
-              <Text
-                fontWeight={600}
-                color="#EB1C23"
-                fontSize={12}
-                textAlign="center">
-                {seconds}
-              </Text>{' '}
-              {t('seconds')} {t('auth.emailValidationBeforeResend')}
+              {t('auth.emailValidationNoReceive')}
             </Text>
-          ) : (
-            <Button variant="link" onPress={resendOTP}>
+            {seconds > 0 ? (
               <Text
-                fontWeight={600}
-                color="#EB1C23"
+                fontWeight={400}
+                color="#1E1E1E"
                 fontSize={12}
                 textAlign="center">
-                {t('auth.emailValidationResend')}
+                {t('pleaseWait')}{' '}
+                <Text
+                  fontWeight={600}
+                  color="#EB1C23"
+                  fontSize={12}
+                  textAlign="center">
+                  {seconds}
+                </Text>{' '}
+                {t('seconds')} {t('auth.emailValidationBeforeResend')}
               </Text>
-            </Button>
-          )}
-        </VStack>
-      </Box>
-      <Button
-        h="12"
-        mb="3"
-        onPress={validatePhoneNumber}
-        isLoading={isLoading}
-        disabled={isDisabledButton}
-        bg={isDisabledButton ? 'gray.400' : undefined}>
-        {t('confirm')}
-      </Button>
-    </VStack>
+            ) : (
+              <Button variant="link" onPress={resendOTP}>
+                <Text
+                  fontWeight={600}
+                  color="#EB1C23"
+                  fontSize={12}
+                  textAlign="center">
+                  {t('auth.emailValidationResend')}
+                </Text>
+              </Button>
+            )}
+          </VStack>
+        </Box>
+        <Button
+          h="12"
+          mb="3"
+          onPress={validatePhoneNumber}
+          isLoading={isLoading}
+          disabled={isDisabledButton}
+          bg={isDisabledButton ? 'gray.400' : undefined}>
+          {t('confirm')}
+        </Button>
+      </VStack>
+    </AppContainer>
   );
 }

@@ -29,7 +29,7 @@ type TextInputProps = {
   required?: boolean;
   loading?: boolean;
   rightIcon?: any;
-  _inputProps?: TextInputAndroidProps | TextInputIOSProps;
+  _inputProps?: any;
   type?: 'text' | 'password';
   keyboardType?: KeyboardTypeOptions;
   onChangeText?: (text: string) => void;

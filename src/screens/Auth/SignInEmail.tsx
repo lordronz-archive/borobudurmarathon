@@ -17,6 +17,7 @@ import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import AppContainer from '../../layout/AppContainer';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -131,73 +132,75 @@ export default function SignInEmailScreen() {
   const isDisabledButton = !email || !password;
 
   return (
-    <VStack px="4" flex="1">
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        style={{flex: 1}}>
-        <BackHeader onPress={() => navigation.goBack()} />
-        <VStack space="1.5">
-          <Heading>{t('auth.signinViaEmail')}</Heading>
-          <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
-            {t('auth.signInWithRegistered')}
-          </Text>
-        </VStack>
-        <VStack space="2.5">
+    <AppContainer>
+      <VStack px="4" flex="1">
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          style={{flex: 1}}>
+          <BackHeader onPress={() => navigation.goBack()} />
           <VStack space="1.5">
-            <TextInput
-              placeholder="Enter your email here"
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              _inputProps={{textContentType: 'emailAddress'}}
-            />
-            <TextInput
-              placeholder="Enter your password here"
-              label="Password"
-              type="password"
-              value={password}
-              onChangeText={text => setPassword(text)}
-            />
+            <Heading>{t('auth.signinViaEmail')}</Heading>
+            <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
+              {t('auth.signInWithRegistered')}
+            </Text>
           </VStack>
-        </VStack>
-        <HStack space="1" mt={22} justifyContent="center">
-          <Text
-            fontWeight={400}
-            color="#1E1E1E"
-            fontSize={12}
-            textAlign="center">
-            {t('auth.dontHaveAccount')}
-          </Text>
-          <Text
-            fontWeight={600}
-            color="#EB1C23"
-            fontSize={12}
-            textAlign="center"
-            underline
-            onPress={() => navigation.navigate('RegisterEmail')}>
-            {t('auth.registerViaEmail')}
-          </Text>
+          <VStack space="2.5">
+            <VStack space="1.5">
+              <TextInput
+                placeholder="Enter your email here"
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                _inputProps={{textContentType: 'emailAddress'}}
+              />
+              <TextInput
+                placeholder="Enter your password here"
+                label="Password"
+                type="password"
+                value={password}
+                onChangeText={text => setPassword(text)}
+              />
+            </VStack>
+          </VStack>
+          <HStack space="1" mt={22} justifyContent="center">
+            <Text
+              fontWeight={400}
+              color="#1E1E1E"
+              fontSize={12}
+              textAlign="center">
+              {t('auth.dontHaveAccount')}
+            </Text>
+            <Text
+              fontWeight={600}
+              color="#EB1C23"
+              fontSize={12}
+              textAlign="center"
+              underline
+              onPress={() => navigation.navigate('RegisterEmail')}>
+              {t('auth.registerViaEmail')}
+            </Text>
+          </HStack>
+          <HStack space="1" mt={15} justifyContent="center">
+            <Text
+              fontWeight={600}
+              color="#EB1C23"
+              fontSize={12}
+              textAlign="center"
+              underline
+              onPress={() => navigation.navigate('ForgotPassword')}>
+              {t('auth.forgotPassword')}
+            </Text>
+          </HStack>
+        </KeyboardAwareScrollView>
+        <HStack my={3}>
+          <Button
+            onPress={() => signin()}
+            isLoading={loading}
+            disabled={isDisabledButton}>
+            {t('auth.signin')}
+          </Button>
         </HStack>
-        <HStack space="1" mt={15} justifyContent="center">
-          <Text
-            fontWeight={600}
-            color="#EB1C23"
-            fontSize={12}
-            textAlign="center"
-            underline
-            onPress={() => navigation.navigate('ForgotPassword')}>
-            {t('auth.forgotPassword')}
-          </Text>
-        </HStack>
-      </KeyboardAwareScrollView>
-      <HStack my={3}>
-        <Button
-          onPress={() => signin()}
-          isLoading={loading}
-          disabled={isDisabledButton}>
-          {t('auth.signin')}
-        </Button>
-      </HStack>
-    </VStack>
+      </VStack>
+    </AppContainer>
   );
 }

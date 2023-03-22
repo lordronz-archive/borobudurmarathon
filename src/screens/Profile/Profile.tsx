@@ -41,6 +41,7 @@ import i18next from 'i18next';
 import {useTranslation} from 'react-i18next';
 import {LanguageID} from '../../types/language.type';
 import httpRequest from '../../helpers/httpRequest';
+import AppContainer from '../../layout/AppContainer';
 
 export default function MyProfile() {
   const navigation =
@@ -119,7 +120,7 @@ export default function MyProfile() {
   };
 
   return (
-    <>
+    <AppContainer>
       <ScrollView backgroundColor={colors.white}>
         <Box alignItems="flex-start" padding={1}>
           <IconButton
@@ -419,6 +420,6 @@ export default function MyProfile() {
           </AlertDialog.Footer>
         </AlertDialog.Content>
       </AlertDialog>
-    </>
+    </AppContainer>
   );
 }

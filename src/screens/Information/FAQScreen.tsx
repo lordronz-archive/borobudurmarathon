@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
+import AppContainer from '../../layout/AppContainer';
 
 export default function FAQScreen() {
   const navigation =
@@ -79,36 +80,40 @@ export default function FAQScreen() {
   ];
 
   return (
-    <ScrollView backgroundColor={colors.white}>
-      <Header title="FAQs" left="back" />
-      <Box borderTopColor={colors.gray[500]}>
-        {menus.map((menu, index) => (
-          <Pressable
-            key={index}
-            onPress={() => {
-              if (menu.route) {
-                navigation.navigate(menu.route, menu.params);
-              }
-            }}>
-            <HStack
-              justifyContent="space-between"
-              alignItems="center"
-              paddingX="3"
-              paddingY="4"
-              borderTopColor={colors.gray[300]}
-              borderTopWidth={0.5}
-              borderBottomColor={
-                index === menus.length - 1 ? colors.gray[300] : undefined
-              }
-              borderBottomWidth={index === menus.length - 1 ? 0.5 : undefined}>
-              <HStack alignItems="center">
-                <Text marginLeft="1">{menu.name}</Text>
+    <AppContainer>
+      <ScrollView backgroundColor={colors.white}>
+        <Header title="FAQs" left="back" />
+        <Box borderTopColor={colors.gray[500]}>
+          {menus.map((menu, index) => (
+            <Pressable
+              key={index}
+              onPress={() => {
+                if (menu.route) {
+                  navigation.navigate(menu.route, menu.params);
+                }
+              }}>
+              <HStack
+                justifyContent="space-between"
+                alignItems="center"
+                paddingX="3"
+                paddingY="4"
+                borderTopColor={colors.gray[300]}
+                borderTopWidth={0.5}
+                borderBottomColor={
+                  index === menus.length - 1 ? colors.gray[300] : undefined
+                }
+                borderBottomWidth={
+                  index === menus.length - 1 ? 0.5 : undefined
+                }>
+                <HStack alignItems="center">
+                  <Text marginLeft="1">{menu.name}</Text>
+                </HStack>
+                <ChevronRightIcon />
               </HStack>
-              <ChevronRightIcon />
-            </HStack>
-          </Pressable>
-        ))}
-      </Box>
-    </ScrollView>
+            </Pressable>
+          ))}
+        </Box>
+      </ScrollView>
+    </AppContainer>
   );
 }

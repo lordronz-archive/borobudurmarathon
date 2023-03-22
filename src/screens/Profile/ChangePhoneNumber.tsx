@@ -20,6 +20,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import {useTranslation} from 'react-i18next';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import useInit from '../../hooks/useInit';
+import AppContainer from '../../layout/AppContainer';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
@@ -91,7 +92,7 @@ export default function ChangePhoneNumberScreen() {
   };
 
   return (
-    <View>
+    <AppContainer>
       <Header title={t('profile.changePhoneNumber')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
@@ -117,6 +118,6 @@ export default function ChangePhoneNumberScreen() {
         </Box>
         <Box pb={100} />
       </ScrollView>
-    </View>
+    </AppContainer>
   );
 }

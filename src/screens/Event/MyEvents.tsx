@@ -16,6 +16,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import SectionListMyEvent from './components/SectionListMyEvent';
 import {useTranslation} from 'react-i18next';
+import AppContainer from '../../layout/AppContainer';
 
 export default function MyEvents() {
   const {colors} = useTheme();
@@ -24,7 +25,7 @@ export default function MyEvents() {
   const {t} = useTranslation();
 
   return (
-    <View backgroundColor={colors.white} flex={1}>
+    <AppContainer>
       <Image
         borderRadius={8}
         source={require('../../assets/images/welcome-card-img.png')}
@@ -55,6 +56,6 @@ export default function MyEvents() {
       <ScrollView>
         <SectionListMyEvent />
       </ScrollView>
-    </View>
+    </AppContainer>
   );
 }

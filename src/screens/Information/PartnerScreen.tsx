@@ -10,6 +10,7 @@ import i18next from 'i18next';
 import EmptyMessage from '../../components/EmptyMessage';
 import useEvent from '../../hooks/useEvent';
 import moment from 'moment';
+import AppContainer from '../../layout/AppContainer';
 
 // function getPriority(val: number | string): 'high' | 'medium' | 'low' {
 //   val = Number(val);
@@ -112,27 +113,28 @@ export default function PartnerScreen() {
   }, []);
 
   return (
-    <ScrollView backgroundColor={colors.white}>
-      <Header title="" left="back" />
+    <AppContainer>
+      <ScrollView backgroundColor={colors.white}>
+        <Header title="" left="back" />
 
-      {isLoading && (
-        <Center>
-          <Spinner />
-        </Center>
-      )}
+        {isLoading && (
+          <Center>
+            <Spinner />
+          </Center>
+        )}
 
-      {!isLoading && sponsors.length === 0 ? <EmptyMessage /> : false}
+        {!isLoading && sponsors.length === 0 ? <EmptyMessage /> : false}
 
-      {sponsors.map(sponsor => (
-        <ListSponsorCard
-          key={sponsor.title}
-          title={sponsor.title}
-          priority={sponsor.priority as any}
-          items={sponsor.items}
-        />
-      ))}
+        {sponsors.map(sponsor => (
+          <ListSponsorCard
+            key={sponsor.title}
+            title={sponsor.title}
+            priority={sponsor.priority as any}
+            items={sponsor.items}
+          />
+        ))}
 
-      {/* <ListSponsorCard
+        {/* <ListSponsorCard
         title="Komite"
         priority="high"
         items={[
@@ -305,7 +307,8 @@ export default function PartnerScreen() {
         ]}
       /> */}
 
-      <Box height="50" />
-    </ScrollView>
+        <Box height="50" />
+      </ScrollView>
+    </AppContainer>
   );
 }

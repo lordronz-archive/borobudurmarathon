@@ -7,6 +7,7 @@ import {FlatList, StyleProp, ViewStyle} from 'react-native';
 import IconDownload from '../../assets/icons/IconDownload';
 import {useTranslation} from 'react-i18next';
 import config from '../../config';
+import AppContainer from '../../layout/AppContainer';
 
 const PDF_STYLE: StyleProp<ViewStyle> = {
   width: '100%',
@@ -23,7 +24,7 @@ export default function CertificatesScreen() {
   // };
 
   return (
-    <View>
+    <AppContainer>
       <Header title={t('certificates')} left="back" />
       <FlatList
         data={user?.linked.mregZmemId}
@@ -65,6 +66,6 @@ export default function CertificatesScreen() {
           </VStack>
         )}
       />
-    </View>
+    </AppContainer>
   );
 }

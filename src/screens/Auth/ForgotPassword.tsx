@@ -10,6 +10,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {getErrorMessage, getErrorStd} from '../../helpers/errorHandler';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
+import AppContainer from '../../layout/AppContainer';
 
 export default function ForgotPasswordScreen() {
   const navigation =
@@ -55,26 +56,27 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <VStack px="4" flex="1">
-      <Box flex="10">
-        <BackHeader onPress={() => navigation.goBack()} />
-        <VStack space="1.5">
-          <Heading>{t('auth.forgotPasswordTitle')}</Heading>
-          <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
-            {t('auth.forgotPasswordSubtitle')}
-          </Text>
-        </VStack>
-        <VStack space="2.5">
+    <AppContainer>
+      <VStack px="4" flex="1">
+        <Box flex="10">
+          <BackHeader onPress={() => navigation.goBack()} />
           <VStack space="1.5">
-            <TextInput
-              placeholder="Enter your email here"
-              label="Email"
-              value={email}
-              onChangeText={text => setEmail(text)}
-            />
+            <Heading>{t('auth.forgotPasswordTitle')}</Heading>
+            <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
+              {t('auth.forgotPasswordSubtitle')}
+            </Text>
           </VStack>
-        </VStack>
-        {/* <HStack space="1" mt={22} justifyContent="center">
+          <VStack space="2.5">
+            <VStack space="1.5">
+              <TextInput
+                placeholder="Enter your email here"
+                label="Email"
+                value={email}
+                onChangeText={text => setEmail(text)}
+              />
+            </VStack>
+          </VStack>
+          {/* <HStack space="1" mt={22} justifyContent="center">
           <Text
             fontWeight={600}
             color="#EB1C23"
@@ -85,11 +87,12 @@ export default function ForgotPasswordScreen() {
             {t('auth.signinViaEmail')}
           </Text>
         </HStack> */}
-      </Box>
-      <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
-        {/* {t('profile.sendOtp')} */}
-        {t('auth.resetPassword')}
-      </Button>
-    </VStack>
+        </Box>
+        <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
+          {/* {t('profile.sendOtp')} */}
+          {t('auth.resetPassword')}
+        </Button>
+      </VStack>
+    </AppContainer>
   );
 }

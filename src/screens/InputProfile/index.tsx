@@ -26,6 +26,7 @@ import {useDemo} from '../../context/demo.context';
 import {useTranslation} from 'react-i18next';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import ViewProfile from './components/ViewProfile';
+import AppContainer from '../../layout/AppContainer';
 
 export default function DataConfirmationScreen() {
   const navigation =
@@ -162,35 +163,39 @@ export default function DataConfirmationScreen() {
   };
 
   return (
-    <VStack flex="1">
-      <Box flex="10">
-        <BackHeader onPress={() => navigation.goBack()} />
-        <VStack space="1.5" px="4">
-          <Heading>{t('consent.title')}</Heading>
-          {/* <Text fontWeight={400} color="#768499" fontSize={11}>
+    <AppContainer>
+      <VStack flex="1">
+        <Box flex="10">
+          <Box px="4">
+            <BackHeader onPress={() => navigation.goBack()} />
+            <VStack space="1.5">
+              <Heading>{t('consent.title')}</Heading>
+              {/* <Text fontWeight={400} color="#768499" fontSize={11}>
             {t('consent.subtitle')}
           </Text> */}
-          <Box>
-            <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-              {t('consent.description')}
-            </Text>
+              <Box>
+                <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
+                  {t('consent.description')}
+                </Text>
+              </Box>
+            </VStack>
           </Box>
-        </VStack>
 
-        <Box height="2" mt="5" mb="2" bgColor="gray.200" />
-        <ViewProfile />
-      </Box>
-      <HStack my={3} px="4">
-        <BMButton
-          variant="outline"
-          onPress={handleNoAddNewProfile}
-          isLoading={isLoadingAction}>
-          No, Add New Profile
-        </BMButton>
-        <BMButton onPress={handleUseExisting} isLoading={isLoadingAction}>
-          Yes, Sure
-        </BMButton>
-      </HStack>
-    </VStack>
+          <Box height="2" mt="5" mb="2" bgColor="gray.200" />
+          <ViewProfile />
+        </Box>
+        <HStack my={3} px="4">
+          <BMButton
+            variant="outline"
+            onPress={handleNoAddNewProfile}
+            isLoading={isLoadingAction}>
+            No, Add New Profile
+          </BMButton>
+          <BMButton onPress={handleUseExisting} isLoading={isLoadingAction}>
+            Yes, Sure
+          </BMButton>
+        </HStack>
+      </VStack>
+    </AppContainer>
   );
 }

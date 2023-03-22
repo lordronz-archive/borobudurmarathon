@@ -31,6 +31,7 @@ import {DocumentPickerResponse} from 'react-native-document-picker';
 import ImageView from 'react-native-image-viewing';
 import {Platform} from 'react-native';
 import {parseUnknownDataToArray} from '../../helpers/parser';
+import AppContainer from '../../layout/AppContainer';
 
 type Price = {
   id: string;
@@ -384,93 +385,95 @@ export default function EventRegisterScreen() {
   textFinalPrice = finalPrice.toLocaleString('id-ID');
 
   return (
-    <ScrollView>
-      <Header title={t('event.registrationForm')} left="back" />
-      <VStack space="4" pb="3">
-        <EventRegistrationCard
-          imgSrc={
-            event?.data.evnhThumbnail
-              ? {uri: event?.data.evnhThumbnail}
-              : require('../../assets/images/FeaturedEventImage.png')
-          }
-          runningDate={datetime.getDateRangeString(
-            event?.data.evnhStartDate,
-            event?.data.evnhEndDate,
-            'short',
-            'short',
-          )}
-          registrationDate={datetime.getDateRangeString(
-            event?.data.evnhRegistrationStart,
-            event?.data.evnhRegistrationEnd,
-            'short',
-            'short',
-          )}
-          title={event?.data?.evnhName}
-          category={
-            (event?.categories || []).find(
-              cat => cat.evncId === params.selectedCategoryId,
-            )?.evncName
-          }
-        />
-        <Divider
-          height="8px"
-          _light={{
-            bg: '#E8ECF3',
-          }}
-          _dark={{
-            bg: 'muted.50',
-          }}
-        />
-        <ViewProfile fields={bannedField} withoutMarginBottom />
+    <AppContainer>
+      <ScrollView>
+        <Header title={t('event.registrationForm')} left="back" />
+        <VStack space="4" pb="3">
+          <EventRegistrationCard
+            imgSrc={
+              event?.data.evnhThumbnail
+                ? {uri: event?.data.evnhThumbnail}
+                : require('../../assets/images/FeaturedEventImage.png')
+            }
+            runningDate={datetime.getDateRangeString(
+              event?.data.evnhStartDate,
+              event?.data.evnhEndDate,
+              'short',
+              'short',
+            )}
+            registrationDate={datetime.getDateRangeString(
+              event?.data.evnhRegistrationStart,
+              event?.data.evnhRegistrationEnd,
+              'short',
+              'short',
+            )}
+            title={event?.data?.evnhName}
+            category={
+              (event?.categories || []).find(
+                cat => cat.evncId === params.selectedCategoryId,
+              )?.evncName
+            }
+          />
+          <Divider
+            height="8px"
+            _light={{
+              bg: '#E8ECF3',
+            }}
+            _dark={{
+              bg: 'muted.50',
+            }}
+          />
+          <ViewProfile fields={bannedField} withoutMarginBottom />
 
-        <VStack space="2.5" px="4" mt="0">
-          <Text bold fontSize="lg">
-            {t('additionalInformation')}
-          </Text>
-          <VStack space="1.5">
-            {fields
-              .filter(
-                f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
-              )
-              .filter(f => !bannedField.includes(f.evhfName))
-              .map(field => (
-                <RegistrationForm
-                  key={field.evhfId}
-                  {...field}
-                  onValueChange={val => {
-                    setFieldsData({...fieldsData, [field.evhfName]: val});
-                  }}
-                  value={fieldsData[field.evhfName]}
-                  helperText={field.helperText}
-                  required={
-                    field.evhfIsRequired.toString() === '1' ||
-                    field.evhfIsRequired.toString() === 'true'
-                  }
-                  setFileResponse={
-                    field.evhfType === 'File'
-                      ? a => setFiles({...files, [field.evhfName]: a})
-                      : undefined
-                  }
-                  file={files ? files[field.evhfName] : undefined}
-                />
-              ))}
+          <VStack space="2.5" px="4" mt="0">
+            <Text bold fontSize="lg">
+              {t('additionalInformation')}
+            </Text>
+            <VStack space="1.5">
+              {fields
+                .filter(
+                  f =>
+                    f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
+                )
+                .filter(f => !bannedField.includes(f.evhfName))
+                .map(field => (
+                  <RegistrationForm
+                    key={field.evhfId}
+                    {...field}
+                    onValueChange={val => {
+                      setFieldsData({...fieldsData, [field.evhfName]: val});
+                    }}
+                    value={fieldsData[field.evhfName]}
+                    helperText={field.helperText}
+                    required={
+                      field.evhfIsRequired.toString() === '1' ||
+                      field.evhfIsRequired.toString() === 'true'
+                    }
+                    setFileResponse={
+                      field.evhfType === 'File'
+                        ? a => setFiles({...files, [field.evhfName]: a})
+                        : undefined
+                    }
+                    file={files ? files[field.evhfName] : undefined}
+                  />
+                ))}
+            </VStack>
           </VStack>
-        </VStack>
-        <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
-          <Checkbox.Group
-            onChange={setCheckbox}
-            value={checkbox}
-            accessibilityLabel="Agree to terms">
-            <Checkbox
-              value="agreed"
-              _text={{fontSize: 12, flexWrap: 'wrap'}}
-              isDisabled={isLoading}>
-              {t('termsAndConditionsAgreement')}
-            </Checkbox>
-          </Checkbox.Group>
-        </Box>
+          <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
+            <Checkbox.Group
+              onChange={setCheckbox}
+              value={checkbox}
+              accessibilityLabel="Agree to terms">
+              <Checkbox
+                value="agreed"
+                _text={{fontSize: 12, flexWrap: 'wrap'}}
+                isDisabled={isLoading}>
+                {t('termsAndConditionsAgreement')}
+              </Checkbox>
+            </Checkbox.Group>
+          </Box>
 
-        {/* <TouchableOpacity
+          {/* <TouchableOpacity
           style={{paddingHorizontal: 20, paddingVertical: 5}}
           onPress={async () => {
             let obj: any = {};
@@ -499,87 +502,88 @@ export default function EventRegisterScreen() {
           </Center>
         </TouchableOpacity> */}
 
-        <HStack px="4" justifyContent={'space-between'} alignItems={'center'}>
-          <Text>{t('event.totalPayment')}</Text>
-          {/* <Text fontSize={18} fontWeight={700}>{`IDR ${Number(
+          <HStack px="4" justifyContent={'space-between'} alignItems={'center'}>
+            <Text>{t('event.totalPayment')}</Text>
+            {/* <Text fontSize={18} fontWeight={700}>{`IDR ${Number(
             prices[0].finalPrice || 0,
           )?.toLocaleString('id-ID')}`}</Text> */}
 
-          <VStack>
-            {!!textOriginalPrice && (
-              <Text
-                color={'#768499'}
-                fontSize="sm"
-                fontWeight={400}
-                strikeThrough>
-                IDR {textOriginalPrice}
+            <VStack>
+              {!!textOriginalPrice && (
+                <Text
+                  color={'#768499'}
+                  fontSize="sm"
+                  fontWeight={400}
+                  strikeThrough>
+                  IDR {textOriginalPrice}
+                </Text>
+              )}
+              <Text color={'black'} fontSize="lg" fontWeight={700}>
+                IDR {textFinalPrice}
               </Text>
-            )}
-            <Text color={'black'} fontSize="lg" fontWeight={700}>
-              IDR {textFinalPrice}
-            </Text>
-          </VStack>
-        </HStack>
-        <Box px="4">
-          <Button
-            h="12"
-            isLoading={isLoading}
-            // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
-            isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
+            </VStack>
+          </HStack>
+          <Box px="4">
+            <Button
+              h="12"
+              isLoading={isLoading}
+              // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
+              isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
+              onPress={() => {
+                if (checkbox[0] !== 'agreed') {
+                  toast.show({
+                    title: 'Failed to register event',
+                    description: 'Please agree to terms and service',
+                  });
+                  return;
+                }
+                register();
+              }}>
+              {t('event.registerNow')}
+            </Button>
+          </Box>
+          <Congratulation
+            cancelRef={cancelRef}
+            isOpen={isOpen}
+            onClose={onClose}
             onPress={() => {
-              if (checkbox[0] !== 'agreed') {
-                toast.show({
-                  title: 'Failed to register event',
-                  description: 'Please agree to terms and service',
-                });
-                return;
-              }
-              register();
-            }}>
-            {t('event.registerNow')}
-          </Button>
-        </Box>
-        <Congratulation
-          cancelRef={cancelRef}
-          isOpen={isOpen}
-          onClose={onClose}
-          onPress={() => {
-            setIsOpen(false);
-            navigation.navigate('Main', {screen: 'My Events'});
-          }}
-          title={t('registration.registrationSuccess')}
-          content={t('registration.registrationSuccessDesc')}
-          buttonContent={t('registration.checkEventBtn')}
-        />
-      </VStack>
-      {event.data.evnhSizeChart && (
-        <ImageView
-          images={[{uri: event.data.evnhSizeChart}]}
-          imageIndex={0}
-          visible={openJersey}
-          onRequestClose={() => setOpenJersey(false)}
-        />
-      )}
-      {isLoading && (
-        <Box
-          position="absolute"
-          width="100%"
-          height="100%"
-          justifyContent="center"
-          alignItems="center"
-          flex={1}>
+              setIsOpen(false);
+              navigation.navigate('Main', {screen: 'My Events'});
+            }}
+            title={t('registration.registrationSuccess')}
+            content={t('registration.registrationSuccessDesc')}
+            buttonContent={t('registration.checkEventBtn')}
+          />
+        </VStack>
+        {event.data.evnhSizeChart && (
+          <ImageView
+            images={[{uri: event.data.evnhSizeChart}]}
+            imageIndex={0}
+            visible={openJersey}
+            onRequestClose={() => setOpenJersey(false)}
+          />
+        )}
+        {isLoading && (
           <Box
-            bg="gray.300"
-            opacity="0.9"
+            position="absolute"
             width="100%"
             height="100%"
-            position="absolute"
-          />
-          <Center>
-            <Spinner size="lg" />
-          </Center>
-        </Box>
-      )}
-    </ScrollView>
+            justifyContent="center"
+            alignItems="center"
+            flex={1}>
+            <Box
+              bg="gray.300"
+              opacity="0.9"
+              width="100%"
+              height="100%"
+              position="absolute"
+            />
+            <Center>
+              <Spinner size="lg" />
+            </Center>
+          </Box>
+        )}
+      </ScrollView>
+    </AppContainer>
   );
 }

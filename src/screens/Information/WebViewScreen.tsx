@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {View} from 'react-native';
 import WebView from 'react-native-webview';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -6,6 +6,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {Box, IconButton, ArrowBackIcon, useTheme} from 'native-base';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import AppContainer from '../../layout/AppContainer';
 
 const urls: any = {
   // faq: 'https://borobudurmarathon.com',
@@ -27,7 +28,7 @@ export default function WebViewScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <View style={{flex: 1}}>
+    <AppContainer>
       <Box alignItems="flex-start" padding={1} position="absolute" zIndex={10}>
         <IconButton
           onPress={() => navigation.goBack()}
@@ -51,6 +52,6 @@ export default function WebViewScreen() {
       </Box>
       <WebView source={{uri: url}} onLoadEnd={() => setIsLoading(false)} />
       {isLoading && <LoadingBlock />}
-    </View>
+    </AppContainer>
   );
 }

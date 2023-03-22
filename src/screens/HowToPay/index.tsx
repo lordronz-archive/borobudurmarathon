@@ -12,6 +12,7 @@ import {
 import React, {useMemo, useState} from 'react';
 import Accordion from 'react-native-collapsible/Accordion';
 import Header from '../../components/header/Header';
+import AppContainer from '../../layout/AppContainer';
 
 export default function HowToPayScreen() {
   const {colors} = useTheme();
@@ -193,7 +194,7 @@ export default function HowToPayScreen() {
   };
 
   return (
-    <View bg={colors.white} flex={1}>
+    <AppContainer>
       <Header title="How To Pay" left={'back'} />
       <ScrollView>
         <Text
@@ -235,6 +236,6 @@ export default function HowToPayScreen() {
           underlayColor="transparent"
         />
       </ScrollView>
-    </View>
+    </AppContainer>
   );
 }

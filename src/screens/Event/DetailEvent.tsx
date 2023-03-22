@@ -54,7 +54,7 @@ export default function DetailEvent() {
   const params = route.params as RootStackParamList['EventDetail'];
 
   const [event, setEvent] = useState<GetEventResponse>();
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  // const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
@@ -169,25 +169,25 @@ export default function DetailEvent() {
       .then(res => {
         console.info('res get detail event', JSON.stringify(res));
         setEvent(res);
-        httpRequest
-          .get('member_resource/transaction')
-          .then(res => {
-            if (res.data) {
-              console.info('member_resourcee', JSON.stringify(res));
+        // httpRequest
+        //   .get('member_resource/transaction')
+        //   .then(res => {
+        //     if (res.data) {
+        //       console.info('member_resourcee', JSON.stringify(res));
 
-              const registerEvent = res.data?.linked?.mregTrnsId?.find(
-                (item: any) =>
-                  item.trnsEventId === res.data.evnhId &&
-                  (item.trnsConfirmed === 1 ||
-                    res.data.evnhBallot === 1 ||
-                    item.trnsExpiredTime?.getTime() > new Date().getTime()),
-              );
-              setIsRegistered(registerEvent ? true : false);
-            }
-          })
-          .catch(err => {
-            console.info('error get transaction', err);
-          });
+        //       const registerEvent = res.data?.linked?.mregTrnsId?.find(
+        //         (item: any) =>
+        //           item.trnsEventId === res.data.evnhId &&
+        //           (item.trnsConfirmed === 1 ||
+        //             res.data.evnhBallot === 1 ||
+        //             item.trnsExpiredTime?.getTime() > new Date().getTime()),
+        //       );
+        //       setIsRegistered(registerEvent ? true : false);
+        //     }
+        //   })
+        //   .catch(err => {
+        //     console.info('error get transaction', err);
+        //   });
       })
       .catch(err => {
         Toast.show({
@@ -409,17 +409,17 @@ export default function DetailEvent() {
           shadow="3">
           <Button
             onPress={() => {
-              if (isRegistered) {
-                navigation.navigate('EventRegister', {
-                  event,
-                  selectedCategoryId: selected.id,
-                });
-              } else {
-                Toast.show({
-                  title: 'Failed to register event',
-                  description: 'You have registered for this event',
-                });
-              }
+              // if (!isRegistered) {
+              navigation.navigate('EventRegister', {
+                event,
+                selectedCategoryId: selected.id,
+              });
+              // } else {
+              //   Toast.show({
+              //     title: 'Failed to register event',
+              //     description: 'You have registered for this event',
+              //   });
+              // }
             }}>
             {'Continue with ' +
               selected?.name +

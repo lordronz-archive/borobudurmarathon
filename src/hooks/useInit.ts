@@ -336,10 +336,12 @@ export default function useInit() {
       setIsLoggingOut(false);
     }
 
-    toast.show({
-      id: 'logout',
-      description: 'Logout successfully',
-    });
+    if (!toast.isActive('logout')) {
+      toast.show({
+        id: 'logout',
+        description: 'Logout successfully',
+      });
+    }
 
     if (onCloseModalLogout) {
       onCloseModalLogout();

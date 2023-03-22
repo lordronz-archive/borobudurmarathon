@@ -452,6 +452,10 @@ export default function ChooseCitizenScreen({route}: Props) {
       getProfile();
 
       navigation.replace('Welcome');
+
+      resetStepper();
+      setStepCount(1);
+      setProfileStep(1);
     } catch (err) {
       Toast.show({
         title: 'Failed to save',
@@ -459,9 +463,6 @@ export default function ChooseCitizenScreen({route}: Props) {
       });
     } finally {
       setIsLoading(false);
-      resetStepper();
-      setStepCount(1);
-      setProfileStep(1);
     }
   };
 

@@ -54,7 +54,7 @@ export default function DetailEvent() {
   const params = route.params as RootStackParamList['EventDetail'];
 
   const [event, setEvent] = useState<GetEventResponse>();
-  const [registeredEvent, setRegisteredEvent] = useState<string[]>([]);
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
@@ -165,30 +165,37 @@ export default function DetailEvent() {
 
   useEffect(() => {
     setIsLoading(true);
-    httpRequest
-      .get('member_resource/transaction')
-      .then(res => {
-        if (res.data) {
-          const registerEventId = res.data?.linked?.mregEventId?.map(
-            (item: any) => item.evnhId?.toString(),
-          );
-          setRegisteredEvent(registerEventId);
-        }
-      })
-      .catch(err => {
-        console.info('error get transaction', err);
-      });
     EventService.getEvent(params.id)
       .then(res => {
         console.info('res get detail event', JSON.stringify(res));
         setEvent(res);
-        setIsLoading(false);
+        httpRequest
+          .get('member_resource/transaction')
+          .then(res => {
+            if (res.data) {
+              console.info('member_resourcee', JSON.stringify(res));
+
+              const registerEvent = res.data?.linked?.mregTrnsId?.find(
+                (item: any) =>
+                  item.trnsEventId === res.data.evnhId &&
+                  (item.trnsConfirmed === 1 ||
+                    res.data.evnhBallot === 1 ||
+                    item.trnsExpiredTime?.getTime() > new Date().getTime()),
+              );
+              setIsRegistered(registerEvent ? true : false);
+            }
+          })
+          .catch(err => {
+            console.info('error get transaction', err);
+          });
       })
       .catch(err => {
         Toast.show({
           title: 'Failed to get event',
           description: getErrorMessage(err),
         });
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   }, []);
@@ -335,7 +342,7 @@ export default function DetailEvent() {
                   <Text fontSize="sm" color={'#768499'} fontWeight={500}>
                     {info.label}
                   </Text>
-                  <Text fontSize="sm" fontWeight={400} mb="2" overflowX="">
+                  <Text fontSize="sm" fontWeight={400} mb="2" overflowX="auto">
                     {info.description}
                   </Text>
                 </Stack>
@@ -347,7 +354,7 @@ export default function DetailEvent() {
 
         <Section
           title="Event Pricing"
-          subtitle={t('event.chooseSuitableCategory')}
+          subtitle={t('event.chooseSuitableCategory') || ''}
           mx={4}
           my={3}>
           <Radio.Group name="exampleGroup">
@@ -402,7 +409,7 @@ export default function DetailEvent() {
           shadow="3">
           <Button
             onPress={() => {
-              if (!registeredEvent?.includes(event.data?.evnhId)) {
+              if (isRegistered) {
                 navigation.navigate('EventRegister', {
                   event,
                   selectedCategoryId: selected.id,

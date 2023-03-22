@@ -91,6 +91,7 @@ export default function TimeInput(props: TimeInputProps) {
               borderWidth: 0,
               padding: 0,
               margin: 0,
+              marginTop: -12,
             }}
             defaultOption={{
               key: '00',
@@ -129,6 +130,7 @@ export default function TimeInput(props: TimeInputProps) {
               borderWidth: 0,
               padding: 0,
               margin: 0,
+              marginTop: -12,
             }}
             defaultOption={{
               key: '00',

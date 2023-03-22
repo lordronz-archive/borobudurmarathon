@@ -59,9 +59,22 @@ export default function SelectInput(props: SelectInputProps) {
             value: label,
           }))}
           save="key"
+          search={
+            props.hideSearch != null
+              ? !props.hideSearch
+              : props.items.length > 4
+          }
           placeholder={props.placeholder}
           boxStyles={{borderRadius: 0, borderWidth: 0, padding: 0}} //override default styles
           dropdownStyles={{borderRadius: 0, borderWidth: 0, padding: 0}}
+          defaultOption={
+            props.value != null
+              ? {
+                  key: props.value,
+                  value: props.items.find(v => v.value === props.value)?.label,
+                }
+              : undefined
+          }
         />
       </Box>
       <FormControl.HelperText>{props.helperText}</FormControl.HelperText>

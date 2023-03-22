@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Row, Box, Divider, SectionList, Text} from 'native-base';
 import {cleanPhoneNumber} from '../../../helpers/phoneNumber';
 import {useAuthUser} from '../../../context/auth.context';
@@ -6,6 +6,7 @@ import moment from 'moment';
 import {t} from 'i18next';
 import {convertOption} from '../../../helpers/convertOption';
 import {showIDNumberTypeName} from '../../../assets/data/ktpPassport';
+import useInit from '../../../hooks/useInit';
 
 type Props = {
   fields?: string[];
@@ -14,6 +15,11 @@ type Props = {
 
 export default function ViewProfile(props: Props) {
   const {user} = useAuthUser();
+  const {getProfile} = useInit();
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   let sectionsDataProfile: {
     title: string;

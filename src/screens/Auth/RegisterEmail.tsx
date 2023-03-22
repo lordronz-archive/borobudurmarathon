@@ -104,12 +104,19 @@ export default function RegisterEmailScreen() {
         setErrors({
           ...objErrors,
         });
+        toast.show({
+          title: 'Failed to save profile',
+          description: Object.keys(objErrors)
+            .map(field => `${objErrors[field]} [${field}]`)
+            .join('. '),
+        });
+      } else {
+        toast.show({
+          title: 'Failed to register',
+          description: getErrorMessage(err),
+          placement: 'top',
+        });
       }
-      toast.show({
-        title: 'Failed to register',
-        description: getErrorMessage(err),
-        placement: 'top',
-      });
     } finally {
       setLoading(false);
     }

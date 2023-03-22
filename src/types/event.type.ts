@@ -221,7 +221,8 @@ export interface EventFieldsEntity {
     | 'Option'
     | 'Date'
     | 'Hidden'
-    | 'File';
+    | 'File'
+    | 'Time';
   static?: boolean;
   helperText?: ReactNode;
 }

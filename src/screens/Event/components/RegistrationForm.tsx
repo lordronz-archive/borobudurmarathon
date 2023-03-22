@@ -5,10 +5,11 @@ import TextInput from '../../../components/form/TextInput';
 import ApiService from '../../../api/api.service';
 import countries from '../../../helpers/countries';
 import DateInput from '../../../components/form/DateInput';
-import {Box, Row, Text} from 'native-base';
+import {Box, HStack, Row, Text} from 'native-base';
 import {convertOption} from '../../../helpers/convertOption';
 import FileInput from '../../../components/form/FileInput';
 import {DocumentPickerResponse} from 'react-native-document-picker';
+import TimeInput from '../../../components/form/TimeInput';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -157,6 +158,21 @@ export default function RegistrationForm(
         setFileResponse={props.setFileResponse}
         file={props.file}
       />
+    );
+  } else if (props.evhfType === 'Time') {
+    return (
+      <HStack>
+        <TimeInput
+          items={options}
+          placeholder={'--'}
+          label={props.evhfLabel}
+          onValueChange={props.onValueChange}
+          value={props.value}
+          helperText={props.helperText}
+          hideSearch={options.length <= 10}
+          required={props.required}
+        />
+      </HStack>
     );
   } else {
     return (

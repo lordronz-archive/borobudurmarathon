@@ -232,6 +232,7 @@ export default function useInit() {
         data.authProfile = 0;
       }
     }
+
     console.info('checkAccount, after demo settings', data);
     if (Number(data.authEmail) === 0) {
       console.info('Number(data.authEmail) === 0');

@@ -291,7 +291,10 @@ export default function EventRegisterScreen() {
 
     try {
       let res: any;
-      if (Number(params.event.data.envhBallot || 0) === 1) {
+      if (
+        Number(params.event.data.evnhType) === 7 ||
+        Number(params.event.data.evnhType) === 1
+      ) {
         console.log('registerEvent', JSON.stringify(payload));
         res = await EventService.registerEvent(payload);
       } else {

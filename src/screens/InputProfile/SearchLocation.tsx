@@ -90,6 +90,7 @@ export default function SearchLocationScreen() {
                     mbsdCity: item.mlocRegency,
                     mbsdProvinces: item.mlocProvince,
                     mbsdAddress: item.mlocName,
+                    mbsdRawAddress: item.mlocName,
                   }));
                   navigation.goBack();
                 }}>

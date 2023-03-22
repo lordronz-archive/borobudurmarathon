@@ -272,12 +272,12 @@ export default function useInit() {
       console.info('Number(data.authTelephone) === 0');
       if (!config.isPhoneVerificationRequired) {
         checkAccount({...data, authTelephone: 1}, profile);
-      } else if (profile.linked.zmemAuusId[0].auusPhone) {
+      } else if (profile?.linked?.zmemAuusId?.[0]?.auusPhone) {
         // dianggap valid aja dulu
         checkAccount({...data, authTelephone: 1}, profile);
       } else {
         const phoneNumber = cleanPhoneNumber(
-          profile.linked.zmemAuusId[0].auusPhone,
+          profile?.linked?.zmemAuusId?.[0]?.auusPhone,
         );
 
         if (phoneNumber) {

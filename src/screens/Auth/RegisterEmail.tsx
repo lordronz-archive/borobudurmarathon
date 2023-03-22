@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, HStack, Text, useToast, VStack} from 'native-base';
+import {HStack, Text, useToast, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -15,7 +15,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Button from '../../components/buttons/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import AppContainer from '../../layout/AppContainer';
-import { getApiErrors } from '../../helpers/apiErrors';
+import {getApiErrors} from '../../helpers/apiErrors';
+import { GENDER_OPTIONS } from '../../assets/data/gender';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -79,10 +80,12 @@ export default function RegisterEmailScreen() {
   const signup = async () => {
     try {
       setLoading(true);
-      const result = await AuthService.signup({
+      const data = {
         ...form,
         ptmmLanguage: 1,
-      });
+      };
+      console.info('signup data', JSON.stringify(data));
+      const result = await AuthService.signup(data);
       console.info('register result', result);
 
       toast.show({
@@ -94,6 +97,9 @@ export default function RegisterEmailScreen() {
       navigation.navigate('EmailVerificationWhenRegister', {
         email: form.ptmmEmail,
         onSuccess: () => {
+          toast.show({
+            description: 'Registered successfully',
+          });
           navigation.navigate('SignInEmail');
         },
       });
@@ -155,10 +161,7 @@ export default function RegisterEmailScreen() {
                 errorMessage={errors.ptmmFullName}
               />
               <SelectInput
-                items={[
-                  {label: 'Male', value: '0'},
-                  {label: 'Female', value: '1'},
-                ]}
+                items={GENDER_OPTIONS}
                 placeholder="Choose gender"
                 label="Gender"
                 onValueChange={val => setForm({...form, ptmmGender: val})}

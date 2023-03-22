@@ -52,7 +52,7 @@ import {GENDER_OPTIONS} from '../../assets/data/gender';
 import ImageCropPicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
-import { getApiErrors } from '../../helpers/apiErrors';
+import {getApiErrors} from '../../helpers/apiErrors';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -138,41 +138,47 @@ export default function ChooseCitizenScreen({route}: Props) {
 
   useEffect(() => {
     setAccountInformation({
-      name: user?.linked.mbsdZmemId?.[0].mbsdFullName || '',
-      phoneNumber: cleanPhoneNumber(user?.linked.zmemAuusId[0].auusPhone) || '',
-      birthdate: user?.linked.mbsdZmemId?.[0].mbsdBirthDate
-        ? new Date(user?.linked.mbsdZmemId?.[0].mbsdBirthDate)
+      name:
+        user?.linked.mbsdZmemId?.[0]?.mbsdFullName ||
+        user?.data?.[0]?.zmemFullName ||
+        '',
+      phoneNumber:
+        cleanPhoneNumber(user?.linked.zmemAuusId[0]?.auusPhone) || '',
+      birthdate: user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate
+        ? new Date(user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate)
         : undefined,
     });
     setProfile({
-      mbsdIDNumber: user?.linked.mbsdZmemId?.[0].mbsdIDNumber || '',
-      mbsdBirthDate: user?.linked.mbsdZmemId?.[0].mbsdBirthDate || '',
-      mbsdBirthPlace: user?.linked.mbsdZmemId?.[0].mbsdBirthPlace || '',
-      mbsdGender: user?.linked.mbsdZmemId?.[0].mbsdGender
-        ? String(user?.linked.mbsdZmemId?.[0].mbsdGender)
+      mbsdIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber || '',
+      mbsdBirthDate: user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate || '',
+      mbsdBirthPlace: user?.linked.mbsdZmemId?.[0]?.mbsdBirthPlace || '',
+      mbsdGender: user?.linked?.mbsdZmemId?.[0]?.mbsdGender
+        ? String(user?.linked?.mbsdZmemId?.[0]?.mbsdGender)
+        : user?.data && user?.data.length > 0 && user?.data[0].zmemGender
+        ? String(user?.data[0].zmemGender)
         : '0',
-      mbsdBloodType: user?.linked.mbsdZmemId?.[0].mbsdBloodType
-        ? Number(user?.linked.mbsdZmemId?.[0].mbsdBloodType)
+      mbsdBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType
+        ? Number(user?.linked.mbsdZmemId?.[0]?.mbsdBloodType)
         : 0,
-      mbsdNationality: user?.linked.mbsdZmemId?.[0].mbsdNationality || '',
-      mbsdCountry: user?.linked.mbsdZmemId?.[0].mbsdCountry || '',
-      mbsdCity: user?.linked.mbsdZmemId?.[0].mbsdCity || '',
-      mbsdProvinces: user?.linked.mbsdZmemId?.[0].mbsdProvinces || '',
-      mbsdAddress: user?.linked.mbsdZmemId?.[0].mbsdAddress || '',
-      mbsdRawAddress: user?.linked.mbsdZmemId?.[0].mbsdAddress || '',
-      mbsdIDNumberType: user?.linked.mbsdZmemId?.[0].mbsdIDNumberType
-        ? Number(user?.linked.mbsdZmemId?.[0].mbsdIDNumberType)
+      mbsdNationality: user?.linked.mbsdZmemId?.[0]?.mbsdNationality || '',
+      mbsdCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry || '',
+      mbsdCity: user?.linked.mbsdZmemId?.[0]?.mbsdCity || '',
+      mbsdProvinces: user?.linked.mbsdZmemId?.[0]?.mbsdProvinces || '',
+      mbsdAddress: user?.linked.mbsdZmemId?.[0]?.mbsdAddress || '',
+      mbsdRawAddress: user?.linked.mbsdZmemId?.[0]?.mbsdAddress || '',
+      mbsdIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType
+        ? Number(user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType)
         : 0,
-      mbsdFile: user?.linked.mbsdZmemId?.[0].mbsdFile
-        ? Number(user?.linked.mbsdZmemId?.[0].mbsdFile)
+      mbsdFile: user?.linked.mbsdZmemId?.[0]?.mbsdFile
+        ? Number(user?.linked.mbsdZmemId?.[0]?.mbsdFile)
         : 0,
-      mmedEducation: user?.linked.mmedZmemId?.[0].mmedEducation || '',
-      mmedOccupation: user?.linked.mmedZmemId?.[0].mmedOccupation || '',
-      mmedIncome: user?.linked.mmedZmemId?.[0].mmedIncome || '',
+      mmedEducation: user?.linked.mmedZmemId?.[0]?.mmedEducation || '-',
+      mmedOccupation: user?.linked.mmedZmemId?.[0]?.mmedOccupation || '-',
+      mmedIncome: user?.linked.mmedZmemId?.[0]?.mmedIncome || '-',
     });
     setCitizen(
-      user?.linked.mbsdZmemId?.[0].mbsdNationality === 'Indonesian' ||
-        Number(user?.linked.mbsdZmemId?.[0].mbsdIDNumberType) === 1
+      user?.linked.mbsdZmemId?.[0]?.mbsdNationality === 'Indonesian' ||
+        Number(user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType) === 1
         ? 'WNI'
         : 'WNA',
     );
@@ -723,8 +729,10 @@ export default function ChooseCitizenScreen({route}: Props) {
               {stepCount === 3 && profileStep === 2 && (
                 <VStack my="3" space="2">
                   <TextInput
-                    placeholder="Enter your identity number"
-                    label="Identity Number"
+                    placeholder={'Enter your identity number'}
+                    label={`Identity Number (${
+                      getIDNumberType(citizen).label
+                    })`}
                     helperText={`Enter your ${
                       citizen === 'WNI' ? 'KTP' : 'Passport'
                     } ID number`}
@@ -885,6 +893,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                         setProfile(oldVal => ({
                           ...oldVal,
                           mbsdAddress: val,
+                          mbsdRawAddress: val,
                         }))
                       }
                     />
@@ -927,7 +936,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('InfoVerifyLater');
-                    }}></TouchableOpacity>
+                    }}
+                  />
                 </HStack>
               </Checkbox>
             )}

@@ -28,6 +28,7 @@ import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
+import httpRequest from '../../helpers/httpRequest';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -56,6 +57,8 @@ export default function MyEventDetail() {
 
   const [tmpPayment, setTmpPayment] = useState<any>();
   const [confirmPayment, setConfirmPayment] = useState<any>();
+
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
 
   const checkStatus = async () => {
     let status;
@@ -139,6 +142,25 @@ export default function MyEventDetail() {
       if (resDetailEvent && resDetailEvent) {
         setDetailEvent(resDetailEvent);
       }
+
+      httpRequest
+        .get('member_resource/transaction')
+        .then(res => {
+          if (res.data) {
+            console.info('member_resourcee', JSON.stringify(res));
+
+            const registerEvent = res.data?.linked?.mregTrnsId?.find(
+              (item: any) =>
+                item.trnsEventId === params.eventId &&
+                (item.trnsConfirmed === 1 ||
+                  item.trnsExpiredTime?.getTime() > new Date().getTime()),
+            );
+            setIsRegistered(registerEvent ? true : false);
+          }
+        })
+        .catch(err => {
+          console.info('error get transaction', err);
+        });
     } catch (error) {
       console.info('Error to fetch data', getErrorMessage(error));
     } finally {
@@ -412,12 +434,16 @@ export default function MyEventDetail() {
                             })
                           : handlePayNow()
                         : setShowModal(true)
-                      : detailEvent &&
-                        navigation.navigate('EventRegister', {
+                      : detailEvent && !isRegistered
+                      ? navigation.navigate('EventRegister', {
                           event: detailEvent,
                           selectedCategoryId:
                             detailTransaction?.linked?.evrlTrnsId?.[0]
                               ?.evpaEvncId,
+                        })
+                      : Toast.show({
+                          title: 'Failed to register event',
+                          description: 'You have registered for this event',
                         });
                     setConfirmPayment(undefined);
                     setIsLoadingButton(false);
@@ -431,7 +457,7 @@ export default function MyEventDetail() {
                   // borderRadius={8}
                   // alignSelf={'center'}
                   // bg={'#EB1C23'}
-                  >
+                >
                   <Text
                     fontWeight={500}
                     color={colors.white}

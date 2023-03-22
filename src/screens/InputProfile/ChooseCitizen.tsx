@@ -50,6 +50,7 @@ import {useDemo} from '../../context/demo.context';
 import {getIDNumberType} from '../../assets/data/ktpPassport';
 import {GENDER_OPTIONS} from '../../assets/data/gender';
 import ImageCropPicker, {ImageOrVideo} from 'react-native-image-crop-picker';
+import useInit from '../../hooks/useInit';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
@@ -62,6 +63,7 @@ export default function ChooseCitizenScreen({route}: Props) {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {demoKTPVerification} = useDemo();
   const {t} = useTranslation();
+  const {getProfile} = useInit();
 
   const {
     step,
@@ -411,6 +413,7 @@ export default function ChooseCitizenScreen({route}: Props) {
       );
       const res = await AuthService.setprofile(profileData);
       console.info('Setprofile result: ', res);
+      getProfile();
 
       navigation.replace('Welcome');
     } catch (err) {

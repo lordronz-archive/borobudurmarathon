@@ -291,9 +291,14 @@ export default function EventRegisterScreen() {
 
     try {
       let res: any;
-      if (Number(params.event.data.evnhBallot || 0) === 1) {
+      if (
+        Number(params.event.data.evnhType) === 7 ||
+        Number(params.event.data.evnhType) === 1
+      ) {
+        console.log('registerEvent', JSON.stringify(payload));
         res = await EventService.registerEvent(payload);
       } else {
+        console.log('registerVREvent', JSON.stringify(payload));
         res = await EventService.registerVREvent(payload);
       }
       console.info(JSON.stringify(res.data));
@@ -362,7 +367,7 @@ export default function EventRegisterScreen() {
     const requiredFields = fields
       .filter(v => v.evhfIsRequired.toString() === '1')
       .map(v => v.evhfName);
-    return requiredFields.every(v => v in fieldsData && !!fieldsData[v]);
+    return requiredFields.every(v => v in fieldsData && fieldsData[v] != null);
   };
 
   const originalPrice = prices[0].originalPrice;
@@ -520,7 +525,7 @@ export default function EventRegisterScreen() {
             h="12"
             isLoading={isLoading}
             // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
-            isDisabled={checkbox[0] !== 'agreed'}
+            isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
             onPress={() => {
               if (checkbox[0] !== 'agreed') {
                 toast.show({

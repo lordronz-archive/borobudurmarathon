@@ -47,6 +47,17 @@ export default function WelcomeScreen() {
     );
   }
 
+  const galleriesRaw = galleries?.data.map(v => v.mgalUrl);
+  const galleriesRandomized =
+    galleriesRaw && galleriesRaw?.length > 7 ? galleriesRaw : [];
+  if (galleriesRaw && !galleriesRandomized.length) {
+    for (let i = 0; i < 8; ++i) {
+      const temp =
+        galleriesRaw[Math.floor(Math.random() * galleriesRaw.length)];
+      galleriesRandomized.push(temp);
+    }
+  }
+
   return (
     <VStack px="2" flex="1">
       <HStack flex="9" space={10.51} py="3">
@@ -56,7 +67,7 @@ export default function WelcomeScreen() {
             borderRadius={8}
             source={{
               uri:
-                galleries?.data[0]?.mgalUrl ||
+                galleriesRandomized[0] ||
                 'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
@@ -101,8 +112,7 @@ export default function WelcomeScreen() {
             borderRadius={8}
             source={{
               uri:
-                galleries?.data[1]?.mgalUrl ||
-                galleries?.data[0]?.mgalUrl ||
+                galleriesRandomized[1] ||
                 'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
@@ -115,8 +125,7 @@ export default function WelcomeScreen() {
               borderRadius={8}
               source={{
                 uri:
-                  galleries?.data[2]?.mgalUrl ||
-                  galleries?.data[0]?.mgalUrl ||
+                  galleriesRandomized[2] ||
                   'https://wallpaperaccess.com/full/317501.jpg',
               }}
               alt="Welcome Image"
@@ -126,8 +135,7 @@ export default function WelcomeScreen() {
               borderRadius={8}
               source={{
                 uri:
-                  galleries?.data[3]?.mgalUrl ||
-                  galleries?.data[0]?.mgalUrl ||
+                  galleriesRandomized[3] ||
                   'https://wallpaperaccess.com/full/317501.jpg',
               }}
               alt="Welcome Image"
@@ -138,8 +146,7 @@ export default function WelcomeScreen() {
             borderRadius={8}
             source={{
               uri:
-                galleries?.data[4]?.mgalUrl ||
-                galleries?.data[0]?.mgalUrl ||
+                galleriesRandomized[4] ||
                 'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
@@ -149,8 +156,7 @@ export default function WelcomeScreen() {
             borderRadius={8}
             source={{
               uri:
-                galleries?.data[5]?.mgalUrl ||
-                galleries?.data[0]?.mgalUrl ||
+                galleriesRandomized[5] ||
                 'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
@@ -160,8 +166,7 @@ export default function WelcomeScreen() {
             borderRadius={8}
             source={{
               uri:
-                galleries?.data[6]?.mgalUrl ||
-                galleries?.data[0]?.mgalUrl ||
+                galleriesRandomized[6] ||
                 'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"
@@ -171,8 +176,7 @@ export default function WelcomeScreen() {
             borderRadius={8}
             source={{
               uri:
-                galleries?.data[7]?.mgalUrl ||
-                galleries?.data[0]?.mgalUrl ||
+                galleriesRandomized[7] ||
                 'https://wallpaperaccess.com/full/317501.jpg',
             }}
             alt="Welcome Image"

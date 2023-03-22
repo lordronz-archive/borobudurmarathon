@@ -3,7 +3,6 @@ import {
   Text,
   VStack,
   ScrollView,
-  View,
   HStack,
   Avatar,
   Spinner,
@@ -278,10 +277,13 @@ export default function UpdateProfileScreen() {
                 bg="gray.400"
                 mx={2}
                 source={{
-                  uri:
-                    profilePic?.path ||
-                    `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}` ||
-                    '',
+                  uri: profilePic?.path
+                    ? profilePic?.path
+                    : user?.data &&
+                      user?.data.length > 0 &&
+                      user?.data[0]?.zmemPhoto
+                    ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
+                    : undefined,
                 }}>
                 {getShortCodeName(user?.data[0].zmemFullName || '')}
               </Avatar>

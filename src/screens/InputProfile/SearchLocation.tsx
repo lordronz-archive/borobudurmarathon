@@ -2,9 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {
   VStack,
   Divider,
-  HStack,
   Text,
-  Box,
   ScrollView,
   Spinner,
   SearchIcon,

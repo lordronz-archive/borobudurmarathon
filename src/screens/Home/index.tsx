@@ -51,9 +51,12 @@ export default function HomeScreen() {
                   bg="gray.400"
                   mx={2}
                   source={{
-                    uri: user?.data[0]?.zmemPhoto
-                      ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
-                      : undefined,
+                    uri:
+                      user?.data &&
+                      user?.data.length > 0 &&
+                      user?.data[0]?.zmemPhoto
+                        ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
+                        : undefined,
                   }}>
                   {getShortCodeName(user?.data[0].zmemFullName || '')}
                 </Avatar>

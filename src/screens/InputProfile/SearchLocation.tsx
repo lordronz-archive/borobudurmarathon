@@ -33,7 +33,7 @@ export default function SearchLocationScreen() {
     console.log('getlocation');
     const parameter = {
       filter: {
-        mlocName: searchValue,
+        mlocName: searchValue?.trim(),
       },
     };
 
@@ -58,8 +58,6 @@ export default function SearchLocationScreen() {
     }
     getLocation();
   }, [searchValue]);
-
-  console.log();
 
   return (
     <VStack px="4" flex="1">

@@ -54,7 +54,7 @@ export default function DetailEvent() {
   const params = route.params as RootStackParamList['EventDetail'];
 
   const [event, setEvent] = useState<GetEventResponse>();
-  // const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const [registeredEvent, setRegisteredEvent] = useState<any>();
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
@@ -166,28 +166,39 @@ export default function DetailEvent() {
   useEffect(() => {
     setIsLoading(true);
     EventService.getEvent(params.id)
-      .then(res => {
-        console.info('res get detail event', JSON.stringify(res));
-        setEvent(res);
-        // httpRequest
-        //   .get('member_resource/transaction')
-        //   .then(res => {
-        //     if (res.data) {
-        //       console.info('member_resourcee', JSON.stringify(res));
+      .then(resEvent => {
+        console.info('res get detail event', JSON.stringify(resEvent));
+        setEvent(resEvent);
 
-        //       const registerEvent = res.data?.linked?.mregTrnsId?.find(
-        //         (item: any) =>
-        //           item.trnsEventId === res.data.evnhId &&
-        //           (item.trnsConfirmed === 1 ||
-        //             res.data.evnhBallot === 1 ||
-        //             item.trnsExpiredTime?.getTime() > new Date().getTime()),
-        //       );
-        //       setIsRegistered(registerEvent ? true : false);
-        //     }
-        //   })
-        //   .catch(err => {
-        //     console.info('error get transaction', err);
-        //   });
+        httpRequest
+          .get('member_resource/transaction')
+          .then(resTransaction => {
+            if (resTransaction.data) {
+              const findEventRegister =
+                resTransaction.data?.linked?.mregTrnsId?.find(
+                  (item: any) =>
+                    item.trnsEventId?.toString() ===
+                      resEvent.data?.evnhId?.toString() &&
+                    (item.trnsConfirmed === '1' ||
+                      new Date(item.trnsExpiredTime)?.getTime() >
+                        new Date().getTime(),
+                    resEvent.data?.evnhBallot === '1'),
+                );
+
+              if (findEventRegister) {
+                const registeredEvent = resTransaction?.data?.data?.find(
+                  (item: any) =>
+                    item.mregOrderId === findEventRegister.trnsRefId,
+                );
+                if (registeredEvent) {
+                  setRegisteredEvent(registeredEvent);
+                }
+              }
+            }
+          })
+          .catch(err => {
+            console.info('error check registered event', err);
+          });
       })
       .catch(err => {
         Toast.show({
@@ -409,21 +420,23 @@ export default function DetailEvent() {
           shadow="3">
           <Button
             onPress={() => {
-              // if (!isRegistered) {
-              navigation.navigate('EventRegister', {
-                event,
-                selectedCategoryId: selected.id,
-              });
-              // } else {
-              //   Toast.show({
-              //     title: 'Failed to register event',
-              //     description: 'You have registered for this event',
-              //   });
-              // }
+              if (!registeredEvent) {
+                navigation.navigate('EventRegister', {
+                  event,
+                  selectedCategoryId: selected.id,
+                });
+              } else {
+                navigation.navigate('MyEventsDetail', {
+                  transactionId: registeredEvent.mregOrderId,
+                  eventId: registeredEvent.links?.mregEventId,
+                  isBallot: registeredEvent.mregType === 'MB' ? true : false,
+                  regStatus: registeredEvent.mregStatus,
+                });
+              }
             }}>
             {'Continue with ' +
               selected?.name +
-              (Number(event.data.envhBallot || 0) === 1 ? ' ~' : '')}
+              (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
           </Button>
         </Box>
       ) : (

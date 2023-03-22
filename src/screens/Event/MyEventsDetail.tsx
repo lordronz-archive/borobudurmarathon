@@ -58,7 +58,7 @@ export default function MyEventDetail() {
   const [tmpPayment, setTmpPayment] = useState<any>();
   const [confirmPayment, setConfirmPayment] = useState<any>();
 
-  // const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const [registeredEvent, setRegisteredEvent] = useState<any>();
 
   const checkStatus = async () => {
     let status;
@@ -143,24 +143,33 @@ export default function MyEventDetail() {
         setDetailEvent(resDetailEvent);
       }
 
-      // httpRequest
-      //   .get('member_resource/transaction')
-      //   .then(res => {
-      //     if (res.data) {
-      //       console.info('member_resourcee', JSON.stringify(res));
+      httpRequest
+        .get('member_resource/transaction')
+        .then(resTransaction => {
+          if (resTransaction.data) {
+            const findEventRegister =
+              resTransaction.data?.linked?.mregTrnsId?.find(
+                (item: any) =>
+                  item.trnsEventId?.toString() === params.eventId?.toString() &&
+                  (item.trnsConfirmed === '1' ||
+                    new Date(item.trnsExpiredTime)?.getTime() >
+                      new Date().getTime(),
+                  params?.isBallot),
+              );
 
-      //       const registerEvent = res.data?.linked?.mregTrnsId?.find(
-      //         (item: any) =>
-      //           item.trnsEventId === params.eventId &&
-      //           (item.trnsConfirmed === 1 ||
-      //             item.trnsExpiredTime?.getTime() > new Date().getTime()),
-      //       );
-      //       setIsRegistered(registerEvent ? true : false);
-      //     }
-      //   })
-      //   .catch(err => {
-      //     console.info('error get transaction', err);
-      //   });
+            if (findEventRegister) {
+              const registeredEvent = resTransaction?.data?.data?.find(
+                (item: any) => item.mregOrderId === findEventRegister.trnsRefId,
+              );
+              if (registeredEvent) {
+                setRegisteredEvent(registeredEvent);
+              }
+            }
+          }
+        })
+        .catch(err => {
+          console.info('error check registered event', err);
+        });
     } catch (error) {
       console.info('Error to fetch data', getErrorMessage(error));
     } finally {
@@ -434,18 +443,20 @@ export default function MyEventDetail() {
                             })
                           : handlePayNow()
                         : setShowModal(true)
-                      : detailEvent &&
-                        // && !isRegistered
-                        navigation.navigate('EventRegister', {
+                      : detailEvent && !registeredEvent
+                      ? navigation.navigate('EventRegister', {
                           event: detailEvent,
                           selectedCategoryId:
                             detailTransaction?.linked?.evrlTrnsId?.[0]
                               ?.evpaEvncId,
+                        })
+                      : navigation.navigate('MyEventsDetail', {
+                          transactionId: registeredEvent.mregOrderId,
+                          eventId: registeredEvent.links?.mregEventId,
+                          isBallot:
+                            registeredEvent.mregType === 'MB' ? true : false,
+                          regStatus: registeredEvent.mregStatus,
                         });
-                    // : Toast.show({
-                    //     title: 'Failed to register event',
-                    //     description: 'You have registered for this event',
-                    //   });
                     setConfirmPayment(undefined);
                     setIsLoadingButton(false);
                   }}

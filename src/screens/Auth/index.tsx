@@ -31,6 +31,7 @@ import LoadingBlock from '../../components/loading/LoadingBlock';
 import useInit from '../../hooks/useInit';
 import {useDemo} from '../../context/demo.context';
 import {useTranslation} from 'react-i18next';
+import AppContainer from '../../layout/AppContainer';
 
 export default function AuthScreen() {
   console.info('===render AuthScreen');
@@ -276,7 +277,7 @@ export default function AuthScreen() {
   }
 
   return (
-    <>
+    <AppContainer>
       <Box px="4" flex="1">
         <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
           <VStack space="3" alignItems="center" justifyContent="center">
@@ -438,6 +439,6 @@ export default function AuthScreen() {
           </Modal.Content>
         </Modal>
       )}
-    </>
+    </AppContainer>
   );
 }

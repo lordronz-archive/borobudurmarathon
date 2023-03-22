@@ -20,6 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import useInit from '../../hooks/useInit';
 import ViewProfile from '../InputProfile/components/ViewProfile';
+import AppContainer from '../../layout/AppContainer';
 
 export default function UpdateProfileScreen() {
   const {user} = useAuthUser();
@@ -261,7 +262,7 @@ export default function UpdateProfileScreen() {
   };
 
   return (
-    <View>
+    <AppContainer>
       <Header title={t('profile.title')} left="back" />
       <ScrollView>
         <VStack space="4" mb="5">
@@ -541,6 +542,6 @@ export default function UpdateProfileScreen() {
         setVisible={setIsShowImagePickerModal}
         onChange={image => handleChangeProfilePic(image)}
       />
-    </View>
+    </AppContainer>
   );
 }

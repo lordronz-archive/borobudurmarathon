@@ -10,6 +10,7 @@ import {getCookiesString} from '../../api/cookies';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import AppContainer from '../../layout/AppContainer';
 
 const uri =
   config.apiUrl.href.href + config.apiUrl.apis.member.checkSession.path;
@@ -33,41 +34,47 @@ export default function InitialScreen() {
   if (isLoadingWebView) {
     console.info('Initial isLoadingWebView -> uri', uri);
     return (
-      <Box flex={1}>
-        <WebView
-          source={{
-            uri,
-          }}
-          onError={() => {
-            setIsLoadingWebView(false);
-            // navigation.navigate('Auth');
-          }}
-          onLoadEnd={async () => {
-            const cookiesString = await getCookiesString();
-            console.info('Initial cookiesString', cookiesString);
-
-            if (cookiesString) {
-              init();
+      <AppContainer>
+        <Box flex={1}>
+          <WebView
+            source={{
+              uri,
+            }}
+            onError={() => {
               setIsLoadingWebView(false);
-            } else {
-              Toast.show({
-                title: 'Failed to get cookies',
-                description:
-                  "We can't get the cookies, please try again later.",
-              });
-              navigation.navigate('Auth');
-              setIsLoadingWebView(false);
-            }
-          }}
-          contentMode="mobile"
-          thirdPartyCookiesEnabled={true}
-          sharedCookiesEnabled={true}
-        />
+              // navigation.navigate('Auth');
+            }}
+            onLoadEnd={async () => {
+              const cookiesString = await getCookiesString();
+              console.info('Initial cookiesString', cookiesString);
 
-        {isLoadingWebView && <LoadingBlock text="Preparing..." />}
-      </Box>
+              if (cookiesString) {
+                init();
+                setIsLoadingWebView(false);
+              } else {
+                Toast.show({
+                  title: 'Failed to get cookies',
+                  description:
+                    "We can't get the cookies, please try again later.",
+                });
+                navigation.navigate('Auth');
+                setIsLoadingWebView(false);
+              }
+            }}
+            contentMode="mobile"
+            thirdPartyCookiesEnabled={true}
+            sharedCookiesEnabled={true}
+          />
+
+          {isLoadingWebView && <LoadingBlock text="Preparing..." />}
+        </Box>
+      </AppContainer>
     );
   }
 
-  return <LoadingBlock text="Preparing... Please wait..." />;
+  return (
+    <AppContainer>
+      <LoadingBlock text="Preparing... Please wait..." />
+    </AppContainer>
+  );
 }

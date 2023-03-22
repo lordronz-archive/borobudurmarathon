@@ -38,6 +38,7 @@ import {useTranslation} from 'react-i18next';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 import IconLocation from '../../assets/icons/IconLocation';
 import BannerFull from '../../components/carousel/BannerFull';
+import AppContainer from '../../layout/AppContainer';
 
 type Price = {
   id: string;
@@ -260,41 +261,45 @@ export default function DetailEvent() {
   };
 
   return (
-    <VStack>
-      <ScrollView backgroundColor={'#fff'}>
-        <Header
-          title=""
-          left="back"
-          right={
-            isLoading ? (
-              <Spinner size="sm" />
-            ) : (
-              <IconButton
-                onPress={shareHandler}
-                icon={<ShareIcon color="black" />}
-                borderRadius="full"
-              />
-            )
-          }
-        />
-        <Stack mx={4}>
-          <Text fontSize="sm" color={'#768499'} fontWeight={600} my={2}>
-            {(event?.data.evnhType
-              ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
-              : 'OTHER'
-            ).toUpperCase() +
-              ' ' +
-              (Number(event?.data.envhFuture || 0) === 1 ? '~' : '')}
-          </Text>
-          <Text fontSize="xl" fontWeight={700} mb="2">
-            {event?.data?.evnhName}
-          </Text>
-          <Text fontSize="sm" color={'#768499'} mb="2">
-            Updated at{' '}
-            {datetime.getDateString(event?.data.evnhRegistrationStart, 'short')}
-          </Text>
-        </Stack>
-        {/* <Image
+    <AppContainer>
+      <VStack>
+        <ScrollView backgroundColor={'#fff'}>
+          <Header
+            title=""
+            left="back"
+            right={
+              isLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <IconButton
+                  onPress={shareHandler}
+                  icon={<ShareIcon color="black" />}
+                  borderRadius="full"
+                />
+              )
+            }
+          />
+          <Stack mx={4}>
+            <Text fontSize="sm" color={'#768499'} fontWeight={600} my={2}>
+              {(event?.data.evnhType
+                ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
+                : 'OTHER'
+              ).toUpperCase() +
+                ' ' +
+                (Number(event?.data.envhFuture || 0) === 1 ? '~' : '')}
+            </Text>
+            <Text fontSize="xl" fontWeight={700} mb="2">
+              {event?.data?.evnhName}
+            </Text>
+            <Text fontSize="sm" color={'#768499'} mb="2">
+              Updated at{' '}
+              {datetime.getDateString(
+                event?.data.evnhRegistrationStart,
+                'short',
+              )}
+            </Text>
+          </Stack>
+          {/* <Image
           w={'100%'}
           minH={250}
           alt="fallback text"
@@ -305,143 +310,148 @@ export default function DetailEvent() {
           }
         /> */}
 
-        {event?.banner && event?.banner.length > 0 ? (
-          <BannerFull
-            entries={
-              event.banner.map(item => ({
-                title: item.eimgName,
-                imageUrl: item.eimgUrlImage,
-              }))
-              // (event?.data ? [event?.data] : [])
-              // .map(item => ({
-              //   title: item.evnhName,
-              //   imageUrl: item.evnhThumbnail,
-              // }))
-            }
-          />
-        ) : (
-          false
-        )}
+          {event?.banner && event?.banner.length > 0 ? (
+            <BannerFull
+              entries={
+                event.banner.map(item => ({
+                  title: item.eimgName,
+                  imageUrl: item.eimgUrlImage,
+                }))
+                // (event?.data ? [event?.data] : [])
+                // .map(item => ({
+                //   title: item.evnhName,
+                //   imageUrl: item.evnhThumbnail,
+                // }))
+              }
+            />
+          ) : (
+            false
+          )}
 
-        <Stack mx={4} mb={4}>
-          {event?.data?.evnhDescription ? (
-            <Text fontSize="sm" color={'#1E1E1E'} mt={3}>
-              {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
+          <Stack mx={4} mb={4}>
+            {event?.data?.evnhDescription ? (
+              <Text fontSize="sm" color={'#1E1E1E'} mt={3}>
+                {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
           maximus pulvinar ligula vel interdum. Duis rutrum, lacus non
           consectetur porta, nulla neque tristique justo, vitae sodales mauris
           nisl et quam. Etiam vel feugiat libero. Cras hendrerit leo ac turpis
           sodales, suscipit dignissim leo ornare. */}
-              {event?.data?.evnhDescription || 'No description'}
-            </Text>
-          ) : (
-            false
-          )}
-          {/* <Text mt="2" fontSize={14} fontWeight="600" color="#1E1E1E">
+                {event?.data?.evnhDescription || 'No description'}
+              </Text>
+            ) : (
+              false
+            )}
+            {/* <Text mt="2" fontSize={14} fontWeight="600" color="#1E1E1E">
             Read More
           </Text> */}
-        </Stack>
-        <Flex mx={4}>
-          {informations.map((info, index) => (
-            <Box key={index}>
-              <HStack my={3} space={3}>
-                <Stack>
-                  <Box p={14} bgColor={'#F4F6F9'} borderRadius={'10'}>
-                    {info.icon}
-                  </Box>
-                </Stack>
-                <Stack w="80%">
-                  <Text fontSize="sm" color={'#768499'} fontWeight={500}>
-                    {info.label}
-                  </Text>
-                  <Text fontSize="sm" fontWeight={400} mb="2" overflowX="auto">
-                    {info.description}
-                  </Text>
-                </Stack>
-              </HStack>
-              {index < informations.length - 1 && <Divider />}
-            </Box>
-          ))}
-        </Flex>
+          </Stack>
+          <Flex mx={4}>
+            {informations.map((info, index) => (
+              <Box key={index}>
+                <HStack my={3} space={3}>
+                  <Stack>
+                    <Box p={14} bgColor={'#F4F6F9'} borderRadius={'10'}>
+                      {info.icon}
+                    </Box>
+                  </Stack>
+                  <Stack w="80%">
+                    <Text fontSize="sm" color={'#768499'} fontWeight={500}>
+                      {info.label}
+                    </Text>
+                    <Text
+                      fontSize="sm"
+                      fontWeight={400}
+                      mb="2"
+                      overflowX="auto">
+                      {info.description}
+                    </Text>
+                  </Stack>
+                </HStack>
+                {index < informations.length - 1 && <Divider />}
+              </Box>
+            ))}
+          </Flex>
 
-        <Section
-          title="Event Pricing"
-          subtitle={t('event.chooseSuitableCategory') || ''}
-          mx={4}
-          my={3}>
-          <Radio.Group name="exampleGroup">
-            {prices
-              // .filter(price => price)
-              .map(price => (
-                <EventPricingCard
-                  key={price.id}
-                  title={price.name}
-                  subtitle={price.description}
-                  originalPrice={price.originalPrice}
-                  finalPrice={price.finalPrice}
-                  benefits={price.benefits}
-                  selected={selected && price.id === selected.id}
-                  onSelect={() => setSelected(price)}
-                />
-              ))}
-          </Radio.Group>
-        </Section>
-        <View py={100} />
-      </ScrollView>
+          <Section
+            title="Event Pricing"
+            subtitle={t('event.chooseSuitableCategory') || ''}
+            mx={4}
+            my={3}>
+            <Radio.Group name="exampleGroup">
+              {prices
+                // .filter(price => price)
+                .map(price => (
+                  <EventPricingCard
+                    key={price.id}
+                    title={price.name}
+                    subtitle={price.description}
+                    originalPrice={price.originalPrice}
+                    finalPrice={price.finalPrice}
+                    benefits={price.benefits}
+                    selected={selected && price.id === selected.id}
+                    onSelect={() => setSelected(price)}
+                  />
+                ))}
+            </Radio.Group>
+          </Section>
+          <View py={100} />
+        </ScrollView>
 
-      {isLoading && (
-        <Box
-          position="absolute"
-          width="100%"
-          height="100%"
-          justifyContent="center"
-          alignItems="center"
-          flex={1}>
+        {isLoading && (
           <Box
-            bg="gray.300"
-            opacity="0.9"
+            position="absolute"
             width="100%"
             height="100%"
-            position="absolute"
-          />
-          <Center>
-            <Spinner size="lg" />
-          </Center>
-        </Box>
-      )}
+            justifyContent="center"
+            alignItems="center"
+            flex={1}>
+            <Box
+              bg="gray.300"
+              opacity="0.9"
+              width="100%"
+              height="100%"
+              position="absolute"
+            />
+            <Center>
+              <Spinner size="lg" />
+            </Center>
+          </Box>
+        )}
 
-      {event && selected ? (
-        <Box
-          position="absolute"
-          bottom="0"
-          width="100%"
-          px="3"
-          py="3"
-          background="white"
-          shadow="3">
-          <Button
-            onPress={() => {
-              if (!registeredEvent) {
-                navigation.navigate('EventRegister', {
-                  event,
-                  selectedCategoryId: selected.id,
-                });
-              } else {
-                navigation.navigate('MyEventsDetail', {
-                  transactionId: registeredEvent.mregOrderId,
-                  eventId: registeredEvent.links?.mregEventId,
-                  isBallot: registeredEvent.mregType === 'MB' ? true : false,
-                  regStatus: registeredEvent.mregStatus,
-                });
-              }
-            }}>
-            {'Continue with ' +
-              selected?.name +
-              (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
-          </Button>
-        </Box>
-      ) : (
-        false
-      )}
-    </VStack>
+        {event && selected ? (
+          <Box
+            position="absolute"
+            bottom="0"
+            width="100%"
+            px="3"
+            py="3"
+            background="white"
+            shadow="3">
+            <Button
+              onPress={() => {
+                if (!registeredEvent) {
+                  navigation.navigate('EventRegister', {
+                    event,
+                    selectedCategoryId: selected.id,
+                  });
+                } else {
+                  navigation.navigate('MyEventsDetail', {
+                    transactionId: registeredEvent.mregOrderId,
+                    eventId: registeredEvent.links?.mregEventId,
+                    isBallot: registeredEvent.mregType === 'MB' ? true : false,
+                    regStatus: registeredEvent.mregStatus,
+                  });
+                }
+              }}>
+              {'Continue with ' +
+                selected?.name +
+                (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
+            </Button>
+          </Box>
+        ) : (
+          false
+        )}
+      </VStack>
+    </AppContainer>
   );
 }

@@ -15,6 +15,7 @@ import IconInformationCircle from '../../assets/icons/IconInformationCircle';
 import SummaryRecord from './components/SummaryRecord';
 import IconHamburgerMenu from '../../assets/icons/IconHamburgerMenu';
 import {useTranslation} from 'react-i18next';
+import AppContainer from '../../layout/AppContainer';
 
 export default function HomeScreen() {
   const navigation =
@@ -29,73 +30,78 @@ export default function HomeScreen() {
   // }, [isFocused]);
 
   return (
-    <ScrollView>
-      <Box backgroundColor={'#fff'}>
-        <Flex
-          mx="4"
-          justify={'space-between'}
-          direction="row"
-          alignItems="center">
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('Main', {screen: t('tab.more')})
-            }>
-            <Flex alignContent={'center'} direction="row" alignItems={'center'}>
-              <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
-              <Avatar
-                bg="gray.400"
-                mx={2}
-                source={{
-                  uri: user?.data[0]?.zmemPhoto
-                    ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
-                    : undefined,
+    <AppContainer>
+      <ScrollView>
+        <Box backgroundColor={'#fff'}>
+          <Flex
+            mx="4"
+            justify={'space-between'}
+            direction="row"
+            alignItems="center">
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Main', {screen: t('tab.more')})
+              }>
+              <Flex
+                alignContent={'center'}
+                direction="row"
+                alignItems={'center'}>
+                <Box bgColor={'#EB1C23'} w={2} h={10} my={4} ml={-4} />
+                <Avatar
+                  bg="gray.400"
+                  mx={2}
+                  source={{
+                    uri: user?.data[0]?.zmemPhoto
+                      ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
+                      : undefined,
+                  }}>
+                  {getShortCodeName(user?.data[0].zmemFullName || '')}
+                </Avatar>
+                <Text fontSize={'lg'} mx={2} fontWeight={700}>
+                  {t('Hello')},{' '}
+                  {user?.data[0].zmemFullName &&
+                  user?.data[0].zmemFullName.length > 15
+                    ? user?.data[0].zmemFullName.substring(0, 12) + '...'
+                    : user?.data[0].zmemFullName}
+                </Text>
+              </Flex>
+            </TouchableOpacity>
+            <Row>
+              <TouchableOpacity
+                style={{padding: 5}}
+                onPress={() => navigation.navigate('FAQ')}>
+                <IconInformationCircle size="xl" color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{padding: 7}}
+                onPress={() => {
+                  navigation.navigate('Main', {
+                    screen: t('tab.more'),
+                  });
                 }}>
-                {getShortCodeName(user?.data[0].zmemFullName || '')}
-              </Avatar>
-              <Text fontSize={'lg'} mx={2} fontWeight={700}>
-                {t('Hello')},{' '}
-                {user?.data[0].zmemFullName &&
-                user?.data[0].zmemFullName.length > 15
-                  ? user?.data[0].zmemFullName.substring(0, 12) + '...'
-                  : user?.data[0].zmemFullName}
-              </Text>
-            </Flex>
-          </TouchableOpacity>
-          <Row>
-            <TouchableOpacity
-              style={{padding: 5}}
-              onPress={() => navigation.navigate('FAQ')}>
-              <IconInformationCircle size="xl" color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{padding: 7}}
-              onPress={() => {
-                navigation.navigate('Main', {
-                  screen: t('tab.more'),
-                });
-              }}>
-              <IconHamburgerMenu size="lg" color="black" />
-            </TouchableOpacity>
-          </Row>
-        </Flex>
+                <IconHamburgerMenu size="lg" color="black" />
+              </TouchableOpacity>
+            </Row>
+          </Flex>
 
-        <SummaryRecord />
+          <SummaryRecord />
 
-        <Divider
-          mt="2"
-          mb="2"
-          _light={{
-            bg: 'muted.300',
-          }}
-          _dark={{
-            bg: 'muted.50',
-          }}
-        />
+          <Divider
+            mt="2"
+            mb="2"
+            _light={{
+              bg: 'muted.300',
+            }}
+            _dark={{
+              bg: 'muted.50',
+            }}
+          />
 
-        <SectionFeaturedEvents />
+          <SectionFeaturedEvents />
 
-        <SectionListEvent />
-      </Box>
-    </ScrollView>
+          <SectionListEvent />
+        </Box>
+      </ScrollView>
+    </AppContainer>
   );
 }

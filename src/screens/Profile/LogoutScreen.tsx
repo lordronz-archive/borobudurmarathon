@@ -11,8 +11,9 @@ import {useAuthUser} from '../../context/auth.context';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import useInit from '../../hooks/useInit';
 import {RootStackParamList} from '../../navigation/RootNavigator';
+import AppContainer from '../../layout/AppContainer';
 
-export default function LogoutScreen(props: Props) {
+export default function LogoutScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
@@ -169,7 +170,7 @@ export default function LogoutScreen(props: Props) {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <AppContainer>
       {state === 'logout-kompas-webview' ? (
         <WebView
           // source={{uri: 'https://my.borobudurmarathon.com'}}
@@ -222,6 +223,6 @@ export default function LogoutScreen(props: Props) {
             : 'Logout. Please wait...'
         }
       />
-    </View>
+    </AppContainer>
   );
 }

@@ -18,13 +18,18 @@ import BestRecord from './components/BestRecord';
 import Statistic from './components/Statistic';
 import SectionListMyEvents from './components/SectionListMyEvents';
 import ComingSoon from '../../components/ComingSoon';
+import AppContainer from '../../layout/AppContainer';
 
 export default function MyEvents() {
   const {colors} = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  return <ComingSoon />;
+  return (
+    <AppContainer>
+      <ComingSoon />
+    </AppContainer>
+  );
 
   // return (
   //   <ScrollView backgroundColor={colors.white} flex={1}>

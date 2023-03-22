@@ -21,6 +21,11 @@ export default function MainTabNavigator() {
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: colors.primary[900],
+        tabBarStyle: {
+          paddingBottom: 5,
+          paddingTop: 5,
+          height: 60,
+        },
       }}>
       <Tab.Screen
         name={t('tab.home')}

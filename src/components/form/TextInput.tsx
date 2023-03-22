@@ -77,6 +77,9 @@ export default function TextInput(props: TextInputProps) {
             value={props.value}
             onChangeText={props.onChangeText}
             autoCapitalize="none"
+            onBlur={() =>
+              props.value && props.onChangeText?.(props.value?.trim())
+            }
             keyboardType={props.keyboardType}
             // InputRightElement={
             //   props.loading ? (

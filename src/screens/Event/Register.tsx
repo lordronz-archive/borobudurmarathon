@@ -111,7 +111,15 @@ export default function EventRegisterScreen() {
           <Text
             textDecorationLine={'underline'}
             color="primary.900"
-            onPress={() => setOpenJersey(true)}>
+            onPress={() => {
+              if (event.data.evnhSizeChart) {
+                setOpenJersey(true);
+              } else {
+                toast.show({
+                  description: 'Jersey Size chart not found',
+                });
+              }
+            }}>
             See jersey size chart
           </Text>
         </Text>

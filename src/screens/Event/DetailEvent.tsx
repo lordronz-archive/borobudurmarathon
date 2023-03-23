@@ -14,8 +14,9 @@ import {
   Toast,
   View,
   VStack,
-  Center,
+  Alert as NBAlert,
   Spinner,
+  WarningOutlineIcon,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {EventService} from '../../api/event.service';
@@ -40,6 +41,7 @@ import IconLocation from '../../assets/icons/IconLocation';
 import BannerFull from '../../components/carousel/BannerFull';
 import AppContainer from '../../layout/AppContainer';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import {useAuthUser} from '../../context/auth.context';
 
 type Price = {
   id: string;
@@ -54,6 +56,7 @@ export default function DetailEvent() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
   const params = route.params as RootStackParamList['EventDetail'];
+  const {isVerified} = useAuthUser();
 
   const [event, setEvent] = useState<GetEventResponse>();
   const [registeredEvent, setRegisteredEvent] = useState<any>();
@@ -280,6 +283,17 @@ export default function DetailEvent() {
               )
             }
           />
+          {!isVerified && (
+            <NBAlert bgColor="warning.300">
+              <HStack alignItems="center">
+                <WarningOutlineIcon color="black" />
+                <Text ml="1" fontSize="xs">
+                  {t('profile.alertNotVerifiedMessage')}
+                </Text>
+              </HStack>
+            </NBAlert>
+          )}
+
           <Stack mx={4}>
             <Text fontSize="sm" color={'#768499'} fontWeight={600} my={2}>
               {(event?.data.evnhType
@@ -410,6 +424,7 @@ export default function DetailEvent() {
             background="white"
             shadow="3">
             <Button
+              disabled={!isVerified}
               onPress={() => {
                 if (!registeredEvent) {
                   navigation.navigate('EventRegister', {
@@ -429,6 +444,11 @@ export default function DetailEvent() {
                 selected?.name +
                 (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
             </Button>
+            {!isVerified && (
+              <Text color="warning.500" textAlign="center">
+                {t('profile.alertNotVerifiedMessage')}
+              </Text>
+            )}
           </Box>
         ) : (
           false

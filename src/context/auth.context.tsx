@@ -62,6 +62,8 @@ function useAuthUser() {
           loginType: type,
         },
       }),
+    isVerified:
+      Number(context.state.user?.linked?.mbsdZmemId?.[0]?.mbsdStatus) === 1,
   };
 }
 

@@ -19,6 +19,10 @@ import {
   useDisclose,
   Actionsheet,
   CheckCircleIcon,
+  Alert,
+  WarningOutlineIcon,
+  Badge,
+  CheckIcon,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -171,11 +175,22 @@ export default function MyProfile() {
               )}
             </Avatar>
             <VStack paddingLeft={2}>
-              <Text fontWeight="bold" fontSize="md">
-                {user && user.data && user.data.length > 0
-                  ? user?.data[0].zmemFullName
-                  : ''}
-              </Text>
+              <HStack alignItems="center" width="75%">
+                <Text fontWeight="bold" fontSize="md" numberOfLines={1} mr="2">
+                  {user && user.data && user.data.length > 0
+                    ? user?.data?.[0]?.zmemFullName
+                    : ''}
+                </Text>
+                <CheckCircleIcon color="blue.600" />
+                {/* <Badge ml="2" colorScheme="success" variant="subtle">
+                  <HStack alignItems="center">
+                    <CheckIcon color="white" />
+                    <Text color="white" fontSize="sm" ml="1">
+                      verified
+                    </Text>
+                  </HStack>
+                </Badge> */}
+              </HStack>
               <Text color={colors.gray[500]} fontSize="sm">
                 {user &&
                 user.linked &&
@@ -198,7 +213,7 @@ export default function MyProfile() {
                 position="absolute"
                 right={0}
                 top={-90}
-                zIndex={10}
+                zIndex={-1}
               />
               <Image
                 alt="hiasan"
@@ -206,7 +221,7 @@ export default function MyProfile() {
                 position="absolute"
                 right={0}
                 top={-95}
-                zIndex={0}
+                zIndex={-2}
               />
             </Box>
           )}
@@ -247,6 +262,15 @@ export default function MyProfile() {
             </Box>
           </Pressable>
         )}
+
+        {/* <Alert bgColor="warning.300" mx="2">
+          <HStack alignItems="center">
+            <WarningOutlineIcon color="black" />
+            <Text ml="1" fontSize="xs">
+              {t('profile.alertNotVerifiedMessage')}
+            </Text>
+          </HStack>
+        </Alert> */}
 
         <Box borderTopColor={colors.gray[500]}>
           {menus.map((menu, index) => (

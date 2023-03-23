@@ -160,6 +160,47 @@ export default function AuthScreen() {
     }
   };
 
+  const onLoadEndRegisterByKompas = async (nTry: number = 0) => {
+    const cookiesString = await getCookiesString();
+    console.info('cookiesString isNotRegistered true', cookiesString);
+
+    await sleep(1000);
+    if (cookiesString) {
+      // getProfile();
+      init();
+    } else if (nTry > 10) {
+      toast.show({
+        title: 'Failed to get cookies',
+        description: "We can't get the cookies, please try again later.",
+      });
+      navigation.navigate('Logout');
+    } else {
+      onLoadEndRegisterByKompas(nTry + 1);
+    }
+  };
+
+  const onLoadEndLoginByKompas = async (nTry: number = 0) => {
+    // setTimeout(() => {
+    //   init();
+    // }, 500);
+    // console.info('authorizationCode###event', event);
+    await sleep(1000);
+    const cookiesString = await getCookiesString();
+    console.info('authorizationCode###cookiesString', cookiesString);
+    if (cookiesString) {
+      init();
+    } else if (nTry > 5) {
+      setIsNotRegistered(true);
+      // toast.show({
+      //   title: 'Failed to get cookies',
+      //   description:
+      //     'Please try to use more stable internet connection. Or try again later.',
+      // });
+    } else {
+      onLoadEndLoginByKompas(nTry + 1);
+    }
+  };
+
   if (authorizationCode && isNotRegistered === true) {
     let uri =
       config.apiUrl.href.href +
@@ -239,47 +280,6 @@ export default function AuthScreen() {
       </Box>
     );
   }
-
-  const onLoadEndRegisterByKompas = async (nTry: number = 0) => {
-    const cookiesString = await getCookiesString();
-    console.info('cookiesString isNotRegistered true', cookiesString);
-
-    await sleep(1000);
-    if (cookiesString) {
-      // getProfile();
-      init();
-    } else if (nTry > 10) {
-      toast.show({
-        title: 'Failed to get cookies',
-        description: "We can't get the cookies, please try again later.",
-      });
-      navigation.navigate('Logout');
-    } else {
-      onLoadEndRegisterByKompas(nTry + 1);
-    }
-  };
-
-  const onLoadEndLoginByKompas = async (nTry: number = 0) => {
-    // setTimeout(() => {
-    //   init();
-    // }, 500);
-    // console.info('authorizationCode###event', event);
-    await sleep(1000);
-    const cookiesString = await getCookiesString();
-    console.info('authorizationCode###cookiesString', cookiesString);
-    if (cookiesString) {
-      init();
-    } else if (nTry > 5) {
-      setIsNotRegistered(true);
-      // toast.show({
-      //   title: 'Failed to get cookies',
-      //   description:
-      //     'Please try to use more stable internet connection. Or try again later.',
-      // });
-    } else {
-      onLoadEndLoginByKompas(nTry + 1);
-    }
-  };
 
   return (
     <AppContainer>

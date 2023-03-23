@@ -29,7 +29,7 @@ export default {
     forgotPasswordSubtitle: 'Reset your password here',
     resetPassword: 'Reset Password',
     description:
-      "Let's join and be part of the Borobudur Marathon community. The biggest running event in Central Java, Indonesia.",
+      "Let's join Borobudur Marathon, and be part of the Voice of Unity.",
     signInWith: 'Sign in with',
     signInWithRegistered: 'Sign in with the email you registered here',
     registerNewAccount: 'Register your new account here',
@@ -121,6 +121,8 @@ export default {
     city: 'City',
     address: 'Address',
     chooseProfilePicture: 'Choose profile picture',
+    alertNotVerifiedMessage:
+      'Your account is still in process to verification.',
   },
   consent: {
     title: 'Data Confirmation',

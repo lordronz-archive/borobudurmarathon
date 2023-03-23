@@ -1,5 +1,14 @@
-import React, { useEffect } from 'react';
-import {Row, Box, Divider, SectionList, Text} from 'native-base';
+import React, {useEffect} from 'react';
+import {
+  Row,
+  Box,
+  Divider,
+  SectionList,
+  Text,
+  HStack,
+  WarningOutlineIcon,
+  Alert,
+} from 'native-base';
 import {cleanPhoneNumber} from '../../../helpers/phoneNumber';
 import {useAuthUser} from '../../../context/auth.context';
 import moment from 'moment';
@@ -14,7 +23,7 @@ type Props = {
 };
 
 export default function ViewProfile(props: Props) {
-  const {user} = useAuthUser();
+  const {user, isVerified} = useAuthUser();
   const {getProfile} = useInit();
 
   useEffect(() => {
@@ -276,6 +285,18 @@ export default function ViewProfile(props: Props) {
       keyExtractor={(item, index) => item.label + index}
       ListFooterComponent={
         props.withoutMarginBottom ? undefined : <Box height="50" />
+      }
+      ListHeaderComponent={
+        isVerified ? undefined : (
+          <Alert bgColor="warning.300">
+            <HStack alignItems="center">
+              <WarningOutlineIcon color="black" />
+              <Text ml="1" fontSize="xs">
+                {t('profile.alertNotVerifiedMessage')}
+              </Text>
+            </HStack>
+          </Alert>
+        )
       }
     />
   );

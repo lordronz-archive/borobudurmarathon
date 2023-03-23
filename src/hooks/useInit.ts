@@ -259,8 +259,16 @@ export default function useInit() {
         });
     } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
       console.info("data.login === 'KompasId' && Number(data.consent) === 0");
-      navigation.navigate('DataConfirmation');
+      if (profile.linked.mbsdZmemId && profile.linked.mbsdZmemId.length > 0) {
+        navigation.navigate('DataConfirmation');
+      } else {
+        navigation.navigate('ChooseCitizen');
+      }
     } else if (Number(data.authProfile) === 0) {
+      toast.show({
+        title: 'Your profile is not complete',
+        description: 'Please complete your profile to continue',
+      });
       console.info('Number(data.authProfile) === 0');
       // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)
       // if (profile.linked.mbsdZmemId && profile.linked.mbsdZmemId[0]) {

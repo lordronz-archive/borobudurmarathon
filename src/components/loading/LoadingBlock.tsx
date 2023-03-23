@@ -3,6 +3,7 @@ import {Box, Center, Spinner, Text} from 'native-base';
 
 type Props = {
   text?: string;
+  style?: any;
 };
 export default function LoadingBlock(props: Props) {
   return (
@@ -15,6 +16,7 @@ export default function LoadingBlock(props: Props) {
         width: '100%',
         height: '100%',
         backgroundColor: '#ffffff',
+        ...(props.style || {})
       }}>
       <Center>
         <Spinner size="lg" />

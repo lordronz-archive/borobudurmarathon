@@ -43,7 +43,9 @@ export default function TimeInput(props: TimeInputProps) {
         <FormControl.Label flexWrap={'wrap'} px={3}>
           <HStack>
             {props.required && <Text color="primary.900">* </Text>}
-            <Text style={{fontSize: 12, color: '#768499'}}>{props.label}</Text>
+            <Text style={{fontSize: 12, color: '#768499'}}>
+              {props.label} (hh:mm)
+            </Text>
           </HStack>
           {props.required && (
             <Text
@@ -85,13 +87,19 @@ export default function TimeInput(props: TimeInputProps) {
               margin: 0,
               marginTop: 0,
             }} //override default styles
-            inputStyles={{margin: 0, padding: 0}}
+            inputStyles={{
+              margin: 0,
+              paddingVertical: 0,
+              paddingLeft: '20%',
+              paddingRight: '20%',
+            }}
             dropdownStyles={{
               borderRadius: 0,
               borderWidth: 0,
               padding: 0,
               margin: 0,
               marginTop: -12,
+              paddingLeft: '32%',
             }}
             defaultOption={{
               key: '00',
@@ -124,13 +132,19 @@ export default function TimeInput(props: TimeInputProps) {
               margin: 0,
               marginTop: 0,
             }} //override default styles
-            inputStyles={{margin: 0, padding: 0}}
+            inputStyles={{
+              margin: 0,
+              padding: 0,
+              paddingLeft: '15%',
+              paddingRight: '15%',
+            }}
             dropdownStyles={{
               borderRadius: 0,
               borderWidth: 0,
               padding: 0,
               margin: 0,
               marginTop: -12,
+              paddingLeft: '28%',
             }}
             defaultOption={{
               key: '00',

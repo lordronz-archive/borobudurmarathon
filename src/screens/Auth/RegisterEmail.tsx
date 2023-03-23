@@ -16,7 +16,7 @@ import Button from '../../components/buttons/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import AppContainer from '../../layout/AppContainer';
 import {getApiErrors} from '../../helpers/apiErrors';
-import { GENDER_OPTIONS } from '../../assets/data/gender';
+import {GENDER_OPTIONS} from '../../assets/data/gender';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -98,7 +98,7 @@ export default function RegisterEmailScreen() {
         email: form.ptmmEmail,
         onSuccess: () => {
           toast.show({
-            description: 'Registered successfully',
+            description: 'Registered successfully. Please login.',
           });
           navigation.navigate('SignInEmail');
         },

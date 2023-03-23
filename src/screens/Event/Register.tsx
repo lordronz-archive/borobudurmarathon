@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   Box,
@@ -12,7 +13,7 @@ import {
   Spinner,
   HStack,
 } from 'native-base';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
@@ -29,9 +30,14 @@ import ViewProfile from '../InputProfile/components/ViewProfile';
 import httpRequest from '../../helpers/httpRequest';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import ImageView from 'react-native-image-viewing';
-import {Platform} from 'react-native';
+import {Platform, View} from 'react-native';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 import AppContainer from '../../layout/AppContainer';
+import {
+  isSubField,
+  REGISTER_EVENT_CONDITIONS,
+} from '../../helpers/registerEvent';
+import {EvhfName} from '../../types/registerEvent.type';
 
 type Price = {
   id: string;
@@ -74,6 +80,12 @@ export default function EventRegisterScreen() {
 
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
+  const [showFields, setShowFields] = useState<EvhfName[]>([]);
+
+  // const [fields, setFields] = useState<EventFieldsEntity[]>([]);
+
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [fieldsData, setFieldsData] = React.useState<any>({});
 
   const fields = useMemo<EventFieldsEntity[]>(() => {
     const fieldResult =
@@ -114,11 +126,70 @@ export default function EventRegisterScreen() {
     //   return x.static === y.static ? 0 : x ? -1 : 1;
     // });
 
-    return [...fieldTop, ...fieldBottom];
+    const newFields = [...fieldTop, ...fieldBottom];
+
+    const fieldNames = newFields
+      .filter(item => !isSubField(item.evhfName))
+      .map(item => item.evhfName);
+
+    setShowFields([...fieldNames]);
+
+    return [...newFields];
   }, [params.event.fields]);
 
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [fieldsData, setFieldsData] = React.useState<any>({});
+  // useEffect(() => {
+  //   generateFields();
+  // }, [params.event.fields]);
+
+  // useEffect(() => {
+  //   if (Object.keys(REGISTER_EVENT_CONDITIONS).includes()) {
+
+  //   }
+  //   generateFields();
+  // }, [fieldsData]);
+
+  // const generateFields = () => {
+  //   const fieldResult =
+  //     params.event.fields && Array.isArray(params.event.fields)
+  //       ? params.event.fields
+  //       : params.event.fields && typeof params.event.fields === 'object'
+  //       ? (Object.values(params.event.fields) as EventFieldsEntity[])
+  //       : ([] as EventFieldsEntity[]);
+
+  //   bannedField.forEach(bF => {
+  //     let findIndex = fieldResult.findIndex(f => f.evhfName === bF);
+  //     if (findIndex !== -1) {
+  //       fieldResult[findIndex].static = true;
+  //     }
+  //   });
+  //   const jerseyIndex = fieldResult.findIndex(f =>
+  //     f.evhfName.toLowerCase().includes('jersey'),
+  //   );
+  //   if (jerseyIndex !== -1) {
+  //     fieldResult[jerseyIndex].helperText = (
+  //       <Text>
+  //         For more information about size,{' '}
+  //         <Text
+  //           textDecorationLine={'underline'}
+  //           color="primary.900"
+  //           onPress={() => setOpenJersey(true)}>
+  //           See jersey size chart
+  //         </Text>
+  //       </Text>
+  //     );
+  //   }
+
+  //   const fieldTop = fieldResult.filter(item => item.static);
+  //   const fieldBottom = fieldResult.filter(item => !item.static);
+
+  //   // fieldResult.sort((x, y) => {
+  //   //   // true values first
+  //   //   return x.static === y.static ? 0 : x ? -1 : 1;
+  //   // });
+
+  //   // return [...fieldTop, ...fieldBottom];
+  //   setFields([...fieldTop, ...fieldBottom]);
+  // };
 
   const onClose = () => setIsOpen(false);
 
@@ -315,74 +386,121 @@ export default function EventRegisterScreen() {
   };
 
   const event = params.event;
-  const prices: Price[] = (event?.categories || [])
-    .filter(cat => cat.evncId === params.selectedCategoryId)
-    .map(cat => {
-      const earlyBirdPrice = (event?.prices || []).find(
-        price => price.evcpEvncId === cat.evncId,
-      );
-      return {
-        id: cat.evncId,
-        name: cat.evncName,
-        description: cat.evncDesc
-          ? cat.evncDesc
-          : [
-              // cat.evncVrReps,
-              'Quota: ' +
-                (Number(cat.evncQuotaRegistration) -
-                  Number(cat.evncUseQuota) !==
-                Number(cat.evncQuotaRegistration)
-                  ? (
-                      Number(cat.evncQuotaRegistration) -
-                      Number(cat.evncUseQuota)
-                    ).toLocaleString('id-ID') +
-                    '/' +
-                    Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-                  : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
-              datetime.getDateRangeString(
-                cat.evncStartDate,
-                cat.evncVrEndDate || undefined,
-                'short',
-                'short',
-              ),
-              cat.evncMaxDistance
-                ? 'Distance: ' + cat.evncMaxDistance + ' km'
-                : undefined,
-              cat.evncMaxDistancePoint
-                ? cat.evncMaxDistancePoint + ' point'
-                : undefined,
-            ]
-              .filter(item => item)
-              .join(', '),
-        originalPrice: Number(cat.evncPrice),
-        finalPrice: earlyBirdPrice
-          ? Number(earlyBirdPrice.evcpPrice)
-          : Number(cat.evncPrice),
-        benefits: parseUnknownDataToArray(cat.evncBenefit).map(
-          item => item.label,
-        ),
-      };
-    });
+  const prices: Price[] = useMemo(
+    () =>
+      (event?.categories || [])
+        .filter(cat => cat.evncId === params.selectedCategoryId)
+        .map(cat => {
+          const earlyBirdPrice = (event?.prices || []).find(
+            price => price.evcpEvncId === cat.evncId,
+          );
+          return {
+            id: cat.evncId,
+            name: cat.evncName,
+            description: cat.evncDesc
+              ? cat.evncDesc
+              : [
+                  // cat.evncVrReps,
+                  'Quota: ' +
+                    (Number(cat.evncQuotaRegistration) -
+                      Number(cat.evncUseQuota) !==
+                    Number(cat.evncQuotaRegistration)
+                      ? (
+                          Number(cat.evncQuotaRegistration) -
+                          Number(cat.evncUseQuota)
+                        ).toLocaleString('id-ID') +
+                        '/' +
+                        Number(cat.evncQuotaRegistration).toLocaleString(
+                          'id-ID',
+                        )
+                      : Number(cat.evncQuotaRegistration).toLocaleString(
+                          'id-ID',
+                        )),
+                  datetime.getDateRangeString(
+                    cat.evncStartDate,
+                    cat.evncVrEndDate || undefined,
+                    'short',
+                    'short',
+                  ),
+                  cat.evncMaxDistance
+                    ? 'Distance: ' + cat.evncMaxDistance + ' km'
+                    : undefined,
+                  cat.evncMaxDistancePoint
+                    ? cat.evncMaxDistancePoint + ' point'
+                    : undefined,
+                ]
+                  .filter(item => item)
+                  .join(', '),
+            originalPrice: Number(cat.evncPrice),
+            finalPrice: earlyBirdPrice
+              ? Number(earlyBirdPrice.evcpPrice)
+              : Number(cat.evncPrice),
+            benefits: parseUnknownDataToArray(cat.evncBenefit).map(
+              item => item.label,
+            ),
+          };
+        }),
+    [],
+  );
 
-  const isRequiredFilled = () => {
-    const requiredFields = fields
-      .filter(v => v.evhfIsRequired.toString() === '1')
-      .map(v => v.evhfName);
-    return requiredFields.every(v => v in fieldsData && fieldsData[v] != null);
-  };
+  const displayedFields = useMemo(
+    () =>
+      fields
+        .filter(f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId')
+        .filter(f => !bannedField.includes(f.evhfName))
+        .filter(f => showFields.includes(f.evhfName)),
+    [fields, bannedField, showFields],
+  );
 
-  const originalPrice = prices[0].originalPrice;
-  const finalPrice = prices[0].finalPrice;
-  let textOriginalPrice;
-  let textFinalPrice;
+  const isRequiredFilled = useCallback(() => {
+    for (let i = 0, j = fields.length; i < j; ++i) {
+      if (fields[i].evhfIsRequired.toString() === '1') {
+        if (
+          fieldsData[fields[i].evhfName] == null ||
+          fieldsData[fields[i].evhfName] === ''
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }, [fields, fieldsData]);
 
-  if (originalPrice === finalPrice) {
-    textOriginalPrice;
-  } else if (finalPrice < originalPrice) {
-    // discount
-    textOriginalPrice = originalPrice.toLocaleString('id-ID');
-  }
-  textFinalPrice = finalPrice.toLocaleString('id-ID');
+  // const originalPrice = prices[0].originalPrice;
+  // const finalPrice = prices[0].finalPrice;
+  // let textOriginalPrice;
+  // let textFinalPrice;
+
+  // if (originalPrice === finalPrice) {
+  //   textOriginalPrice;
+  // } else if (finalPrice < originalPrice) {
+  //   // discount
+  //   textOriginalPrice = originalPrice.toLocaleString('id-ID');
+  // }
+  // textFinalPrice = finalPrice.toLocaleString('id-ID');
+
+  const [textOriginalPrice, textFinalPrice] = useMemo(() => {
+    const originalPrice = prices[0].originalPrice;
+    const finalPrice = prices[0].finalPrice;
+    let textOriginalPriceReturn;
+    let textFinalPriceReturn;
+    if (finalPrice < originalPrice) {
+      textOriginalPriceReturn = originalPrice.toLocaleString('id-ID');
+    }
+    textFinalPriceReturn = finalPrice.toLocaleString('id-ID');
+    return [textOriginalPriceReturn, textFinalPriceReturn];
+  }, []);
+
+  // console.info(
+  //   'fields --->',
+  //   JSON.stringify(
+  //     fields.map(item => ({
+  //       evhfName: item.evhfName,
+  //       evhfLabel: item.evhfLabel,
+  //     })),
+  //   ),
+  // );
+  // console.info('showFields --->', JSON.stringify(showFields));
 
   return (
     <AppContainer>
@@ -429,19 +547,98 @@ export default function EventRegisterScreen() {
             <Text bold fontSize="lg">
               {t('additionalInformation')}
             </Text>
+            {/* <Text>{JSON.stringify(showFields)}</Text> */}
             <VStack space="1.5">
-              {fields
-                .filter(
-                  f =>
-                    f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
-                )
-                .filter(f => !bannedField.includes(f.evhfName))
-                .map(field => (
+              {displayedFields.map(field => (
+                <View
+                  key={field.evhfId}
+                  style={
+                    isSubField(field.evhfName)
+                      ? {
+                          borderLeftColor: '#f2f2f2',
+                          borderLeftWidth: 10,
+                          borderRadius: 10,
+                        }
+                      : undefined
+                  }>
                   <RegistrationForm
                     key={field.evhfId}
                     {...field}
                     onValueChange={val => {
                       setFieldsData({...fieldsData, [field.evhfName]: val});
+                      if (REGISTER_EVENT_CONDITIONS[field.evhfName]) {
+                        console.info(
+                          'REGISTER_EVENT_CONDITIONS[field.evhfName]',
+                          REGISTER_EVENT_CONDITIONS[field.evhfName],
+                        );
+                        if (
+                          (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                            val
+                          ]
+                        ) {
+                          console.info(
+                            '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ],
+                          );
+                          if (
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ].show
+                          ) {
+                            console.info(
+                              '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].show',
+                            );
+                            console.info(
+                              (REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val].show,
+                            );
+                            setShowFields([
+                              ...showFields,
+                              ...((REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val].show || []),
+                            ]);
+                          } else if (
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ].hide
+                          ) {
+                            console.info(
+                              '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].hide',
+                            );
+                            console.info(
+                              (REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val].hide,
+                            );
+
+                            const newFields = [...showFields].filter(
+                              item =>
+                                !(
+                                  (REGISTER_EVENT_CONDITIONS as any)[
+                                    field.evhfName
+                                  ][val].hide || []
+                                ).includes(item),
+                            );
+                            setShowFields([...newFields]);
+                          }
+                        } else {
+                          console.info(
+                            'ELSEEEE - (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ],
+                          );
+                        }
+                      } else {
+                        console.info(
+                          'ELSE -- REGISTER_EVENT_CONDITIONS[field.evhfName]',
+                          REGISTER_EVENT_CONDITIONS[field.evhfName],
+                        );
+                      }
                     }}
                     value={fieldsData[field.evhfName]}
                     helperText={field.helperText}
@@ -456,7 +653,8 @@ export default function EventRegisterScreen() {
                     }
                     file={files ? files[field.evhfName] : undefined}
                   />
-                ))}
+                </View>
+              ))}
             </VStack>
           </VStack>
           <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
@@ -548,7 +746,7 @@ export default function EventRegisterScreen() {
             onClose={onClose}
             onPress={() => {
               setIsOpen(false);
-              navigation.navigate('Main', {screen: 'My Events'});
+              navigation.navigate('Main', {screen: t('tab.myEvents')});
             }}
             title={t('registration.registrationSuccess')}
             content={t('registration.registrationSuccessDesc')}

@@ -105,8 +105,8 @@ export default function EventRegisterScreen() {
       f.evhfName.toLowerCase().includes('jersey'),
     );
     if (jerseyIndex !== -1) {
-      fieldResult[jerseyIndex].helperText = (
-        <Text>
+      fieldResult[jerseyIndex].helperText = params.event.data.evnhSizeChart ? (
+        <Text fontSize="xs">
           For more information about size,{' '}
           <Text
             textDecorationLine={'underline'}
@@ -123,7 +123,7 @@ export default function EventRegisterScreen() {
             See jersey size chart
           </Text>
         </Text>
-      );
+      ) : null;
     }
 
     const fieldTop = fieldResult.filter(item => item.static);

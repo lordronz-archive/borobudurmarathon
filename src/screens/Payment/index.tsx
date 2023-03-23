@@ -413,17 +413,19 @@ export default function PaymentScreen() {
                 color="#3F4C5F"
                 fontSize={10}
                 textAlign={'center'}>
-                Punya pertanyaan seputar pembayaran event?
+                {t('payment.haveQuestion')}
               </Text>
-              <Text
-                fontWeight={600}
-                marginBottom={'15px'}
-                color="#1E1E1E"
-                fontSize={12}
-                textDecorationLine={'underline'}
-                textAlign={'center'}>
-                Lihat panduan
-              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('HowToPay')}>
+                <Text
+                  fontWeight={600}
+                  marginBottom={'15px'}
+                  color="#1E1E1E"
+                  fontSize={12}
+                  textDecorationLine={'underline'}
+                  textAlign={'center'}>
+                  {t('payment.seeTutorial')}
+                </Text>
+              </TouchableOpacity>
             </ScrollView>
           )}
         </>

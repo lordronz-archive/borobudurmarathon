@@ -145,12 +145,15 @@ export default {
     runningDate: 'Running Date',
     raceCategory: 'Race Category',
     updatedAt: 'Updated at',
+    registerEventAgain: 'Register Event Again',
   },
   payment: {
     paymentInformation: 'Payment Information',
     ensurePayment:
       'To complete Event Registration please ensure you have paid registration fee.',
     completePaymentBefore: 'Complete your payment before',
+    seeTutorial: 'See Tutorial',
+    haveQuestion: 'Have a question about payment?',
   },
   gender: {
     male: 'Male',

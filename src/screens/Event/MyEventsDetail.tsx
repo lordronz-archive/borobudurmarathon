@@ -482,7 +482,7 @@ export default function MyEventDetail() {
                       ? confirmPayment
                         ? `Pay Now via ${confirmPayment?.evptLabel}`
                         : 'Choose Payment Method'
-                      : 'Register Ulang Event'}
+                      : t('event.registerEventAgain')}
                   </Text>
                 </AppButton>
               )}
@@ -609,7 +609,7 @@ export default function MyEventDetail() {
             color="#3F4C5F"
             fontSize={10}
             textAlign={'center'}>
-            Punya pertanyaan seputar pembayaran event?
+            {t('payment.haveQuestion')}
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate('HowToPay')}>
             <Text
@@ -619,7 +619,7 @@ export default function MyEventDetail() {
               fontSize={12}
               textDecorationLine={'underline'}
               textAlign={'center'}>
-              Lihat panduan
+              {t('payment.seeTutorial')}
             </Text>
           </TouchableOpacity>
         </ScrollView>

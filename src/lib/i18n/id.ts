@@ -144,12 +144,15 @@ export default {
     runningDate: 'Tanggal Berlari',
     raceCategory: 'Kategori Lari',
     updatedAt: 'Diperbarui pada',
+    registerEventAgain: 'Register Ulang Event',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',
     ensurePayment:
       'Untuk menyelesaikan pendaftaran event, mohon pastikan anda sudah melunasi pembayaran.',
     completePaymentBefore: 'Selesaikan pembayaran sebelum',
+    seeTutorial: 'Lihat Panduan',
+    haveQuestion: 'Punya pertanyaan seputar pembayaran event?',
   },
   gender: {
     male: 'Laki-laki',

@@ -306,13 +306,13 @@ export default function DetailEvent() {
             <Text fontSize="xl" fontWeight={700} mb="2">
               {event?.data?.evnhName}
             </Text>
-            <Text fontSize="sm" color={'#768499'} mb="2">
+            {/* <Text fontSize="sm" color={'#768499'} mb="2">
               Updated at{' '}
               {datetime.getDateString(
                 event?.data.evnhRegistrationStart,
                 'short',
               )}
-            </Text>
+            </Text> */}
           </Stack>
           {/* <Image
           w={'100%'}

@@ -19,10 +19,6 @@ import {
   useDisclose,
   Actionsheet,
   CheckCircleIcon,
-  Alert,
-  WarningOutlineIcon,
-  Badge,
-  CheckIcon,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -51,7 +47,7 @@ export default function MyProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
-  const {user} = useAuthUser();
+  const {user, isVerified} = useAuthUser();
 
   // logout
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
@@ -181,7 +177,7 @@ export default function MyProfile() {
                     ? user?.data?.[0]?.zmemFullName
                     : ''}
                 </Text>
-                <CheckCircleIcon color="blue.600" />
+                {isVerified && <CheckCircleIcon color="blue.600" />}
                 {/* <Badge ml="2" colorScheme="success" variant="subtle">
                   <HStack alignItems="center">
                     <CheckIcon color="white" />

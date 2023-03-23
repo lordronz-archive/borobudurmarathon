@@ -22,7 +22,7 @@
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="splash_logo_partner" translatesAutoresizingMaskIntoConstraints="NO" id="lpO-hO-wy9">
                                 <rect key="frame" x="67" y="574" width="240" height="93"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
@@ -36,6 +36,6 @@
     </scenes>
     <resources>
         <image name="splash_logo_bormar_2023" width="2000" height="864"/>
-        <image name="splash_logo_partner" width="1592" height="363"/>
+        <image name="splash_logo_partner" width="796" height="181.5"/>
     </resources>
 </document>

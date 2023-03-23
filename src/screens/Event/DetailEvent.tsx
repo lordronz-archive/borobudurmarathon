@@ -321,7 +321,7 @@ export default function DetailEvent() {
           source={
             event?.data.evnhThumbnail
               ? {uri: event?.data.evnhThumbnail}
-              : require('../../assets/images/FeaturedEventImage.png')
+              : require('../../assets/images/no-image.png')
           }
         /> */}
 

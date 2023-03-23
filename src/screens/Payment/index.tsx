@@ -164,7 +164,7 @@ export default function PaymentScreen() {
                           uri: detailTransaction?.data?.linked?.trnsEventId?.[0]
                             ?.evnhThumbnail,
                         }
-                      : require('../../assets/images/FeaturedEventImage.png')
+                      : require('../../assets/images/no-image.png')
                   }
                   alt="Event Thumbnail"
                 />
@@ -183,7 +183,7 @@ export default function PaymentScreen() {
                         ?.trndDescription
                     }
                   </Text>
-                  <Text fontSize={13} fontWeight={400} color={'#1E1E1E'}>
+                  <Text fontSize={13} fontWeight={400} color={'#1E1E1E'} numberOfLines={1}>
                     {detailTransaction?.linked?.trnsEventId?.[0]?.evnhName}
                   </Text>
                 </VStack>

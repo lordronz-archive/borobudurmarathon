@@ -146,7 +146,7 @@ export default {
     updatedAt: 'Diperbarui pada',
   },
   payment: {
-    paymenInformation: 'Informasi Pembayaran',
+    paymentInformation: 'Informasi Pembayaran',
     ensurePayment:
       'Untuk menyelesaikan pendaftaran event, mohon pastikan anda sudah melunasi pembayaran.',
     completePaymentBefore: 'Selesaikan pembayaran sebelum',

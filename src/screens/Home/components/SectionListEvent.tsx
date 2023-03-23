@@ -53,7 +53,7 @@ export default function SectionListEvent() {
           image={
             item.evnhThumbnail
               ? {uri: item.evnhThumbnail}
-              : require('../../../assets/images/FeaturedEventImage.png')
+              : require('../../../assets/images/no-image.png')
           }
           isAvailable={
             !moment(item.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(

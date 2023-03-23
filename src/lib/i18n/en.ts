@@ -147,7 +147,7 @@ export default {
     updatedAt: 'Updated at',
   },
   payment: {
-    paymenInformation: 'Payment Information',
+    paymentInformation: 'Payment Information',
     ensurePayment:
       'To complete Event Registration please ensure you have paid registration fee.',
     completePaymentBefore: 'Complete your payment before',

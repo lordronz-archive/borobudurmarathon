@@ -6,7 +6,7 @@ import {Image} from 'native-base';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-const defaultImage = require('../../assets/images/FeaturedEventImage.png');
+const defaultImage = require('../../assets/images/no-image.png');
 
 const {width} = Dimensions.get('window');
 

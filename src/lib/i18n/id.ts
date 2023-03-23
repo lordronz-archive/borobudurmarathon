@@ -29,7 +29,7 @@ export default {
     forgotPasswordSubtitle: 'Reset password anda disini',
     resetPassword: 'Reset Password',
     description:
-      'Ayo bergabung menjadi bagian dari komunitas Borobudur Marathon. Event lari terbesar di Jawa Tengah, Indonesia.',
+      'Ayo bergabung dalam Borobudur Marathon, dan jadilah bagian dari Voice of Unity.',
     signInWith: 'Masuk dengan',
     signInWithRegistered: 'Masuk dengan email yang telah anda daftarkan disini',
     registerNewAccount: 'Buat akun baru anda disini',
@@ -123,6 +123,7 @@ export default {
     city: 'Kota',
     address: 'Alamat',
     chooseProfilePicture: 'Pilih foto profil',
+    alertNotVerifiedMessage: 'Akun Anda masih dalam proses verifikasi.',
   },
   consent: {
     title: 'Konfirmasi Data',
@@ -145,7 +146,7 @@ export default {
     updatedAt: 'Diperbarui pada',
   },
   payment: {
-    paymenInformation: 'Informasi Pembayaran',
+    paymentInformation: 'Informasi Pembayaran',
     ensurePayment:
       'Untuk menyelesaikan pendaftaran event, mohon pastikan anda sudah melunasi pembayaran.',
     completePaymentBefore: 'Selesaikan pembayaran sebelum',

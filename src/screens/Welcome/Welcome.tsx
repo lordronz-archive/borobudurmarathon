@@ -20,9 +20,11 @@ import {useTranslation} from 'react-i18next';
 import {WelcomeService} from '../../api/welcome.service';
 import AppContainer from '../../layout/AppContainer';
 // import useuser from '../../hooks/useuser';
+import useInit from '../../hooks/useInit';
 
 export default function WelcomeScreen() {
   const {user} = useAuthUser();
+  const {getProfile} = useInit();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
@@ -38,6 +40,8 @@ export default function WelcomeScreen() {
       console.log('GALLERY', JSON.stringify(data));
       setGalleries(data);
     })();
+
+    getProfile();
   }, []);
 
   if (!user) {

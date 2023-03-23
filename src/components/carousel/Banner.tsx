@@ -10,7 +10,7 @@ import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {useNavigation} from '@react-navigation/native';
 // import {EActionType, any} from '../../helpers/api/content/banner';
 
-const defaultImage = require('../../assets/images/FeaturedEventImage.png');
+const defaultImage = require('../../assets/images/no-image.png');
 // const imageLoading = require('../../assets/image-loading.png');
 // const playIcon = require('../../assets/play-icon.png');
 

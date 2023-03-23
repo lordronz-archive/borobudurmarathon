@@ -39,7 +39,7 @@ export default function AuthScreen() {
   const toast = useToast();
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const {getProfile, init} = useInit();
+  const {init} = useInit();
   const {
     isShowModal,
     showModal,
@@ -58,7 +58,6 @@ export default function AuthScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [initialCookieString, setInitialCookieString] = useState<string>();
   const {state, setLoginType} = useAuthUser();
   const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -73,17 +72,6 @@ export default function AuthScreen() {
       setAuthorizationCode(params.authorization_code);
     }
   }, [params?.authorization_code]);
-
-  useEffect(() => {
-    getCookie();
-  }, []);
-
-  const getCookie = async () => {
-    const strCookie = await getCookiesString();
-    if (strCookie) {
-      setInitialCookieString(strCookie);
-    }
-  };
 
   const redirect_uri = 'bormar://auth-me';
   // 'https://account.kompas.id/sso/check?redirect_uri=https://my.borobudurmarathon.com/dev.titudev.com/api/v1/kompasid/login/auth&client_id=3&state=borobudur_marathon&scope=nama%20lengkap,%20alamat,%20Alamat%20email%20dan%20mengirimkan%20pesan&response_type=code';
@@ -172,6 +160,47 @@ export default function AuthScreen() {
     }
   };
 
+  const onLoadEndRegisterByKompas = async (nTry: number = 0) => {
+    const cookiesString = await getCookiesString();
+    console.info('cookiesString isNotRegistered true', cookiesString);
+
+    await sleep(1000);
+    if (cookiesString) {
+      // getProfile();
+      init();
+    } else if (nTry > 10) {
+      toast.show({
+        title: 'Failed to get cookies',
+        description: "We can't get the cookies, please try again later.",
+      });
+      navigation.navigate('Logout');
+    } else {
+      onLoadEndRegisterByKompas(nTry + 1);
+    }
+  };
+
+  const onLoadEndLoginByKompas = async (nTry: number = 0) => {
+    // setTimeout(() => {
+    //   init();
+    // }, 500);
+    // console.info('authorizationCode###event', event);
+    await sleep(1000);
+    const cookiesString = await getCookiesString();
+    console.info('authorizationCode###cookiesString', cookiesString);
+    if (cookiesString) {
+      init();
+    } else if (nTry > 5) {
+      setIsNotRegistered(true);
+      // toast.show({
+      //   title: 'Failed to get cookies',
+      //   description:
+      //     'Please try to use more stable internet connection. Or try again later.',
+      // });
+    } else {
+      onLoadEndLoginByKompas(nTry + 1);
+    }
+  };
+
   if (authorizationCode && isNotRegistered === true) {
     let uri =
       config.apiUrl.href.href +
@@ -192,21 +221,8 @@ export default function AuthScreen() {
             uri,
           }}
           onError={() => setIsLoading(false)}
-          onLoadEnd={async () => {
-            const cookiesString = await getCookiesString();
-            console.info('cookiesString isNotRegistered true', cookiesString);
-
-            if (cookiesString) {
-              // getProfile();
-              init();
-            } else {
-              toast.show({
-                title: 'Failed to get cookies',
-                description:
-                  "We can't get the cookies, please try again later.",
-              });
-              navigation.navigate('Logout');
-            }
+          onLoadEnd={() => {
+            onLoadEndRegisterByKompas();
           }}
           contentMode="mobile"
           thirdPartyCookiesEnabled={true}
@@ -238,18 +254,7 @@ export default function AuthScreen() {
           }}
           onError={() => setIsLoading(false)}
           onLoadEnd={() => {
-            setTimeout(() => {
-              init();
-            }, 500);
-            // console.info('authorizationCode###event', event);
-            // await sleep(1000);
-            // const cookiesString = await getCookiesString();
-            // console.info('authorizationCode###cookiesString', cookiesString);
-            // if (cookiesString) {
-            //   init();
-            // } else {
-            //   setIsNotRegistered(true);
-            // }
+            onLoadEndLoginByKompas();
           }}
           contentMode="mobile"
           thirdPartyCookiesEnabled={true}

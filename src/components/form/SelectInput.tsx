@@ -73,8 +73,13 @@ export default function SelectInput(props: SelectInputProps) {
             marginTop: -8,
             marginBottom: -5,
           }} //override default styles
-          inputStyles={{margin: 0, padding: 0, color: '#444444'}}
-          dropdownStyles={{borderRadius: 0, borderWidth: 0, padding: 0}}
+          inputStyles={{margin: 0, padding: 0}}
+          dropdownStyles={{
+            borderRadius: 0,
+            borderWidth: 0,
+            padding: 0,
+            marginTop: -8,
+          }}
           defaultOption={
             props.value != null
               ? {

@@ -104,17 +104,18 @@ export default function MyCardEvent({
             </HStack>
           </HStack>
           {status === 'Waiting Payment' && (
-            <HStack space="2">
+            <HStack space="2" alignItems="center">
               <Alert
                 status="warning"
                 bgColor={'#FFF8E4'}
                 borderRadius={8}
-                flexGrow={1}>
+                width="75%">
                 <VStack space={2} flexShrink={1} w="100%">
                   <HStack
                     flexShrink={1}
                     space={2}
-                    justifyContent="space-between">
+                    justifyContent="space-between"
+                    alignItems="center">
                     <HStack space={2} flexShrink={1} alignItems="center">
                       <Alert.Icon mt="1" />
                       <Text fontSize={12} color="coolGray.800">

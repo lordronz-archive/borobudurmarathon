@@ -30,6 +30,7 @@ import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
+import {t} from 'i18next';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -188,7 +189,7 @@ export default function MyEventDetail() {
 
   const DATA_LIST = [
     {
-      title: 'Registration Dates',
+      title: t('event.registrationDate'),
       value: datetime.getDateRangeString(
         detailEvent?.data?.evnhRegistrationStart,
         detailEvent?.data?.evnhRegistrationEnd,
@@ -197,7 +198,7 @@ export default function MyEventDetail() {
       ),
     },
     {
-      title: 'Running Dates',
+      title: t('event.runningDate'),
       value: datetime.getDateRangeString(
         detailEvent?.data?.evnhStartDate,
         detailEvent?.data?.evnhEndDate,
@@ -206,11 +207,11 @@ export default function MyEventDetail() {
       ),
     },
     {
-      title: 'Location',
+      title: t('event.place'),
       value: detailEvent?.data?.evnhPlace || '-',
     },
     {
-      title: 'Total Payment',
+      title: t('event.totalPayment'),
       value: `IDR ${Number(
         detailTransaction?.data?.trnsAmount || 0,
       )?.toLocaleString('id-ID')}`,
@@ -493,7 +494,9 @@ export default function MyEventDetail() {
                 borderTopStyle={'solid'}>
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate('Main', {screen: 'My Events'})
+                    navigation.navigate('EventDetail', {
+                      id: Number(detailEvent?.data.evnhId),
+                    })
                   }>
                   <HStack
                     justifyContent={'space-between'}
@@ -506,7 +509,11 @@ export default function MyEventDetail() {
                           : 'OTHER'
                         ).toUpperCase()}
                       </Text>
-                      <Text fontWeight={500} color="#1E1E1E" fontSize={14}>
+                      <Text
+                        fontWeight={500}
+                        color="#1E1E1E"
+                        fontSize={14}
+                        numberOfLines={1}>
                         {detailEvent?.data?.evnhName}
                       </Text>
                     </VStack>
@@ -569,10 +576,19 @@ export default function MyEventDetail() {
                   borderTopWidth={1}
                   borderTopStyle={'solid'}>
                   <HStack justifyContent={'space-between'}>
-                    <Text fontWeight={400} color="#768499" fontSize={11}>
+                    <Text
+                      fontWeight={400}
+                      color="#768499"
+                      fontSize={11}
+                      width="35%">
                       {item.title}
                     </Text>
-                    <Text fontWeight={500} color="#1E1E1E" fontSize={12}>
+                    <Text
+                      fontWeight={500}
+                      color="#1E1E1E"
+                      fontSize={12}
+                      width="60%"
+                      textAlign="right">
                       {item.value}
                     </Text>
                   </HStack>
@@ -594,15 +610,17 @@ export default function MyEventDetail() {
             textAlign={'center'}>
             Punya pertanyaan seputar pembayaran event?
           </Text>
-          <Text
-            fontWeight={600}
-            marginBottom={'15px'}
-            color="#1E1E1E"
-            fontSize={12}
-            textDecorationLine={'underline'}
-            textAlign={'center'}>
-            Lihat panduan
-          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('HowToPay')}>
+            <Text
+              fontWeight={600}
+              marginBottom={'15px'}
+              color="#1E1E1E"
+              fontSize={12}
+              textDecorationLine={'underline'}
+              textAlign={'center'}>
+              Lihat panduan
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       )}
       <Actionsheet

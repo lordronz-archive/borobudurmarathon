@@ -98,6 +98,7 @@ export default function TimeInput(props: TimeInputProps) {
               borderWidth: 0,
               padding: 0,
               margin: 0,
+              marginTop: -12,
               paddingLeft: '32%',
             }}
             defaultOption={{
@@ -142,6 +143,7 @@ export default function TimeInput(props: TimeInputProps) {
               borderWidth: 0,
               padding: 0,
               margin: 0,
+              marginTop: -12,
               paddingLeft: '28%',
             }}
             defaultOption={{

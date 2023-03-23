@@ -39,6 +39,7 @@ import {parseUnknownDataToArray} from '../../helpers/parser';
 import IconLocation from '../../assets/icons/IconLocation';
 import BannerFull from '../../components/carousel/BannerFull';
 import AppContainer from '../../layout/AppContainer';
+import LoadingBlock from '../../components/loading/LoadingBlock';
 
 type Price = {
   id: string;
@@ -397,26 +398,7 @@ export default function DetailEvent() {
           <View py={100} />
         </ScrollView>
 
-        {isLoading && (
-          <Box
-            position="absolute"
-            width="100%"
-            height="100%"
-            justifyContent="center"
-            alignItems="center"
-            flex={1}>
-            <Box
-              bg="gray.300"
-              opacity="0.9"
-              width="100%"
-              height="100%"
-              position="absolute"
-            />
-            <Center>
-              <Spinner size="lg" />
-            </Center>
-          </Box>
-        )}
+        {isLoading && <LoadingBlock style={{opacity: 0.7}} />}
 
         {event && selected ? (
           <Box

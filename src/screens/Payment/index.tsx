@@ -30,6 +30,7 @@ import IconCircleCheck from '../../assets/icons/IconCircleCheck';
 import WebView from 'react-native-webview';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
+import {TransactionDetail} from '../../types/transaction.type';
 
 export default function PaymentScreen() {
   const {onCopy} = useClipboard();
@@ -41,7 +42,8 @@ export default function PaymentScreen() {
 
   const {colors} = useTheme();
   const [isLoading, setIsLoading] = useState(false);
-  const [detailTransaction, setDetailTransaction] = useState<any>();
+  const [detailTransaction, setDetailTransaction] =
+    useState<TransactionDetail>();
   const [activePayment, setActivePayment] = useState<any>();
 
   const {t} = useTranslation();
@@ -158,16 +160,16 @@ export default function PaymentScreen() {
                   marginRight={'15px'}
                   borderRadius={5}
                   source={
-                    detailTransaction?.data?.linked?.trnsEventId?.[0]
-                      ?.evnhThumbnail
+                    detailTransaction?.linked?.trnsEventId?.[0]?.evnhThumbnail
                       ? {
-                          uri: detailTransaction?.data?.linked?.trnsEventId?.[0]
+                          uri: detailTransaction?.linked?.trnsEventId?.[0]
                             ?.evnhThumbnail,
                         }
                       : require('../../assets/images/no-image.png')
                   }
                   alt="Event Thumbnail"
                 />
+
                 <VStack flex={1}>
                   <Text fontSize={12} fontWeight={600} color={'#768499'}>
                     {(detailTransaction?.linked?.trnsEventId?.[0]?.evnhType
@@ -183,7 +185,11 @@ export default function PaymentScreen() {
                         ?.trndDescription
                     }
                   </Text>
-                  <Text fontSize={13} fontWeight={400} color={'#1E1E1E'} numberOfLines={1}>
+                  <Text
+                    fontSize={13}
+                    fontWeight={400}
+                    color={'#1E1E1E'}
+                    numberOfLines={1}>
                     {detailTransaction?.linked?.trnsEventId?.[0]?.evnhName}
                   </Text>
                 </VStack>
@@ -313,7 +319,7 @@ export default function PaymentScreen() {
                               <TouchableOpacity
                                 style={{paddingVertical: 16}}
                                 onPress={() => {
-                                  onCopy(item.value);
+                                  onCopy(item.value as any);
                                   Toast.show({
                                     title: `${item.title} Copy to Clipboard`,
                                   });

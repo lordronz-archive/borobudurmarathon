@@ -95,38 +95,38 @@ export const REGISTER_EVENT_CONDITIONS: IGroup = {
 // }
 
 export function isSubField(field: string) {
-  console.info('================================== START');
+  // console.info('================================== START');
   for (const gfield in REGISTER_EVENT_CONDITIONS) {
     // gfield = evpaNationality
-    console.info('--------------------------------');
-    console.info('gfield --> ', gfield);
-    console.info(
-      '(REGISTER_EVENT_CONDITIONS as any)[gfield] -->',
-      (REGISTER_EVENT_CONDITIONS as any)[gfield],
-    );
+    // console.info('--------------------------------');
+    // console.info('gfield --> ', gfield);
+    // console.info(
+    //   '(REGISTER_EVENT_CONDITIONS as any)[gfield] -->',
+    //   (REGISTER_EVENT_CONDITIONS as any)[gfield],
+    // );
 
     if ((REGISTER_EVENT_CONDITIONS as any)[gfield]) {
       for (const objCondition of Object.values(
         (REGISTER_EVENT_CONDITIONS as any)[gfield],
       )) {
         // objCondition = {show: []}
-        console.info('objCondition --', objCondition);
+        // console.info('objCondition --', objCondition);
         if (objCondition) {
           for (const subfields of Object.values(objCondition)) {
             // subfields = ['evpaNationality]
-            console.info('subfields --', subfields);
+            // console.info('subfields --', subfields);
             if (subfields.includes(field)) {
               return true;
             }
           }
         }
       }
-      console.info(
-        '(REGISTER_EVENT_CONDITIONS as any)[gfield]',
-        (REGISTER_EVENT_CONDITIONS as any)[gfield],
-      );
+      // console.info(
+      //   '(REGISTER_EVENT_CONDITIONS as any)[gfield]',
+      //   (REGISTER_EVENT_CONDITIONS as any)[gfield],
+      // );
     }
   }
-  console.info('================================== END');
+  // console.info('================================== END');
   return false;
 }

@@ -455,16 +455,16 @@ export default function EventRegisterScreen() {
   }
   textFinalPrice = finalPrice.toLocaleString('id-ID');
 
-  console.info(
-    'fields --->',
-    JSON.stringify(
-      fields.map(item => ({
-        evhfName: item.evhfName,
-        evhfLabel: item.evhfLabel,
-      })),
-    ),
-  );
-  console.info('showFields --->', JSON.stringify(showFields));
+  // console.info(
+  //   'fields --->',
+  //   JSON.stringify(
+  //     fields.map(item => ({
+  //       evhfName: item.evhfName,
+  //       evhfLabel: item.evhfLabel,
+  //     })),
+  //   ),
+  // );
+  // console.info('showFields --->', JSON.stringify(showFields));
 
   return (
     <AppContainer>

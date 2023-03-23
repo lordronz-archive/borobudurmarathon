@@ -36,6 +36,7 @@ export default function TimeInput(props: TimeInputProps) {
 
   const [hours, setHours] = useState('00');
   const [mins, setMins] = useState('00');
+  const [secs, setSecs] = useState('00');
 
   return (
     <FormControl isInvalid={props.isInvalid}>
@@ -44,7 +45,7 @@ export default function TimeInput(props: TimeInputProps) {
           <HStack>
             {props.required && <Text color="primary.900">* </Text>}
             <Text style={{fontSize: 12, color: '#768499'}}>
-              {props.label} (hh:mm)
+              {props.label} (hh:mm:ss)
             </Text>
           </HStack>
           {props.required && (
@@ -65,7 +66,7 @@ export default function TimeInput(props: TimeInputProps) {
           <SelectList
             setSelected={(val: string) => {
               setHours(val);
-              props.onValueChange?.(val + ':' + mins);
+              props.onValueChange?.(val + ':' + mins + ':' + secs);
             }}
             data={[...Array(24)]
               .map((_, i) => i)
@@ -90,8 +91,6 @@ export default function TimeInput(props: TimeInputProps) {
             inputStyles={{
               margin: 0,
               paddingVertical: 0,
-              paddingLeft: '20%',
-              paddingRight: '20%',
             }}
             dropdownStyles={{
               borderRadius: 0,
@@ -99,7 +98,6 @@ export default function TimeInput(props: TimeInputProps) {
               padding: 0,
               margin: 0,
               marginTop: -12,
-              paddingLeft: '32%',
             }}
             defaultOption={{
               key: '00',
@@ -110,7 +108,7 @@ export default function TimeInput(props: TimeInputProps) {
           <SelectList
             setSelected={(val: string) => {
               setMins(val);
-              props.onValueChange?.(hours + ':' + val);
+              props.onValueChange?.(hours + ':' + val + ':' + secs);
             }}
             data={[...Array(60)]
               .map((_, i) => i)
@@ -135,8 +133,6 @@ export default function TimeInput(props: TimeInputProps) {
             inputStyles={{
               margin: 0,
               padding: 0,
-              paddingLeft: '15%',
-              paddingRight: '15%',
             }}
             dropdownStyles={{
               borderRadius: 0,
@@ -144,7 +140,48 @@ export default function TimeInput(props: TimeInputProps) {
               padding: 0,
               margin: 0,
               marginTop: -12,
-              paddingLeft: '28%',
+            }}
+            defaultOption={{
+              key: '00',
+              value: '00',
+            }}
+          />
+          <Text>:</Text>
+          <SelectList
+            setSelected={(val: string) => {
+              setSecs(val);
+              props.onValueChange?.(hours + ':' + mins + ':' + val);
+            }}
+            data={[...Array(60)]
+              .map((_, i) => i)
+              .map(n => ({
+                key: n.toString().padStart(2, '0'),
+                value: n.toString().padStart(2, '0'),
+              }))}
+            save="key"
+            search={
+              props.hideSearch != null
+                ? !props.hideSearch
+                : props.items.length > 4
+            }
+            placeholder={props.placeholder}
+            boxStyles={{
+              borderRadius: 0,
+              borderWidth: 0,
+              padding: 0,
+              margin: 0,
+              marginTop: 0,
+            }} //override default styles
+            inputStyles={{
+              margin: 0,
+              padding: 0,
+            }}
+            dropdownStyles={{
+              borderRadius: 0,
+              borderWidth: 0,
+              padding: 0,
+              margin: 0,
+              marginTop: -12,
             }}
             defaultOption={{
               key: '00',

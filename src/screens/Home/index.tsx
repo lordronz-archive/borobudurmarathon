@@ -89,7 +89,7 @@ export default function HomeScreen() {
             </Row>
           </Flex>
 
-          <SummaryRecord />
+          {/* <SummaryRecord /> */}
 
           <Divider
             mt="2"

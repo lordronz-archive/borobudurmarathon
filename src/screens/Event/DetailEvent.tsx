@@ -424,7 +424,9 @@ export default function DetailEvent() {
             background="white"
             shadow="3">
             <Button
-              disabled={!isVerified}
+              disabled={
+                !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
+              }
               onPress={() => {
                 if (!registeredEvent) {
                   navigation.navigate('EventRegister', {

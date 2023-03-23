@@ -335,9 +335,11 @@ export default function useInit() {
     setIsLoggingOut?: (val: boolean) => void,
     onCloseModalLogout?: () => void,
   ) => {
+    console.info('will logout');
     InAppBrowser.closeAuth();
     await clearCookies();
 
+    console.info('will dispatch logout');
     dispatch({type: EAuthUserAction.LOGOUT});
 
     if (setIsLoggingOut) {
@@ -351,6 +353,7 @@ export default function useInit() {
       });
     }
 
+    console.info('will dispatch logout');
     if (onCloseModalLogout) {
       onCloseModalLogout();
     }

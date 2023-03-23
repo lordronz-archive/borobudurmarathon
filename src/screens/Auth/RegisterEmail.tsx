@@ -41,7 +41,9 @@ export default function RegisterEmailScreen() {
   });
 
   const [emailWillBeCheck] = useDebounce(form.ptmmEmail, 500);
-  const [isEmailCanUse, setIsEmailCanUse] = useState<boolean | undefined>();
+  const [isEmailCanUse, setIsEmailCanUse] = useState<boolean | undefined>(
+    undefined,
+  );
 
   const [confirmPassword, setConfirmPassword] = useState<string>();
 
@@ -53,10 +55,8 @@ export default function RegisterEmailScreen() {
   }, [emailWillBeCheck]);
 
   const checkEmail = () => {
-    if (!form.ptmmEmail || (form.ptmmEmail && form.ptmmEmail.length <= 5)) {
-      if (!form.ptmmEmail) {
-        setIsEmailCanUse(false);
-      }
+    if (!form.ptmmEmail) {
+      setIsEmailCanUse(undefined);
       return false;
     }
     console.info('emailWillBeCheck', emailWillBeCheck);
@@ -185,7 +185,11 @@ export default function RegisterEmailScreen() {
                 loading={isLoadingCheckEmail}
                 isInvalid={!!errors.ptmmEmail || isEmailCanUse === false}
                 errorMessage={
-                  errors.ptmmEmail || 'Email already taken. Use another email.'
+                  errors.ptmmEmail
+                    ? errors.ptmmEmail
+                    : isEmailCanUse === false
+                    ? 'Email already taken. Use another email.'
+                    : undefined
                 }
                 rightIcon={
                   isEmailCanUse === true ? (

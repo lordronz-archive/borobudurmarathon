@@ -21,6 +21,8 @@ export default function LogoutScreen() {
   const {
     state: {loginType},
   } = useAuthUser();
+
+  const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState<
     'logout-kompas' | 'logout-kompas-webview' | 'logout-bormar-webview'
   >(loginType === 'Email' ? 'logout-bormar-webview' : 'logout-kompas-webview');
@@ -182,9 +184,17 @@ export default function LogoutScreen() {
             console.info('onLoadEnd logout-bormar-webview', event);
             setState('logout-bormar-webview');
           }}
-          renderLoading={() => (
-            <LoadingBlock text="~ Logout Kompas. Please wait..." />
-          )}
+          onError={event => {
+            setIsLoading(false);
+            console.info(
+              'logout-kompas-webview -- onError',
+              JSON.stringify(event),
+            );
+            Toast.show({
+              description: 'Failed to logout kompas',
+            });
+            setState('logout-bormar-webview');
+          }}
         />
       ) : state === 'logout-bormar-webview' ? (
         <WebView
@@ -196,6 +206,7 @@ export default function LogoutScreen() {
           // injectedJavaScript={jsCode}
           onLoadEnd={() => {
             if (loginType === 'KompasId') {
+              setIsLoading(true);
               setState('logout-kompas');
             } else {
               logout(
@@ -207,22 +218,30 @@ export default function LogoutScreen() {
             }
             // props.onLoadEnd
           }}
-          renderLoading={() => (
-            <LoadingBlock text="~ Logout Bormar. Please wait..." />
-          )}
+          onError={event => {
+            setIsLoading(false);
+            console.info('logout-bormar-webview -- onError', event);
+            Toast.show({
+              description: 'Failed to logout bormar',
+            });
+          }}
         />
       ) : (
         false
       )}
-      <LoadingBlock
-        text={
-          state === 'logout-kompas-webview'
-            ? 'Logout Kompas. Please wait...'
-            : state === 'logout-bormar-webview'
-            ? 'Logout Bormar. Please wait...'
-            : 'Logout. Please wait...'
-        }
-      />
+      {isLoading ? (
+        <LoadingBlock
+          text={
+            state === 'logout-kompas-webview'
+              ? 'Logout Kompas. Please wait...'
+              : state === 'logout-bormar-webview'
+              ? 'Logout Bormar. Please wait...'
+              : `Logout. Please wait... (${state})`
+          }
+        />
+      ) : (
+        false
+      )}
     </AppContainer>
   );
 }

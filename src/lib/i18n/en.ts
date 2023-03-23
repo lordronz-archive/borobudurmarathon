@@ -49,7 +49,7 @@ export default {
     register: 'Register',
     registerViaEmail: 'Register here',
     signin: 'Sign In',
-    signinViaEmail: 'Sign In Via Email',
+    signinViaEmail: 'Sign in here',
     signout: 'Sign Out',
     uploadId: 'Tap to Upload',
     maxIdSize:

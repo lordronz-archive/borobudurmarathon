@@ -51,7 +51,7 @@ export default {
     register: 'Daftar',
     registerViaEmail: 'Daftar di sini',
     signin: 'Masuk',
-    signinViaEmail: 'Masuk Via Email',
+    signinViaEmail: 'Masuk di sini',
     signout: 'Keluar',
     uploadId: 'Ketuk untuk Mengunggah',
     maxIdSize:

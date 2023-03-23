@@ -1,4 +1,5 @@
 import {ReactNode} from 'react';
+import {EvhfName} from './registerEvent.type';
 
 // LIST EVENT
 export interface GetEventsResponse {
@@ -212,7 +213,7 @@ export interface EventFieldsEntity {
   evhfIsRequired: string;
   evhfLabel: string;
   evhfMsflId: string;
-  evhfName: string;
+  evhfName: EvhfName;
   evhfType:
     | 'Number'
     | 'Text'

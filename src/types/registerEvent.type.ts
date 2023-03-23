@@ -1,0 +1,52 @@
+export type EvhfName =
+  | 'evpaEvnhId'
+  | 'evpaEvncId'
+  | 'evpaName'
+  | 'evpaEmail'
+  | 'evpaPhone'
+  | 'evpaGender'
+  | 'evpaBirthPlace'
+  | 'evpaBirthDate'
+  | 'evpaAddress'
+  | 'evpaCity'
+  | 'evpaCountry'
+  | 'evpaNationality'
+  | 'evpaIDNumberType'
+  | 'evpaIDNumber'
+  | 'evpaBloodType'
+  | 'evpaEmergencyContactName'
+  | 'evpaEmergencyContactNumber'
+  | 'evpaBIBName'
+  | 'evpaJersey'
+  | 'evpaWave'
+  | 'evpaCommunityName'
+  | 'evpaCovidVaksin'
+  | 'evpaSudahVaksin'
+  | 'evpaMedicalTreatment'
+  | 'evpaMentionTreatment'
+  | 'evpaLongTreatment'
+  | 'evpa10KFinished'
+  | 'evpa10KYear'
+  | 'evpa10KRace'
+  | 'evpaHalfMarathonFinished'
+  | 'evpaHalfMarathonYear'
+  | 'evpaHMRace'
+  | 'evpaMarathonFinished'
+  | 'evpaMarathonYear'
+  | 'evpaMarathonRace'
+  | 'evpaRekeningBankJateng'
+  | 'evpaProvinces'
+  | 'evpaProvinsi';
+
+export type EvhfType =
+  | 'Number'
+  | 'Text'
+  | 'Email'
+  | 'Option'
+  | 'Phone'
+  | 'Date'
+  | 'Time';
+
+export type IGroup = {
+  [key in EvhfName]?: {[key: string]: {show?: EvhfName[]; hide?: EvhfName[]}};
+};

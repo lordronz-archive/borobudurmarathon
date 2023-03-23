@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   Box,
@@ -29,9 +30,14 @@ import ViewProfile from '../InputProfile/components/ViewProfile';
 import httpRequest from '../../helpers/httpRequest';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import ImageView from 'react-native-image-viewing';
-import {Platform} from 'react-native';
+import {Platform, View} from 'react-native';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 import AppContainer from '../../layout/AppContainer';
+import {
+  isSubField,
+  REGISTER_EVENT_CONDITIONS,
+} from '../../helpers/registerEvent';
+import {EvhfName} from '../../types/registerEvent.type';
 
 type Price = {
   id: string;
@@ -74,6 +80,12 @@ export default function EventRegisterScreen() {
 
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
+  const [showFields, setShowFields] = useState<EvhfName[]>([]);
+
+  // const [fields, setFields] = useState<EventFieldsEntity[]>([]);
+
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [fieldsData, setFieldsData] = React.useState<any>({});
 
   const fields = useMemo<EventFieldsEntity[]>(() => {
     const fieldResult =
@@ -114,11 +126,70 @@ export default function EventRegisterScreen() {
     //   return x.static === y.static ? 0 : x ? -1 : 1;
     // });
 
-    return [...fieldTop, ...fieldBottom];
+    const newFields = [...fieldTop, ...fieldBottom];
+
+    const fieldNames = newFields
+      .filter(item => !isSubField(item.evhfName))
+      .map(item => item.evhfName);
+
+    setShowFields([...fieldNames]);
+
+    return [...newFields];
   }, [params.event.fields]);
 
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [fieldsData, setFieldsData] = React.useState<any>({});
+  // useEffect(() => {
+  //   generateFields();
+  // }, [params.event.fields]);
+
+  // useEffect(() => {
+  //   if (Object.keys(REGISTER_EVENT_CONDITIONS).includes()) {
+
+  //   }
+  //   generateFields();
+  // }, [fieldsData]);
+
+  // const generateFields = () => {
+  //   const fieldResult =
+  //     params.event.fields && Array.isArray(params.event.fields)
+  //       ? params.event.fields
+  //       : params.event.fields && typeof params.event.fields === 'object'
+  //       ? (Object.values(params.event.fields) as EventFieldsEntity[])
+  //       : ([] as EventFieldsEntity[]);
+
+  //   bannedField.forEach(bF => {
+  //     let findIndex = fieldResult.findIndex(f => f.evhfName === bF);
+  //     if (findIndex !== -1) {
+  //       fieldResult[findIndex].static = true;
+  //     }
+  //   });
+  //   const jerseyIndex = fieldResult.findIndex(f =>
+  //     f.evhfName.toLowerCase().includes('jersey'),
+  //   );
+  //   if (jerseyIndex !== -1) {
+  //     fieldResult[jerseyIndex].helperText = (
+  //       <Text>
+  //         For more information about size,{' '}
+  //         <Text
+  //           textDecorationLine={'underline'}
+  //           color="primary.900"
+  //           onPress={() => setOpenJersey(true)}>
+  //           See jersey size chart
+  //         </Text>
+  //       </Text>
+  //     );
+  //   }
+
+  //   const fieldTop = fieldResult.filter(item => item.static);
+  //   const fieldBottom = fieldResult.filter(item => !item.static);
+
+  //   // fieldResult.sort((x, y) => {
+  //   //   // true values first
+  //   //   return x.static === y.static ? 0 : x ? -1 : 1;
+  //   // });
+
+  //   // return [...fieldTop, ...fieldBottom];
+  //   setFields([...fieldTop, ...fieldBottom]);
+  // };
 
   const onClose = () => setIsOpen(false);
 
@@ -384,6 +455,17 @@ export default function EventRegisterScreen() {
   }
   textFinalPrice = finalPrice.toLocaleString('id-ID');
 
+  console.info(
+    'fields --->',
+    JSON.stringify(
+      fields.map(item => ({
+        evhfName: item.evhfName,
+        evhfLabel: item.evhfLabel,
+      })),
+    ),
+  );
+  console.info('showFields --->', JSON.stringify(showFields));
+
   return (
     <AppContainer>
       <ScrollView>
@@ -429,6 +511,7 @@ export default function EventRegisterScreen() {
             <Text bold fontSize="lg">
               {t('additionalInformation')}
             </Text>
+            {/* <Text>{JSON.stringify(showFields)}</Text> */}
             <VStack space="1.5">
               {fields
                 .filter(
@@ -436,26 +519,112 @@ export default function EventRegisterScreen() {
                     f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
                 )
                 .filter(f => !bannedField.includes(f.evhfName))
+                .filter(f => showFields.includes(f.evhfName))
                 .map(field => (
-                  <RegistrationForm
+                  <View
                     key={field.evhfId}
-                    {...field}
-                    onValueChange={val => {
-                      setFieldsData({...fieldsData, [field.evhfName]: val});
-                    }}
-                    value={fieldsData[field.evhfName]}
-                    helperText={field.helperText}
-                    required={
-                      field.evhfIsRequired.toString() === '1' ||
-                      field.evhfIsRequired.toString() === 'true'
-                    }
-                    setFileResponse={
-                      field.evhfType === 'File'
-                        ? a => setFiles({...files, [field.evhfName]: a})
+                    style={
+                      isSubField(field.evhfName)
+                        ? {
+                            borderLeftColor: '#f2f2f2',
+                            borderLeftWidth: 10,
+                            borderRadius: 10,
+                          }
                         : undefined
-                    }
-                    file={files ? files[field.evhfName] : undefined}
-                  />
+                    }>
+                    <RegistrationForm
+                      key={field.evhfId}
+                      {...field}
+                      onValueChange={val => {
+                        if (REGISTER_EVENT_CONDITIONS[field.evhfName]) {
+                          console.info(
+                            'REGISTER_EVENT_CONDITIONS[field.evhfName]',
+                            REGISTER_EVENT_CONDITIONS[field.evhfName],
+                          );
+                          if (
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ]
+                          ) {
+                            console.info(
+                              '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
+                              (REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val],
+                            );
+                            if (
+                              (REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val].show
+                            ) {
+                              console.info(
+                                '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].show',
+                              );
+                              console.info(
+                                (REGISTER_EVENT_CONDITIONS as any)[
+                                  field.evhfName
+                                ][val].show,
+                              );
+                              setShowFields([
+                                ...showFields,
+                                ...((REGISTER_EVENT_CONDITIONS as any)[
+                                  field.evhfName
+                                ][val].show || []),
+                              ]);
+                            } else if (
+                              (REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val].hide
+                            ) {
+                              console.info(
+                                '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].hide',
+                              );
+                              console.info(
+                                (REGISTER_EVENT_CONDITIONS as any)[
+                                  field.evhfName
+                                ][val].hide,
+                              );
+
+                              const newFields = [...showFields].filter(
+                                item =>
+                                  !(
+                                    (REGISTER_EVENT_CONDITIONS as any)[
+                                      field.evhfName
+                                    ][val].hide || []
+                                  ).includes(item),
+                              );
+                              setShowFields([...newFields]);
+                            }
+                          } else {
+                            console.info(
+                              'ELSEEEE - (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
+                              (REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val],
+                            );
+                          }
+                        } else {
+                          console.info(
+                            'ELSE -- REGISTER_EVENT_CONDITIONS[field.evhfName]',
+                            REGISTER_EVENT_CONDITIONS[field.evhfName],
+                          );
+                        }
+                        setFieldsData({...fieldsData, [field.evhfName]: val});
+                      }}
+                      value={fieldsData[field.evhfName]}
+                      helperText={field.helperText}
+                      required={
+                        field.evhfIsRequired.toString() === '1' ||
+                        field.evhfIsRequired.toString() === 'true'
+                      }
+                      setFileResponse={
+                        field.evhfType === 'File'
+                          ? a => setFiles({...files, [field.evhfName]: a})
+                          : undefined
+                      }
+                      file={files ? files[field.evhfName] : undefined}
+                    />
+                  </View>
                 ))}
             </VStack>
           </VStack>
@@ -548,7 +717,7 @@ export default function EventRegisterScreen() {
             onClose={onClose}
             onPress={() => {
               setIsOpen(false);
-              navigation.navigate('Main', {screen: 'My Events'});
+              navigation.navigate('Main', {screen: t('tab.myEvents')});
             }}
             title={t('registration.registrationSuccess')}
             content={t('registration.registrationSuccessDesc')}

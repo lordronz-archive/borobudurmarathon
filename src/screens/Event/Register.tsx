@@ -13,7 +13,7 @@ import {
   Spinner,
   HStack,
 } from 'native-base';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
@@ -386,74 +386,110 @@ export default function EventRegisterScreen() {
   };
 
   const event = params.event;
-  const prices: Price[] = (event?.categories || [])
-    .filter(cat => cat.evncId === params.selectedCategoryId)
-    .map(cat => {
-      const earlyBirdPrice = (event?.prices || []).find(
-        price => price.evcpEvncId === cat.evncId,
-      );
-      return {
-        id: cat.evncId,
-        name: cat.evncName,
-        description: cat.evncDesc
-          ? cat.evncDesc
-          : [
-              // cat.evncVrReps,
-              'Quota: ' +
-                (Number(cat.evncQuotaRegistration) -
-                  Number(cat.evncUseQuota) !==
-                Number(cat.evncQuotaRegistration)
-                  ? (
-                      Number(cat.evncQuotaRegistration) -
-                      Number(cat.evncUseQuota)
-                    ).toLocaleString('id-ID') +
-                    '/' +
-                    Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-                  : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
-              datetime.getDateRangeString(
-                cat.evncStartDate,
-                cat.evncVrEndDate || undefined,
-                'short',
-                'short',
-              ),
-              cat.evncMaxDistance
-                ? 'Distance: ' + cat.evncMaxDistance + ' km'
-                : undefined,
-              cat.evncMaxDistancePoint
-                ? cat.evncMaxDistancePoint + ' point'
-                : undefined,
-            ]
-              .filter(item => item)
-              .join(', '),
-        originalPrice: Number(cat.evncPrice),
-        finalPrice: earlyBirdPrice
-          ? Number(earlyBirdPrice.evcpPrice)
-          : Number(cat.evncPrice),
-        benefits: parseUnknownDataToArray(cat.evncBenefit).map(
-          item => item.label,
-        ),
-      };
-    });
+  const prices: Price[] = useMemo(
+    () =>
+      (event?.categories || [])
+        .filter(cat => cat.evncId === params.selectedCategoryId)
+        .map(cat => {
+          const earlyBirdPrice = (event?.prices || []).find(
+            price => price.evcpEvncId === cat.evncId,
+          );
+          return {
+            id: cat.evncId,
+            name: cat.evncName,
+            description: cat.evncDesc
+              ? cat.evncDesc
+              : [
+                  // cat.evncVrReps,
+                  'Quota: ' +
+                    (Number(cat.evncQuotaRegistration) -
+                      Number(cat.evncUseQuota) !==
+                    Number(cat.evncQuotaRegistration)
+                      ? (
+                          Number(cat.evncQuotaRegistration) -
+                          Number(cat.evncUseQuota)
+                        ).toLocaleString('id-ID') +
+                        '/' +
+                        Number(cat.evncQuotaRegistration).toLocaleString(
+                          'id-ID',
+                        )
+                      : Number(cat.evncQuotaRegistration).toLocaleString(
+                          'id-ID',
+                        )),
+                  datetime.getDateRangeString(
+                    cat.evncStartDate,
+                    cat.evncVrEndDate || undefined,
+                    'short',
+                    'short',
+                  ),
+                  cat.evncMaxDistance
+                    ? 'Distance: ' + cat.evncMaxDistance + ' km'
+                    : undefined,
+                  cat.evncMaxDistancePoint
+                    ? cat.evncMaxDistancePoint + ' point'
+                    : undefined,
+                ]
+                  .filter(item => item)
+                  .join(', '),
+            originalPrice: Number(cat.evncPrice),
+            finalPrice: earlyBirdPrice
+              ? Number(earlyBirdPrice.evcpPrice)
+              : Number(cat.evncPrice),
+            benefits: parseUnknownDataToArray(cat.evncBenefit).map(
+              item => item.label,
+            ),
+          };
+        }),
+    [],
+  );
 
-  const isRequiredFilled = () => {
-    const requiredFields = fields
-      .filter(v => v.evhfIsRequired.toString() === '1')
-      .map(v => v.evhfName);
-    return requiredFields.every(v => v in fieldsData && fieldsData[v] != null);
-  };
+  const displayedFields = useMemo(
+    () =>
+      fields
+        .filter(f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId')
+        .filter(f => !bannedField.includes(f.evhfName))
+        .filter(f => showFields.includes(f.evhfName)),
+    [fields, bannedField, showFields],
+  );
 
-  const originalPrice = prices[0].originalPrice;
-  const finalPrice = prices[0].finalPrice;
-  let textOriginalPrice;
-  let textFinalPrice;
+  const isRequiredFilled = useCallback(() => {
+    for (let i = 0, j = fields.length; i < j; ++i) {
+      if (fields[i].evhfIsRequired.toString() === '1') {
+        if (
+          fieldsData[fields[i].evhfName] == null ||
+          fieldsData[fields[i].evhfName] === ''
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }, [fields, fieldsData]);
 
-  if (originalPrice === finalPrice) {
-    textOriginalPrice;
-  } else if (finalPrice < originalPrice) {
-    // discount
-    textOriginalPrice = originalPrice.toLocaleString('id-ID');
-  }
-  textFinalPrice = finalPrice.toLocaleString('id-ID');
+  // const originalPrice = prices[0].originalPrice;
+  // const finalPrice = prices[0].finalPrice;
+  // let textOriginalPrice;
+  // let textFinalPrice;
+
+  // if (originalPrice === finalPrice) {
+  //   textOriginalPrice;
+  // } else if (finalPrice < originalPrice) {
+  //   // discount
+  //   textOriginalPrice = originalPrice.toLocaleString('id-ID');
+  // }
+  // textFinalPrice = finalPrice.toLocaleString('id-ID');
+
+  const [textOriginalPrice, textFinalPrice] = useMemo(() => {
+    const originalPrice = prices[0].originalPrice;
+    const finalPrice = prices[0].finalPrice;
+    let textOriginalPriceReturn;
+    let textFinalPriceReturn;
+    if (finalPrice < originalPrice) {
+      textOriginalPriceReturn = originalPrice.toLocaleString('id-ID');
+    }
+    textFinalPriceReturn = finalPrice.toLocaleString('id-ID');
+    return [textOriginalPriceReturn, textFinalPriceReturn];
+  }, []);
 
   // console.info(
   //   'fields --->',
@@ -513,119 +549,112 @@ export default function EventRegisterScreen() {
             </Text>
             {/* <Text>{JSON.stringify(showFields)}</Text> */}
             <VStack space="1.5">
-              {fields
-                .filter(
-                  f =>
-                    f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId',
-                )
-                .filter(f => !bannedField.includes(f.evhfName))
-                .filter(f => showFields.includes(f.evhfName))
-                .map(field => (
-                  <View
+              {displayedFields.map(field => (
+                <View
+                  key={field.evhfId}
+                  style={
+                    isSubField(field.evhfName)
+                      ? {
+                          borderLeftColor: '#f2f2f2',
+                          borderLeftWidth: 10,
+                          borderRadius: 10,
+                        }
+                      : undefined
+                  }>
+                  <RegistrationForm
                     key={field.evhfId}
-                    style={
-                      isSubField(field.evhfName)
-                        ? {
-                            borderLeftColor: '#f2f2f2',
-                            borderLeftWidth: 10,
-                            borderRadius: 10,
-                          }
-                        : undefined
-                    }>
-                    <RegistrationForm
-                      key={field.evhfId}
-                      {...field}
-                      onValueChange={val => {
-                        if (REGISTER_EVENT_CONDITIONS[field.evhfName]) {
+                    {...field}
+                    onValueChange={val => {
+                      setFieldsData({...fieldsData, [field.evhfName]: val});
+                      if (REGISTER_EVENT_CONDITIONS[field.evhfName]) {
+                        console.info(
+                          'REGISTER_EVENT_CONDITIONS[field.evhfName]',
+                          REGISTER_EVENT_CONDITIONS[field.evhfName],
+                        );
+                        if (
+                          (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                            val
+                          ]
+                        ) {
                           console.info(
-                            'REGISTER_EVENT_CONDITIONS[field.evhfName]',
-                            REGISTER_EVENT_CONDITIONS[field.evhfName],
+                            '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ],
                           );
                           if (
                             (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
                               val
-                            ]
+                            ].show
                           ) {
                             console.info(
-                              '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
-                              (REGISTER_EVENT_CONDITIONS as any)[
-                                field.evhfName
-                              ][val],
+                              '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].show',
                             );
-                            if (
-                              (REGISTER_EVENT_CONDITIONS as any)[
-                                field.evhfName
-                              ][val].show
-                            ) {
-                              console.info(
-                                '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].show',
-                              );
-                              console.info(
-                                (REGISTER_EVENT_CONDITIONS as any)[
-                                  field.evhfName
-                                ][val].show,
-                              );
-                              setShowFields([
-                                ...showFields,
-                                ...((REGISTER_EVENT_CONDITIONS as any)[
-                                  field.evhfName
-                                ][val].show || []),
-                              ]);
-                            } else if (
-                              (REGISTER_EVENT_CONDITIONS as any)[
-                                field.evhfName
-                              ][val].hide
-                            ) {
-                              console.info(
-                                '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].hide',
-                              );
-                              console.info(
-                                (REGISTER_EVENT_CONDITIONS as any)[
-                                  field.evhfName
-                                ][val].hide,
-                              );
-
-                              const newFields = [...showFields].filter(
-                                item =>
-                                  !(
-                                    (REGISTER_EVENT_CONDITIONS as any)[
-                                      field.evhfName
-                                    ][val].hide || []
-                                  ).includes(item),
-                              );
-                              setShowFields([...newFields]);
-                            }
-                          } else {
                             console.info(
-                              'ELSEEEE - (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
                               (REGISTER_EVENT_CONDITIONS as any)[
                                 field.evhfName
-                              ][val],
+                              ][val].show,
                             );
+                            setShowFields([
+                              ...showFields,
+                              ...((REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val].show || []),
+                            ]);
+                          } else if (
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ].hide
+                          ) {
+                            console.info(
+                              '(REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val].hide',
+                            );
+                            console.info(
+                              (REGISTER_EVENT_CONDITIONS as any)[
+                                field.evhfName
+                              ][val].hide,
+                            );
+
+                            const newFields = [...showFields].filter(
+                              item =>
+                                !(
+                                  (REGISTER_EVENT_CONDITIONS as any)[
+                                    field.evhfName
+                                  ][val].hide || []
+                                ).includes(item),
+                            );
+                            setShowFields([...newFields]);
                           }
                         } else {
                           console.info(
-                            'ELSE -- REGISTER_EVENT_CONDITIONS[field.evhfName]',
-                            REGISTER_EVENT_CONDITIONS[field.evhfName],
+                            'ELSEEEE - (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][val]',
+                            (REGISTER_EVENT_CONDITIONS as any)[field.evhfName][
+                              val
+                            ],
                           );
                         }
-                        setFieldsData({...fieldsData, [field.evhfName]: val});
-                      }}
-                      value={fieldsData[field.evhfName]}
-                      helperText={field.helperText}
-                      required={
-                        field.evhfIsRequired.toString() === '1' ||
-                        field.evhfIsRequired.toString() === 'true'
+                      } else {
+                        console.info(
+                          'ELSE -- REGISTER_EVENT_CONDITIONS[field.evhfName]',
+                          REGISTER_EVENT_CONDITIONS[field.evhfName],
+                        );
                       }
-                      setFileResponse={
-                        field.evhfType === 'File'
-                          ? a => setFiles({...files, [field.evhfName]: a})
-                          : undefined
-                      }
-                      file={files ? files[field.evhfName] : undefined}
-                    />
-                  </View>
-                ))}
+                    }}
+                    value={fieldsData[field.evhfName]}
+                    helperText={field.helperText}
+                    required={
+                      field.evhfIsRequired.toString() === '1' ||
+                      field.evhfIsRequired.toString() === 'true'
+                    }
+                    setFileResponse={
+                      field.evhfType === 'File'
+                        ? a => setFiles({...files, [field.evhfName]: a})
+                        : undefined
+                    }
+                    file={files ? files[field.evhfName] : undefined}
+                  />
+                </View>
+              ))}
             </VStack>
           </VStack>
           <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">

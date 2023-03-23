@@ -16,17 +16,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="splash_logo_bottom" translatesAutoresizingMaskIntoConstraints="NO" id="mGQ-5x-YYG">
-                                <rect key="frame" x="78" y="580" width="219" height="67"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="splash_description" translatesAutoresizingMaskIntoConstraints="NO" id="69U-vp-DFh">
-                                <rect key="frame" x="36" y="496" width="303" height="83"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="splash_logo_bormar_2023" translatesAutoresizingMaskIntoConstraints="NO" id="fkj-iT-Rit">
                                 <rect key="frame" x="67" y="219" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="splash_logo_partner" translatesAutoresizingMaskIntoConstraints="NO" id="lpO-hO-wy9">
+                                <rect key="frame" x="67" y="574" width="240" height="93"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
@@ -39,8 +35,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="splash_description" width="1666" height="236"/>
         <image name="splash_logo_bormar_2023" width="2000" height="864"/>
-        <image name="splash_logo_bottom" width="920" height="177"/>
+        <image name="splash_logo_partner" width="1592" height="363"/>
     </resources>
 </document>

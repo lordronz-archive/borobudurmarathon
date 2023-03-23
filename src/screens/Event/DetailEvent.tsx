@@ -42,6 +42,7 @@ import BannerFull from '../../components/carousel/BannerFull';
 import AppContainer from '../../layout/AppContainer';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {useAuthUser} from '../../context/auth.context';
+import { getApiErrors } from '../../helpers/apiErrors';
 
 type Price = {
   id: string;
@@ -206,10 +207,26 @@ export default function DetailEvent() {
           });
       })
       .catch(err => {
-        Toast.show({
-          title: 'Failed to get event',
-          description: getErrorMessage(err),
-        });
+        const objErrors = getApiErrors(err);
+        if (objErrors && objErrors.message) {
+          Toast.show({
+            description: objErrors.message,
+          });
+        } else if (objErrors) {
+          Toast.show({
+            title: 'Failed to get profile',
+            description: Object.keys(objErrors)
+              .map(field => `${objErrors[field]} [${field}]`)
+              .join('. '),
+          });
+        } else {
+          console.info('err get event detail', JSON.stringify(err));
+          Toast.show({
+            title: 'Failed to get event',
+            description: getErrorMessage(err),
+          });
+        }
+        navigation.goBack();
       })
       .finally(() => {
         setIsLoading(false);

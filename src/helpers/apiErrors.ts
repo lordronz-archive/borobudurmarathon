@@ -11,6 +11,16 @@ export function getApiErrors(err: any): {[key: string]: string} | null {
     }
     console.info('objErrors', objErrors);
 
+    if (Object.keys(objErrors).length > 0) {
+      return objErrors;
+    } else {
+      return null;
+    }
+  } else if (err?.data?.status?.error?.message) {
+    let objErrors = {errroMessage: err?.data?.status?.error?.message};
+
+    console.info('objErrors', objErrors);
+
     return objErrors;
   }
   return null;

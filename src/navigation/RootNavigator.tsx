@@ -34,6 +34,9 @@ import InfoVerifyLaterScreen from '../screens/Information/InfoVerifyLater';
 
 export type RootStackParamList = {
   Initial: undefined;
+  InitialEvent: {id: string};
+  InitialPayment: {id: string};
+
   Auth: undefined;
   SignInEmail: undefined;
   RegisterEmail: undefined;
@@ -105,6 +108,17 @@ function RootNavigator() {
           component={InitialScreen}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="InitialEvent"
+          component={InitialScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="InitialPayment"
+          component={InitialScreen}
+          options={{headerShown: false}}
+        />
+
         <Stack.Screen
           name="Auth"
           component={AuthScreen}

@@ -16,12 +16,14 @@ import SummaryRecord from './components/SummaryRecord';
 import IconHamburgerMenu from '../../assets/icons/IconHamburgerMenu';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
+// import useDeeplinkInit from '../../lib/deeplink/useDeeplinkInit';
 
 export default function HomeScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {user} = useAuthUser();
   const {t} = useTranslation();
+  // const _resDLI = useDeeplinkInit();
 
   // useEffect(() => {
   //   if (isFocused) {

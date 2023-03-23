@@ -5,6 +5,7 @@ import ApiService from './api.service';
 import QRCode from 'qrcode';
 import {ISponsorResponse} from '../types/sponsor.type';
 import {GetGalleryResponse} from '../types/gallery.type';
+import { TransactionDetail } from '../types/transaction.type';
 
 function qs(obj: any, prefix: any) {
   const str: string[] = [];
@@ -63,14 +64,18 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getTransactionDetail: async function (transactionId: string): Promise<any> {
+  getTransactionDetail: async function (transactionId: string): Promise<{
+    data: TransactionDetail;
+  }> {
     console.log('Transaction id to get : ', transactionId);
     try {
       return ApiService.get(
         config.apiUrl.apis.member.getTransactionDetail.path +
           '/' +
           transactionId,
-      );
+      ) as Promise<{
+        data: TransactionDetail;
+      }>;
     } catch (error) {
       console.log('E : ', error);
       const msg = error as any;

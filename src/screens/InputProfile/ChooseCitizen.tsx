@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {
+  Actionsheet,
   ArrowBackIcon,
   Box,
   Checkbox,
@@ -54,6 +55,8 @@ import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
 import {getApiErrors} from '../../helpers/apiErrors';
 
+const MAX_VALIDATION_TRY_PROCESSING = 5;
+const MIN_VALIDATION_TRY_INVALID = 3;
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
 const PROCESSING_MESSAGES = [
@@ -99,6 +102,8 @@ export default function ChooseCitizenScreen({route}: Props) {
   } = useProfileStepper();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowInfoVerifyLater, setIsShowInfoVerifyLater] = useState(false);
+  const [isShowVerifyLater, setIsShowVerifyLater] = useState(false);
   const [validationTry, setValidationTry] = useState(1);
   const [validationTryProcessing, setValidationTryProcessing] = useState(1);
   const [stepCount, setStepCount] = useState(1);
@@ -280,8 +285,10 @@ export default function ChooseCitizenScreen({route}: Props) {
     }
   };
 
-  const handleConfirm = async () => {
-    if (!isOpenProcessing) {
+  const handleConfirm = async (nTry?: {processing?: number}) => {
+    if (nTry && nTry.processing) {
+      setIsOpen(false);
+    } else {
       setIsOpen(true);
     }
 
@@ -324,26 +331,27 @@ export default function ChooseCitizenScreen({route}: Props) {
         resValidation.data &&
         resValidation.data.isProcessing
       ) {
+        const currentTry = nTry && nTry.processing ? nTry.processing : 0;
         console.info(
           'resValidation.data.isProcessing TRUE',
           JSON.stringify(resValidation.data),
         );
-        console.info('validationTryProcessing', validationTryProcessing);
+        console.info('currentTry', currentTry);
         // toast.show({
         //   title: 'Processing',
         //   description: 'Your ID still in processing to validate.',
         // });
         setIsOpen(false);
         setIsOpenProcessing(true);
-        setValidationTryProcessing(validationTryProcessing + 1);
 
-        if (validationTryProcessing >= 5) {
-          console.info('validationTryProcessing >= 5', validationTryProcessing);
-          setIsVerifyLater(true);
+        if (currentTry >= MAX_VALIDATION_TRY_PROCESSING) {
+          console.info('currentTry >= 5', currentTry);
+          setIsShowVerifyLater(true);
         } else {
-          console.info('validationTryProcessing', validationTryProcessing);
+          console.info('currentTry < 5', currentTry);
+          setValidationTryProcessing(currentTry + 1);
           setTimeout(() => {
-            handleConfirm();
+            handleConfirm({processing: currentTry + 1});
           }, 3000);
         }
       } else if (
@@ -415,15 +423,17 @@ export default function ChooseCitizenScreen({route}: Props) {
             getErrorMessage(err) || 'Please check your ID and try again',
         });
         setIsOpenNotReadable(true);
-        setValidationTry(v => v + 1);
       } else {
         toast.show({
           title: 'Failed',
           description: 'Please try again later',
         });
         console.info(err, getErrorMessage(err), 'Failed confirm profile');
-        setValidationTry(v => v + 1);
       }
+      if (validationTry >= MIN_VALIDATION_TRY_INVALID) {
+        setIsShowVerifyLater(true);
+      }
+      setValidationTry(v => v + 1);
       setIsOpen(false);
     }
   };
@@ -913,11 +923,14 @@ export default function ChooseCitizenScreen({route}: Props) {
                 {t('termsAndConditionsAgreement')}
               </Text>
             </Checkbox>
-            {validationTry >= 3 && (
+            {isShowVerifyLater && (
               <Checkbox
                 mt={'20px'}
                 value={isVerifyLater.toString()}
-                onChange={setIsVerifyLater}
+                onChange={val => {
+                  setIsVerifyLater(val);
+                  setIsShowInfoVerifyLater(val);
+                }}
                 isDisabled={isLoading}>
                 <HStack flex={1}>
                   <VStack ml={'10px'} flex={1}>
@@ -925,9 +938,11 @@ export default function ChooseCitizenScreen({route}: Props) {
                       <Text fontSize={'12px'} fontWeight={600}>
                         {t('profile.verifyProfileDataLater')}
                       </Text>
-                      <Text fontSize={'11px'} fontWeight={600} underline>
-                        {t('seeMoreInfo')}
-                      </Text>
+                      <TouchableOpacity onPress={() => setIsShowInfoVerifyLater(true)}>
+                        <Text fontSize={'11px'} fontWeight={600} underline>
+                          {t('seeMoreInfo')}
+                        </Text>
+                      </TouchableOpacity>
                     </HStack>
                     <Text fontSize={'10px'} fontWeight={400}>
                       {t('profile.ifProfileNotValidated')}
@@ -941,6 +956,26 @@ export default function ChooseCitizenScreen({route}: Props) {
                 </HStack>
               </Checkbox>
             )}
+            <Actionsheet
+              isOpen={isShowInfoVerifyLater}
+              onClose={() => setIsShowInfoVerifyLater(false)}>
+              <Actionsheet.Content>
+                <Box w="100%" px={4} justifyContent="center">
+                  <Text fontSize="16" bold mb="3">
+                    Verify Later
+                  </Text>
+                  <Text fontWeight={400} fontSize="12px" mb="12px">
+                    {t('profile.verifyProfileLaterInfo')}
+                  </Text>
+                </Box>
+                <Box h="8"/>
+                {/* <Actionsheet.Item>Delete</Actionsheet.Item>
+                <Actionsheet.Item isDisabled>Share</Actionsheet.Item>
+                <Actionsheet.Item>Play</Actionsheet.Item>
+                <Actionsheet.Item>Favourite</Actionsheet.Item> */}
+                {/* <Actionsheet.Item>OK</Actionsheet.Item> */}
+              </Actionsheet.Content>
+            </Actionsheet>
           </Box>
         )}
 
@@ -1086,34 +1121,62 @@ export default function ChooseCitizenScreen({route}: Props) {
           }
           buttonContent={'Close'}
         />
+
         <VerifyID
           cancelRef={cancelRefProcessing}
           isOpen={isOpenProcessing}
           isLoading
-          onClose={
-            validationTryProcessing >= 3
-              ? () => {
-                  setIsOpenProcessing(false);
-                }
-              : undefined
-          }
-          onPress={
-            validationTryProcessing >= 3
-              ? () => {
-                  setIsOpenProcessing(false);
-                }
-              : undefined
-          }
           title={
             PROCESSING_MESSAGES[validationTryProcessing % 3].title ||
             'We still check your ID'
           }
           content={
-            PROCESSING_MESSAGES[validationTryProcessing % 3].content ||
-            'Your ID still in processing to validate.'
+            (PROCESSING_MESSAGES[validationTryProcessing % 3].content ||
+              'Your ID still in processing to validate') +
+            ` (${validationTryProcessing})`
           }
           buttonContent={'Close'}
         />
+
+        {isOpenProcessing && isShowVerifyLater ? (
+          <VerifyID
+            cancelRef={cancelRefProcessing}
+            isOpen={isOpenProcessing}
+            isLoading
+            title={
+              PROCESSING_MESSAGES[validationTryProcessing % 3].title ||
+              'We still check your ID'
+            }
+            content={
+              (PROCESSING_MESSAGES[validationTryProcessing % 3].content ||
+                'Your ID still in processing to validate') +
+              `. You can continue by choosing verify later.`
+            }
+            onPress={() => {
+              setIsOpenProcessing(false);
+            }}
+            onClose={() => {
+              setIsOpenProcessing(false);
+            }}
+            buttonContent={'Close'}
+          />
+        ) : (
+          <VerifyID
+            cancelRef={cancelRefProcessing}
+            isOpen={isOpenProcessing}
+            isLoading
+            title={
+              PROCESSING_MESSAGES[validationTryProcessing % 3].title ||
+              'We still check your ID'
+            }
+            content={
+              (PROCESSING_MESSAGES[validationTryProcessing % 3].content ||
+                'Your ID still in processing to validate') +
+              ` (${validationTryProcessing})`
+            }
+            buttonContent={'Close'}
+          />
+        )}
       </VStack>
     </AppContainer>
   );

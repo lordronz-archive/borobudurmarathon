@@ -31,6 +31,7 @@ import {SvgXml} from 'react-native-svg';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import {t} from 'i18next';
+import {TransactionDetail} from '../../types/transaction.type';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -50,7 +51,7 @@ export default function MyEventDetail() {
 
   const confirmRef = React.useRef(null);
 
-  const [detailTransaction, setDetailTransaction] = useState<any>();
+  const [detailTransaction, setDetailTransaction] = useState<TransactionDetail>();
   const [detailEvent, setDetailEvent] = useState<GetEventResponse>();
 
   const [status, setStatus] = useState<string>('');
@@ -271,7 +272,7 @@ export default function MyEventDetail() {
     try {
       const resApplyCoupon = await EventService.applyCoupon({
         cupnCode: couponCode,
-        trnsRefId: detailTransaction?.data?.trnsRefId,
+        trnsRefId: detailTransaction?.data?.trnsRefId || '',
       });
       console.info('res apply coupon', JSON.stringify(resApplyCoupon));
       if (resApplyCoupon) {
@@ -450,7 +451,7 @@ export default function MyEventDetail() {
                           event: detailEvent,
                           selectedCategoryId:
                             detailTransaction?.linked?.evrlTrnsId?.[0]
-                              ?.evpaEvncId,
+                              ?.evpaEvncId || '',
                         })
                       : navigation.navigate('MyEventsDetail', {
                           transactionId: registeredEvent.mregOrderId,

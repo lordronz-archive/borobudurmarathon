@@ -47,7 +47,7 @@ export default function ViewProfile(props: Props) {
     }[];
   }[] = [
     {
-      title: t('profile.accountAndPersonalData'),
+      title: t('label.accountInformation'),
       data: [
         {
           fields: ['zmemFullName', 'evpaName'],

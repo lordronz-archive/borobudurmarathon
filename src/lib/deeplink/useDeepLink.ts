@@ -3,11 +3,15 @@ import {useState, useEffect} from 'react';
 import {Linking} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {getDynamicUrlParams} from './dynamicLink';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../navigation/RootNavigator';
+import { t } from 'i18next';
 
 const useMount = (func: any) => useEffect(() => func(), []);
 
 export default function useInitialURL() {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [url, setUrl] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -55,7 +59,7 @@ export default function useInitialURL() {
     if (initialUrl) {
       // PAYMENT
       if (initialUrl.includes('/auth-callback')) {
-        console.info('deeplink auth-callback')
+        console.info('deeplink auth-callback');
         let initParams: any = {};
         if (initialUrl && initialUrl.includes('?')) {
           const exp = (initialUrl || '').split('?');
@@ -94,13 +98,13 @@ export default function useInitialURL() {
         }
       }
 
-      if (initialUrl.includes('/payment-callback')) {
+      if (initialUrl.includes('/INVOICE')) {
         let initParams: any = {};
         if (initialUrl && initialUrl.includes('?')) {
           const exp = (initialUrl || '').split('?');
           if (exp.length > 1) {
-            let expParams
-            
+            let expParams;
+
             if (exp[2]) {
               expParams = exp[2].split('&');
             } else {
@@ -114,33 +118,24 @@ export default function useInitialURL() {
             console.info('initParams', initParams);
             setParams(initParams);
 
-            /* Example response payload
-              {
-                "link": "https://e79c-182-1-122-66.ap.ngrok.io",
-                "paymentId": "1af4ce63-393c-4fd1-8070-0f530e9f44c8",
-                "paymentVendorId": "GCASH",
-                "status": "success",
-                "transactionId": "e7e5613b-a0ff-4120-85b6-77710a33ae1e"
-                "totalNeedToPay": 1600
-              }
-            */
-
-            navigation.navigate('Main', {screen: 'Home'});
-            navigation.navigate('PaymentCallback', {
-              params: {...initParams}
+            navigation.navigate('Main', {screen: t('tab.myEvents')});
+            navigation.navigate('MyEventsDetail', {
+              // transactionId: item.mregOrderId,
+              // eventId: event.evnhId,
+              // isBallot: item.mregType === 'MB' ? true : false,
+              // regStatus: item.mregStatus,
             });
           }
         }
       }
 
-      // NEWS
-      if (initialUrl.includes('/news/')) {
-        const id = getDynamicUrlParams(initialUrl, '/news/');
+      // EVENT DETAIL
+      if (initialUrl.includes('/events/')) {
+        const id = getDynamicUrlParams(initialUrl, '/events/');
         console.info('id', id);
-        navigation.navigate('Main', {screen: 'Home'});
-        navigation.navigate('NewsDetail', {
-          id: id,
-          // newsType: ENewsType.NEWS,
+        navigation.navigate('Main', {screen: t('tab.home')});
+        navigation.navigate('EventDetail', {
+          id: Number(id),
         });
       }
 

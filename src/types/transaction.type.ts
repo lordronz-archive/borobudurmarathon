@@ -59,6 +59,7 @@ export interface Linked {
 
   jtvaTrnsId?: {jtvaVANumber: string}[] | null;
   bnivTrnsId?: {bnivVANumber: string}[] | null;
+  trcpTrnsId?: any[] | null;
 }
 export interface TrnsEventIdEntity {
   id: number;

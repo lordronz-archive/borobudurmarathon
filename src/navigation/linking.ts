@@ -1,6 +1,8 @@
 import {utils} from '@react-native-firebase/app';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import {getStateFromPath} from '@react-navigation/native';
 import {Linking} from 'react-native';
+import {getParameterByName} from '../helpers/url';
 
 export const linking = {
   prefixes: [
@@ -57,6 +59,20 @@ export const linking = {
   config: {
     screens: {
       Auth: 'auth-me',
+      InitialEvent: 'events/:id',
+      InitialPayment: 'INVOICE',
     },
+  },
+  getStateFromPath: (path: any, options: any) => {
+    console.info('getStateFromPath -- path', path);
+    console.info('getStateFromPath -- options', options);
+
+    const page = getParameterByName('page', path);
+    const id = getParameterByName('id', path);
+    if (page === 'transaction') {
+      return {routes: [{name: 'InitialPayment', params: {id}}]};
+    }
+
+    return getStateFromPath(path, options);
   },
 };

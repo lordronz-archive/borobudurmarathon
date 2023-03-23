@@ -2,7 +2,7 @@
 import React, {useEffect} from 'react';
 import {Box, Toast} from 'native-base';
 import useInit from '../../hooks/useInit';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import config from '../../config';
 import {useState} from 'react';
 import WebView from 'react-native-webview';
@@ -11,16 +11,25 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import AppContainer from '../../layout/AppContainer';
+import useDeeplinkInit from '../../lib/deeplink/useDeeplinkInit';
 
 const uri =
   config.apiUrl.href.href + config.apiUrl.apis.member.checkSession.path;
 
 export default function InitialScreen() {
   const isFocused = useIsFocused();
+  const route = useRoute();
+
+  console.info('InitialScreen -- route', route);
+  const path = route.path; // "/events/368"
+
+  console.info('InitialScreen -- params', route.params);
+
   const {init} = useInit();
   const [isLoadingWebView, setIsLoadingWebView] = useState(true);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const _resDLI = useDeeplinkInit();
 
   useEffect(() => {
     if (isFocused) {
@@ -49,7 +58,31 @@ export default function InitialScreen() {
               console.info('Initial cookiesString', cookiesString);
 
               if (cookiesString) {
-                init();
+                if (route.name === 'InitialEvent') {
+                  init([
+                    {path: 'Main'},
+                    {path: 'EventDetail', params: {id: route.params.id}},
+                  ]);
+                } else if (route.name === 'InitialPayment') {
+                  if (route.params.id) {
+                    init([
+                      {path: 'Main', params: {screen: t('tab.myEvents')}},
+                      {
+                        path: 'MyEventsDetail',
+                        params: {
+                          transactionId: route.params.id || '',
+                          eventId: 0,
+                          isBallot: 0,
+                          regStatus: 1,
+                        },
+                      },
+                    ]);
+                  } else {
+                    init([{path: 'Main', params: {screen: t('tab.myEvents')}}]);
+                  }
+                } else {
+                  init();
+                }
                 setIsLoadingWebView(false);
               } else {
                 Toast.show({

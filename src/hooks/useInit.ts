@@ -40,7 +40,12 @@ export default function useInit() {
 
   const {dispatch} = useAuthUser();
 
-  const init = async () => {
+  const init = async (
+    nextScreens?: {
+      path: keyof RootStackParamList;
+      params?: NativeStackNavigationProp<RootStackParamList>;
+    }[],
+  ) => {
     try {
       const res = await AuthService.checkSession();
 
@@ -51,7 +56,7 @@ export default function useInit() {
         const profile = await getProfile();
 
         if (profile) {
-          checkAccount(res.data, profile);
+          checkAccount(res.data, profile, undefined, nextScreens);
         }
       } else {
         console.info('AuthService.checkSession res empty');
@@ -214,6 +219,10 @@ export default function useInit() {
       isShowDemoConsent?: boolean;
       isShowDemoNewUser?: boolean;
     },
+    nextScreens?: {
+      path: keyof RootStackParamList;
+      params?: NativeStackNavigationProp<RootStackParamList>;
+    }[],
   ) => {
     console.info('checkAccount: data', data);
     console.info('checkAccount: replace', data);
@@ -244,9 +253,14 @@ export default function useInit() {
             onSuccess: () => {
               setDemoVerifyEmail(false);
 
-              checkAccount({...data, authEmail: '1'}, profile, {
-                isShowDemoVerifyEmail: false,
-              });
+              checkAccount(
+                {...data, authEmail: '1'},
+                profile,
+                {
+                  isShowDemoVerifyEmail: false,
+                },
+                nextScreens,
+              );
             },
           });
         })
@@ -279,10 +293,20 @@ export default function useInit() {
     } else if (Number(data.authTelephone) === 0) {
       console.info('Number(data.authTelephone) === 0');
       if (!config.isPhoneVerificationRequired) {
-        checkAccount({...data, authTelephone: 1}, profile);
+        checkAccount(
+          {...data, authTelephone: 1},
+          profile,
+          undefined,
+          nextScreens,
+        );
       } else if (profile?.linked?.zmemAuusId?.[0]?.auusPhone) {
         // dianggap valid aja dulu
-        checkAccount({...data, authTelephone: 1}, profile);
+        checkAccount(
+          {...data, authTelephone: 1},
+          profile,
+          undefined,
+          nextScreens,
+        );
       } else {
         const phoneNumber = cleanPhoneNumber(
           profile?.linked?.zmemAuusId?.[0]?.auusPhone,
@@ -295,7 +319,12 @@ export default function useInit() {
               navigation.navigate('PhoneNumberValidation', {
                 phoneNumber,
                 onSuccess: () => {
-                  checkAccount({...data, authTelephone: 1}, profile);
+                  checkAccount(
+                    {...data, authTelephone: 1},
+                    profile,
+                    undefined,
+                    nextScreens,
+                  );
                 },
               });
             })
@@ -317,7 +346,12 @@ export default function useInit() {
       const isUserHasBeenOpenWelcome = await WelcomeService.getLatestView(
         profile.data[0].zmemId,
       );
-      if (isUserHasBeenOpenWelcome) {
+
+      if (nextScreens) {
+        for (const screen of nextScreens) {
+          navigation.navigate(screen.path, screen.params);
+        }
+      } else if (isUserHasBeenOpenWelcome) {
         navigation.replace('Main', {screen: t('tab.home')});
       } else {
         navigation.replace('Welcome');

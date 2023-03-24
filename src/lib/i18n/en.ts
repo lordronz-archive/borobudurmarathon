@@ -16,6 +16,7 @@ export default {
   seeMoreInfo: 'See more info',
   additionalInformation: 'Additional Information',
   name: 'Name',
+  fullName: 'Full Name',
   phoneNumber: 'Phone Number',
   confirmation: 'Confirmation',
   cancel: 'Cancel',
@@ -36,6 +37,7 @@ export default {
     emailValidationTitle: 'Email Validation',
     emailValidationSubtitle: 'Please verify your email address ',
     emailValidation8DigitCode: 'Enter 8 digit code that we send to ',
+    emailValidation6DigitCode: 'Enter 6 digit code that we send to ',
     emailValidationLabel: 'Verification Code',
     emailValidationPlaceholder: 'Enter verification code here',
     emailValidationNoReceive: "Didn't receive verification code?",
@@ -66,6 +68,18 @@ export default {
     willSendToPhone:
       'We will send verification code to this number for validation',
     signoutConfirmation: 'Are you sure want to sign out?',
+    registerSuccess: 'Registered successfully. Please login.',
+    helperWeWillSendOTPToEmail:
+      'We will send verification code to this email for validation',
+    placeholderFullName: 'Enter your full name here',
+    helperFullName: 'Name as stated on your official ID document',
+    placeholderEmail: 'Enter your email here',
+    placeholderPhone: 'Enter your phone here',
+    placeholderPassword: 'Enter your password here',
+    placeholderPasswordAgain: 'Enter your password to confirm',
+    password: 'Password',
+    passwordAgain: 'Confirm Password',
+    placeholderIdentityNumber: 'Enter your identity number',
   },
   registration: {
     registrationSuccess: 'Event Registration Success',
@@ -215,5 +229,20 @@ export default {
     errorTitle: 'Something wrong',
     errorMessage:
       'Please try again. Makesure your connection is stable. If you still got the same error, let us know.',
+    emailAlreadyTaken: 'Email already taken. Use another email.',
+    forgotPasswordSuccess:
+      'Link for reset password has been sent to your email. Please check your inbox and follow the instructions.',
+    otpHasBeenSentToEmail: 'OTP has been sent to your email',
+    passwordNotSame: 'Password and Confirm Password is not same',
+  },
+  chooseOne: 'Choose one',
+  stepTitle: {
+    Citizen: 'Citizen',
+    UploadID: 'Upload ID',
+    Profile: 'Profile',
+  },
+  uploadPhotoOptions: {
+    openCamera: 'Open Camera',
+    chooseFromGallery: 'Choose From Gallery',
   },
 };

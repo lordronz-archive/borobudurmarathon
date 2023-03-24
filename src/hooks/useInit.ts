@@ -243,12 +243,12 @@ export default function useInit() {
     }
 
     console.info('checkAccount, after demo settings', data);
-    if (Number(data.authEmail) === 0) {
-      console.info('Number(data.authEmail) === 0');
+    if (data.login === 'KompasId' && Number(data.authEmail) === 0) {
+      console.info("data.login === 'KompasId' && Number(data.authEmail) === 0");
       // verify email
       AuthService.verificationEmail()
         .then(() => {
-          navigation.navigate('EmailValidation', {
+          navigation.navigate('EmailValidationForKompas', {
             email: data.email,
             onSuccess: () => {
               setDemoVerifyEmail(false);

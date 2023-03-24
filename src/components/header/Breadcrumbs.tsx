@@ -1,8 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Box, Divider, HStack, Text, useTheme, VStack} from 'native-base';
+import {Box, Divider, HStack, Text, VStack} from 'native-base';
 import React from 'react';
-import {RootStackParamList} from '../../navigation/RootNavigator';
 
 type Props = {
   titles: string[];
@@ -10,10 +7,6 @@ type Props = {
 };
 
 export default function Breadcrumbs(props: Props) {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {colors} = useTheme();
-
   return (
     <HStack paddingY={'12px'}>
       {props.titles.map((title, i) => (

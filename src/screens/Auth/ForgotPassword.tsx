@@ -7,10 +7,9 @@ import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {getErrorMessage, getErrorStd} from '../../helpers/errorHandler';
-import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 
 export default function ForgotPasswordScreen() {
   const navigation =
@@ -21,35 +20,22 @@ export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState<string>();
   const [loading, setLoading] = useState(false);
 
-  const signin = async () => {
+  const forgotPassword = async () => {
     try {
       setLoading(true);
       const body = {
         email,
       };
       const result = await AuthService.resetPass(body);
-      console.info('login result', result);
+      console.info('forgotPassword result', result);
       navigation.goBack();
       toast.show({
         title: 'Success',
-        description:
-          'Link for reset password has been sent to your email. Please check your inbox and follow the instructions.',
+        description: t('message.forgotPasswordSuccess'),
         placement: 'top',
       });
-    } catch (e) {
-      const errStd = getErrorStd(e);
-      if (errStd.errorCode === 409) {
-        toast.show({
-          description: 'Failed',
-          placement: 'top',
-        });
-      } else {
-        toast.show({
-          title: 'Failed',
-          description: getErrorMessage(e),
-          placement: 'top',
-        });
-      }
+    } catch (err) {
+      handleErrorMessage(err);
     } finally {
       setLoading(false);
     }
@@ -69,7 +55,7 @@ export default function ForgotPasswordScreen() {
           <VStack space="2.5">
             <VStack space="1.5">
               <TextInput
-                placeholder="Enter your email here"
+                placeholder={t('auth.placeholderEmail') || ''}
                 label="Email"
                 value={email}
                 onChangeText={text => setEmail(text)}
@@ -88,7 +74,11 @@ export default function ForgotPasswordScreen() {
           </Text>
         </HStack> */}
         </Box>
-        <Button h="12" mb="3" onPress={() => signin()} isLoading={loading}>
+        <Button
+          h="12"
+          mb="3"
+          onPress={() => forgotPassword()}
+          isLoading={loading}>
           {/* {t('profile.sendOtp')} */}
           {t('auth.resetPassword')}
         </Button>

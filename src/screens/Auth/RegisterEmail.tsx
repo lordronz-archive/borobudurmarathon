@@ -8,15 +8,16 @@ import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import SelectInput from '../../components/form/SelectInput';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import {useDebounce} from 'use-debounce';
 import {useTranslation} from 'react-i18next';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Button from '../../components/buttons/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import AppContainer from '../../layout/AppContainer';
-import {getApiErrors} from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 import {GENDER_OPTIONS} from '../../assets/data/gender';
+import i18next from 'i18next';
+import {LanguageID} from '../../types/language.type';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -28,13 +29,13 @@ export default function RegisterEmailScreen() {
 
   const [form, setForm] = useState<{
     ptmmFullName: string;
-    ptmmGender: string;
+    ptmmGender: string | undefined;
     ptmmPassword: string;
     ptmmEmail: string;
     ptmmLanguage: '1';
   }>({
     ptmmFullName: '',
-    ptmmGender: '',
+    ptmmGender: undefined,
     ptmmPassword: '',
     ptmmEmail: '',
     ptmmLanguage: '1',
@@ -82,14 +83,14 @@ export default function RegisterEmailScreen() {
       setLoading(true);
       const data = {
         ...form,
-        ptmmLanguage: 1,
+        ptmmLanguage: i18next.language === 'id' ? LanguageID.ID : LanguageID.EN,
       };
       console.info('signup data', JSON.stringify(data));
       const result = await AuthService.signup(data);
       console.info('register result', result);
 
       toast.show({
-        description: 'OTP has been sent to your email',
+        description: t('message.otpHasBeenSentToEmail'),
         placement: 'top',
       });
 
@@ -98,31 +99,14 @@ export default function RegisterEmailScreen() {
         email: form.ptmmEmail,
         onSuccess: () => {
           toast.show({
-            description: 'Registered successfully. Please login.',
+            description: t('auth.registerSuccess'),
           });
           navigation.navigate('SignInEmail');
         },
       });
     } catch (err: any) {
-      const objErrors = getApiErrors(err);
-      console.info('objErrors', objErrors);
-      if (objErrors) {
-        setErrors({
-          ...objErrors,
-        });
-        toast.show({
-          title: 'Failed to save profile',
-          description: Object.keys(objErrors)
-            .map(field => `${objErrors[field]} [${field}]`)
-            .join('. '),
-        });
-      } else {
-        toast.show({
-          title: 'Failed to register',
-          description: getErrorMessage(err),
-          placement: 'top',
-        });
-      }
+      const objErrors = handleErrorMessage(err, 'Failed to register');
+      setErrors({...objErrors});
     } finally {
       setLoading(false);
     }
@@ -153,8 +137,8 @@ export default function RegisterEmailScreen() {
           <VStack space="2.5">
             <VStack space="1.5">
               <TextInput
-                placeholder="Enter your full name here"
-                label="Full Name"
+                placeholder={t('auth.placeholderFullName') || ''}
+                label={t('fullName') || ''}
                 value={form.ptmmFullName}
                 onChangeText={val => setForm({...form, ptmmFullName: val})}
                 isInvalid={!!errors.ptmmFullName}
@@ -162,7 +146,7 @@ export default function RegisterEmailScreen() {
               />
               <SelectInput
                 items={GENDER_OPTIONS}
-                placeholder="Choose gender"
+                placeholder={t('chooseOne') || ''}
                 label="Gender"
                 onValueChange={val => setForm({...form, ptmmGender: val})}
                 value={form.ptmmGender}
@@ -171,11 +155,11 @@ export default function RegisterEmailScreen() {
                 errorMessage={errors.ptmmGender}
               />
               <TextInput
-                placeholder="Enter your email here"
+                placeholder={t('auth.placeholderEmail') || ''}
                 label="Email"
                 helperText={
                   isEmailCanUse === undefined
-                    ? 'We will send verification code to this email for validation'
+                    ? t('auth.helperWeWillSendOTPToEmail')
                     : undefined
                 }
                 onChangeText={val => {
@@ -188,7 +172,7 @@ export default function RegisterEmailScreen() {
                   errors.ptmmEmail
                     ? errors.ptmmEmail
                     : isEmailCanUse === false
-                    ? 'Email already taken. Use another email.'
+                    ? t('message.emailAlreadyTaken')
                     : undefined
                 }
                 rightIcon={
@@ -203,15 +187,15 @@ export default function RegisterEmailScreen() {
                 _inputProps={{textContentType: 'emailAddress'}}
               />
               <TextInput
-                placeholder="Enter your password here"
-                label="Password"
+                placeholder={t('auth.placeholderPassword') || ''}
+                label={t('auth.password') || ''}
                 type="password"
                 onChangeText={val => setForm({...form, ptmmPassword: val})}
                 value={form.ptmmPassword}
               />
               <TextInput
-                placeholder="Enter your password to confirm"
-                label="Confirm Password"
+                placeholder={t('auth.placeholderPasswordAgain') || ''}
+                label={t('auth.passwordAgain') || ''}
                 type="password"
                 onChangeText={setConfirmPassword}
                 value={confirmPassword}
@@ -220,7 +204,7 @@ export default function RegisterEmailScreen() {
                   !!confirmPassword &&
                   form.ptmmPassword !== confirmPassword
                 }
-                errorMessage="Password and Confirm Password is not same"
+                errorMessage={t('message.passwordNotSame') || ''}
               />
             </VStack>
           </VStack>
@@ -247,7 +231,7 @@ export default function RegisterEmailScreen() {
           <Button
             onPress={() => signup()}
             isLoading={loading}
-            disabled={isDisabled}>
+            disabled={isDisabled || isLoadingCheckEmail}>
             {t('auth.register')}
           </Button>
         </HStack>

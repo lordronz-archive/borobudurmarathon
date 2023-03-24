@@ -16,6 +16,7 @@ export default {
   seeMoreInfo: 'Lihat info',
   additionalInformation: 'Informasi Tambahan',
   name: 'Nama',
+  fullName: 'Nama Lengkap',
   phoneNumber: 'Nomor HP',
   confirmation: 'Konfirmasi',
   cancel: 'Batal',
@@ -37,6 +38,8 @@ export default {
     emailValidationSubtitle: 'Harap verifikasi alamat email Anda',
     emailValidation8DigitCode:
       'Masukkan 8 digit kode verifikasi yang telah kami kirimkan ke',
+    emailValidation6DigitCode:
+      'Masukkan 6 digit kode verifikasi yang telah kami kirimkan ke',
     emailValidationLabel: 'Kode Verifikasi',
     emailValidationPlaceholder: 'Masukkan kode verifikasi disini',
     emailValidationNoReceive: 'Belum menerima kode verifikasi?',
@@ -67,6 +70,18 @@ export default {
     willSendToPhone:
       'Kami akan mengirimkan kode verifikasi ke nomor ini untuk validasi',
     signoutConfirmation: 'Apakah anda yakin ingin keluar?',
+    registerSuccess: 'Pendaftaran berhasil. Silakan login.',
+    helperWeWillSendOTPToEmail:
+      'Kami akan mengirimkan OTP ke email untuk validasi',
+    placeholderFullName: 'Masukkan nama lengkap di sini',
+    helperFullName: 'Nama sesuai dokumen identitas resmi',
+    placeholderEmail: 'Masukkan email di sini',
+    placeholderPhone: 'Masukkan nomor handphone di sini',
+    placeholderPassword: 'Masukkan kata sandi di sini',
+    placeholderPasswordAgain: 'Masukkan ulang kata sandi di sini',
+    password: 'Kata sandi',
+    passwordAgain: 'Ketik ulang kata sandi',
+    placeholderIdentityNumber: 'Masukkan nomor identitas',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',
@@ -214,5 +229,20 @@ export default {
     errorTitle: 'Terjadi kesalahan.',
     errorMessage:
       'Silakan coba lagi. Pastikan koneksi internet stabil. Jika error berlanjut, silakan hubungi kami.',
+    emailAlreadyTaken: 'Email sudah terdaftar. Gunakan email lain.',
+    forgotPasswordSuccess:
+      'Link untuk reset password telah dikirim via email. Silakan cek inbox dan ikuti petunjuknya.',
+    otpHasBeenSentToEmail: 'OTP sudah dikirim via email',
+    passwordNotSame: 'Kata sandi tidak sama, silakan cek ulang',
+  },
+  chooseOne: 'Pilih salah satu',
+  stepTitle: {
+    Citizen: 'Kewarganegaraan',
+    UploadID: 'Unggah Identitas',
+    Profile: 'Profil',
+  },
+  uploadPhotoOptions: {
+    openCamera: 'Buka Kamera',
+    chooseFromGallery: 'Pilih Dari Galeri',
   },
 };

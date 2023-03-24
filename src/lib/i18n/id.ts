@@ -154,6 +154,18 @@ export default {
     completePaymentBefore: 'Selesaikan pembayaran sebelum',
     seeTutorial: 'Lihat Panduan',
     haveQuestion: 'Punya pertanyaan seputar pembayaran event?',
+    paymentStatusExpired:
+      'Status pembayaran sudah expired, jika masih ingin mengikuti event ini silahkan register ulang event ini',
+    passBallotStage:
+      'Selamat anda lolos tahap ballot, silahkan lanjutkan ke pembayaran event.',
+    pleaseCompletePayment:
+      'Silahkan selesaikan pembayaran anda sebelum batas pembayaran berakhir',
+    ballotAnnouncement:
+      'Pengumuman hasil ballot akan diinformasikan pada periode pengumuman hasil ballot.',
+    paymentStatusExpiredShort: 'Status pembayaran anda sudah expire',
+    qrWillAppear: 'QR Code event akan tampil disini setalah anda',
+    passedBallot: 'lolos ballot',
+    makeAPayment: 'melakukan pembayaran',
   },
   gender: {
     male: 'Laki-laki',

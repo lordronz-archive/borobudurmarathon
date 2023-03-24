@@ -16,7 +16,7 @@ export default function LoadingBlock(props: Props) {
         width: '100%',
         height: '100%',
         backgroundColor: '#ffffff',
-        ...(props.style || {})
+        ...(props.style || {}),
       }}>
       <Center>
         <Spinner size="lg" />

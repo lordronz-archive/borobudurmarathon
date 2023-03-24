@@ -36,6 +36,7 @@ export default {
     emailValidationTitle: 'Email Validation',
     emailValidationSubtitle: 'Please verify your email address ',
     emailValidation8DigitCode: 'Enter 8 digit code that we send to ',
+    emailValidation6DigitCode: 'Enter 6 digit code that we send to ',
     emailValidationLabel: 'Verification Code',
     emailValidationPlaceholder: 'Enter verification code here',
     emailValidationNoReceive: "Didn't receive verification code?",

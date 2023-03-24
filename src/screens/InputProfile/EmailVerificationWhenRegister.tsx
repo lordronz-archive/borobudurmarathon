@@ -49,7 +49,7 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
     };
   }, [seconds]);
 
-  const validatePhoneNumber = async () => {
+  const verifyEmail = async () => {
     setIsLoading(true);
     let valid = true;
 
@@ -177,7 +177,7 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
         <Button
           h="12"
           mb="3"
-          onPress={validatePhoneNumber}
+          onPress={verifyEmail}
           isLoading={isLoading}
           disabled={isDisabledButton}
           bg={isDisabledButton ? 'gray.400' : undefined}>

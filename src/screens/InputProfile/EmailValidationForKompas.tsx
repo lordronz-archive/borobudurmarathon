@@ -15,7 +15,10 @@ import config from '../../config';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'EmailValidation'>;
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  'EmailValidationForKompas'
+>;
 
 export default function EmailValidationScreen({route}: Props) {
   const navigation =
@@ -46,7 +49,7 @@ export default function EmailValidationScreen({route}: Props) {
     };
   }, [seconds]);
 
-  const validatePhoneNumber = async () => {
+  const validateEmail = async () => {
     setIsLoading(true);
     let valid = true;
 
@@ -119,7 +122,7 @@ export default function EmailValidationScreen({route}: Props) {
           </VStack>
           <Box mt={26} mb="3">
             <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-              {t('auth.emailValidation8DigitCode')}{' '}
+              {t('auth.emailValidation6DigitCode')}{' '}
               <Text bold>{`"${email}"`}</Text>
             </Text>
           </Box>
@@ -174,7 +177,7 @@ export default function EmailValidationScreen({route}: Props) {
         <Button
           h="12"
           mb="3"
-          onPress={validatePhoneNumber}
+          onPress={validateEmail}
           isLoading={isLoading}
           disabled={isDisabledButton}
           bg={isDisabledButton ? 'gray.400' : undefined}>

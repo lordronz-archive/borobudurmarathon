@@ -37,6 +37,8 @@ export default {
     emailValidationSubtitle: 'Harap verifikasi alamat email Anda',
     emailValidation8DigitCode:
       'Masukkan 8 digit kode verifikasi yang telah kami kirimkan ke',
+    emailValidation6DigitCode:
+      'Masukkan 6 digit kode verifikasi yang telah kami kirimkan ke',
     emailValidationLabel: 'Kode Verifikasi',
     emailValidationPlaceholder: 'Masukkan kode verifikasi disini',
     emailValidationNoReceive: 'Belum menerima kode verifikasi?',

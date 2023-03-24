@@ -23,7 +23,7 @@ import MyEventDetail from '../screens/Event/MyEventsDetail';
 import CertificatesScreen from '../screens/Profile/Certificates';
 import PartnerScreen from '../screens/Information/PartnerScreen';
 import ChooseCitizenScreen from '../screens/InputProfile/ChooseCitizen';
-import EmailValidationScreen from '../screens/InputProfile/EmailValidation';
+import EmailValidationForKompasScreen from '../screens/InputProfile/EmailValidationForKompas';
 import AboutUsScreen from '../screens/Information/AboutUs';
 import SearchLocationScreen from '../screens/InputProfile/SearchLocation';
 import SignInEmailScreen from '../screens/Auth/SignInEmail';
@@ -64,7 +64,7 @@ export type RootStackParamList = {
       }
     | undefined;
   PhoneNumberValidation?: {phoneNumber?: string; onSuccess: () => void};
-  EmailValidation?: {email?: string; onSuccess: () => void};
+  EmailValidationForKompas?: {email?: string; onSuccess: () => void};
   EmailVerificationWhenRegister?: {email?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
   ChooseCitizen: undefined;
@@ -135,8 +135,8 @@ function RootNavigator() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="EmailValidation"
-          component={EmailValidationScreen}
+          name="EmailValidationForKompas"
+          component={EmailValidationForKompasScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

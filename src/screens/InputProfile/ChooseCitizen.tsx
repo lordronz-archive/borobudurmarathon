@@ -50,7 +50,7 @@ import Button from '../../components/buttons/Button';
 import {useDemo} from '../../context/demo.context';
 import {getIDNumberType} from '../../assets/data/ktpPassport';
 import {GENDER_OPTIONS} from '../../assets/data/gender';
-import ImageCropPicker, {ImageOrVideo} from 'react-native-image-crop-picker';
+import {ImageOrVideo} from 'react-native-image-crop-picker';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
 import {getApiErrors} from '../../helpers/apiErrors';
@@ -520,16 +520,16 @@ export default function ChooseCitizenScreen({route}: Props) {
   //     });
   // };
 
-  const onChangeFile = (image: ImageOrVideo) => {
-    if (image.size <= 5 * 1e6) {
-      handleChangeIdentityFile(image);
-    } else {
-      toast.show({
-        id: 'id-image-too-big',
-        description: 'ID Image is too big, maximum file size is 5 MB',
-      });
-    }
-  };
+  // const onChangeFile = (image: ImageOrVideo) => {
+  //   if (image.size <= 5 * 1e6) {
+  //     handleChangeIdentityFile(image);
+  //   } else {
+  //     toast.show({
+  //       id: 'id-image-too-big',
+  //       description: 'ID Image is too big, maximum file size is 5 MB',
+  //     });
+  //   }
+  // };
 
   const isDisabledButton = () => {
     if (step === 'profile') {
@@ -715,9 +715,9 @@ export default function ChooseCitizenScreen({route}: Props) {
               {stepCount === 3 && profileStep === 1 && (
                 <VStack my="3" space="2">
                   <TextInput
-                    placeholder="Enter your name"
-                    label="Name"
-                    helperText="Name as stated on your official ID document"
+                    placeholder={t('auth.placeholderFullName') || ''}
+                    label={t('fullName') || ''}
+                    helperText={t('auth.helperFullName')}
                     value={accountInformation.name}
                     onChangeText={val =>
                       setAccountInformation(oldVal => ({
@@ -727,8 +727,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                     }
                   />
                   <TextInput
-                    placeholder="Enter your phone number"
-                    label="Phone number"
+                    placeholder={t('auth.placeholderPhone') || ''}
+                    label={t('phoneNumber') || ''}
                     helperText={t('auth.willSendToPhone')}
                     value={accountInformation.phoneNumber}
                     keyboardType="numeric"
@@ -744,7 +744,7 @@ export default function ChooseCitizenScreen({route}: Props) {
               {stepCount === 3 && profileStep === 2 && (
                 <VStack my="3" space="2">
                   <TextInput
-                    placeholder={'Enter your identity number'}
+                    placeholder={t('auth.placeholderIdentityNumber') || ''}
                     label={`Identity Number (${
                       getIDNumberType(citizen).label
                     })`}
@@ -763,7 +763,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                   />
                   <SelectInput
                     items={GENDER_OPTIONS}
-                    placeholder="Choose gender"
+                    placeholder={t('chooseOne') || ''}
                     label="Gender"
                     hideSearch
                     value={profile.mbsdGender}

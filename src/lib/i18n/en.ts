@@ -72,11 +72,14 @@ export default {
     helperWeWillSendOTPToEmail:
       'We will send verification code to this email for validation',
     placeholderFullName: 'Enter your full name here',
+    helperFullName: 'Name as stated on your official ID document',
     placeholderEmail: 'Enter your email here',
+    placeholderPhone: 'Enter your phone here',
     placeholderPassword: 'Enter your password here',
     placeholderPasswordAgain: 'Enter your password to confirm',
     password: 'Password',
     passwordAgain: 'Confirm Password',
+    placeholderIdentityNumber: 'Enter your identity number',
   },
   registration: {
     registrationSuccess: 'Event Registration Success',

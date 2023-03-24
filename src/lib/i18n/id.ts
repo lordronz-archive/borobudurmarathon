@@ -74,11 +74,14 @@ export default {
     helperWeWillSendOTPToEmail:
       'Kami akan mengirimkan OTP ke email untuk validasi',
     placeholderFullName: 'Masukkan nama lengkap di sini',
+    helperFullName: 'Nama sesuai dokumen identitas resmi',
     placeholderEmail: 'Masukkan email di sini',
+    placeholderPhone: 'Masukkan nomor handphone di sini',
     placeholderPassword: 'Masukkan kata sandi di sini',
     placeholderPasswordAgain: 'Masukkan ulang kata sandi di sini',
     password: 'Kata sandi',
     passwordAgain: 'Ketik ulang kata sandi',
+    placeholderIdentityNumber: 'Masukkan nomor identitas',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',

@@ -11,6 +11,7 @@ import {
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ImageSourcePropType} from 'react-native';
+import LoadingBlock from '../loading/LoadingBlock';
 
 type CardEventProps = {
   title: string;
@@ -38,6 +39,8 @@ export default function CardEvent({
             w="100%"
             h="100%"
             borderRadius={5}
+            fallbackSource={require('../../assets/images/no-image.png')}
+            loadingIndicatorSource={require('../../assets/images/no-image.png')}
             alt={title}
           />
         </AspectRatio>

@@ -56,7 +56,7 @@ export default function WelcomeScreen() {
   const galleriesRandomized =
     galleriesRaw && galleriesRaw?.length > 7 ? galleriesRaw : [];
   if (galleriesRaw && !galleriesRandomized.length) {
-    for (let i = 0; i < 8; ++i) {
+    for (let i = 0; i < 9; ++i) {
       const temp =
         galleriesRaw[Math.floor(Math.random() * galleriesRaw.length)];
       galleriesRandomized.push(temp);
@@ -71,11 +71,14 @@ export default function WelcomeScreen() {
             <Image
               flex="2"
               borderRadius={8}
-              source={{
-                uri:
-                  galleriesRandomized[0] ||
-                  'https://wallpaperaccess.com/full/317501.jpg',
-              }}
+              source={
+                galleriesRandomized[0]
+                  ? {
+                      uri: galleriesRandomized[0],
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              fallbackSource={require('../../assets/images/no-image.png')}
               alt="Welcome Image"
             />
             <Box
@@ -84,16 +87,19 @@ export default function WelcomeScreen() {
               borderColor="#E8ECF3"
               borderRadius={8}
               overflow="hidden">
-              <Image
+              {/* <Image
                 flex="2"
                 borderRadius={8}
-                source={{
-                  uri:
-                    galleries?.data[0]?.mgalUrl ||
-                    'https://wallpaperaccess.com/full/317501.jpg',
-                }}
+                source={
+                  galleriesRandomized[1]
+                    ? {
+                        uri: galleriesRandomized[1],
+                      }
+                    : require('../../assets/images/no-image.png')
+                }
+                fallbackSource={require('../../assets/images/no-image.png')}
                 alt="Welcome Image"
-              />
+              /> */}
               <Box
                 flex="3"
                 borderWidth={1}
@@ -129,16 +135,19 @@ export default function WelcomeScreen() {
                 </Box>
                 <Box backgroundColor={'#EB1C23'} height={2} />
               </Box>
-              <Box backgroundColor={'#EB1C23'} height={2} />
+              {/* <Box backgroundColor={'#EB1C23'} height={2} /> */}
             </Box>
             <Image
               flex="1.5"
               borderRadius={8}
-              source={{
-                uri:
-                  galleriesRandomized[1] ||
-                  'https://wallpaperaccess.com/full/317501.jpg',
-              }}
+              source={
+                galleriesRandomized[2]
+                  ? {
+                      uri: galleriesRandomized[2],
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              fallbackSource={require('../../assets/images/no-image.png')}
               alt="Welcome Image"
             />
           </VStack>
@@ -147,62 +156,80 @@ export default function WelcomeScreen() {
               <Image
                 flex="1.5"
                 borderRadius={8}
-                source={{
-                  uri:
-                    galleriesRandomized[2] ||
-                    'https://wallpaperaccess.com/full/317501.jpg',
-                }}
+                source={
+                  galleriesRandomized[3]
+                    ? {
+                        uri: galleriesRandomized[3],
+                      }
+                    : require('../../assets/images/no-image.png')
+                }
+                fallbackSource={require('../../assets/images/no-image.png')}
                 alt="Welcome Image"
               />
               <Image
                 flex="2.4"
                 borderRadius={8}
-                source={{
-                  uri:
-                    galleriesRandomized[3] ||
-                    'https://wallpaperaccess.com/full/317501.jpg',
-                }}
+                source={
+                  galleriesRandomized[4]
+                    ? {
+                        uri: galleriesRandomized[4],
+                      }
+                    : require('../../assets/images/no-image.png')
+                }
+                fallbackSource={require('../../assets/images/no-image.png')}
                 alt="Welcome Image"
               />
             </HStack>
             <Image
               flex="1.5"
               borderRadius={8}
-              source={{
-                uri:
-                  galleriesRandomized[4] ||
-                  'https://wallpaperaccess.com/full/317501.jpg',
-              }}
+              source={
+                galleriesRandomized[5]
+                  ? {
+                      uri: galleriesRandomized[5],
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              fallbackSource={require('../../assets/images/no-image.png')}
               alt="Welcome Image"
             />
             <Image
               flex="2.4"
               borderRadius={8}
-              source={{
-                uri:
-                  galleriesRandomized[5] ||
-                  'https://wallpaperaccess.com/full/317501.jpg',
-              }}
+              source={
+                galleriesRandomized[6]
+                  ? {
+                      uri: galleriesRandomized[6],
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              fallbackSource={require('../../assets/images/no-image.png')}
               alt="Welcome Image"
             />
             <Image
               flex="3"
               borderRadius={8}
-              source={{
-                uri:
-                  galleriesRandomized[6] ||
-                  'https://wallpaperaccess.com/full/317501.jpg',
-              }}
+              source={
+                galleriesRandomized[7]
+                  ? {
+                      uri: galleriesRandomized[7],
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              fallbackSource={require('../../assets/images/no-image.png')}
               alt="Welcome Image"
             />
             <Image
               flex="1.5"
               borderRadius={8}
-              source={{
-                uri:
-                  galleriesRandomized[7] ||
-                  'https://wallpaperaccess.com/full/317501.jpg',
-              }}
+              source={
+                galleriesRandomized[8]
+                  ? {
+                      uri: galleriesRandomized[8],
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              fallbackSource={require('../../assets/images/no-image.png')}
               alt="Welcome Image"
             />
           </VStack>

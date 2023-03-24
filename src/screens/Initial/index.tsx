@@ -12,7 +12,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import AppContainer from '../../layout/AppContainer';
 import useDeeplinkInit from '../../lib/deeplink/useDeeplinkInit';
-import { t } from 'i18next';
+import {t} from 'i18next';
 
 const uri =
   config.apiUrl.href.href + config.apiUrl.apis.member.checkSession.path;

@@ -233,4 +233,13 @@ export default {
     passwordNotSame: 'Password and Confirm Password is not same',
   },
   chooseOne: 'Choose one',
+  stepTitle: {
+    Citizen: 'Citizen',
+    UploadID: 'Upload ID',
+    Profile: 'Profile',
+  },
+  uploadPhotoOptions: {
+    openCamera: 'Open Camera',
+    chooseFromGallery: 'Choose From Gallery',
+  },
 };

@@ -233,4 +233,13 @@ export default {
     passwordNotSame: 'Kata sandi tidak sama, silakan cek ulang',
   },
   chooseOne: 'Pilih salah satu',
+  stepTitle: {
+    Citizen: 'Kewarganegaraan',
+    UploadID: 'Unggah Identitas',
+    Profile: 'Profil',
+  },
+  uploadPhotoOptions: {
+    openCamera: 'Buka Kamera',
+    chooseFromGallery: 'Pilih Dari Galeri',
+  },
 };

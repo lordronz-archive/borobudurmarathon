@@ -4,6 +4,7 @@ import {Box, Button, Modal, Text, Toast} from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {TouchableOpacity} from 'react-native';
 import { getErrorMessage } from '../../helpers/errorHandler';
+import { t } from 'i18next';
 
 type Props = {
   title?: string;
@@ -74,12 +75,12 @@ const ImagePicker = (props: Props) => {
         <Box alignSelf={'flex-start'}>
           <TouchableOpacity onPress={openCamera} style={{marginVertical: 15}}>
             <Text fontSize={'14px'} fontWeight={400} color={'#1E1E1E'}>
-              Open Camera
+              {t('uploadPhotoOptions.openCamera')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={openGalery} style={{marginVertical: 15}}>
             <Text fontSize={'14px'} fontWeight={400} color={'#1E1E1E'}>
-              Choose from gallery
+              {t('uploadPhotoOptions.chooseFromGallery')}
             </Text>
           </TouchableOpacity>
         </Box>

@@ -564,7 +564,11 @@ export default function ChooseCitizenScreen({route}: Props) {
       <VStack px="4" flex="1">
         <VStack>
           <Breadcrumbs
-            titles={['Citizen', 'Upload ID', 'Profile']}
+            titles={[
+              t('stepTitle.Citizen'),
+              t('stepTitle.UploadID'),
+              t('stepTitle.Profile'),
+            ]}
             step={stepCount + 1}
           />
           <VStack space="1" mt={'12px'}>
@@ -970,7 +974,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                     {t('profile.verifyProfileLaterInfo')}
                   </Text>
                 </Box>
-                <Box h="8"/>
+                <Box h="8" />
                 {/* <Actionsheet.Item>Delete</Actionsheet.Item>
                 <Actionsheet.Item isDisabled>Share</Actionsheet.Item>
                 <Actionsheet.Item>Play</Actionsheet.Item>

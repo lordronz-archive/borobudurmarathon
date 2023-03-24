@@ -14,9 +14,14 @@ import {
   Modal,
   Checkbox,
   FormControl,
+  Actionsheet,
+  useDisclose,
+  CheckCircleIcon,
+  Image,
+  ChevronDownIcon,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {Alert, Linking} from 'react-native';
+import {Alert, Linking, TouchableOpacity} from 'react-native';
 import KompasIcon from '../../components/icons/KompasIcon';
 import {Heading} from '../../components/text/Heading';
 import {getErrorMessage} from '../../helpers/errorHandler';
@@ -32,6 +37,8 @@ import useInit from '../../hooks/useInit';
 import {useDemo} from '../../context/demo.context';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
+import i18next from 'i18next';
+import {LanguageID} from '../../types/language.type';
 
 export default function AuthScreen() {
   console.info('===render AuthScreen');
@@ -62,6 +69,11 @@ export default function AuthScreen() {
   const [isNotRegistered, setIsNotRegistered] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   console.info('#Auth -- state', state);
+  const {
+    isOpen: isOpenChangeLanguage,
+    onOpen: onOpenChangeLanguage,
+    onClose: onCloseChangeLanguage,
+  } = useDisclose();
 
   const [authorizationCode, setAuthorizationCode] = useState<string>(
     params?.authorization_code,
@@ -281,9 +293,45 @@ export default function AuthScreen() {
     );
   }
 
+  const changeLanguage = async (langId: LanguageID) => {
+    i18next.changeLanguage(langId === LanguageID.EN ? 'en' : 'id');
+    // const url =
+    //   config.apiUrl.href.href +
+    //   config.apiUrl.apis.member.setLanguage.path +
+    //   langId;
+    // await httpRequest.get(url);
+  };
+
   return (
     <AppContainer>
       <Box px="4" flex="1">
+        <Box position="absolute" right="2" top="2" zIndex={10}>
+          <TouchableOpacity
+            onPress={() => {
+              onOpenChangeLanguage();
+            }}
+            style={{padding: 10}}>
+            <HStack alignItems="center">
+              {i18next.language === 'en' && (
+                <Image
+                  alt="English"
+                  source={require('../../assets/images/english.png')}
+                  shadow="2"
+                  mr="1"
+                />
+              )}
+              {i18next.language === 'id' && (
+                <Image
+                  alt="Indonesia"
+                  source={require('../../assets/images/indonesia.png')}
+                  shadow="2"
+                  mr="1"
+                />
+              )}
+              <ChevronDownIcon size="sm" />
+            </HStack>
+          </TouchableOpacity>
+        </Box>
         <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
           <VStack space="3" alignItems="center" justifyContent="center">
             <Heading textAlign={'center'}>
@@ -356,6 +404,72 @@ export default function AuthScreen() {
           </Center>
         </VStack>
       </Box>
+
+      <Actionsheet
+        isOpen={isOpenChangeLanguage}
+        onClose={onCloseChangeLanguage}
+        hideDragIndicator>
+        <Actionsheet.Content borderTopRadius="0">
+          <Box
+            w="100%"
+            h={60}
+            px={4}
+            justifyContent="center"
+            alignItems="center"
+            fontWeight="bold">
+            <Text
+              fontSize="20"
+              color="gray.900"
+              _dark={{
+                color: 'gray.300',
+              }}>
+              {t('profile.changeLanguage')}
+            </Text>
+          </Box>
+          <Actionsheet.Item
+            onPress={() => {
+              changeLanguage(LanguageID.EN);
+              onCloseChangeLanguage();
+            }}>
+            <HStack
+              w={i18next.language === 'en' ? '85%' : '100%'}
+              alignItems="center"
+              justifyContent="space-between">
+              <HStack alignItems="center" space={2}>
+                <Image
+                  alt="English"
+                  source={require('../../assets/images/english.png')}
+                />
+                <Text>English</Text>
+              </HStack>
+              {i18next.language === 'en' && (
+                <CheckCircleIcon color="primary.900" />
+              )}
+            </HStack>
+          </Actionsheet.Item>
+          <Actionsheet.Item
+            onPress={() => {
+              changeLanguage(LanguageID.ID);
+              onCloseChangeLanguage();
+            }}>
+            <HStack
+              w={i18next.language === 'id' ? '85%' : '100%'}
+              alignItems="center"
+              justifyContent="space-between">
+              <HStack alignItems="center" space={2}>
+                <Image
+                  alt="Indonesia"
+                  source={require('../../assets/images/indonesia.png')}
+                />
+                <Text>Indonesia</Text>
+              </HStack>
+              {i18next.language === 'id' && (
+                <CheckCircleIcon color="primary.900" />
+              )}
+            </HStack>
+          </Actionsheet.Item>
+        </Actionsheet.Content>
+      </Actionsheet>
 
       {config.isShowDemoSettings && (
         <Modal

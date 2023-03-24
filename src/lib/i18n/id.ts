@@ -16,6 +16,7 @@ export default {
   seeMoreInfo: 'Lihat info',
   additionalInformation: 'Informasi Tambahan',
   name: 'Nama',
+  fullName: 'Nama Lengkap',
   phoneNumber: 'Nomor HP',
   confirmation: 'Konfirmasi',
   cancel: 'Batal',
@@ -69,6 +70,15 @@ export default {
     willSendToPhone:
       'Kami akan mengirimkan kode verifikasi ke nomor ini untuk validasi',
     signoutConfirmation: 'Apakah anda yakin ingin keluar?',
+    registerSuccess: 'Pendaftaran berhasil. Silakan login.',
+    helperWeWillSendOTPToEmail:
+      'Kami akan mengirimkan OTP ke email untuk validasi',
+    placeholderFullName: 'Masukkan nama lengkap di sini',
+    placeholderEmail: 'Masukkan email di sini',
+    placeholderPassword: 'Masukkan kata sandi di sini',
+    placeholderPasswordAgain: 'Masukkan ulang kata sandi di sini',
+    password: 'Kata sandi',
+    passwordAgain: 'Ketik ulang kata sandi',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',
@@ -216,5 +226,9 @@ export default {
     errorTitle: 'Terjadi kesalahan.',
     errorMessage:
       'Silakan coba lagi. Pastikan koneksi internet stabil. Jika error berlanjut, silakan hubungi kami.',
+    emailAlreadyTaken: 'Email sudah terdaftar. Gunakan email lain.',
+    forgotPasswordSuccess:
+      'Link untuk reset password telah dikirim via email. Silakan cek inbox dan ikuti petunjuknya.',
   },
+  chooseOne: 'Pilih salah satu',
 };

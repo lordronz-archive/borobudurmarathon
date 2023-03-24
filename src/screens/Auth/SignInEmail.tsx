@@ -18,6 +18,7 @@ import {useTranslation} from 'react-i18next';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AppContainer from '../../layout/AppContainer';
+import { getApiErrors, handleErrorMessage } from '../../helpers/apiErrors';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -84,20 +85,22 @@ export default function SignInEmailScreen() {
       // console.info('resCheckSession', resCheckSession);
 
       // checkAccount(result.data);
-    } catch (e) {
-      const errStd = getErrorStd(e);
-      if (errStd.errorCode === 409) {
-        toast.show({
-          description: 'Failed to login',
-          placement: 'top',
-        });
-      } else {
-        toast.show({
-          title: 'Failed to login',
-          description: getErrorMessage(e),
-          placement: 'top',
-        });
-      }
+    } catch (err) {
+      handleErrorMessage(err, 'Failed to login');
+
+      // const errStd = getErrorStd(e);
+      // if (errStd.errorCode === 409) {
+      //   toast.show({
+      //     description: 'Failed to login',
+      //     placement: 'top',
+      //   });
+      // } else {
+      //   toast.show({
+      //     title: 'Failed to login',
+      //     description: getErrorMessage(e),
+      //     placement: 'top',
+      //   });
+      // }
     } finally {
       setLoading(false);
     }
@@ -147,15 +150,15 @@ export default function SignInEmailScreen() {
           <VStack space="2.5">
             <VStack space="1.5">
               <TextInput
-                placeholder="Enter your email here"
+                placeholder={t('auth.placeholderEmail') || ''}
                 label="Email"
                 value={email}
                 onChangeText={setEmail}
                 _inputProps={{textContentType: 'emailAddress'}}
               />
               <TextInput
-                placeholder="Enter your password here"
-                label="Password"
+                placeholder={t('auth.placeholderPassword') || ''}
+                label={t('auth.password') || ''}
                 type="password"
                 value={password}
                 onChangeText={text => setPassword(text)}

@@ -278,8 +278,9 @@ const AuthService = {
       }
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      // const msg = error as any;
+      return Promise.reject(error);
+      // throw new AuthenticationError(msg.status, msg.data.status.error.message);
       // throw new ResponseError(
       //   error.status,
       //   error.error.message

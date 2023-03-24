@@ -230,6 +230,7 @@ export default {
     forgotPasswordSuccess:
       'Link untuk reset password telah dikirim via email. Silakan cek inbox dan ikuti petunjuknya.',
     otpHasBeenSentToEmail: 'OTP sudah dikirim via email',
+    passwordNotSame: 'Kata sandi tidak sama, silakan cek ulang',
   },
   chooseOne: 'Pilih salah satu',
 };

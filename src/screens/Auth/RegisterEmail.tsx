@@ -204,7 +204,7 @@ export default function RegisterEmailScreen() {
                   !!confirmPassword &&
                   form.ptmmPassword !== confirmPassword
                 }
-                errorMessage="Password and Confirm Password is not same"
+                errorMessage={t('message.passwordNotSame') || ''}
               />
             </VStack>
           </VStack>

@@ -230,6 +230,7 @@ export default {
     forgotPasswordSuccess:
       'Link for reset password has been sent to your email. Please check your inbox and follow the instructions.',
     otpHasBeenSentToEmail: 'OTP has been sent to your email',
+    passwordNotSame: 'Password and Confirm Password is not same',
   },
   chooseOne: 'Choose one',
 };

@@ -102,6 +102,7 @@ const ProfileService = {
       console.info('url');
       return await httpRequest.get<MasterLocationResponse>(url);
     } catch (error) {
+      console.info('getLocation error', error);
       const msg = error as any;
       throw msg;
     }

@@ -51,7 +51,8 @@ export default function MyEventDetail() {
 
   const confirmRef = React.useRef(null);
 
-  const [detailTransaction, setDetailTransaction] = useState<TransactionDetail>();
+  const [detailTransaction, setDetailTransaction] =
+    useState<TransactionDetail>();
   const [detailEvent, setDetailEvent] = useState<GetEventResponse>();
 
   const [status, setStatus] = useState<string>('');
@@ -329,12 +330,12 @@ export default function MyEventDetail() {
                 <VStack flex={1} paddingLeft={'10px'}>
                   <Text fontWeight={400} color="#201D1D" fontSize={12}>
                     {status === 'Payment Expired'
-                      ? 'Status pembayaran sudah expired, jika masih ingin mengikuti event ini silahkan register ulang event ini'
+                      ? t('payment.paymentStatusExpired')
                       : params.isBallot && status === 'Waiting Payment'
-                      ? 'Selamat anda lolos tahap ballot, silahkan lanjutkan ke pembayaran event.'
+                      ? t('payment.passBallotStage')
                       : !params.isBallot && status === 'Waiting Payment'
-                      ? 'Silahkan selesaikan pembayaran anda sebelum batas pembayaran berakhir'
-                      : 'Pengumuman hasil ballot akan diinformasikan pada periode pengumuman hasil ballot.'}
+                      ? t('payment.pleaseCompletePayment')
+                      : t('payment.ballotAnnouncement')}
                   </Text>
                   {(status === 'Registered' || status === 'Unqualified') && (
                     <Text
@@ -402,12 +403,12 @@ export default function MyEventDetail() {
                 fontSize={12}
                 textAlign={'center'}>
                 {status === 'Payment Expired'
-                  ? 'Status pembayaran anda sudah expire'
+                  ? t('payment.paymentStatusExpiredShort')
                   : status === 'Paid'
                   ? 'Use this QR Code to enter the event'
-                  : `QR Code event akan tampil disini setalah anda ${
-                      params.isBallot ? 'lolos ballot & ' : ''
-                    }melakukan pembayaran`}
+                  : `${t('payment.qrWillAppear')} ${
+                      params.isBallot ? `${t('payment.passedBallot')} & ` : ''
+                    }${t('payment.makeAPayment')}`}
               </Text>
               {status === 'Waiting Payment' && (
                 <Box

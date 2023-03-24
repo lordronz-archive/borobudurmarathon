@@ -52,18 +52,18 @@ function getDateString(
     date = new Date(date);
   }
 
-  const now = new Date();
-  if (now.getFullYear() === date.getFullYear()) {
-    if (now.getMonth() === date.getMonth()) {
-      if (now.getDate() === date.getDate()) {
-        return t('time.today');
-      } else if (now.getDate() - date.getDate() === 1) {
-        return t('time.yesterday');
-      } else if (date.getDate() - now.getDate() === 1) {
-        return t('time.tomorrow');
-      }
-    }
-  }
+  // const now = new Date();
+  // if (now.getFullYear() === date.getFullYear()) {
+  //   if (now.getMonth() === date.getMonth()) {
+  //     if (now.getDate() === date.getDate()) {
+  //       return t('time.today');
+  //     } else if (now.getDate() - date.getDate() === 1) {
+  //       return t('time.yesterday');
+  //     } else if (date.getDate() - now.getDate() === 1) {
+  //       return t('time.tomorrow');
+  //     }
+  //   }
+  // }
 
   const dayText = LIST_DAY[date.getDay()];
   const dateText = date.getDate();

@@ -133,6 +133,7 @@ export default {
   },
   event: {
     registrationForm: 'Form Registration',
+    eventPricing: 'Event Pricing',
     chooseSuitableCategory: 'Choose suitable category & pricing',
     totalPayment: 'Total Payment',
     registerNow: 'Register Now',

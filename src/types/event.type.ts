@@ -141,6 +141,8 @@ interface Status {
 
 // EVENT
 export interface GetEventResponse {
+  access?: boolean;
+  notif?: string;
   categories?: CategoriesEntity[] | null;
   data: EventPropertiesDetail;
   fields?: EventFieldsEntity[] | null;
@@ -201,9 +203,9 @@ export interface EventPropertiesDetail {
   evnhType: string;
 
   evnhBallot?: string; // '0'
-  envhCategory?: string;
+  evnhCategory?: string;
   evnhSizeChart?: string;
-  envhFuture?: string;
+  evnhFuture?: string;
 }
 export interface EventFieldsEntity {
   evhfEvnhId: string;

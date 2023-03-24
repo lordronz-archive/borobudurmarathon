@@ -42,7 +42,7 @@ import BannerFull from '../../components/carousel/BannerFull';
 import AppContainer from '../../layout/AppContainer';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {useAuthUser} from '../../context/auth.context';
-import { getApiErrors } from '../../helpers/apiErrors';
+import {getApiErrors} from '../../helpers/apiErrors';
 
 type Price = {
   id: string;
@@ -69,8 +69,8 @@ export default function DetailEvent() {
     {
       icon: <IconTag size="5" mt="0.5" color="gray.500" />,
       label: t('event.raceCategory'),
-      description: event?.data.envhCategory
-        ? event?.data.envhCategory
+      description: event?.data.evnhCategory
+        ? event?.data.evnhCategory
         : (event?.categories || []).map(cat => cat.evncName).join(', '),
     },
     {
@@ -300,15 +300,26 @@ export default function DetailEvent() {
               )
             }
           />
-          {!isVerified && (
+          {event && !event?.access ? (
+            <NBAlert bgColor="warning.300" py="5">
+              <VStack alignItems="center">
+                <WarningOutlineIcon color="gray.600" size="xl" mb="2" />
+                <Text ml="1" fontSize="sm" textAlign="center" color="gray.700">
+                  {event.notif}
+                </Text>
+              </VStack>
+            </NBAlert>
+          ) : !isVerified ? (
             <NBAlert bgColor="warning.300">
               <HStack alignItems="center">
-                <WarningOutlineIcon color="black" />
-                <Text ml="1" fontSize="xs">
+                <WarningOutlineIcon color="gray.600" />
+                <Text ml="1" fontSize="xs" color="gray.700">
                   {t('profile.alertNotVerifiedMessage')}
                 </Text>
               </HStack>
             </NBAlert>
+          ) : (
+            false
           )}
 
           <Stack mx={4}>
@@ -387,16 +398,26 @@ export default function DetailEvent() {
                     </Box>
                   </Stack>
                   <Stack w="80%">
-                    <Text fontSize="sm" color={'#768499'} fontWeight={500}>
-                      {info.label}
-                    </Text>
                     <Text
                       fontSize="sm"
-                      fontWeight={400}
-                      mb="2"
-                      overflowX="auto">
-                      {info.description}
+                      color={'#768499'}
+                      fontWeight={500}
+                      mb="0.5">
+                      {info.label}
                     </Text>
+                    {info.description ? (
+                      <Text
+                        fontSize="sm"
+                        fontWeight={400}
+                        mb="2"
+                        overflowX="auto">
+                        {info.description}
+                      </Text>
+                    ) : (
+                      <Text color="gray.500" italic>
+                        ~ Not Set
+                      </Text>
+                    )}
                   </Stack>
                 </HStack>
                 {index < informations.length - 1 && <Divider />}
@@ -404,28 +425,30 @@ export default function DetailEvent() {
             ))}
           </Flex>
 
-          <Section
-            title="Event Pricing"
-            subtitle={t('event.chooseSuitableCategory') || ''}
-            mx={4}
-            my={3}>
-            <Radio.Group name="exampleGroup">
-              {prices
-                // .filter(price => price)
-                .map(price => (
-                  <EventPricingCard
-                    key={price.id}
-                    title={price.name}
-                    subtitle={price.description}
-                    originalPrice={price.originalPrice}
-                    finalPrice={price.finalPrice}
-                    benefits={price.benefits}
-                    selected={selected && price.id === selected.id}
-                    onSelect={() => setSelected(price)}
-                  />
-                ))}
-            </Radio.Group>
-          </Section>
+          {prices.length > 0 && (
+            <Section
+              title={t('event.eventPricing')}
+              subtitle={t('event.chooseSuitableCategory') || ''}
+              mx={4}
+              my={3}>
+              <Radio.Group name="exampleGroup">
+                {prices
+                  // .filter(price => price)
+                  .map(price => (
+                    <EventPricingCard
+                      key={price.id}
+                      title={price.name}
+                      subtitle={price.description}
+                      originalPrice={price.originalPrice}
+                      finalPrice={price.finalPrice}
+                      benefits={price.benefits}
+                      selected={selected && price.id === selected.id}
+                      onSelect={() => setSelected(price)}
+                    />
+                  ))}
+              </Radio.Group>
+            </Section>
+          )}
           <View py={100} />
         </ScrollView>
 

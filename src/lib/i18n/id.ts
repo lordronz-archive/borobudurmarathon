@@ -132,6 +132,7 @@ export default {
   },
   event: {
     registrationForm: 'Formulir Registrasi',
+    eventPricing: 'Pilih Kategori',
     chooseSuitableCategory: 'Pilih kategori & harga yang sesuai',
     totalPayment: 'Total Pembayaran',
     registerNow: 'Daftar Sekarang',

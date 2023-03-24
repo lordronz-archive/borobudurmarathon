@@ -155,6 +155,18 @@ export default {
     completePaymentBefore: 'Complete your payment before',
     seeTutorial: 'See Tutorial',
     haveQuestion: 'Have a question about payment?',
+    paymentStatusExpired:
+      'The payment status has expired, if you still want to take part in this event, please re-register for this event',
+    passBallotStage:
+      'Congratulations, you have passed the ballot stage, please proceed to paying for the event.',
+    pleaseCompletePayment:
+      'Please complete your payment before the payment deadline expires',
+    ballotAnnouncement:
+      'Announcement of ballot results will be informed during the ballot result announcement period.',
+    paymentStatusExpiredShort: 'Your payment status has expired',
+    qrWillAppear: 'The QR Code event will appear here after you',
+    passedBallot: 'passed the ballot',
+    makeAPayment: 'make a payment',
   },
   gender: {
     male: 'Male',

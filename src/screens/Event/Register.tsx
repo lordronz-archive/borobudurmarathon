@@ -38,6 +38,7 @@ import {
   REGISTER_EVENT_CONDITIONS,
 } from '../../helpers/registerEvent';
 import {EvhfName} from '../../types/registerEvent.type';
+import LoadingBlock from '../../components/loading/LoadingBlock';
 
 type Price = {
   id: string;
@@ -769,27 +770,8 @@ export default function EventRegisterScreen() {
             onRequestClose={() => setOpenJersey(false)}
           />
         )}
-        {isLoading && (
-          <Box
-            position="absolute"
-            width="100%"
-            height="100%"
-            justifyContent="center"
-            alignItems="center"
-            flex={1}>
-            <Box
-              bg="gray.300"
-              opacity="0.9"
-              width="100%"
-              height="100%"
-              position="absolute"
-            />
-            <Center>
-              <Spinner size="lg" />
-            </Center>
-          </Box>
-        )}
       </ScrollView>
+      {isLoading && <LoadingBlock style={{opacity: 0.7}} />}
     </AppContainer>
   );
 }

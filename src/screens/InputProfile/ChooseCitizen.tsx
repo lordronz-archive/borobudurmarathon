@@ -495,30 +495,30 @@ export default function ChooseCitizenScreen({route}: Props) {
     }
   };
 
-  const openCamera = () => {
-    ImageCropPicker.openCamera({
-      width: IMAGE_WIDTH,
-      height: IMAGE_HEIGHT,
-      cropping: true,
-      freeStyleCropEnabled: true,
-      mediaType: 'photo',
-      useIsFocused: false,
-    })
-      .then(image => {
-        console.info('openCamera image result', image);
-        onChangeFile(image);
-        setVisible(false);
-      })
-      .catch(err => {
-        toast.show({
-          description: getErrorMessage(err),
-        });
-        console.log('ERROR OPEN CAMERA =>>> ', err);
-        if (getErrorMessage(err).includes('simulator')) {
-          setVisible(true);
-        }
-      });
-  };
+  // const openCamera = () => {
+  //   ImageCropPicker.openCamera({
+  //     width: IMAGE_WIDTH,
+  //     height: IMAGE_HEIGHT,
+  //     cropping: true,
+  //     freeStyleCropEnabled: true,
+  //     mediaType: 'photo',
+  //     useIsFocused: false,
+  //   })
+  //     .then(image => {
+  //       console.info('openCamera image result', image);
+  //       onChangeFile(image);
+  //       setVisible(false);
+  //     })
+  //     .catch(err => {
+  //       toast.show({
+  //         description: getErrorMessage(err),
+  //       });
+  //       console.log('ERROR OPEN CAMERA =>>> ', err);
+  //       if (getErrorMessage(err).includes('simulator')) {
+  //         setVisible(true);
+  //       }
+  //     });
+  // };
 
   const onChangeFile = (image: ImageOrVideo) => {
     if (image.size <= 5 * 1e6) {
@@ -621,7 +621,8 @@ export default function ChooseCitizenScreen({route}: Props) {
               <TouchableOpacity
                 style={{width: '100%', height: 200}}
                 onPress={() => {
-                  openCamera();
+                  // openCamera();
+                  setVisible(true);
                 }}>
                 {identityImage && identityImage.data ? (
                   <Box
@@ -938,7 +939,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                       <Text fontSize={'12px'} fontWeight={600}>
                         {t('profile.verifyProfileDataLater')}
                       </Text>
-                      <TouchableOpacity onPress={() => setIsShowInfoVerifyLater(true)}>
+                      <TouchableOpacity
+                        onPress={() => setIsShowInfoVerifyLater(true)}>
                         <Text fontSize={'11px'} fontWeight={600} underline>
                           {t('seeMoreInfo')}
                         </Text>

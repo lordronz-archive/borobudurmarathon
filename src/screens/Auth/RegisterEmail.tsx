@@ -91,7 +91,7 @@ export default function RegisterEmailScreen() {
       console.info('register result', result);
 
       toast.show({
-        description: 'OTP has been sent to your email',
+        description: t('message.otpHasBeenSentToEmail'),
         placement: 'top',
       });
 

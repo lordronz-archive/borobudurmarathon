@@ -229,6 +229,7 @@ export default {
     emailAlreadyTaken: 'Email already taken. Use another email.',
     forgotPasswordSuccess:
       'Link for reset password has been sent to your email. Please check your inbox and follow the instructions.',
+    otpHasBeenSentToEmail: 'OTP has been sent to your email',
   },
   chooseOne: 'Choose one',
 };

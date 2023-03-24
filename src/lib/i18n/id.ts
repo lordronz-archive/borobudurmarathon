@@ -229,6 +229,7 @@ export default {
     emailAlreadyTaken: 'Email sudah terdaftar. Gunakan email lain.',
     forgotPasswordSuccess:
       'Link untuk reset password telah dikirim via email. Silakan cek inbox dan ikuti petunjuknya.',
+    otpHasBeenSentToEmail: 'OTP sudah dikirim via email',
   },
   chooseOne: 'Pilih salah satu',
 };

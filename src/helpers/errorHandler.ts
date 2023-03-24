@@ -1,6 +1,7 @@
 export function getErrorMessage(err: any) {
   let errMessage = 'Failed. Please try again.';
   console.info('err', err);
+  console.info('err', JSON.stringify(err));
 
   if (err && typeof err === 'string') {
     errMessage = err;

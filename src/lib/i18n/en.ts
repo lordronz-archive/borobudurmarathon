@@ -199,4 +199,9 @@ export default {
     Nov: 'Nov',
     Dec: 'Dec',
   },
+  message: {
+    errorTitle: 'Something wrong',
+    errorMessage:
+      'Please try again. Makesure your connection is stable. If you still got the same error, let us know.',
+  },
 };

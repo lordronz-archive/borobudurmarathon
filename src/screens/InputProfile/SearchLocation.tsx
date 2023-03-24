@@ -16,6 +16,9 @@ import IconLocation from '../../assets/icons/IconLocation';
 import useProfileStepper from '../../hooks/useProfileStepper';
 import {TouchableOpacity} from 'react-native';
 import AppContainer from '../../layout/AppContainer';
+import ErrorMessage from '../../components/ErrorMessage';
+import EmptyMessage from '../../components/EmptyMessage';
+import {getApiErrors} from '../../helpers/apiErrors';
 
 export default function SearchLocationScreen() {
   const {setProfile} = useProfileStepper();
@@ -24,6 +27,9 @@ export default function SearchLocationScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listLocation, setListLocation] = useState<any[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorTitle, setErrorTitle] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const [searchValue] = useDebounce(search, 500);
 
@@ -42,10 +48,37 @@ export default function SearchLocationScreen() {
         if (res && res.data && res.data.data) {
           setListLocation(res.data.data);
         }
+        setIsError(false);
       })
       .catch(err => {
         setListLocation([]);
         console.log(err);
+
+        const objErrors = getApiErrors(err);
+        console.info('objErrors', objErrors);
+        if (objErrors) {
+          setErrorTitle('Oops');
+          setErrorMessage(
+            Object.keys(objErrors)
+              .map(
+                field =>
+                  `${objErrors[field]} ${
+                    field === 'errorMessage' ? '' : '[' + field + ']'
+                  }`,
+              )
+              .join('. '),
+          );
+        } else {
+          setErrorTitle(undefined);
+          setErrorMessage(undefined);
+        }
+        setIsError(true);
+        //  else {
+        //   // Toast.show({
+        //   //   title: 'Failed.',
+        //   //   description: getErrorMessage(err),
+        //   // });
+        // }
       })
       .finally(() => setIsLoading(false));
   };
@@ -63,8 +96,8 @@ export default function SearchLocationScreen() {
       <VStack px="4" flex="1">
         <Header title="Search Location" left={'back'} />
         <TextInput
-          placeholder={`Location Name`}
-          label={`Search Location`}
+          placeholder={'Location Name'}
+          label={'Search Location'}
           onChangeText={val => setSearch(val)}
           value={search}
           _inputProps={{InputLeftElement: <SearchIcon />}}
@@ -74,6 +107,17 @@ export default function SearchLocationScreen() {
           <Spinner flex={1} color="primary.900" />
         ) : (
           <ScrollView>
+            {isError ? (
+              <ErrorMessage
+                title={errorTitle}
+                description={errorMessage}
+                onPress={() => getLocation()}
+              />
+            ) : searchValue && listLocation.length === 0 ? (
+              <EmptyMessage />
+            ) : (
+              false
+            )}
             {listLocation?.map((item, index) => (
               <TouchableOpacity
                 key={index}

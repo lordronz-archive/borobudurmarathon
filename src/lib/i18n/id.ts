@@ -198,4 +198,9 @@ export default {
     Nov: 'Nov',
     Dec: 'Des',
   },
+  message: {
+    errorTitle: 'Terjadi kesalahan.',
+    errorMessage:
+      'Silakan coba lagi. Pastikan koneksi internet stabil. Jika error berlanjut, silakan hubungi kami.',
+  },
 };

@@ -17,7 +17,7 @@ export function getApiErrors(err: any): {[key: string]: string} | null {
       return null;
     }
   } else if (err?.data?.status?.error?.message) {
-    let objErrors = {errroMessage: err?.data?.status?.error?.message};
+    let objErrors = {errorMessage: err?.data?.status?.error?.message};
 
     console.info('objErrors', objErrors);
 

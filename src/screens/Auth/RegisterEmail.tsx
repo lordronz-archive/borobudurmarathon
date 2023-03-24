@@ -8,17 +8,16 @@ import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import SelectInput from '../../components/form/SelectInput';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import {useDebounce} from 'use-debounce';
 import {useTranslation} from 'react-i18next';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Button from '../../components/buttons/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import AppContainer from '../../layout/AppContainer';
-import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 import {GENDER_OPTIONS} from '../../assets/data/gender';
 import i18next from 'i18next';
-import { LanguageID } from '../../types/language.type';
+import {LanguageID} from '../../types/language.type';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -106,7 +105,8 @@ export default function RegisterEmailScreen() {
         },
       });
     } catch (err: any) {
-      handleErrorMessage(err, 'Failed to register');
+      const objErrors = handleErrorMessage(err, 'Failed to register');
+      setErrors({...objErrors});
     } finally {
       setLoading(false);
     }
@@ -231,7 +231,7 @@ export default function RegisterEmailScreen() {
           <Button
             onPress={() => signup()}
             isLoading={loading}
-            disabled={isDisabled}>
+            disabled={isDisabled || isLoadingCheckEmail}>
             {t('auth.register')}
           </Button>
         </HStack>

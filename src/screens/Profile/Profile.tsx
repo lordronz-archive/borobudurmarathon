@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Text,
@@ -20,7 +20,7 @@ import {
   Actionsheet,
   CheckCircleIcon,
 } from 'native-base';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {useAuthUser} from '../../context/auth.context';
@@ -42,12 +42,15 @@ import {useTranslation} from 'react-i18next';
 import {LanguageID} from '../../types/language.type';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
+import useInit from '../../hooks/useInit';
 
 export default function MyProfile() {
+  const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   const {user, isVerified} = useAuthUser();
+  const {getProfile} = useInit();
 
   // logout
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
@@ -55,6 +58,12 @@ export default function MyProfile() {
   const cancelLogoutRef = React.useRef(null);
   const {t} = useTranslation();
   const {isOpen, onOpen, onClose} = useDisclose();
+
+  useEffect(() => {
+    if (isFocused) {
+      getProfile();
+    }
+  }, [isFocused]);
 
   const menus: {
     key: string;

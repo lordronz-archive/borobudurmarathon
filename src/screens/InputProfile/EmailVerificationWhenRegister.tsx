@@ -90,23 +90,23 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
     }
   };
 
-  // const resendOTP = async () => {
-  //   setSeconds(30);
-  //   try {
-  //     setIsLoading(true);
-  //     const sendOtpRes = await AuthService.verificationEmail();
-  //     console.info('SendOTP result: ', sendOtpRes);
-  //     Toast.show({
-  //       description: 'OTP has been sent successfully',
-  //     });
-  //     setIsLoading(false);
-  //   } catch (err) {
-  //     Toast.show({
-  //       description: getErrorMessage(err),
-  //     });
-  //     setIsLoading(false);
-  //   }
-  // };
+  const resendOTP = async () => {
+    setSeconds(30);
+    try {
+      setIsLoading(true);
+      const sendOtpRes = await AuthService.resendOTPEmail(email || '');
+      console.info('SendOTP result: ', sendOtpRes);
+      Toast.show({
+        description: 'OTP has been sent successfully',
+      });
+      setIsLoading(false);
+    } catch (err) {
+      Toast.show({
+        description: getErrorMessage(err),
+      });
+      setIsLoading(false);
+    }
+  };
   const isDisabledButton = !otpCode;
 
   return (
@@ -137,7 +137,7 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
               />
             </VStack>
           </VStack>
-          {/* <VStack space="1" mt={22.64}>
+          <VStack space="1" mt={22.64}>
             <Text
               fontWeight={400}
               color="#1E1E1E"
@@ -172,7 +172,7 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
                 </Text>
               </Button>
             )}
-          </VStack> */}
+          </VStack>
         </Box>
         <Button
           h="12"

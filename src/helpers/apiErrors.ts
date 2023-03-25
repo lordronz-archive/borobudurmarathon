@@ -1,5 +1,5 @@
-import { Toast } from 'native-base';
-import { getErrorMessage } from './errorHandler';
+import {Toast} from 'native-base';
+import {getErrorMessage} from './errorHandler';
 
 export function getApiErrors(err: any): {[key: string]: string} | null {
   if (err?.data?.status?.error?.errors) {

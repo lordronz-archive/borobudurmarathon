@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   ShareIcon,
@@ -43,6 +43,7 @@ import AppContainer from '../../layout/AppContainer';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {useAuthUser} from '../../context/auth.context';
 import {getApiErrors} from '../../helpers/apiErrors';
+import useInit from '../../hooks/useInit';
 
 type Price = {
   id: string;
@@ -53,17 +54,25 @@ type Price = {
   benefits: string[];
 };
 export default function DetailEvent() {
+  const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
   const params = route.params as RootStackParamList['EventDetail'];
   const {isVerified} = useAuthUser();
+  const {getProfile} = useInit();
 
   const [event, setEvent] = useState<GetEventResponse>();
   const [registeredEvent, setRegisteredEvent] = useState<any>();
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
+
+  useEffect(() => {
+    if (isFocused) {
+      getProfile();
+    }
+  }, [isFocused]);
 
   const informations: {icon: any; label: string; description: string}[] = [
     {

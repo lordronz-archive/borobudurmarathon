@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ProfileService} from '../api/profile.service';
 import {EAuthUserAction, useAuthUser} from '../context/auth.context';
@@ -19,9 +19,9 @@ import i18next from 'i18next';
 import {Platform} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {WelcomeService} from '../api/welcome.service';
+import {handleErrorMessage} from '../helpers/apiErrors';
 
 export default function useInit() {
-  const route = useRoute();
   const toast = useToast();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -33,9 +33,7 @@ export default function useInit() {
     isShowDemoVerifyEmail,
     setDemoVerifyEmail,
     isShowDemoConsent,
-    setDemoConsent,
     isShowDemoNewUser,
-    setDemoNewUser,
   } = useDemo();
 
   const {dispatch} = useAuthUser();
@@ -155,11 +153,12 @@ export default function useInit() {
         navigation.navigate('Logout');
         // setIsNotRegistered(true);
       } else {
-        toast.show({
-          title: 'Failed to get profile',
-          variant: 'subtle',
-          description: getErrorMessage(err),
-        });
+        handleErrorMessage(err, 'Failed to get profile');
+        // toast.show({
+        //   title: 'Failed to get profile',
+        //   variant: 'subtle',
+        //   description: getErrorMessage(err),
+        // });
         navigation.navigate('Initial');
       }
     }

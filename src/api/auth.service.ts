@@ -6,7 +6,6 @@ import config from '../config';
 import base64 from 'react-native-base64';
 import Config from 'react-native-config';
 import {IAuthResponse, IBindMemberToKompas} from '../types/auth.type';
-import Base64 from '../helpers/base64';
 
 type AuthorizeKompasResponse = {
   code: number;
@@ -126,6 +125,22 @@ const AuthService = {
       // const msg = error as any;
       // throw new AuthenticationError(msg.status, msg.data.status.error.message);
       return Promise.reject(error);
+    }
+  },
+  resendOTPEmail: async function (email: string) {
+    try {
+      return await httpRequest.post(
+        config.apiUrl.apis.member.resendOTPEmail.path,
+        {
+          data: {
+            email,
+          },
+        },
+      );
+    } catch (error) {
+      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      const msg = error as any;
+      throw new AuthenticationError(msg.status, msg.data.status.error.message);
     }
   },
   setprofile: async function (personalData: any) {

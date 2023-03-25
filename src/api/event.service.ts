@@ -208,6 +208,7 @@ const EventService = {
         evnhStatusPublish: 1,
         ...(featured && {evnhFuture: 1}),
       },
+      pageSize: 25,
       sort: '-evnhStartDate',
     };
     if (config.isDev) {

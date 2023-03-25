@@ -692,6 +692,7 @@ export default function ChooseCitizenScreen({route}: Props) {
               )}
 
               <ImagePicker
+                title={t('stepTitle.UploadID')}
                 setVisible={setVisible}
                 visible={visible}
                 onChange={image => {

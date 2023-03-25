@@ -7,7 +7,7 @@ import { getErrorMessage } from '../../helpers/errorHandler';
 import { t } from 'i18next';
 
 type Props = {
-  title?: string;
+  title?: string | null;
   visible: boolean;
   setVisible: (value: boolean) => void;
   onChange: (img: any) => void;

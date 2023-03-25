@@ -42,7 +42,7 @@ import BannerFull from '../../components/carousel/BannerFull';
 import AppContainer from '../../layout/AppContainer';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {useAuthUser} from '../../context/auth.context';
-import {getApiErrors} from '../../helpers/apiErrors';
+import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
 import useInit from '../../hooks/useInit';
 
 type Price = {
@@ -189,6 +189,10 @@ export default function DetailEvent() {
           .get('member_resource/transaction')
           .then(resTransaction => {
             if (resTransaction.data) {
+              console.info(
+                'resTransaction.data',
+                JSON.stringify(resTransaction.data),
+              );
               const findEventRegister =
                 resTransaction.data?.linked?.mregTrnsId?.find(
                   (item: any) =>
@@ -214,46 +218,12 @@ export default function DetailEvent() {
           })
           .catch(err => {
             console.info('error check registered event', err);
-            const objErrors = getApiErrors(err);
-            if (objErrors && objErrors.message) {
-              Toast.show({
-                description: objErrors.message,
-              });
-            } else if (objErrors) {
-              Toast.show({
-                title: 'Failed to get profile',
-                description: Object.keys(objErrors)
-                  .map(field => `${objErrors[field]} [${field}]`)
-                  .join('. '),
-              });
-            } else {
-              Toast.show({
-                title: 'Failed to get event',
-                description: getErrorMessage(err),
-              });
-            }
+            handleErrorMessage(err, 'Failed to get transaction');
           });
       })
       .catch(err => {
         console.info('err get event detail', JSON.stringify(err));
-        const objErrors = getApiErrors(err);
-        if (objErrors && objErrors.message) {
-          Toast.show({
-            description: objErrors.message,
-          });
-        } else if (objErrors) {
-          Toast.show({
-            title: 'Failed to get profile',
-            description: Object.keys(objErrors)
-              .map(field => `${objErrors[field]} [${field}]`)
-              .join('. '),
-          });
-        } else {
-          Toast.show({
-            title: 'Failed to get event',
-            description: getErrorMessage(err),
-          });
-        }
+        handleErrorMessage(err, 'Failed to get event');
         navigation.goBack();
       });
   }, []);

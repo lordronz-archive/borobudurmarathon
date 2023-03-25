@@ -190,6 +190,7 @@ export default function SectionListMyEvent() {
           })
         }>
         <MyEventCard
+          regId={transaction.trnsId}
           title={event.evnhName}
           date={
             moment(cleanStartDate).format(

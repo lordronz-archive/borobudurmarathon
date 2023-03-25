@@ -4,9 +4,9 @@ import React, {useMemo} from 'react';
 import IconRun from '../../assets/icons/IconRun';
 import IconTag from '../../assets/icons/IconTag';
 import MButton from '../buttons/Button';
-import {useNavigation} from '@react-navigation/native';
 
 type MyCardEventProps = {
+  regId: string;
   title: string;
   status: string;
   date: string;
@@ -17,6 +17,7 @@ type MyCardEventProps = {
 };
 
 export default function MyCardEvent({
+  regId,
   title,
   date,
   status,
@@ -77,6 +78,9 @@ export default function MyCardEvent({
     <Box alignItems="flex-start" my={3} width="100%">
       <HStack flex={1}>
         <Stack pl={3} flexGrow={1} space="2">
+          <Text fontSize="xs" color="coolGray.500">
+            #{regId}
+          </Text>
           <HStack flex="1" justifyContent={'space-between'} space="1">
             <Text
               flex={'1'}

@@ -99,6 +99,7 @@ export default {
   myEvent: {
     title: 'My Events',
     subtitle: 'All of My Borobudur Marathon Events',
+    detailTitle: 'Event Detail',
   },
   label: {
     accountInformation: 'Account Information',
@@ -181,6 +182,10 @@ export default {
     qrWillAppear: 'The QR Code event will appear here after you',
     passedBallot: 'passed the ballot',
     makeAPayment: 'make a payment',
+    waitingPayment: 'Waiting Payment',
+    paymentExpired: 'Payment Expired',
+    waitingBallotResult: 'Waiting ballot result',
+    sorryNotPassedBallot: 'Sorry, you are not passed for ballot',
   },
   gender: {
     male: 'Male',
@@ -234,6 +239,7 @@ export default {
       'Link for reset password has been sent to your email. Please check your inbox and follow the instructions.',
     otpHasBeenSentToEmail: 'OTP has been sent to your email',
     passwordNotSame: 'Password and Confirm Password is not same',
+    youHaveRegisteredToThisEvent: 'You have registered to this event',
   },
   chooseOne: 'Choose one',
   stepTitle: {

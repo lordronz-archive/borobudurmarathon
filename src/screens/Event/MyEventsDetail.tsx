@@ -318,7 +318,7 @@ export default function MyEventDetail() {
 
   return (
     <AppContainer>
-      <Header title="Detail Event" left="back" />
+      <Header title={t('myEvent.detailTitle')} left="back" />
       {isLoading ? (
         <LoadingBlock />
       ) : (
@@ -337,7 +337,7 @@ export default function MyEventDetail() {
                       ? t('payment.pleaseCompletePayment')
                       : t('payment.ballotAnnouncement')}
                   </Text>
-                  {(status === 'Registered' || status === 'Unqualified') && (
+                  {/* {(status === 'Registered' || status === 'Unqualified') && (
                     <Text
                       fontWeight={600}
                       color="#201D1D"
@@ -345,7 +345,7 @@ export default function MyEventDetail() {
                       textDecorationLine={'underline'}>
                       Lihat detail info
                     </Text>
-                  )}
+                  )} */}
                 </VStack>
               </HStack>
             </Box>
@@ -388,12 +388,12 @@ export default function MyEventDetail() {
                     fontSize={16}
                     textAlign={'center'}>
                     {status === 'Payment Expired'
-                      ? 'Payment Expired'
+                      ? t('payment.paymentExpired')
                       : status === 'Waiting Payment'
-                      ? 'Menunggu pembayaran'
+                      ? t('payment.waitingPayment')
                       : status === 'Registered'
-                      ? 'Menunggu hasil ballot'
-                      : 'Maaf anda tidak lolos tahap ballot'}
+                      ? t('payment.waitingBallotResult')
+                      : t('payment.sorryNotPassedBallot')}
                   </Text>
                 </>
               )}
@@ -503,7 +503,7 @@ export default function MyEventDetail() {
                   <HStack
                     justifyContent={'space-between'}
                     alignItems={'center'}>
-                    <VStack>
+                    <VStack width="90%">
                       <Text fontWeight={500} color="#768499" fontSize={12}>
                         {(detailEvent?.data?.evnhType
                           ? EVENT_TYPES[detailEvent?.data?.evnhType as any]

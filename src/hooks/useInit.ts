@@ -20,8 +20,10 @@ import {Platform} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {WelcomeService} from '../api/welcome.service';
 import {handleErrorMessage} from '../helpers/apiErrors';
+import {useState} from 'react';
 
 export default function useInit() {
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const toast = useToast();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -70,6 +72,7 @@ export default function useInit() {
 
   const getProfile = async () => {
     try {
+      setIsLoadingProfile(true);
       const resProfile = await ProfileService.getMemberDetail();
 
       // console.info('resProfile', resProfile);
@@ -82,6 +85,8 @@ export default function useInit() {
       await i18next.changeLanguage(
         +resProfile.data[0].zmemLanguage === 1 ? 'en' : 'id',
       );
+
+      setIsLoadingProfile(false);
 
       return resProfile;
       // if (cookie) {
@@ -144,6 +149,7 @@ export default function useInit() {
       //   navigation.navigate('Auth');
       // }
     } catch (err: any) {
+      setIsLoadingProfile(false);
       console.info('### error resProfile', err);
       console.info('### error resProfile --- ', JSON.stringify(err));
       if (err && err.status === 409) {
@@ -418,6 +424,7 @@ export default function useInit() {
   return {
     init,
     checkAccount,
+    isLoadingProfile,
     getProfile,
     clearCookies,
     logout,

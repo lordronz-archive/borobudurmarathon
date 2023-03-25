@@ -101,6 +101,7 @@ export default {
   myEvent: {
     title: 'Event Saya',
     subtitle: 'Seluruh event Borobudur Marathon Saya',
+    detailTitle: 'Detail Event',
   },
   label: {
     accountInformation: 'Informasi Akun',
@@ -181,6 +182,10 @@ export default {
     qrWillAppear: 'QR Code event akan tampil disini setalah anda',
     passedBallot: 'lolos ballot',
     makeAPayment: 'melakukan pembayaran',
+    waitingPayment: 'Menunggu Pembayaran',
+    paymentExpired: 'Pembayaran Expired',
+    waitingBallotResult: 'Menunggu hasil ballot',
+    sorryNotPassedBallot: 'Maaf anda tidak lolos tahap ballot',
   },
   gender: {
     male: 'Laki-laki',
@@ -234,6 +239,7 @@ export default {
       'Link untuk reset password telah dikirim via email. Silakan cek inbox dan ikuti petunjuknya.',
     otpHasBeenSentToEmail: 'OTP sudah dikirim via email',
     passwordNotSame: 'Kata sandi tidak sama, silakan cek ulang',
+    youHaveRegisteredToThisEvent: 'Anda sudah mendaftar ke event ini',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {

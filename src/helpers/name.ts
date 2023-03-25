@@ -36,3 +36,11 @@ export function getShortCodeName(
 
   return shortCode.toUpperCase();
 }
+
+export function getFullNameFromData(user: any) {
+  return user?.linked?.mbsdZmemId && user?.linked?.mbsdZmemId.length > 0
+    ? user?.linked?.mbsdZmemId[0].mbsdFullName
+    : user?.data && user?.data.length > 0
+    ? user?.data[0]?.zmemFullName
+    : '';
+}

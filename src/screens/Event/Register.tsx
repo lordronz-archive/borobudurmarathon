@@ -670,10 +670,11 @@ export default function EventRegisterScreen() {
             <Checkbox.Group
               onChange={setCheckbox}
               value={checkbox}
-              accessibilityLabel="Agree to terms">
+              accessibilityLabel="Agree to terms"
+              mr="10">
               <Checkbox
                 value="agreed"
-                _text={{fontSize: 12, flexWrap: 'wrap'}}
+                _text={{fontSize: 12}}
                 isDisabled={isLoading}>
                 {t('termsAndConditionsAgreement')}
               </Checkbox>

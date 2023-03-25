@@ -60,7 +60,7 @@ export default function DetailEvent() {
   const route = useRoute();
   const params = route.params as RootStackParamList['EventDetail'];
   const {isVerified} = useAuthUser();
-  const {getProfile} = useInit();
+  const {getProfile, isLoadingProfile} = useInit();
 
   const [event, setEvent] = useState<GetEventResponse>();
   const [registeredEvent, setRegisteredEvent] = useState<any>();
@@ -210,12 +210,32 @@ export default function DetailEvent() {
                 }
               }
             }
+            setIsLoading(false);
           })
           .catch(err => {
             console.info('error check registered event', err);
+            const objErrors = getApiErrors(err);
+            if (objErrors && objErrors.message) {
+              Toast.show({
+                description: objErrors.message,
+              });
+            } else if (objErrors) {
+              Toast.show({
+                title: 'Failed to get profile',
+                description: Object.keys(objErrors)
+                  .map(field => `${objErrors[field]} [${field}]`)
+                  .join('. '),
+              });
+            } else {
+              Toast.show({
+                title: 'Failed to get event',
+                description: getErrorMessage(err),
+              });
+            }
           });
       })
       .catch(err => {
+        console.info('err get event detail', JSON.stringify(err));
         const objErrors = getApiErrors(err);
         if (objErrors && objErrors.message) {
           Toast.show({
@@ -229,16 +249,12 @@ export default function DetailEvent() {
               .join('. '),
           });
         } else {
-          console.info('err get event detail', JSON.stringify(err));
           Toast.show({
             title: 'Failed to get event',
             description: getErrorMessage(err),
           });
         }
         navigation.goBack();
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
   }, []);
 
@@ -336,9 +352,7 @@ export default function DetailEvent() {
               {(event?.data.evnhType
                 ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
                 : 'OTHER'
-              ).toUpperCase() +
-                ' ' +
-                (Number(event?.data.envhFuture || 0) === 1 ? '~' : '')}
+              ).toUpperCase()}
             </Text>
             <Text fontSize="xl" fontWeight={700} mb="2">
               {event?.data?.evnhName}
@@ -453,6 +467,7 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
+                      disabled={!!registeredEvent}
                     />
                   ))}
               </Radio.Group>
@@ -461,9 +476,38 @@ export default function DetailEvent() {
           <View py={100} />
         </ScrollView>
 
-        {isLoading && <LoadingBlock style={{opacity: 0.7}} />}
+        {(isLoading || isLoadingProfile) && (
+          <LoadingBlock style={{opacity: 0.7}} />
+        )}
 
-        {event && selected ? (
+        {event && registeredEvent ? (
+          <Box
+            position="absolute"
+            bottom="0"
+            width="100%"
+            px="3"
+            py="3"
+            background="white"
+            shadow="3">
+            <Text color="warning.500" textAlign="center" mb="2">
+              {t('message.youHaveRegisteredToThisEvent')}
+            </Text>
+            <Button
+              disabled={
+                !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
+              }
+              onPress={() => {
+                navigation.navigate('MyEventsDetail', {
+                  transactionId: registeredEvent.mregOrderId,
+                  eventId: registeredEvent.links?.mregEventId,
+                  isBallot: registeredEvent.mregType === 'MB' ? true : false,
+                  regStatus: registeredEvent.mregStatus,
+                });
+              }}>
+              View Detail
+            </Button>
+          </Box>
+        ) : event && selected && !registeredEvent ? (
           <Box
             position="absolute"
             bottom="0"
@@ -477,19 +521,10 @@ export default function DetailEvent() {
                 !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
               }
               onPress={() => {
-                if (!registeredEvent) {
-                  navigation.navigate('EventRegister', {
-                    event,
-                    selectedCategoryId: selected.id,
-                  });
-                } else {
-                  navigation.navigate('MyEventsDetail', {
-                    transactionId: registeredEvent.mregOrderId,
-                    eventId: registeredEvent.links?.mregEventId,
-                    isBallot: registeredEvent.mregType === 'MB' ? true : false,
-                    regStatus: registeredEvent.mregStatus,
-                  });
-                }
+                navigation.navigate('EventRegister', {
+                  event,
+                  selectedCategoryId: selected.id,
+                });
               }}>
               {'Continue with ' +
                 selected?.name +

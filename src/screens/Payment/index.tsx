@@ -170,7 +170,7 @@ export default function PaymentScreen() {
                   alt="Event Thumbnail"
                 />
 
-                <VStack flex={1}>
+                <VStack flex={1} width="90%">
                   <Text fontSize={12} fontWeight={600} color={'#768499'}>
                     {(detailTransaction?.linked?.trnsEventId?.[0]?.evnhType
                       ? EVENT_TYPES[
@@ -201,7 +201,7 @@ export default function PaymentScreen() {
                 paddingY={'16px'}>
                 <VStack width={'50%'}>
                   <Text fontWeight={400} color="#768499" fontSize={10}>
-                    Registration date
+                    {t('event.registrationDate')}
                   </Text>
                   <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
                     {datetime.getDateRangeString(

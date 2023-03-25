@@ -21,6 +21,7 @@ type EventPricingCardProps = {
   benefits: string[];
   selected?: boolean;
   onSelect?: () => void;
+  disabled?: boolean;
 };
 
 export default function EventPricingCard({
@@ -31,6 +32,7 @@ export default function EventPricingCard({
   benefits,
   selected,
   onSelect,
+  disabled,
 }: EventPricingCardProps) {
   let textOriginalPrice;
   let textFinalPrice;
@@ -60,7 +62,7 @@ export default function EventPricingCard({
   };
 
   return (
-    <TouchableOpacity onPress={onSelect} style={{width: '100%'}}>
+    <TouchableOpacity onPress={onSelect} style={{width: '100%'}} disabled={disabled}>
       <Box alignItems="center" w={'100%'} my={3}>
         <Box
           rounded="lg"
@@ -76,7 +78,7 @@ export default function EventPricingCard({
 
             {selected ? (
               <CheckCircleIcon size={30} color="primary.900" />
-            ) : (
+            ) : !disabled ? (
               <TouchableOpacity onPress={onSelect}>
                 {/* <CircleIcon size="xl" color="gray.300" /> */}
                 <View
@@ -87,6 +89,8 @@ export default function EventPricingCard({
                   height={30}
                 />
               </TouchableOpacity>
+            ) : (
+              false
             )}
           </Flex>
           <Text color={'#768499'} fontSize="sm" fontWeight={400}>

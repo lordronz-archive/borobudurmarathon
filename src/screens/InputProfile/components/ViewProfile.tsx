@@ -8,6 +8,7 @@ import {
   HStack,
   WarningOutlineIcon,
   Alert,
+  Spinner,
 } from 'native-base';
 import {cleanPhoneNumber} from '../../../helpers/phoneNumber';
 import {useAuthUser} from '../../../context/auth.context';
@@ -16,6 +17,7 @@ import {t} from 'i18next';
 import {convertOption} from '../../../helpers/convertOption';
 import {showIDNumberTypeName} from '../../../assets/data/ktpPassport';
 import useInit from '../../../hooks/useInit';
+import {getFullNameFromData} from '../../../helpers/name';
 
 type Props = {
   fields?: string[];
@@ -24,7 +26,7 @@ type Props = {
 
 export default function ViewProfile(props: Props) {
   const {user, isVerified} = useAuthUser();
-  const {getProfile} = useInit();
+  const {getProfile, isLoadingProfile} = useInit();
 
   useEffect(() => {
     getProfile();
@@ -52,10 +54,7 @@ export default function ViewProfile(props: Props) {
         {
           fields: ['zmemFullName', 'evpaName'],
           label: t('name'),
-          value:
-            user?.data && user?.data.length > 0
-              ? user?.data[0]?.zmemFullName
-              : '',
+          value: getFullNameFromData(user),
         },
         {
           fields: ['mbsdEmail', 'evpaEmail'],
@@ -275,11 +274,12 @@ export default function ViewProfile(props: Props) {
         )
       }
       renderSectionHeader={({section: {title}}) => (
-        <Box mb="4" mt="5">
+        <HStack mb="4" mt="5">
           <Text bold fontSize="lg">
             {title}
           </Text>
-        </Box>
+          {isLoadingProfile && <Spinner size="sm" ml="1" />}
+        </HStack>
       )}
       ItemSeparatorComponent={() => <Divider mt={2} mb={2} />}
       keyExtractor={(item, index) => item.label + index}

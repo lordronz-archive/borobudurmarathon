@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Box,
   Text,
@@ -19,6 +19,7 @@ import {
   useDisclose,
   Actionsheet,
   CheckCircleIcon,
+  Spinner,
 } from 'native-base';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -28,7 +29,7 @@ import IconBadge from '../../assets/icons/IconBadge';
 import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
-import {getShortCodeName} from '../../helpers/name';
+import {getFullNameFromData, getShortCodeName} from '../../helpers/name';
 import {TouchableOpacity} from 'react-native';
 import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
@@ -50,7 +51,7 @@ export default function MyProfile() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   const {user, isVerified} = useAuthUser();
-  const {getProfile} = useInit();
+  const {getProfile, isLoadingProfile} = useInit();
 
   // logout
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
@@ -170,23 +171,16 @@ export default function MyProfile() {
                     ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
                     : undefined,
               }}>
-              {getShortCodeName(
-                user &&
-                  user.data &&
-                  user.data.length > 0 &&
-                  user?.data[0].zmemFullName
-                  ? user?.data[0].zmemFullName
-                  : '',
-              )}
+              {getShortCodeName(getFullNameFromData(user))}
             </Avatar>
             <VStack paddingLeft={2}>
               <HStack alignItems="center" width="75%">
                 <Text fontWeight="bold" fontSize="md" numberOfLines={1} mr="2">
-                  {user && user.data && user.data.length > 0
-                    ? user?.data?.[0]?.zmemFullName
-                    : ''}
+                  {getFullNameFromData(user)}
                 </Text>
                 {isVerified && <CheckCircleIcon color="blue.600" />}
+
+                {isLoadingProfile && <Spinner size="sm" ml="1" />}
                 {/* <Badge ml="2" colorScheme="success" variant="subtle">
                   <HStack alignItems="center">
                     <CheckIcon color="white" />

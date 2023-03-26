@@ -14,6 +14,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import AppContainer from '../../layout/AppContainer';
 
 export default function LogoutScreen() {
+  console.info('===== render LogoutScreen');
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
@@ -57,6 +58,7 @@ export default function LogoutScreen() {
 
   useEffect(() => {
     if (state === 'logout-kompas') {
+      console.info('STATE logout-kompas - will open logout auth url');
       if (config.inAppBrowser) {
         openLogoutLinkInApp();
       } else {
@@ -86,22 +88,25 @@ export default function LogoutScreen() {
   };
 
   const openLogoutLinkInApp = async () => {
-    console.info('openLogoutLinkInApp');
+    console.info('LOGOUT - openLogoutLinkInApp - state: ' + state);
     try {
       if (await InAppBrowser.isAvailable()) {
+        console.info('await InAppBrowser.isAvailable()');
         InAppBrowser.close();
         InAppBrowser.closeAuth();
 
-        if (Platform.OS === 'android') {
-          setTimeout(() => {
-            logout(
-              () => {},
-              () => {
-                navigation.navigate('Initial');
-              },
-            );
-          }, 800);
-        }
+        // if (Platform.OS === 'android') {
+        //   console.info('LOGOUT - Android logout()');
+        //   setTimeout(() => {
+        //     logout(
+        //       () => {},
+        //       () => {
+        //         console.info('LOGOUT - Android navigate to Initial');
+        //         navigation.navigate('Initial');
+        //       },
+        //     );
+        //   }, 800);
+        // }
         const result = await InAppBrowser.openAuth(url, redirect_uri, {
           // iOS Properties
           dismissButtonStyle: 'done',
@@ -132,18 +137,23 @@ export default function LogoutScreen() {
           },
         });
 
-        if (Platform.OS === 'ios') {
+        try {
           await sleep(800);
+          console.info('will InAppBrowser.closeAuth();');
           InAppBrowser.closeAuth();
+          console.info('will InAppBrowser.close();');
           InAppBrowser.close();
-
-          logout(
-            () => {},
-            () => {
-              navigation.navigate('Initial');
-            },
-          );
+        } catch (err) {
+          console.info('logout err ---', err);
         }
+
+        logout(
+          () => {},
+          () => {
+            console.info('LOGOUT - will go to initial');
+            navigation.navigate('Initial');
+          },
+        );
 
         // if (result.type === 'success') {
         //     logout(
@@ -161,9 +171,10 @@ export default function LogoutScreen() {
         openLogoutLink();
       }
     } catch (error) {
+      console.info('Failed to open authentication URL for logout');
       // Alert.alert(error.message)
       Toast.show({
-        title: 'Failed to open authentication URL',
+        title: 'Failed to open authentication URL for logout',
         description: getErrorMessage(error),
       });
       InAppBrowser.closeAuth();
@@ -180,9 +191,12 @@ export default function LogoutScreen() {
           originWhitelist={['*']}
           // injectedJavaScript={jsCode}
           // onLoadEnd={props.onLoadEnd}
-          onLoadEnd={event => {
-            console.info('onLoadEnd logout-bormar-webview', event);
+          onLoadEnd={() => {
+            console.info(
+              'onLoadEnd logout-kompas-webview, will change to logout-bormar-web-view',
+            );
             setState('logout-bormar-webview');
+            setIsLoading(false);
           }}
           onError={event => {
             setIsLoading(false);
@@ -205,13 +219,19 @@ export default function LogoutScreen() {
           originWhitelist={['*']}
           // injectedJavaScript={jsCode}
           onLoadEnd={() => {
+            console.info('onLoadEnd logout-bormar-webview');
             if (loginType === 'KompasId') {
+              console.info(
+                "loginType === 'KompasId', will change to logout-kompas",
+              );
               setIsLoading(true);
               setState('logout-kompas');
             } else {
+              console.info('will logout');
               logout(
                 () => {},
                 () => {
+                  console.info('success');
                   navigation.navigate('Initial');
                 },
               );
@@ -236,7 +256,7 @@ export default function LogoutScreen() {
               ? 'Logout Kompas. Please wait...'
               : state === 'logout-bormar-webview'
               ? 'Logout Bormar. Please wait...'
-              : `Logout. Please wait... (${state})`
+              : 'Logout. Please wait...'
           }
         />
       ) : (

@@ -79,7 +79,7 @@ export default function MyCardEvent({
       <HStack flex={1}>
         <Stack pl={3} flexGrow={1} space="2">
           <Text fontSize="xs" color="coolGray.500">
-            #{regId}
+            {regId}
           </Text>
           <HStack flex="1" justifyContent={'space-between'} space="1">
             <Text

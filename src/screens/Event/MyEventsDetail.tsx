@@ -191,6 +191,14 @@ export default function MyEventDetail() {
 
   const DATA_LIST = [
     {
+      title: 'Registration ID',
+      value: detailTransaction?.data?.trnsRefId,
+    },
+    {
+      title: 'BIB',
+      value: detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaBIBNo,
+    },
+    {
       title: t('event.registrationDate'),
       value: datetime.getDateRangeString(
         detailEvent?.data?.evnhRegistrationStart,
@@ -218,7 +226,7 @@ export default function MyEventDetail() {
         detailTransaction?.data?.trnsAmount || 0,
       )?.toLocaleString('id-ID')}`,
     },
-  ];
+  ].filter(item => item.value);
 
   function statusColor(status: string) {
     switch (status) {

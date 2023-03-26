@@ -1,7 +1,7 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import moment from 'moment';
-import {Box, Center, Divider, FlatList, Spinner, Toast} from 'native-base';
+import {Center, Divider, FlatList, Spinner, Toast} from 'native-base';
 import React, {ComponentType, useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
@@ -190,7 +190,7 @@ export default function SectionListMyEvent() {
           })
         }>
         <MyEventCard
-          regId={transaction.trnsId}
+          regId={transaction.trnsRefId}
           title={event.evnhName}
           date={
             moment(cleanStartDate).format(

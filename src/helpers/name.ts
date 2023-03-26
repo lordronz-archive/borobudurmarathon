@@ -38,9 +38,22 @@ export function getShortCodeName(
 }
 
 export function getFullNameFromData(user: any) {
-  return user?.linked?.mbsdZmemId && user?.linked?.mbsdZmemId.length > 0
-    ? user?.linked?.mbsdZmemId[0].mbsdFullName
-    : user?.data && user?.data.length > 0
-    ? user?.data[0]?.zmemFullName
-    : '';
+  if (
+    user &&
+    user.linked &&
+    user.linked.mbsdZmemId &&
+    user.linked.mbsdZmemId.length > 0 &&
+    user.linked.mbsdZmemId[0].mbsdFullName
+  ) {
+    return user.linked.mbsdZmemId[0].mbsdFullName;
+  } else if (
+    user &&
+    user.data &&
+    user.data.length > 0 &&
+    user.data[0].zmemFullName
+  ) {
+    return user.data && user.data[0].zmemFullName;
+  } else {
+    return '';
+  }
 }

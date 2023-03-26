@@ -42,8 +42,9 @@ import BannerFull from '../../components/carousel/BannerFull';
 import AppContainer from '../../layout/AppContainer';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {useAuthUser} from '../../context/auth.context';
-import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 import useInit from '../../hooks/useInit';
+import {GetTransactionsResponse} from '../../types/transactions.type';
 
 type Price = {
   id: string;
@@ -187,21 +188,30 @@ export default function DetailEvent() {
 
         httpRequest
           .get('member_resource/transaction')
-          .then(resTransaction => {
+          .then((resTransaction: {data: GetTransactionsResponse}) => {
             if (resTransaction.data) {
               console.info(
                 'resTransaction.data',
                 JSON.stringify(resTransaction.data),
               );
+              // const findEventRegister =
+              //   resTransaction.data?.linked?.mregTrnsId?.find(
+              //     (item: any) =>
+              //       item.trnsEventId?.toString() ===
+              //         resEvent.data?.evnhId?.toString() &&
+              //       (item.trnsConfirmed === '1' ||
+              //         new Date(item.trnsExpiredTime)?.getTime() >
+              //           new Date().getTime(),
+              //       resEvent.data?.evnhBallot === '1'),
+              //   );
+              (resTransaction.data.linked?.mregTrnsId || []).sort(
+                (a, b) => b.id - a.id,
+              );
               const findEventRegister =
                 resTransaction.data?.linked?.mregTrnsId?.find(
                   (item: any) =>
                     item.trnsEventId?.toString() ===
-                      resEvent.data?.evnhId?.toString() &&
-                    (item.trnsConfirmed === '1' ||
-                      new Date(item.trnsExpiredTime)?.getTime() >
-                        new Date().getTime(),
-                    resEvent.data?.evnhBallot === '1'),
+                    resEvent.data?.evnhId?.toString(),
                 );
 
               if (findEventRegister) {

@@ -180,6 +180,10 @@ export default function DetailEvent() {
   // ];
 
   useEffect(() => {
+    fetchDetail();
+  }, []);
+
+  const fetchDetail = async () => {
     setIsLoading(true);
     EventService.getEvent(params.id)
       .then(resEvent => {
@@ -215,12 +219,12 @@ export default function DetailEvent() {
                 );
 
               if (findEventRegister) {
-                const registeredEvent = resTransaction?.data?.data?.find(
+                const findRegisteredEvent = resTransaction?.data?.data?.find(
                   (item: any) =>
                     item.mregOrderId === findEventRegister.trnsRefId,
                 );
-                if (registeredEvent) {
-                  setRegisteredEvent(registeredEvent);
+                if (findRegisteredEvent) {
+                  setRegisteredEvent(findRegisteredEvent);
                 }
               }
             }
@@ -228,7 +232,13 @@ export default function DetailEvent() {
           })
           .catch(err => {
             console.info('error check registered event', err);
-            handleErrorMessage(err, 'Failed to get transaction');
+            const error = handleErrorMessage(err, 'Failed to get transaction', {
+              ignore404: true,
+            });
+
+            if (!error) {
+              setIsLoading(false);
+            }
           });
       })
       .catch(err => {
@@ -236,7 +246,7 @@ export default function DetailEvent() {
         handleErrorMessage(err, 'Failed to get event');
         navigation.goBack();
       });
-  }, []);
+  };
 
   const buildLink = async () => {
     const link = await buildShortDynamicLink('events' + '/' + params.id, {
@@ -295,12 +305,14 @@ export default function DetailEvent() {
             left="back"
             right={
               isLoading ? (
-                <Spinner size="sm" />
+                <Spinner size="sm" mr="3" />
               ) : (
                 <IconButton
                   onPress={shareHandler}
                   icon={<ShareIcon color="black" />}
                   borderRadius="full"
+                  mr="2"
+                  p="2"
                 />
               )
             }

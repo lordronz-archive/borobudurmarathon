@@ -2,8 +2,8 @@ import Config from 'react-native-config';
 import apiUrl from './api';
 
 export default {
-  isPhoneVerificationRequired: true,
-  bypassPhoneVerification: false,
+  isPhoneVerificationRequired: false,
+  bypassPhoneVerification: true,
   bypassEmailVerification: false,
   inAppBrowser: true,
   isDev: Config.IS_DEV === 'TRUE',

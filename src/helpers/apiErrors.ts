@@ -35,7 +35,18 @@ export function getApiErrors(err: any): {[key: string]: string} | null {
   return null;
 }
 
-export function handleErrorMessage(err: any, title?: string) {
+export function handleErrorMessage(
+  err: any,
+  title?: string,
+  options?: {
+    ignore404?: boolean;
+  },
+) {
+  if (options && options.ignore404) {
+    if (err.status === 404) {
+      return null;
+    }
+  }
   const objErrors = getApiErrors(err);
   console.info('objErrors', objErrors);
   if (objErrors) {

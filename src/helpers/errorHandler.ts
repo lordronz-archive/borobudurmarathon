@@ -33,6 +33,14 @@ export function getErrorMessage(err: any) {
   return errMessage;
 }
 
+export function getErrorCode(err: any) {
+  if (err && err.status) {
+    return err.status;
+  } else {
+    return null;
+  }
+}
+
 export function getErrorStd(err: any): {name: string; errorCode: number} {
   let errorStd = {name: 'failed', errorCode: 0};
   console.info('err', err);

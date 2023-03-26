@@ -135,7 +135,11 @@ export default function EventRegisterScreen() {
     //   return x.static === y.static ? 0 : x ? -1 : 1;
     // });
 
-    const newFields = [...fieldTop, ...fieldBottom];
+    let newFields = [...fieldTop, ...fieldBottom];
+    newFields = newFields.map(item => {
+      delete item.static;
+      return item;
+    });
 
     const fieldNames = newFields
       .filter(item => !isSubField(item.evhfName))

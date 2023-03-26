@@ -32,7 +32,7 @@ export default function CardEvent({
 
   return (
     <Box alignItems="flex-start" my={3} width="100%">
-      <HStack flex={1} alignItems={'center'}>
+      <HStack flex={1} alignItems={isAvailable ? 'center' : 'flex-start'}>
         <AspectRatio w="20%" ratio={1 / 1}>
           <Image
             source={image}
@@ -44,7 +44,7 @@ export default function CardEvent({
             alt={title}
           />
         </AspectRatio>
-        <Stack pl={3} flex={1}>
+        <VStack pl={3} width="80%">
           {!isAvailable && (
             <Badge
               backgroundColor="gray.200"
@@ -60,14 +60,16 @@ export default function CardEvent({
               {t('event.expiredEvents')}
             </Badge>
           )}
+
           <Text
             fontSize="md"
-            mt="1"
+            mt={isAvailable ? 0 : 1}
             flex={1}
             fontWeight="600"
             fontFamily="Poppins-Medium">
             {title}
           </Text>
+
           <HStack space={1}>
             <VStack width="40%" flex={1}>
               <Text fontSize="xs" color="coolGray.500">
@@ -90,7 +92,7 @@ export default function CardEvent({
               </Text>
             </VStack>
           </HStack>
-        </Stack>
+        </VStack>
       </HStack>
     </Box>
   );

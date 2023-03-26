@@ -17,6 +17,7 @@ import {
   Alert as NBAlert,
   Spinner,
   WarningOutlineIcon,
+  Badge,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {EventService} from '../../api/event.service';
@@ -45,6 +46,7 @@ import {useAuthUser} from '../../context/auth.context';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import useInit from '../../hooks/useInit';
 import {GetTransactionsResponse} from '../../types/transactions.type';
+import moment from 'moment';
 
 type Price = {
   id: string;
@@ -296,6 +298,12 @@ export default function DetailEvent() {
     }
   };
 
+  const isExpiredRegistration = event?.data?.evnhRegistrationEnd
+    ? moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
+        moment(),
+      )
+    : false;
+
   return (
     <AppContainer>
       <VStack>
@@ -317,6 +325,7 @@ export default function DetailEvent() {
               )
             }
           />
+
           {event && !event?.access ? (
             <NBAlert bgColor="warning.300" py="5">
               <VStack alignItems="center">
@@ -340,12 +349,36 @@ export default function DetailEvent() {
           )}
 
           <Stack mx={4}>
-            <Text fontSize="sm" color={'#768499'} fontWeight={600} my={2}>
-              {(event?.data.evnhType
-                ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
-                : 'OTHER'
-              ).toUpperCase()}
-            </Text>
+            <HStack alignItems="center" justifyContent="space-between">
+              <Text
+                fontSize="sm"
+                color={'#768499'}
+                fontWeight={600}
+                my={2}
+                mr="2">
+                {(event?.data.evnhType
+                  ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
+                  : 'OTHER'
+                ).toUpperCase()}
+              </Text>
+              {isExpiredRegistration && (
+                <Badge
+                  backgroundColor="gray.200"
+                  px="3"
+                  py="0.5"
+                  my="2"
+                  borderRadius="4"
+                  alignSelf="flex-start"
+                  _text={{
+                    color: 'gray.500',
+                    fontWeight: 'bold',
+                    fontSize: 'xs',
+                  }}>
+                  {t('event.expiredEvents')}
+                </Badge>
+              )}
+            </HStack>
+
             <Text fontSize="xl" fontWeight={700} mb="2">
               {event?.data?.evnhName}
             </Text>
@@ -459,7 +492,7 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
-                      disabled={!!registeredEvent}
+                      disabled={!!registeredEvent || isExpiredRegistration}
                     />
                   ))}
               </Radio.Group>

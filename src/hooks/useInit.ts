@@ -89,82 +89,16 @@ export default function useInit() {
       setIsLoadingProfile(false);
 
       return resProfile;
-      // if (cookie) {
-      //   SessionService.saveSession(cookie);
-      // }
-      // if (resProfile.data && resProfile.data.length > 0) {
-      //   if (
-      //     resProfile.linked.zmemAuusId &&
-      //     resProfile.linked.zmemAuusId[0] &&
-      //     resProfile.linked.zmemAuusId[0].auusVerification
-      //   ) {
-      //     // start trial
-      //     if (isShowDemoVerifyEmail) {
-      //       toast.show({
-      //         id: 'need-to-verify-email',
-      //         description: '(DEMO) Please confirm your email to continue',
-      //       });
-      //       AuthService.verificationEmail().then(() =>
-      //         navigation.navigate('EmailValidation', {
-      //           email: resProfile.linked.zmemAuusId[0].auusEmail,
-      //           onSuccess: () => {
-      //             setDemoVerifyEmail(false);
-      //             checkProfileIsCompleteOrNot(resProfile);
-      //           },
-      //         }),
-      //       );
-      //     } else {
-      //       checkProfileIsCompleteOrNot(resProfile);
-      //     }
-      //   } else if (
-      //     resProfile.linked.zmemAuusId &&
-      //     resProfile.linked.zmemAuusId[0] &&
-      //     !resProfile.linked.zmemAuusId[0].auusVerification
-      //   ) {
-      //     // need to complete profile
-      //     toast.show({
-      //       id: 'need-to-verify-email',
-      //       description: 'Please confirm your email to continue',
-      //     });
-      //     AuthService.verificationEmail().then(() =>
-      //       navigation.navigate('EmailValidation', {
-      //         email: resProfile.linked.zmemAuusId[0].auusEmail,
-      //         onSuccess: () => {
-      //           checkProfileIsCompleteOrNot(resProfile);
-      //         },
-      //       }),
-      //     );
-      //   } else {
-      //     toast.show({
-      //       id: 'logout',
-      //       description: 'Something wrong, please try again',
-      //     });
-      //     navigation.navigate('Logout');
-      //   }
-      // } else {
-      //   toast.show({
-      //     id: 'logout',
-      //     description: 'Something wrong, please try again',
-      //   });
-      //   navigation.navigate('Auth');
-      // }
     } catch (err: any) {
       setIsLoadingProfile(false);
       console.info('### error resProfile', err);
       console.info('### error resProfile --- ', JSON.stringify(err));
       if (err && err.status === 409) {
         navigation.navigate('Logout');
-        // setIsNotRegistered(true);
       } else if (err && err.errorCode === 409) {
         navigation.navigate('Logout');
-        // setIsNotRegistered(true);
       } else {
         handleErrorMessage(err, 'Failed to get profile');
-        // toast.show({
-        //   title: 'Failed to get profile',
-        //   variant: 'subtle',
-        //   description: getErrorMessage(err),
-        // });
         navigation.navigate('Initial');
       }
     }

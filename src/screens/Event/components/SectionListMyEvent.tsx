@@ -184,9 +184,9 @@ export default function SectionListMyEvent() {
         onPress={() =>
           navigation.navigate('MyEventsDetail', {
             transactionId: item.mregOrderId,
-            eventId: event.evnhId,
-            isBallot: item.mregType === 'MB' ? true : false,
-            regStatus: item.mregStatus,
+            // eventId: event.evnhId,
+            // isBallot: item.mregType === 'MB' ? true : false,
+            // regStatus: item.mregStatus,
           })
         }>
         <MyEventCard
@@ -210,9 +210,9 @@ export default function SectionListMyEvent() {
           onPayNowClick={() =>
             navigation.navigate('MyEventsDetail', {
               transactionId: item.mregOrderId,
-              eventId: event.evnhId,
-              isBallot: item.mregType === 'MB' ? true : false,
-              regStatus: item.mregStatus,
+              // eventId: event.evnhId,
+              // isBallot: item.mregType === 'MB' ? true : false,
+              // regStatus: item.mregStatus,
             })
           }
         />

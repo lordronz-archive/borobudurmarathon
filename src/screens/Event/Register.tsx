@@ -8,9 +8,7 @@ import {
   ScrollView,
   Divider,
   useToast,
-  Center,
   Button,
-  Spinner,
   HStack,
 } from 'native-base';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';

@@ -87,9 +87,9 @@ export type RootStackParamList = {
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};
   MyEventsDetail: {
     transactionId: string;
-    eventId: number;
-    isBallot: boolean;
-    regStatus: number;
+    // eventId: number;
+    // isBallot: boolean;
+    // regStatus: number;
   };
   Payment: {transactionId: string};
   HowToPay: undefined;

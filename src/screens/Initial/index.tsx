@@ -19,7 +19,7 @@ const uri =
 
 export default function InitialScreen() {
   const isFocused = useIsFocused();
-  const route = useRoute();
+  const route: any = useRoute();
 
   console.info('InitialScreen -- route', route);
   const path = route.path; // "/events/368"
@@ -62,19 +62,19 @@ export default function InitialScreen() {
                 if (route.name === 'InitialEvent') {
                   init([
                     {path: 'Main'},
-                    {path: 'EventDetail', params: {id: route.params.id}},
+                    {path: 'EventDetail', params: {id: route?.params?.id}},
                   ]);
                 } else if (route.name === 'InitialPayment') {
-                  if (route.params.id) {
+                  if (route?.params?.id) {
                     init([
                       {path: 'Main', params: {screen: t('tab.myEvents')}},
                       {
                         path: 'MyEventsDetail',
                         params: {
-                          transactionId: route.params.id || '',
-                          eventId: 0,
-                          isBallot: 0,
-                          regStatus: 1,
+                          transactionId: route?.params?.id || '',
+                          // eventId: 0,
+                          // isBallot: 0,
+                          // regStatus: 1,
                         },
                       },
                     ]);

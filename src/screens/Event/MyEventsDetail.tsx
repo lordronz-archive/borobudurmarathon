@@ -18,13 +18,16 @@ import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
-import IconInfo from '../../assets/icons/IconInfo';
 import IconQr from '../../assets/icons/IconQr';
 import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import moment from 'moment';
 import datetime from '../../helpers/datetime';
-import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
+import {
+  EVENT_TYPES,
+  GetEventResponse,
+  TransactionStatus,
+} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
@@ -32,6 +35,8 @@ import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import {t} from 'i18next';
 import {TransactionDetail} from '../../types/transaction.type';
+import {handleErrorMessage} from '../../helpers/apiErrors';
+import TransactionAlertStatus from './components/TransactionAlertStatus';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -43,6 +48,7 @@ export default function MyEventDetail() {
   const screenWidth = Dimensions.get('window').width;
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingEvent, setIsLoadingEvent] = useState<boolean>(false);
   const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false);
   const [isLoadingApplyCoupon, setIsLoadingApplyCoupon] =
     useState<boolean>(false);
@@ -53,9 +59,11 @@ export default function MyEventDetail() {
 
   const [detailTransaction, setDetailTransaction] =
     useState<TransactionDetail>();
-  const [detailEvent, setDetailEvent] = useState<GetEventResponse>();
+  const [eventDetail, setEventDetail] = useState<GetEventResponse>();
+  const eventData = eventDetail?.data;
+  console.info('eventDetail', JSON.stringify(eventDetail));
 
-  const [status, setStatus] = useState<string>('');
+  const [status, setStatus] = useState<TransactionStatus>();
   const [couponCode, setCouponCode] = useState<string>('');
   const [QR, setQR] = useState<any>();
 
@@ -64,53 +72,8 @@ export default function MyEventDetail() {
 
   const [registeredEvent, setRegisteredEvent] = useState<any>();
 
-  const checkStatus = async () => {
-    let status;
-    if (params.isBallot) {
-      if (params.regStatus === 0) {
-        status = 'Registered';
-      } else if (params.regStatus === 99) {
-        status = 'Unqualified';
-      } else {
-        if (detailTransaction?.data?.trnsConfirmed === 1) {
-          status = 'Paid';
-        } else if (
-          moment(detailTransaction?.data?.trnsExpiredTime).isBefore(
-            moment(new Date()),
-          )
-        ) {
-          status = 'Payment Expired';
-        } else {
-          status = 'Waiting Payment';
-        }
-      }
-    } else {
-      if (detailTransaction?.data?.trnsConfirmed === 1) {
-        status = 'Paid';
-      } else if (
-        moment(detailTransaction?.data?.trnsExpiredTime).isBefore(
-          moment(new Date()),
-        )
-      ) {
-        status = 'Payment Expired';
-      } else {
-        status = 'Waiting Payment';
-      }
-    }
-    if (status === 'Paid') {
-      const resQR = await EventService.generateQR(
-        detailTransaction?.data?.trnsRefId +
-          '%' +
-          detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaBIBNo,
-      );
-      console.log(resQR);
-
-      if (resQR) {
-        setQR(resQR);
-      }
-    }
-    setStatus(status);
-  };
+  const isBallot =
+    Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -139,51 +102,121 @@ export default function MyEventDetail() {
 
       if (resDetailTransaction && resDetailTransaction.data) {
         setDetailTransaction(resDetailTransaction.data);
-      }
 
-      const resDetailEvent = await EventService.getEvent(params.eventId);
-      console.info('res detail event', JSON.stringify(resDetailEvent));
-      if (resDetailEvent && resDetailEvent) {
-        setDetailEvent(resDetailEvent);
-      }
+        const isThisBallot =
+          Number(
+            resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
+          ) === 1;
+        const regStatus = resDetailTransaction?.data?.data.trnsStatus;
 
-      httpRequest
-        .get('member_resource/transaction')
-        .then(resTransaction => {
-          if (resTransaction.data) {
-            const findEventRegister =
-              resTransaction.data?.linked?.mregTrnsId?.find(
-                (item: any) =>
-                  item.trnsEventId?.toString() === params.eventId?.toString() &&
-                  (item.trnsConfirmed === '1' ||
-                    new Date(item.trnsExpiredTime)?.getTime() >
-                      new Date().getTime(),
-                  params?.isBallot),
-              );
-
-            if (findEventRegister) {
-              const registeredEvent = resTransaction?.data?.data?.find(
-                (item: any) => item.mregOrderId === findEventRegister.trnsRefId,
-              );
-              if (registeredEvent) {
-                setRegisteredEvent(registeredEvent);
-              }
+        let newStatus: TransactionStatus;
+        if (isThisBallot) {
+          if (regStatus === 0) {
+            newStatus = 'Registered';
+          } else if (regStatus === 99) {
+            newStatus = 'Unqualified';
+          } else {
+            if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
+              newStatus = 'Paid';
+            } else if (
+              moment(
+                resDetailTransaction?.data?.data?.trnsExpiredTime,
+              ).isBefore(moment(new Date()))
+            ) {
+              newStatus = 'Payment Expired';
+            } else {
+              newStatus = 'Waiting Payment';
             }
           }
-        })
-        .catch(err => {
-          console.info('error check registered event', err);
-        });
+        } else {
+          if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
+            newStatus = 'Paid';
+          } else if (
+            moment(resDetailTransaction?.data?.data?.trnsExpiredTime).isBefore(
+              moment(new Date()),
+            )
+          ) {
+            newStatus = 'Payment Expired';
+          } else {
+            newStatus = 'Waiting Payment';
+          }
+        }
+        setStatus(newStatus);
+
+        if (newStatus === 'Paid') {
+          const resQR = await EventService.generateQR(
+            resDetailTransaction?.data?.data?.trnsRefId +
+              '%' +
+              resDetailTransaction?.data?.linked?.evrlTrnsId?.[0]?.evpaBIBNo,
+          );
+          console.log('resQR', resQR);
+
+          if (resQR) {
+            setQR(resQR);
+          }
+        }
+
+        const eventId =
+          resDetailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhId;
+
+        if (eventId) {
+          fetchDetailEvent(eventId);
+          fetchTransaction(eventId);
+        }
+      }
     } catch (error) {
       console.info('Error to fetch data', getErrorMessage(error));
+      handleErrorMessage(error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    checkStatus();
-  }, [detailTransaction]);
+  const fetchDetailEvent = async (eventId: number) => {
+    setIsLoadingEvent(true);
+    EventService.getEvent(eventId)
+      .then(resEvent => {
+        console.info('res get detail event', JSON.stringify(resEvent));
+        setEventDetail(resEvent);
+        setIsLoadingEvent(false);
+      })
+      .catch(err => {
+        console.info('err get event detail', JSON.stringify(err));
+        handleErrorMessage(err, 'Failed to get event');
+        setIsLoadingEvent(false);
+      });
+  };
+
+  const fetchTransaction = (eventId: number) => {
+    // get transactions
+    httpRequest
+      .get('member_resource/transaction')
+      .then(resTransaction => {
+        if (resTransaction.data) {
+          const findEventRegister =
+            resTransaction.data?.linked?.mregTrnsId?.find(
+              (item: any) =>
+                item.trnsEventId?.toString() === eventId?.toString() &&
+                (item.trnsConfirmed === '1' ||
+                  new Date(item.trnsExpiredTime)?.getTime() >
+                    new Date().getTime(),
+                isBallot),
+            );
+
+          if (findEventRegister) {
+            const findRegisteredEvent = resTransaction?.data?.data?.find(
+              (item: any) => item.mregOrderId === findEventRegister.trnsRefId,
+            );
+            if (findRegisteredEvent) {
+              setRegisteredEvent(findRegisteredEvent);
+            }
+          }
+        }
+      })
+      .catch(err => {
+        console.info('error check registered event', err);
+      });
+  };
 
   useEffect(() => {
     fetchData();
@@ -201,8 +234,8 @@ export default function MyEventDetail() {
     {
       title: t('event.registrationDate'),
       value: datetime.getDateRangeString(
-        detailEvent?.data?.evnhRegistrationStart,
-        detailEvent?.data?.evnhRegistrationEnd,
+        detailTransaction?.linked?.trnsEventId?.[0]?.evnhRegistrationStart,
+        detailTransaction?.linked?.trnsEventId?.[0]?.evnhRegistrationEnd,
         'short',
         'short',
       ),
@@ -210,15 +243,15 @@ export default function MyEventDetail() {
     {
       title: t('event.runningDate'),
       value: datetime.getDateRangeString(
-        detailEvent?.data?.evnhStartDate,
-        detailEvent?.data?.evnhEndDate,
+        detailTransaction?.linked?.trnsEventId?.[0]?.evnhStartDate,
+        detailTransaction?.linked?.trnsEventId?.[0]?.evnhEndDate,
         'short',
         'short',
       ),
     },
     {
       title: t('event.place'),
-      value: detailEvent?.data?.evnhPlace || '-',
+      value: detailTransaction?.linked?.trnsEventId?.[0]?.evnhPlace || '-',
     },
     {
       title: t('event.totalPayment'),
@@ -228,7 +261,7 @@ export default function MyEventDetail() {
     },
   ].filter(item => item.value);
 
-  function statusColor(status: string) {
+  function statusColor() {
     switch (status) {
       case 'Registered':
         return {
@@ -260,7 +293,7 @@ export default function MyEventDetail() {
   }
 
   const statusComp = useMemo(() => {
-    const color = statusColor(status || '');
+    const color = statusColor();
 
     return (
       <Text
@@ -324,6 +357,58 @@ export default function MyEventDetail() {
     }
   };
 
+  const handleButton = () => {
+    setIsLoadingButton(true);
+
+    if (status === 'Waiting Payment') {
+      if (confirmPayment) {
+        if (
+          detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
+          detailTransaction?.linked?.trihTrnsId?.find(
+            (item: any) => item.trihIsCurrent === 1,
+          )?.trihPaymentType === confirmPayment?.evptMsptName
+        ) {
+          navigation.navigate('Payment', {
+            transactionId: params.transactionId,
+          });
+        } else {
+          handlePayNow();
+        }
+      } else {
+        setShowModal(true);
+      }
+    } else if (eventDetail && !registeredEvent) {
+      if (
+        (eventDetail.categories || []).find(
+          cat =>
+            cat.evncId ===
+            detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId,
+        )
+      ) {
+        navigation.navigate('EventRegister', {
+          event: eventDetail,
+          selectedCategoryId:
+            detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || '',
+        });
+      } else {
+        Toast.show({
+          title: 'Cannot Register Event',
+          description: 'Category not found',
+        });
+      }
+    } else {
+      navigation.navigate('MyEventsDetail', {
+        transactionId: registeredEvent.mregOrderId,
+        // eventId: registeredEvent.links?.mregEventId,
+        // isBallot:
+        //   registeredEvent.mregType === 'MB' ? true : false,
+        // regStatus: registeredEvent.mregStatus,
+      });
+    }
+    setConfirmPayment(undefined);
+    setIsLoadingButton(false);
+  };
+
   return (
     <AppContainer>
       <Header title={t('myEvent.detailTitle')} left="back" />
@@ -331,33 +416,7 @@ export default function MyEventDetail() {
         <LoadingBlock />
       ) : (
         <ScrollView backgroundColor={'#E8ECF3'}>
-          {status !== 'Paid' && (
-            <Box m={15} p={'10px'} borderRadius={5} bg={'#FFF8E4'}>
-              <HStack>
-                <IconInfo color={colors.black} size={6} />
-                <VStack flex={1} paddingLeft={'10px'}>
-                  <Text fontWeight={400} color="#201D1D" fontSize={12}>
-                    {status === 'Payment Expired'
-                      ? t('payment.paymentStatusExpired')
-                      : params.isBallot && status === 'Waiting Payment'
-                      ? t('payment.passBallotStage')
-                      : !params.isBallot && status === 'Waiting Payment'
-                      ? t('payment.pleaseCompletePayment')
-                      : t('payment.ballotAnnouncement')}
-                  </Text>
-                  {/* {(status === 'Registered' || status === 'Unqualified') && (
-                    <Text
-                      fontWeight={600}
-                      color="#201D1D"
-                      fontSize={12}
-                      textDecorationLine={'underline'}>
-                      Lihat detail info
-                    </Text>
-                  )} */}
-                </VStack>
-              </HStack>
-            </Box>
-          )}
+          <TransactionAlertStatus isBallot={isBallot} status={status} />
 
           <Box margin={'15px'} bg={colors.white} borderRadius={8}>
             <VStack paddingX={'15px'}>
@@ -415,7 +474,7 @@ export default function MyEventDetail() {
                   : status === 'Paid'
                   ? 'Use this QR Code to enter the event'
                   : `${t('payment.qrWillAppear')} ${
-                      params.isBallot ? `${t('payment.passedBallot')} & ` : ''
+                      isBallot ? `${t('payment.passedBallot')} & ` : ''
                     }${t('payment.makeAPayment')}`}
               </Text>
               {status === 'Waiting Payment' && (
@@ -440,38 +499,9 @@ export default function MyEventDetail() {
               )}
 
               {(status === 'Waiting Payment' ||
-                (status === 'Payment Expired' && !params.isBallot)) && (
+                (status === 'Payment Expired' && !isBallot)) && (
                 <AppButton
-                  onPress={() => {
-                    setIsLoadingButton(true);
-                    status === 'Waiting Payment'
-                      ? confirmPayment
-                        ? detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-                          detailTransaction?.linked?.trihTrnsId?.find(
-                            (item: any) => item.trihIsCurrent === 1,
-                          )?.trihPaymentType === confirmPayment?.evptMsptName
-                          ? navigation.navigate('Payment', {
-                              transactionId: params.transactionId,
-                            })
-                          : handlePayNow()
-                        : setShowModal(true)
-                      : detailEvent && !registeredEvent
-                      ? navigation.navigate('EventRegister', {
-                          event: detailEvent,
-                          selectedCategoryId:
-                            detailTransaction?.linked?.evrlTrnsId?.[0]
-                              ?.evpaEvncId || '',
-                        })
-                      : navigation.navigate('MyEventsDetail', {
-                          transactionId: registeredEvent.mregOrderId,
-                          eventId: registeredEvent.links?.mregEventId,
-                          isBallot:
-                            registeredEvent.mregType === 'MB' ? true : false,
-                          regStatus: registeredEvent.mregStatus,
-                        });
-                    setConfirmPayment(undefined);
-                    setIsLoadingButton(false);
-                  }}
+                  onPress={handleButton}
                   isLoading={isLoadingButton}
                   style={{marginTop: 12, marginHorizontal: 22}}
                   // width={'100%'}
@@ -505,7 +535,7 @@ export default function MyEventDetail() {
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('EventDetail', {
-                      id: Number(detailEvent?.data.evnhId),
+                      id: Number(eventData?.evnhId),
                     })
                   }>
                   <HStack
@@ -513,9 +543,9 @@ export default function MyEventDetail() {
                     alignItems={'center'}>
                     <VStack width="90%">
                       <Text fontWeight={500} color="#768499" fontSize={12}>
-                        {(detailEvent?.data?.evnhType
-                          ? EVENT_TYPES[detailEvent?.data?.evnhType as any]
-                              .value || 'OTHER'
+                        {(eventData?.evnhType
+                          ? EVENT_TYPES[eventData?.evnhType as any].value ||
+                            'OTHER'
                           : 'OTHER'
                         ).toUpperCase()}
                       </Text>
@@ -524,7 +554,7 @@ export default function MyEventDetail() {
                         color="#1E1E1E"
                         fontSize={14}
                         numberOfLines={1}>
-                        {detailEvent?.data?.evnhName}
+                        {eventData?.evnhName}
                       </Text>
                     </VStack>
                     <ChevronRightIcon />
@@ -633,6 +663,7 @@ export default function MyEventDetail() {
           </TouchableOpacity>
         </ScrollView>
       )}
+
       <Actionsheet
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -649,8 +680,8 @@ export default function MyEventDetail() {
             width={'full'}
             height={screenWidth / 1.4}
             showsVerticalScrollIndicator={false}>
-            {detailEvent &&
-              detailEvent?.payments
+            {eventDetail &&
+              eventDetail?.payments
                 ?.filter(item => item.evptMsptId !== '9')
                 ?.sort((a, b) =>
                   a.evptLabel < b.evptLabel
@@ -676,6 +707,7 @@ export default function MyEventDetail() {
           </ScrollView>
         </Actionsheet.Content>
       </Actionsheet>
+
       <AlertDialog leastDestructiveRef={confirmRef} isOpen={showModalConfirm}>
         <AlertDialog.Content>
           <AlertDialog.Header>Confirm Payment</AlertDialog.Header>

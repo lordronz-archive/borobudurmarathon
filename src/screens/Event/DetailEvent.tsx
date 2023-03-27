@@ -524,9 +524,9 @@ export default function DetailEvent() {
               onPress={() => {
                 navigation.navigate('MyEventsDetail', {
                   transactionId: registeredEvent.mregOrderId,
-                  eventId: registeredEvent.links?.mregEventId,
-                  isBallot: registeredEvent.mregType === 'MB' ? true : false,
-                  regStatus: registeredEvent.mregStatus,
+                  // eventId: registeredEvent.links?.mregEventId,
+                  // isBallot: registeredEvent.mregType === 'MB' ? true : false,
+                  // regStatus: registeredEvent.mregStatus,
                 });
               }}>
               View Detail

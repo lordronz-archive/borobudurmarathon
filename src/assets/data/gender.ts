@@ -11,6 +11,24 @@ export const GENDER_OPTIONS = [
   },
 ];
 
+export const getGenderOptions = (
+  male?: string | null,
+  female?: string | null,
+) => {
+  return [
+    {
+      id: 1,
+      label: male || 'Male',
+      value: '1',
+    },
+    {
+      id: 2,
+      label: female || 'Female',
+      value: '2',
+    },
+  ];
+};
+
 export function showGenderName(val: string | number | undefined) {
   return (
     GENDER_OPTIONS.find(

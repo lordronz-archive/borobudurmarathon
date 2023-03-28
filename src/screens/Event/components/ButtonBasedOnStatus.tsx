@@ -30,31 +30,31 @@ export default function ButtonBasedOnStatus(props: Props) {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleButton = () => {
+  const handleButtonPayNow = () => {
     setIsLoading(true);
 
     if (props.status === 'Waiting Payment') {
-      if (props.payment) {
-        if (
-          props.isPaymentGenerated
-          // detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-          // detailTransaction?.linked?.trihTrnsId?.find(
-          //   (item: any) => item.trihIsCurrent === 1,
-          // )?.trihPaymentType === payment?.evptMsptName
-        ) {
-          navigation.navigate('Payment', {
-            transactionId: props.transactionId,
-          });
-        } else {
-          props.onPayNow();
-        }
+      if (
+        props.isPaymentGenerated
+        // detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
+        // detailTransaction?.linked?.trihTrnsId?.find(
+        //   (item: any) => item.trihIsCurrent === 1,
+        // )?.trihPaymentType === payment?.evptMsptName
+      ) {
+        navigation.navigate('Payment', {
+          transactionId: props.transactionId,
+        });
       } else {
-        props.onChoosePaymentMethod();
+        props.onPayNow();
       }
     }
     // setpayment(undefined);
     props.onAfterButtonFinished();
     setIsLoading(false);
+  };
+
+  const handleButtonChoosePaymentMethod = () => {
+    props.onChoosePaymentMethod();
   };
 
   const handleButtonRegisterAgain = () => {
@@ -81,16 +81,34 @@ export default function ButtonBasedOnStatus(props: Props) {
 
   if (props.status === 'Waiting Payment') {
     return (
-      <Button
-        onPress={handleButton}
-        isLoading={isLoading}
-        style={{marginTop: 12, marginHorizontal: 22}}>
-        <Text fontWeight={500} color="white" fontSize={14} textAlign={'center'}>
-          {props.payment
-            ? `Pay Now via ${props.payment?.evptLabel}`
-            : 'Choose Payment Method'}
-        </Text>
-      </Button>
+      <>
+        {props.payment && (
+          <Button
+            onPress={handleButtonPayNow}
+            isLoading={isLoading}
+            style={{marginTop: 12, marginHorizontal: 22}}>
+            <Text
+              fontWeight={500}
+              color="white"
+              fontSize={14}
+              textAlign={'center'}>
+              {`Pay Now via ${props.payment?.evptLabel}`}
+            </Text>
+          </Button>
+        )}
+        <Button
+          onPress={handleButtonChoosePaymentMethod}
+          isLoading={isLoading}
+          style={{marginTop: 12, marginHorizontal: 22}}>
+          <Text
+            fontWeight={500}
+            color="white"
+            fontSize={14}
+            textAlign={'center'}>
+            Choose Payment Method
+          </Text>
+        </Button>
+      </>
     );
   } else if (props.status === 'Payment Expired' && !props.isBallot) {
     // register again

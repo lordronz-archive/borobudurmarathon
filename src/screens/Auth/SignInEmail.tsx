@@ -18,7 +18,8 @@ import {useTranslation} from 'react-i18next';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AppContainer from '../../layout/AppContainer';
-import { getApiErrors, handleErrorMessage } from '../../helpers/apiErrors';
+import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
+import {validateEmail} from '../../helpers/validate';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -80,7 +81,7 @@ export default function SignInEmailScreen() {
     );
   }
 
-  const isDisabledButton = !email || !password;
+  const isDisabledButton = !email || !password || !validateEmail(email);
 
   return (
     <AppContainer>
@@ -102,7 +103,10 @@ export default function SignInEmailScreen() {
                 label="Email"
                 value={email}
                 onChangeText={setEmail}
-                _inputProps={{textContentType: 'emailAddress'}}
+                keyboardType="email-address"
+                _inputProps={{
+                  textContentType: 'emailAddress',
+                }}
               />
               <TextInput
                 placeholder={t('auth.placeholderPassword') || ''}

@@ -888,7 +888,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                     </Box>
                   ) : (
                     <TextInput
-                      placeholder={t('auth.placeholderAddress')}
+                      placeholder={t('auth.placeholderAddress') || ''}
                       label={t('profile.address') || ''}
                       value={profile.mbsdAddress}
                       onChangeText={val =>

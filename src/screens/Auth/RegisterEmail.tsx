@@ -18,6 +18,7 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import {getGenderOptions} from '../../assets/data/gender';
 import i18next from 'i18next';
 import {LanguageID} from '../../types/language.type';
+import {validateEmail} from '../../helpers/validate';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -56,7 +57,7 @@ export default function RegisterEmailScreen() {
   }, [emailWillBeCheck]);
 
   const checkEmail = () => {
-    if (!form.ptmmEmail) {
+    if (!form.ptmmEmail || !validateEmail(form.ptmmEmail)) {
       setIsEmailCanUse(undefined);
       return false;
     }
@@ -119,7 +120,8 @@ export default function RegisterEmailScreen() {
     !confirmPassword ||
     !form.ptmmEmail ||
     isEmailCanUse === false ||
-    form.ptmmPassword !== confirmPassword;
+    form.ptmmPassword !== confirmPassword ||
+    !validateEmail(form.ptmmEmail);
 
   return (
     <AppContainer>
@@ -156,6 +158,10 @@ export default function RegisterEmailScreen() {
               />
               <TextInput
                 placeholder={t('auth.placeholderEmail') || ''}
+                keyboardType="email-address"
+                _inputProps={{
+                  textContentType: 'emailAddress',
+                }}
                 label="Email"
                 helperText={
                   isEmailCanUse === undefined
@@ -184,7 +190,6 @@ export default function RegisterEmailScreen() {
                     />
                   ) : undefined
                 }
-                _inputProps={{textContentType: 'emailAddress'}}
               />
               <TextInput
                 placeholder={t('auth.placeholderPassword') || ''}

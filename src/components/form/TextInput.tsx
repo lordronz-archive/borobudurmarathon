@@ -18,6 +18,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import {validateEmail} from '../../helpers/validate';
 
 type TextInputProps = {
   isInvalid?: boolean;
@@ -39,7 +40,12 @@ export default function TextInput(props: TextInputProps) {
   const [show, setShow] = useState(false);
   const {t} = useTranslation();
   return (
-    <FormControl isInvalid={props.isInvalid}>
+    <FormControl
+      isInvalid={
+        props.keyboardType === 'email-address'
+          ? props.isInvalid || (!!props.value && !validateEmail(props.value))
+          : props.isInvalid
+      }>
       <Box
         borderWidth={1}
         borderColor="#C5CDDB"
@@ -123,7 +129,11 @@ export default function TextInput(props: TextInputProps) {
         mt="0"
         mb="1.5"
         leftIcon={<WarningOutlineIcon size="xs" />}>
-        {props.errorMessage}
+        {props.keyboardType === 'email-address'
+          ? validateEmail(props.value || '')
+            ? props.errorMessage
+            : t('message.emailInvalid')
+          : props.errorMessage}
       </FormControl.ErrorMessage>
     </FormControl>
   );

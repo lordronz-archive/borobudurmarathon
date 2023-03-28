@@ -26,7 +26,7 @@ import {MasterLocationResponse} from '../../types/profile.type';
 import {ProfileService} from '../../api/profile.service';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import {ID_NUMBER_TYPE_OPTIONS} from '../../assets/data/ktpPassport';
-import {GENDER_OPTIONS} from '../../assets/data/gender';
+import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
@@ -240,7 +240,7 @@ export default function InputProfileScreen() {
                 keyboardType={'numeric'}
               />
               <SelectInput
-                items={GENDER_OPTIONS}
+                items={getGenderOptions(t('gender.male'), t('gender.female'))}
                 placeholder="Choose gender"
                 label="Gender"
                 onValueChange={setGender}

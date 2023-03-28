@@ -15,7 +15,7 @@ import Button from '../../components/buttons/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import AppContainer from '../../layout/AppContainer';
 import {handleErrorMessage} from '../../helpers/apiErrors';
-import {GENDER_OPTIONS} from '../../assets/data/gender';
+import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
 import i18next from 'i18next';
 import {LanguageID} from '../../types/language.type';
 
@@ -145,7 +145,7 @@ export default function RegisterEmailScreen() {
                 errorMessage={errors.ptmmFullName}
               />
               <SelectInput
-                items={GENDER_OPTIONS}
+                items={getGenderOptions(t('gender.male'), t('gender.female'))}
                 placeholder={t('chooseOne') || ''}
                 label="Gender"
                 onValueChange={val => setForm({...form, ptmmGender: val})}

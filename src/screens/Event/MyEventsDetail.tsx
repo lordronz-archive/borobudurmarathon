@@ -12,6 +12,7 @@ import {
   Toast,
   Actionsheet,
   AlertDialog,
+  Spinner,
 } from 'native-base';
 import AppButton from '../../components/buttons/Button';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
@@ -30,13 +31,14 @@ import {
 } from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
-import {SvgXml} from 'react-native-svg';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import {t} from 'i18next';
 import {TransactionDetail} from '../../types/transaction.type';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import TransactionAlertStatus from './components/TransactionAlertStatus';
+import QRCodeWithFunction from './components/QRCodeWithFunction';
+import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -49,7 +51,6 @@ export default function MyEventDetail() {
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingEvent, setIsLoadingEvent] = useState<boolean>(false);
-  const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false);
   const [isLoadingApplyCoupon, setIsLoadingApplyCoupon] =
     useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -65,7 +66,6 @@ export default function MyEventDetail() {
 
   const [status, setStatus] = useState<TransactionStatus>();
   const [couponCode, setCouponCode] = useState<string>('');
-  const [QR, setQR] = useState<any>();
 
   const [tmpPayment, setTmpPayment] = useState<any>();
   const [confirmPayment, setConfirmPayment] = useState<any>();
@@ -142,19 +142,6 @@ export default function MyEventDetail() {
           }
         }
         setStatus(newStatus);
-
-        if (newStatus === 'Paid') {
-          const resQR = await EventService.generateQR(
-            resDetailTransaction?.data?.data?.trnsRefId +
-              '%' +
-              resDetailTransaction?.data?.linked?.evrlTrnsId?.[0]?.evpaBIBNo,
-          );
-          console.log('resQR', resQR);
-
-          if (resQR) {
-            setQR(resQR);
-          }
-        }
 
         const eventId =
           resDetailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhId;
@@ -259,7 +246,7 @@ export default function MyEventDetail() {
         detailTransaction?.data?.trnsAmount || 0,
       )?.toLocaleString('id-ID')}`,
     },
-  ].filter(item => item.value);
+  ].filter(item => item.value !== null && item.value !== undefined);
 
   function statusColor() {
     switch (status) {
@@ -357,62 +344,10 @@ export default function MyEventDetail() {
     }
   };
 
-  const handleButton = () => {
-    setIsLoadingButton(true);
-
-    if (status === 'Waiting Payment') {
-      if (confirmPayment) {
-        if (
-          detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-          detailTransaction?.linked?.trihTrnsId?.find(
-            (item: any) => item.trihIsCurrent === 1,
-          )?.trihPaymentType === confirmPayment?.evptMsptName
-        ) {
-          navigation.navigate('Payment', {
-            transactionId: params.transactionId,
-          });
-        } else {
-          handlePayNow();
-        }
-      } else {
-        setShowModal(true);
-      }
-    } else if (eventDetail && !registeredEvent) {
-      if (
-        (eventDetail.categories || []).find(
-          cat =>
-            cat.evncId ===
-            detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId,
-        )
-      ) {
-        navigation.navigate('EventRegister', {
-          event: eventDetail,
-          selectedCategoryId:
-            detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || '',
-        });
-      } else {
-        Toast.show({
-          title: 'Cannot Register Event',
-          description: 'Category not found',
-        });
-      }
-    } else {
-      navigation.navigate('MyEventsDetail', {
-        transactionId: registeredEvent.mregOrderId,
-        // eventId: registeredEvent.links?.mregEventId,
-        // isBallot:
-        //   registeredEvent.mregType === 'MB' ? true : false,
-        // regStatus: registeredEvent.mregStatus,
-      });
-    }
-    setConfirmPayment(undefined);
-    setIsLoadingButton(false);
-  };
-
   return (
     <AppContainer>
       <Header title={t('myEvent.detailTitle')} left="back" />
-      {isLoading ? (
+      {isLoading || isLoadingEvent ? (
         <LoadingBlock />
       ) : (
         <ScrollView backgroundColor={'#E8ECF3'}>
@@ -432,11 +367,20 @@ export default function MyEventDetail() {
                 </Text>
                 {statusComp}
               </HStack>
-              {status === 'Paid' && (
-                <Box alignItems={'center'}>
-                  <SvgXml xml={QR} />
-                </Box>
+
+              {status === 'Paid' &&
+              detailTransaction?.data?.trnsRefId &&
+              detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaBIBNo ? (
+                <QRCodeWithFunction
+                  trnsRefId={detailTransaction?.data?.trnsRefId}
+                  evpaBIBNo={
+                    detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaBIBNo
+                  }
+                />
+              ) : (
+                false
               )}
+
               {status !== 'Paid' && (
                 <>
                   <Box
@@ -498,7 +442,7 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {(status === 'Waiting Payment' ||
+              {/* {(status === 'Waiting Payment' ||
                 (status === 'Payment Expired' && !isBallot)) && (
                 <AppButton
                   onPress={handleButton}
@@ -524,7 +468,29 @@ export default function MyEventDetail() {
                       : t('event.registerEventAgain')}
                   </Text>
                 </AppButton>
-              )}
+              )} */}
+              <ButtonBasedOnStatus
+                transactionId={params.transactionId}
+                status={status}
+                payment={confirmPayment}
+                isBallot={isBallot}
+                isRegisteredEvent={!registeredEvent}
+                eventDetail={eventDetail}
+                evpaEvncId={
+                  detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
+                }
+                onChoosePaymentMethod={() => setShowModal(true)}
+                onPayNow={() => handlePayNow()}
+                isPaymentGenerated={
+                  detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
+                  detailTransaction?.linked?.trihTrnsId?.find(
+                    (item: any) => item.trihIsCurrent === 1,
+                  )?.trihPaymentType === confirmPayment?.evptMsptName
+                }
+                onAfterButtonFinished={() => {
+                  setConfirmPayment(undefined);
+                }}
+              />
 
               <Box
                 marginTop={'15px'}
@@ -547,7 +513,7 @@ export default function MyEventDetail() {
                           ? EVENT_TYPES[eventData?.evnhType as any].value ||
                             'OTHER'
                           : 'OTHER'
-                        ).toUpperCase()}
+                        ).toUpperCase() + (isBallot ? ' (BALLOT)' : '')}
                       </Text>
                       <Text
                         fontWeight={500}
@@ -561,6 +527,7 @@ export default function MyEventDetail() {
                   </HStack>
                 </TouchableOpacity>
               </Box>
+
               {status === 'Waiting Payment' && (
                 <Box
                   paddingY={'16px'}
@@ -641,6 +608,7 @@ export default function MyEventDetail() {
               <View flex={1} bg={'#DFB344'} height={'6px'} />
             </HStack>
           </Box>
+
           <Text
             fontWeight={400}
             marginTop={'14px'}

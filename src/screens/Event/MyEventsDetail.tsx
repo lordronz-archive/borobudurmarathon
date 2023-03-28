@@ -346,7 +346,7 @@ export default function MyEventDetail() {
     <AppContainer>
       <Header title={t('myEvent.detailTitle')} left="back" />
       {isLoading || isLoadingEvent ? (
-        <LoadingBlock />
+        <LoadingBlock style={{opacity: 0.7}} />
       ) : (
         <ScrollView backgroundColor={'#E8ECF3'}>
           <TransactionAlertStatus isBallot={isBallot} status={status} />

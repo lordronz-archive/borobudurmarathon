@@ -12,9 +12,7 @@ import {
   Toast,
   Actionsheet,
   AlertDialog,
-  Spinner,
 } from 'native-base';
-import AppButton from '../../components/buttons/Button';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';

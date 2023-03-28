@@ -37,6 +37,7 @@ import {
 } from '../../helpers/registerEvent';
 import {EvhfName} from '../../types/registerEvent.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import { handleErrorMessage } from '../../helpers/apiErrors';
 
 type Price = {
   id: string;
@@ -334,7 +335,7 @@ export default function EventRegisterScreen() {
     if (!valid) {
       setIsLoading(false);
       toast.show({
-        title: 'Failed to register event',
+        title: t('error.failedToRegisterEvent'),
         description: toastDescription,
       });
       return;
@@ -387,10 +388,7 @@ export default function EventRegisterScreen() {
       console.info(JSON.stringify(res.data));
       setIsOpen(true);
     } catch (error) {
-      toast.show({
-        title: 'Failed to register event',
-        description: getErrorMessage(error),
-      });
+      handleErrorMessage(error, t('error.failedToRegisterEvent'));
     } finally {
       setIsLoading(false);
     }
@@ -755,7 +753,7 @@ export default function EventRegisterScreen() {
               onPress={() => {
                 if (checkbox[0] !== 'agreed') {
                   toast.show({
-                    title: 'Failed to register event',
+                    title: t('error.failedToRegisterEvent'),
                     description: 'Please agree to terms and service',
                   });
                   return;

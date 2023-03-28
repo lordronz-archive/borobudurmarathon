@@ -98,7 +98,7 @@ export default function useInit() {
       } else if (err && err.errorCode === 409) {
         navigation.navigate('Logout');
       } else {
-        handleErrorMessage(err, 'Failed to get profile');
+        handleErrorMessage(err, t('error.failedToGetProfile'));
         navigation.navigate('Initial');
       }
     }
@@ -204,11 +204,7 @@ export default function useInit() {
           });
         })
         .catch(err => {
-          toast.show({
-            title: 'Failed to send otp',
-            variant: 'subtle',
-            description: getErrorMessage(err),
-          });
+          handleErrorMessage(err, t('error.failedToSendOTP'));
         });
     } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
       console.info("data.login === 'KompasId' && Number(data.consent) === 0");
@@ -219,8 +215,8 @@ export default function useInit() {
       }
     } else if (Number(data.authProfile) === 0) {
       toast.show({
-        title: 'Your profile is not complete',
-        description: 'Please complete your profile to continue',
+        title: t('error.profileIsNotComplete'),
+        description: t('error.profileIsNotCompleteDescription'),
       });
       console.info('Number(data.authProfile) === 0');
       // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)
@@ -268,11 +264,7 @@ export default function useInit() {
               });
             })
             .catch(err => {
-              toast.show({
-                title: 'Failed to send otp',
-                variant: 'subtle',
-                description: getErrorMessage(err),
-              });
+              handleErrorMessage(err, t('error.failedToSendOTP'));
             });
         } else {
           navigation.replace('ChooseCitizen');

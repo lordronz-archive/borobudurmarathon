@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import {Box} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {SvgXml} from 'react-native-svg';
@@ -26,7 +27,7 @@ export default function QRCodeWithFunction(props: Props) {
         setQR(resQR);
       }
     } catch (err) {
-      handleErrorMessage(err, 'Failed to generate QR Code');
+      handleErrorMessage(err, t('error.failedToGenerateQR'));
     }
   };
 

@@ -234,9 +234,13 @@ export default function DetailEvent() {
           })
           .catch(err => {
             console.info('error check registered event', err);
-            const error = handleErrorMessage(err, 'Failed to get transaction', {
-              ignore404: true,
-            });
+            const error = handleErrorMessage(
+              err,
+              t('error.failedToGetTransactions'),
+              {
+                ignore404: true,
+              },
+            );
 
             if (!error) {
               setIsLoading(false);
@@ -245,7 +249,7 @@ export default function DetailEvent() {
       })
       .catch(err => {
         console.info('err get event detail', JSON.stringify(err));
-        handleErrorMessage(err, 'Failed to get event');
+        handleErrorMessage(err, t('error.failedToGetEvent'));
         navigation.goBack();
       });
   };

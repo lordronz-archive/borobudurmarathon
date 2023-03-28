@@ -71,8 +71,8 @@ export default function ButtonBasedOnStatus(props: Props) {
       });
     } else {
       Toast.show({
-        title: 'Cannot Register Event',
-        description: 'Category & pricing not found',
+        title: t('error.cannotRegisterEvent'),
+        description: t('error.categoryPricingNotFound'),
       });
     }
     props.onAfterButtonFinished();

@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import {Toast} from 'native-base';
 import {getErrorMessage} from './errorHandler';
 
@@ -37,7 +38,7 @@ export function getApiErrors(err: any): {[key: string]: string} | null {
 
 export function handleErrorMessage(
   err: any,
-  title?: string,
+  title?: string | null,
   options?: {
     ignore404?: boolean;
   },
@@ -49,7 +50,21 @@ export function handleErrorMessage(
   }
   const objErrors = getApiErrors(err);
   console.info('objErrors', objErrors);
-  if (objErrors) {
+  if (objErrors && objErrors.errorMessage) {
+    try {
+      const objMessage = JSON.parse(objErrors.errorMessage);
+
+      objErrors.errorMessage = objMessage[i18next.language];
+    } catch (error) {
+      // nothing
+    } finally {
+      Toast.show({
+        title: title || 'Failed',
+        description: objErrors.errorMessage,
+        placement: 'top',
+      });
+    }
+  } else if (objErrors) {
     Toast.show({
       title: title || 'Failed',
       description: Object.keys(objErrors)

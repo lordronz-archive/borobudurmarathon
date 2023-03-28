@@ -21,6 +21,7 @@ import {useTranslation} from 'react-i18next';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
+import { handleErrorMessage } from '../../helpers/apiErrors';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
@@ -66,21 +67,14 @@ export default function ChangePhoneNumberScreen() {
                 getProfile();
                 navigation.goBack();
               } catch (err) {
-                Toast.show({
-                  title: 'Failed to send otp',
-                  description: 'Phone already used by another user',
-                });
-                console.info(err, getErrorMessage(err), 'Failed to send otp');
+                handleErrorMessage(err, t('error.failedToSendOTP'));
                 setIsLoading(false);
               }
             },
           });
         })
         .catch(err => {
-          Toast.show({
-            title: 'Failed to send otp',
-            description: getErrorMessage(err),
-          });
+          handleErrorMessage(err, t('error.failedToSendOTP'));
         });
     } else {
       Toast.show({

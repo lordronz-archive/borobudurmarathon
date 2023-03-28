@@ -37,6 +37,7 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import TransactionAlertStatus from './components/TransactionAlertStatus';
 import QRCodeWithFunction from './components/QRCodeWithFunction';
 import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
+import { getTransactionStatus } from '../../helpers/transaction';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -107,38 +108,43 @@ export default function MyEventDetail() {
           ) === 1;
         const regStatus = resDetailTransaction?.data?.data.trnsStatus;
 
-        let newStatus: TransactionStatus;
-        if (isThisBallot) {
-          if (regStatus === 0) {
-            newStatus = 'Registered';
-          } else if (regStatus === 99) {
-            newStatus = 'Unqualified';
-          } else {
-            if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
-              newStatus = 'Paid';
-            } else if (
-              moment(
-                resDetailTransaction?.data?.data?.trnsExpiredTime,
-              ).isBefore(moment(new Date()))
-            ) {
-              newStatus = 'Payment Expired';
-            } else {
-              newStatus = 'Waiting Payment';
-            }
-          }
-        } else {
-          if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
-            newStatus = 'Paid';
-          } else if (
-            moment(resDetailTransaction?.data?.data?.trnsExpiredTime).isBefore(
-              moment(new Date()),
-            )
-          ) {
-            newStatus = 'Payment Expired';
-          } else {
-            newStatus = 'Waiting Payment';
-          }
-        }
+        let newStatus: TransactionStatus = getTransactionStatus({
+          isBallot: isThisBallot,
+          regStatus,
+          trnsConfirmed: resDetailTransaction?.data?.data?.trnsConfirmed,
+          trnsExpiredTime: resDetailTransaction?.data?.data?.trnsExpiredTime,
+        });
+        // if (isThisBallot) {
+        //   if (regStatus === 0) {
+        //     newStatus = 'Registered';
+        //   } else if (regStatus === 99) {
+        //     newStatus = 'Unqualified';
+        //   } else {
+        //     if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
+        //       newStatus = 'Paid';
+        //     } else if (
+        //       moment(
+        //         resDetailTransaction?.data?.data?.trnsExpiredTime,
+        //       ).isBefore(moment(new Date()))
+        //     ) {
+        //       newStatus = 'Payment Expired';
+        //     } else {
+        //       newStatus = 'Waiting Payment';
+        //     }
+        //   }
+        // } else {
+        //   if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
+        //     newStatus = 'Paid';
+        //   } else if (
+        //     moment(resDetailTransaction?.data?.data?.trnsExpiredTime).isBefore(
+        //       moment(new Date()),
+        //     )
+        //   ) {
+        //     newStatus = 'Payment Expired';
+        //   } else {
+        //     newStatus = 'Waiting Payment';
+        //   }
+        // }
         setStatus(newStatus);
 
         const eventId =
@@ -167,7 +173,7 @@ export default function MyEventDetail() {
       })
       .catch(err => {
         console.info('err get event detail', JSON.stringify(err));
-        handleErrorMessage(err, 'Failed to get event');
+        handleErrorMessage(err, t('error.failedToGetEvent'));
         setIsLoadingEvent(false);
       });
   };
@@ -308,10 +314,7 @@ export default function MyEventDetail() {
         });
       }
     } catch (err) {
-      Toast.show({
-        title: 'Failed to Apply Coupon',
-        description: getErrorMessage(err),
-      });
+      handleErrorMessage(err, t('error.failedToApplyCoupon'));
     } finally {
       await fetchData();
       setIsLoadingApplyCoupon(false);
@@ -333,10 +336,7 @@ export default function MyEventDetail() {
         });
       }
     } catch (err) {
-      Toast.show({
-        title: 'Failed to pay now',
-        description: getErrorMessage(err),
-      });
+      handleErrorMessage(err, t('error.failedToPayNow'));
     } finally {
       setIsLoading(false);
     }

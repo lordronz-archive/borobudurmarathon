@@ -31,6 +31,7 @@ import WebView from 'react-native-webview';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import {TransactionDetail} from '../../types/transaction.type';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 
 export default function PaymentScreen() {
   const {onCopy} = useClipboard();
@@ -62,10 +63,7 @@ export default function PaymentScreen() {
         );
       }
     } catch (err) {
-      Toast.show({
-        title: 'Failed to get featured events',
-        description: getErrorMessage(err),
-      });
+      handleErrorMessage(err, t('error.failedToGetTransaction'));
     } finally {
       setIsLoading(false);
     }

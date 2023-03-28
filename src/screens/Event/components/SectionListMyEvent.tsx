@@ -1,7 +1,8 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {t} from 'i18next';
 import moment from 'moment';
-import {Center, Divider, FlatList, Spinner, Toast} from 'native-base';
+import {Center, Divider, FlatList, Spinner} from 'native-base';
 import React, {ComponentType, useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
@@ -9,8 +10,9 @@ import CategoryButton from '../../../components/buttons/CategoryButton';
 import MyEventCard from '../../../components/card/MyEventCard';
 import EmptyMessage from '../../../components/EmptyMessage';
 import Section from '../../../components/section/Section';
-import {getErrorMessage} from '../../../helpers/errorHandler';
+import {handleErrorMessage} from '../../../helpers/apiErrors';
 import httpRequest from '../../../helpers/httpRequest';
+import {getTransactionStatus} from '../../../helpers/transaction';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {Datum, EventProperties, Transaction} from '../../../types/event.type';
 
@@ -98,28 +100,18 @@ export default function SectionListMyEvent() {
             }
           })
           .catch(err => {
-            if (getErrorMessage(err).includes('Not Found')) {
-              //
-            } else {
-              Toast.show({
-                title: 'Failed to get events',
-                description: getErrorMessage(err),
-              });
-            }
+            handleErrorMessage(err, t('error.failedToGetEvents'), {
+              ignore404: true,
+            });
           })
           .finally(() => {
             setIsLoading(false);
           });
       })
       .catch(err => {
-        if (getErrorMessage(err).includes('Not Found')) {
-          //
-        } else {
-          Toast.show({
-            title: 'Failed to get events',
-            description: getErrorMessage(err),
-          });
-        }
+        handleErrorMessage(err, t('error.failedToGetEvents'), {
+          ignore404: true,
+        });
       })
       .finally(() => {
         setIsLoading(false);
@@ -151,33 +143,33 @@ export default function SectionListMyEvent() {
 
     const cleanTransactionExpTime = transaction.trnsExpiredTime;
 
-    const checkStatus = () => {
-      let status;
-      if (item.mregType === 'MB') {
-        if (item.mregStatus === 0) {
-          status = 'Registered';
-        } else if (item.mregStatus === 99) {
-          status = 'Unqualified';
-        } else {
-          if (transaction?.trnsConfirmed === 1) {
-            status = 'Paid';
-          } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
-            status = 'Payment Expired';
-          } else {
-            status = 'Waiting Payment';
-          }
-        }
-      } else {
-        if (transaction?.trnsConfirmed === 1) {
-          status = 'Paid';
-        } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
-          status = 'Payment Expired';
-        } else {
-          status = 'Waiting Payment';
-        }
-      }
-      return status;
-    };
+    // const checkStatus = () => {
+    //   let status;
+    //   if (item.mregType === 'MB') {
+    //     if (item.mregStatus === 0) {
+    //       status = 'Registered';
+    //     } else if (item.mregStatus === 99) {
+    //       status = 'Unqualified';
+    //     } else {
+    //       if (transaction?.trnsConfirmed === 1) {
+    //         status = 'Paid';
+    //       } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
+    //         status = 'Payment Expired';
+    //       } else {
+    //         status = 'Waiting Payment';
+    //       }
+    //     }
+    //   } else {
+    //     if (transaction?.trnsConfirmed === 1) {
+    //       status = 'Paid';
+    //     } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
+    //       status = 'Payment Expired';
+    //     } else {
+    //       status = 'Waiting Payment';
+    //     }
+    //   }
+    //   return status;
+    // };
 
     return (
       <TouchableOpacity
@@ -203,7 +195,12 @@ export default function SectionListMyEvent() {
               ? ' - ' + moment(cleanEndDate).format('MMM D YYYY')
               : '')
           }
-          status={checkStatus()}
+          status={getTransactionStatus({
+            isBallot: event.evnhBallot === 1,
+            regStatus: transaction.trnsStatus,
+            trnsConfirmed: transaction?.trnsConfirmed,
+            trnsExpiredTime: transaction?.trnsExpiredTime,
+          })}
           category={category?.evncName || ''}
           transactionExpirationTime={cleanTransactionExpTime}
           isAvailable={false}

@@ -30,6 +30,7 @@ import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
+import { handleErrorMessage } from '../../helpers/apiErrors';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -152,11 +153,7 @@ export default function InputProfileScreen() {
         setProfileAfterVerifyPhoneSuccess();
       }
     } catch (err) {
-      Toast.show({
-        title: 'Failed to send otp',
-        description: 'Phone already used by another user',
-      });
-      console.info(err, getErrorMessage(err), 'Failed to send otp');
+      handleErrorMessage(err, t('error.failedToSendOTP'));
     } finally {
       setIsLoading(false);
     }
@@ -171,10 +168,7 @@ export default function InputProfileScreen() {
       navigation.navigate('Welcome');
       setIsLoading(false);
     } catch (err) {
-      Toast.show({
-        title: 'Failed to save',
-        description: getErrorMessage(err),
-      });
+      handleErrorMessage(err, t('error.failedToSaveProfile'));
       setIsLoading(false);
     }
   };

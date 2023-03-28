@@ -355,6 +355,8 @@ export interface MregEventID {
   evnhRegistrationStatus: number;
   evnhTransactionExpired: number;
   evnhStatus: number;
+
+  evnhBallot: number;
 }
 
 export interface MregTrnsID {

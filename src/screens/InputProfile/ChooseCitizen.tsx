@@ -53,7 +53,7 @@ import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
-import {getApiErrors} from '../../helpers/apiErrors';
+import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
@@ -383,10 +383,7 @@ export default function ChooseCitizenScreen({route}: Props) {
               },
             });
           } catch (err) {
-            toast.show({
-              title: 'Failed to send otp',
-              description: getErrorMessage(err),
-            });
+            handleErrorMessage(err, t('error.failedToSendOTP'));
             setProfileStep(1);
           }
         } else {
@@ -475,21 +472,7 @@ export default function ChooseCitizenScreen({route}: Props) {
       setStepCount(1);
       setProfileStep(1);
     } catch (err) {
-      const objErrors = getApiErrors(err);
-      console.info('objErrors', objErrors);
-      if (objErrors) {
-        Toast.show({
-          title: 'Failed to save profile',
-          description: Object.keys(objErrors)
-            .map(field => `${objErrors[field]} [${field}]`)
-            .join('. '),
-        });
-      } else {
-        Toast.show({
-          title: 'Failed to save',
-          description: getErrorMessage(err),
-        });
-      }
+      handleErrorMessage(err, t('error.failedToSaveProfile'));
     } finally {
       setIsLoading(false);
     }

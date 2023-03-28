@@ -1,7 +1,9 @@
+import { t } from 'i18next';
 import {Toast} from 'native-base';
 import {useState} from 'react';
 import {createGlobalState} from 'react-hooks-global-state';
 import {EventService} from '../api/event.service';
+import { handleErrorMessage } from '../helpers/apiErrors';
 import {getErrorMessage} from '../helpers/errorHandler';
 import {GetEventsResponse} from '../types/event.type';
 
@@ -42,10 +44,7 @@ export default function useEvent() {
         setIsLoading(false);
       })
       .catch(err => {
-        Toast.show({
-          title: 'Failed to get events',
-          description: getErrorMessage(err),
-        });
+        handleErrorMessage(err, t('error.failedToGetEvents'));
         setIsLoading(false);
       });
   };

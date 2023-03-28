@@ -5,7 +5,7 @@ export function getTransactionStatus(params: {
   isBallot: boolean;
   regStatus: number;
   trnsConfirmed: number;
-  trnsExpiredTime: string;
+  trnsExpiredTime: Date | string;
 }): TransactionStatus {
   let newStatus;
   if (params.isBallot) {

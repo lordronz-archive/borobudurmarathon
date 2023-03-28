@@ -10,7 +10,7 @@ type MyCardEventProps = {
   title: string;
   status: string;
   date: string;
-  transactionExpirationTime?: string;
+  transactionExpirationTime?: Date | string;
   isAvailable?: boolean;
   category: string;
   onPayNowClick: () => void;

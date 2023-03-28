@@ -14,7 +14,7 @@ export interface Datum {
   mregYear: null;
   mregType: string;
   mregStatus: number;
-  mregCreatedTime: Date;
+  mregCreatedTime: string;
   links: Links;
   mregZmemId?: number;
   mregEventId?: number;
@@ -62,14 +62,14 @@ export interface MregEventID {
   evnhThumbnail: string;
   evnhBallot: number;
   evnhQuotaConfirmation: number;
-  evnhTimeLimitRegistration: Date;
+  evnhTimeLimitRegistration: string;
   evnhCategory: string;
   evnhLinkWeb: null | string;
-  evnhTimeLimitConfirmation: Date;
-  evnhStartDate: Date;
-  evnhEndDate: Date;
-  evnhRegistrationStart: Date;
-  evnhRegistrationEnd: Date;
+  evnhTimeLimitConfirmation: string;
+  evnhStartDate: string;
+  evnhEndDate: string;
+  evnhRegistrationStart: string;
+  evnhRegistrationEnd: string;
   evnhStatusPublish: number;
   evnhRegistrationStatus: number;
   evnhTransactionExpired: number;
@@ -88,7 +88,7 @@ export interface MregEvncID {
   evncVrStartDate: null;
   evncVrEndDate: null;
   evncVrReps: null;
-  evncStartDate: Date;
+  evncStartDate: string;
   evncPrice: string;
   evncMaxDistance: null;
   evncMaxDistancePoint: null;
@@ -112,8 +112,8 @@ export interface MregTrnsID {
   trnsAmount: string;
   trnsConfirmed: number;
   trnsConfirmTime: null;
-  trnsExpiredTime: Date;
-  trnsCreatedTime: Date;
+  trnsExpiredTime: string;
+  trnsCreatedTime: string;
 }
 
 export interface MregZmemID {
@@ -123,7 +123,7 @@ export interface MregZmemID {
   zmemLoyalty: number;
   zmemLevel: number;
   zmemStatus: number;
-  zmemCreatedTime: Date;
+  zmemCreatedTime: string;
   zmemAuusId: number;
   zmemOwner: number;
   zmemNewsletter: number;

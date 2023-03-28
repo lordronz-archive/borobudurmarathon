@@ -1,5 +1,3 @@
-import {t} from 'i18next';
-
 export const LIST_MONTH = [
   'January',
   'February',
@@ -36,7 +34,7 @@ const LIST_DAY = [
   'Selasa',
   'Rabu',
   'Kamis',
-  `Jum'at`,
+  "Jum'at",
   'Sabtu',
 ];
 
@@ -152,6 +150,17 @@ export const toAcceptableApiFormat = (s?: string) => {
 const datetime = {
   getDateString,
   getDateRangeString,
+};
+
+export const getAge = (dateString?: string, base?: string) => {
+  const baseDate = base ? new Date(base) : new Date();
+  const birthDate = dateString ? new Date(dateString) : new Date();
+  let age = baseDate.getFullYear() - birthDate.getFullYear();
+  const m = baseDate.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && baseDate.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
 };
 
 export default datetime;

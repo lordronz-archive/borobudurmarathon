@@ -21,7 +21,7 @@ import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import Congratulation from '../../components/modal/Congratulation';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
-import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
+import datetime, {getAge, toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import ViewProfile from '../InputProfile/components/ViewProfile';
@@ -454,14 +454,27 @@ export default function EventRegisterScreen() {
     [],
   );
 
-  const displayedFields = useMemo(
-    () =>
-      fields
-        .filter(f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId')
-        .filter(f => !bannedField.includes(f.evhfName))
-        .filter(f => showFields.includes(f.evhfName)),
-    [fields, bannedField, showFields],
-  );
+  const guardianFields = [
+    'evpaGuardianName',
+    'evpaGuardianCardIDNumber',
+    'evpaGuardianPhoneNumber',
+    'evpaGuardianEmail',
+  ];
+  const displayedFields = useMemo(() => {
+    const res = fields
+      .filter(f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId')
+      .filter(f => !bannedField.includes(f.evhfName))
+      .filter(f => showFields.includes(f.evhfName));
+    if (
+      getAge(
+        user?.linked?.mbsdZmemId?.[0]?.mbsdBirthDate,
+        event?.data.evnhStartDate,
+      ) >= 17
+    ) {
+      return res.filter(f => !guardianFields.includes(f.evhfName));
+    }
+    return res;
+  }, [fields, bannedField, showFields, user]);
 
   const isRequiredFilled = useCallback(() => {
     for (let i = 0, j = fields.length; i < j; ++i) {

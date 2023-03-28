@@ -37,7 +37,7 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import TransactionAlertStatus from './components/TransactionAlertStatus';
 import QRCodeWithFunction from './components/QRCodeWithFunction';
 import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
-import { getTransactionStatus } from '../../helpers/transaction';
+import {getTransactionStatus} from '../../helpers/transaction';
 
 export default function MyEventDetail() {
   const route = useRoute();

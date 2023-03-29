@@ -296,6 +296,7 @@ export default function EventRegisterScreen() {
 
   const validate = (payload: any) => {
     let objErrors = {};
+    let newPayload = {};
     let toastDescription = '';
     for (const f of fields) {
       if (showFields.includes(f.evhfName)) {
@@ -321,13 +322,18 @@ export default function EventRegisterScreen() {
         // jika field itu tidak di show, biasanya ini sub fields yg NO, jadi harusnya memang tidak akan pernah diisi
         if (f.evhfIsRequired.toString() === '1') {
           // ini mau diapain?
+          newPayload = {
+            ...newPayload,
+            [f.evhfName]: '-',
+          };
         }
       }
     }
 
     console.info('objErrors', objErrors);
-    if (Object.keys(objErrors).length > 0) {
-      setIsLoading(false);
+    if (newPayload && Object.keys(newPayload).length > 0) {
+      register(newPayload);
+    } else if (Object.keys(objErrors).length > 0) {
       toast.show({
         title: t('error.failedToRegisterEvent'),
         description: toastDescription,
@@ -343,32 +349,39 @@ export default function EventRegisterScreen() {
     }
   };
 
-  const register = async () => {
+  const register = async (newPayload?: any) => {
     setIsLoading(true);
 
-    let payload = {
-      ...fieldsData,
-      evpaEvnhId: params.event.data.evnhId,
-      evpaEvncId: params.selectedCategoryId,
-      evpaName:
-        user?.data && user?.data.length > 0 ? user?.data[0].zmemFullName : null,
-      evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
-      evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
-      evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
-      evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
-      evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
-      evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
-      evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
-      evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
-      evpaBirthDate: toAcceptableApiFormat(
-        user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
-      ),
-      evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
-      evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
-      evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
-      evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
-      evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
-    };
+    let payload = {};
+    if (newPayload) {
+      payload = {...newPayload};
+    } else {
+      payload = {
+        ...fieldsData,
+        evpaEvnhId: params.event.data.evnhId,
+        evpaEvncId: params.selectedCategoryId,
+        evpaName:
+          user?.data && user?.data.length > 0
+            ? user?.data[0].zmemFullName
+            : null,
+        evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
+        evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
+        evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
+        evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
+        evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+        evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+        evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
+        evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
+        evpaBirthDate: toAcceptableApiFormat(
+          user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
+        ),
+        evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
+        evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
+        evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
+        evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
+        evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
+      };
+    }
 
     const isValid = validate(payload);
     if (!isValid) {

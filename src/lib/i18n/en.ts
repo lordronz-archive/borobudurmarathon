@@ -167,6 +167,7 @@ export default {
     totalPayment: 'Total Payment',
     registerNow: 'Register Now',
     registrationDate: 'Registration Date',
+    eventDate: 'Event Date',
     place: 'Place',
     quota: 'Quota',
     distance: 'Distance',

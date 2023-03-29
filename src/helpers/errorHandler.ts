@@ -1,3 +1,5 @@
+import i18next from 'i18next';
+
 export function getErrorMessage(err: any) {
   let errMessage = 'Failed. Please try again.';
   console.info('err', err);
@@ -29,6 +31,12 @@ export function getErrorMessage(err: any) {
     errMessage = err.error;
   } else {
     // errMessage = JSON.stringify(err);
+  }
+  try {
+    const parsed = JSON.parse(errMessage);
+    errMessage = parsed[i18next.language];
+  } catch {
+    //
   }
   return errMessage;
 }

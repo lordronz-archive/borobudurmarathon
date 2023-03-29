@@ -74,6 +74,7 @@ export default function ChangePhoneNumberScreen() {
           });
         })
         .catch(err => {
+          setIsLoading(false);
           handleErrorMessage(err, t('error.failedToSendOTP'));
         });
     } else {

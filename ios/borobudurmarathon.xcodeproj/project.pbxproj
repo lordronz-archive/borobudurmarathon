@@ -612,6 +612,7 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-borobudurmarathon-borobudurmarathonTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = KMTUPL6U39;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -640,6 +641,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = KMTUPL6U39;
 				INFOPLIST_FILE = borobudurmarathonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -665,6 +667,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 226;
+				DEVELOPMENT_TEAM = KMTUPL6U39;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = borobudurmarathon/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "My Borobudur Marathon";
@@ -679,7 +682,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.borobudurmarathon.app.dev;
 				PRODUCT_NAME = borobudurmarathon;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -698,7 +701,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 226;
-				DEVELOPMENT_TEAM = ZX8X7SH43D;
+				DEVELOPMENT_TEAM = KMTUPL6U39;
 				INFOPLIST_FILE = borobudurmarathon/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "My Borobudur Marathon";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
@@ -712,7 +715,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.borobudurmarathon.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.borobudurmarathon.app.dev;
 				PRODUCT_NAME = borobudurmarathon;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

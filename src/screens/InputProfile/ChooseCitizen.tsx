@@ -49,7 +49,7 @@ import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import Button from '../../components/buttons/Button';
 import {useDemo} from '../../context/demo.context';
 import {getIDNumberType} from '../../assets/data/ktpPassport';
-import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
+import {getGenderOptions} from '../../assets/data/gender';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
@@ -384,7 +384,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             });
           } catch (err) {
             toast.show({
-              title: 'Failed to send otp',
+              title: t('error.failedToSendOTP'),
               description: getErrorMessage(err),
             });
             setProfileStep(1);

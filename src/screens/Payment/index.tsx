@@ -130,7 +130,7 @@ export default function PaymentScreen() {
     <AppContainer>
       <Header title="" left="back" />
       {isLoading ? (
-        <LoadingBlock />
+        <LoadingBlock style={{opacity: 0.7}} />
       ) : (
         <>
           {activePayment?.trihPaymentType?.includes('snap') &&

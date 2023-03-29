@@ -6,7 +6,6 @@ import {EAuthUserAction, useAuthUser} from '../context/auth.context';
 import {RootStackParamList} from '../navigation/RootNavigator';
 import {SessionService} from '../api/session.service';
 import {useToast} from 'native-base';
-import {getErrorMessage} from '../helpers/errorHandler';
 import {AuthService} from '../api/auth.service';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import CookieManager from '@react-native-cookies/cookies';
@@ -103,52 +102,6 @@ export default function useInit() {
       }
     }
   };
-
-  // const checkProfileIsCompleteOrNot = (resProfile: IMemberDetailResponse) => {
-  //   if (resProfile.linked.mbsdZmemId && resProfile.linked.mbsdZmemId[0]) {
-  //     // profile has been completed
-  //     if (isShowDemoNewUser) {
-  //       toast.show({
-  //         id: 'welcome',
-  //         description: 'Welcome, New Runner',
-  //       });
-  //       // need to complete profile
-  //       // navigation.navigate('InputProfile');
-  //       navigation.replace('ChooseCitizen');
-  //       setDemoNewUser(false);
-  //     } else {
-  //       if (resProfile.linked.zmemAuusId[0].auusConsent === 1) {
-  //         if (isShowDemoConsent) {
-  //           navigation.replace('DataConfirmation');
-  //           setDemoConsent(false);
-  //         } else {
-  //           if (route.name !== 'Home') {
-  //             navigation.replace('Main', {screen: 'Home'});
-  //             if (!toast.isActive('welcome')) {
-  //               toast.show({
-  //                 id: 'welcome',
-  //                 description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-  //               });
-  //             }
-  //           }
-  //         }
-  //       } else {
-  //         navigation.replace('DataConfirmation');
-  //       }
-  //     }
-  //   } else {
-  //     // toast.show({
-  //     //   description: "Let's complete your data",
-  //     // });
-  //     toast.show({
-  //       id: 'welcome',
-  //       description: 'Welcome, New Runner',
-  //     });
-  //     // need to complete profile
-  //     // navigation.navigate('InputProfile');
-  //     navigation.replace('ChooseCitizen');
-  //   }
-  // };
 
   const checkAccount = async (
     data: IAuthResponseData,

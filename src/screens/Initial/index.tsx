@@ -34,7 +34,6 @@ export default function InitialScreen() {
 
   useEffect(() => {
     if (isFocused) {
-      // init();
       if (!isLoadingWebView) {
         setIsLoadingWebView(true);
       }

@@ -8,17 +8,16 @@ import {
   ScrollView,
   Divider,
   useToast,
-  Button,
   HStack,
+  WarningOutlineIcon,
 } from 'native-base';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import RegistrationForm from './components/RegistrationForm';
 import {EventFieldsEntity} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import Congratulation from '../../components/modal/Congratulation';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
 import datetime, {getAge, toAcceptableApiFormat} from '../../helpers/datetime';
@@ -37,7 +36,8 @@ import {
 } from '../../helpers/registerEvent';
 import {EvhfName} from '../../types/registerEvent.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
-import { handleErrorMessage } from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
+import Button from '../../components/buttons/Button';
 
 type Price = {
   id: string;
@@ -67,6 +67,7 @@ const bannedField = [
 ];
 
 export default function EventRegisterScreen() {
+  const ref = React.useRef(null);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -81,6 +82,7 @@ export default function EventRegisterScreen() {
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
   const [showFields, setShowFields] = useState<EvhfName[]>([]);
+  const [errors, setErrors] = useState<any>({});
 
   // const [fields, setFields] = useState<EventFieldsEntity[]>([]);
 
@@ -292,10 +294,57 @@ export default function EventRegisterScreen() {
     user,
   ]);
 
+  const validate = (payload: any) => {
+    let objErrors = {};
+    let toastDescription = '';
+    for (const f of fields) {
+      if (showFields.includes(f.evhfName)) {
+        if (f.evhfIsRequired.toString() === '1') {
+          if (
+            payload[f.evhfName] === undefined ||
+            payload[f.evhfName] === null
+          ) {
+            console.info('INVALID: ', f);
+
+            if (!toastDescription) {
+              toastDescription = `${t('error.Field')} "${f.evhfLabel}" ${t(
+                'error.isRequired',
+              )}`;
+            }
+            objErrors = {
+              ...objErrors,
+              [f.evhfName]: 'required',
+            };
+          }
+        }
+      } else {
+        // jika field itu tidak di show, biasanya ini sub fields yg NO, jadi harusnya memang tidak akan pernah diisi
+        if (f.evhfIsRequired.toString() === '1') {
+          // ini mau diapain?
+        }
+      }
+    }
+
+    console.info('objErrors', objErrors);
+    if (Object.keys(objErrors).length > 0) {
+      setIsLoading(false);
+      toast.show({
+        title: t('error.failedToRegisterEvent'),
+        description: toastDescription,
+      });
+      if (ref && ref.current) {
+        (ref.current as any).scrollTo({x: 0, y: 900, animated: true});
+      }
+      setErrors({...objErrors});
+      return false;
+    } else {
+      setErrors({});
+      return true;
+    }
+  };
+
   const register = async () => {
     setIsLoading(true);
-    let valid = true;
-    let toastDescription = '';
 
     let payload = {
       ...fieldsData,
@@ -321,23 +370,9 @@ export default function EventRegisterScreen() {
       evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
     };
 
-    fields.forEach((f: EventFieldsEntity) => {
-      if (
-        f.evhfIsRequired.toString() === '1' &&
-        (!(f.evhfName in payload) || !payload[f.evhfName])
-      ) {
-        valid = false;
-        console.info('INVALID: ', f);
-        toastDescription = `Field "${f.evhfLabel}" is required`;
-      }
-    });
-
-    if (!valid) {
+    const isValid = validate(payload);
+    if (!isValid) {
       setIsLoading(false);
-      toast.show({
-        title: t('error.failedToRegisterEvent'),
-        description: toastDescription,
-      });
       return;
     }
 
@@ -474,19 +509,19 @@ export default function EventRegisterScreen() {
     return res;
   }, [fields, bannedField, showFields, user]);
 
-  const isRequiredFilled = useCallback(() => {
-    for (let i = 0, j = fields.length; i < j; ++i) {
-      if (fields[i].evhfIsRequired.toString() === '1') {
-        if (
-          fieldsData[fields[i].evhfName] == null ||
-          fieldsData[fields[i].evhfName] === ''
-        ) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }, [fields, fieldsData]);
+  // const isRequiredFilled = useCallback(() => {
+  //   for (let i = 0, j = fields.length; i < j; ++i) {
+  //     if (fields[i].evhfIsRequired.toString() === '1') {
+  //       if (
+  //         fieldsData[fields[i].evhfName] == null ||
+  //         fieldsData[fields[i].evhfName] === ''
+  //       ) {
+  //         return false;
+  //       }
+  //     }
+  //   }
+  //   return true;
+  // }, [fields, fieldsData]);
 
   // const originalPrice = prices[0].originalPrice;
   // const finalPrice = prices[0].finalPrice;
@@ -513,20 +548,20 @@ export default function EventRegisterScreen() {
     return [textOriginalPriceReturn, textFinalPriceReturn];
   }, []);
 
-  // console.info(
-  //   'fields --->',
-  //   JSON.stringify(
-  //     fields.map(item => ({
-  //       evhfName: item.evhfName,
-  //       evhfLabel: item.evhfLabel,
-  //     })),
-  //   ),
-  // );
-  // console.info('showFields --->', JSON.stringify(showFields));
+  console.info(
+    'fields --->',
+    JSON.stringify(
+      fields.map(item => ({
+        evhfName: item.evhfName,
+        evhfLabel: item.evhfLabel,
+      })),
+    ),
+  );
+  console.info('showFields --->', JSON.stringify(showFields));
 
   return (
     <AppContainer>
-      <ScrollView>
+      <ScrollView ref={ref}>
         <Header title={t('event.registrationForm')} left="back" />
         <VStack space="4" pb="3">
           <EventRegistrationCard
@@ -675,6 +710,17 @@ export default function EventRegisterScreen() {
                     }
                     file={files ? files[field.evhfName] : undefined}
                   />
+                  {errors[field.evhfName] === 'required' && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        right: -10,
+                        paddingRight: 20,
+                        top: 10,
+                      }}>
+                      <WarningOutlineIcon color="red.600" size="sm" />
+                    </View>
+                  )}
                 </View>
               ))}
             </VStack>
@@ -746,10 +792,9 @@ export default function EventRegisterScreen() {
           </HStack>
           <Box px="4">
             <Button
-              h="12"
               isLoading={isLoading}
               // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
-              isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
+              // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
               onPress={() => {
                 if (checkbox[0] !== 'agreed') {
                   toast.show({

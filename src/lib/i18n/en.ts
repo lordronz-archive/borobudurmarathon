@@ -276,5 +276,7 @@ export default {
     failedToGenerateQR: 'Failed to generate QR Code',
     cannotRegisterEvent: 'Cannot register event',
     categoryPricingNotFound: 'Category & pricing not exist for now',
+    Field: 'Field',
+    isRequired: 'is required',
   },
 };

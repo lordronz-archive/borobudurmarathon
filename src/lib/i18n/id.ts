@@ -277,5 +277,7 @@ export default {
     failedToGenerateQR: 'Gagal membuat QR Code',
     cannotRegisterEvent: 'Tidak bisa mendaftar',
     categoryPricingNotFound: 'Kategori dan harga tidak tersedia untuk saat ini',
+    Field: 'Data',
+    isRequired: 'wajib diisi',
   },
 };

@@ -448,7 +448,7 @@ export default function MyEventDetail() {
                     color="#201D1D"
                     fontSize={14}
                     textAlign={'center'}>
-                    {`Pay before ${moment(
+                    {`${t('payment.payBefore')} ${moment(
                       detailTransaction?.data?.trnsExpiredTime,
                     ).format('DD MMM YYYY, HH:mm')}`}
                   </Text>
@@ -654,7 +654,7 @@ export default function MyEventDetail() {
             {t('payment.choosePaymentMethod')}
           </Text>
           <Text color={'#768499'} fontSize={'12px'} fontWeight={400}>
-            {t('payment.choosePaymentMethodDescription')}
+            Silahkan pilih metode pembayaran untuk event ini
           </Text>
           <ScrollView
             flexGrow={1}
@@ -691,7 +691,7 @@ export default function MyEventDetail() {
 
       <AlertDialog leastDestructiveRef={confirmRef} isOpen={showModalConfirm}>
         <AlertDialog.Content>
-          <AlertDialog.Header>Confirm Payment</AlertDialog.Header>
+          <AlertDialog.Header>{t('payment.confirmPayment')}</AlertDialog.Header>
           <AlertDialog.Body marginY={'20px'}>
             <Text
               textAlign={'center'}
@@ -705,7 +705,7 @@ export default function MyEventDetail() {
               color={'#768499'}
               fontSize={'11px'}
               fontWeight={400}>
-              You can’t change payment method after confirming your choice.
+              You can't change payment method after confirming your choice.
             </Text>
           </AlertDialog.Body>
           <AlertDialog.Footer>

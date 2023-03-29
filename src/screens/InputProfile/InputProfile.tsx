@@ -30,7 +30,7 @@ import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
-import { handleErrorMessage } from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -235,15 +235,15 @@ export default function InputProfileScreen() {
               />
               <SelectInput
                 items={getGenderOptions(t('gender.male'), t('gender.female'))}
-                placeholder="Choose gender"
-                label="Gender"
+                placeholder={t('profile.chooseGender') || ''}
+                label={t('profile.gender') || ''}
                 onValueChange={setGender}
                 value={mbsdGender}
                 hideSearch
               />
               <DateInput
                 placeholder="DD MMM YYYY"
-                label="Date of birth"
+                label={t('profile.dob') || ''}
                 date={birthDate}
                 setDate={date => {
                   setBirthDate(date);
@@ -251,15 +251,15 @@ export default function InputProfileScreen() {
                 }}
               />
               <TextInput
-                placeholder="Enter your place of birth"
-                label="Place of birth"
+                placeholder={t('profile.enterPob') || ''}
+                label={t('profile.pob') || ''}
                 onChangeText={setBirthPlace}
                 value={mbsdBirthPlace}
               />
               <SelectInput
                 items={BLOOD_OPTIONS}
-                placeholder="Choose blood type"
-                label="Blood Type"
+                placeholder={t('auth.placeholderBloodType') || ''}
+                label={t('profile.bloodType') || ''}
                 onValueChange={setBloodType}
                 value={mbsdBloodType}
               />
@@ -268,8 +268,8 @@ export default function InputProfileScreen() {
                   label: en_short_name,
                   value: en_short_name,
                 }))}
-                placeholder="Choose country"
-                label="Country"
+                placeholder={t('auth.placeholderCountry') || ''}
+                label={t('profile.country') || ''}
                 onValueChange={setCountry}
                 value={mbsdCountry}
               />
@@ -278,8 +278,8 @@ export default function InputProfileScreen() {
                   label: nationality,
                   value: nationality,
                 }))}
-                placeholder="Choose nationality"
-                label="Nationality"
+                placeholder={t('auth.placeholderNationality') || ''}
+                label={t('profile.nationality') || ''}
                 onValueChange={setNationality}
                 value={mbsdNationality}
               />

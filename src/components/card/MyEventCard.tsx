@@ -1,6 +1,7 @@
 import moment from 'moment';
 import {HStack, VStack, Text, Box, Stack, Badge, Alert} from 'native-base';
 import React, {useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import IconRun from '../../assets/icons/IconRun';
 import IconTag from '../../assets/icons/IconTag';
 import MButton from '../buttons/Button';
@@ -55,6 +56,8 @@ export default function MyCardEvent({
         };
     }
   }
+
+  const {t} = useTranslation();
 
   const statusComp = useMemo(() => {
     const color = statusColor(status || '');
@@ -123,7 +126,7 @@ export default function MyCardEvent({
                     <HStack space={2} flexShrink={1} alignItems="center">
                       <Alert.Icon mt="1" />
                       <Text fontSize={12} color="coolGray.800">
-                        Pay before{' '}
+                        {t('payment.payBefore')}{' '}
                         {moment(transactionExpirationTime).format(
                           'DD MMM YYYY, H:mm',
                         )}

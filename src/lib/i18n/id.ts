@@ -24,6 +24,7 @@ export default {
   required: 'Wajib diisi',
   copy: 'Salin',
   continue: 'Lanjut',
+  close: 'Tutup',
   auth: {
     forgotPassword: 'Lupa password?',
     forgotPasswordTitle: 'Lupa Password',
@@ -88,6 +89,11 @@ export default {
     password: 'Kata sandi',
     passwordAgain: 'Ketik ulang kata sandi',
     placeholderIdentityNumber: 'Masukkan nomor identitas',
+    verifyId: 'Verifikasi Identitas Anda',
+    waitVerifyId: 'Verifikasi identitas anda sedang kami proses',
+    idNotReadable: 'KTP Anda Tidak Terbaca',
+    idNotReadableDesc:
+      'Identitas Anda gagal diverifikasi.\nHarap unggah ulang kartu identitas Anda atau pilih Verifikasi Identitas nanti.',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',
@@ -146,6 +152,8 @@ export default {
     address: 'Alamat',
     chooseProfilePicture: 'Pilih foto profil',
     alertNotVerifiedMessage: 'Akun Anda masih dalam proses verifikasi.',
+    chooseGender: 'Pilih Jenis Kelamin',
+    enterPob: 'Masukkan tempat lahir anda',
   },
   consent: {
     title: 'Konfirmasi Data',
@@ -197,6 +205,8 @@ export default {
     payNowVia: 'Bayar via',
     choosePaymentMethodDescription:
       'Silahkan pilih metode pembayaran untuk event ini',
+    payBefore: 'Bayar sebelum',
+    confirmPayment: 'Konfirmasi Pembayaran',
   },
   gender: {
     male: 'Laki-laki',

@@ -24,6 +24,7 @@ export default {
   required: 'Required',
   copy: 'Copy',
   continue: 'Continue',
+  close: 'Close',
   auth: {
     forgotPassword: 'Forgot password?',
     forgotPasswordTitle: 'Forgot Password',
@@ -86,6 +87,11 @@ export default {
     password: 'Password',
     passwordAgain: 'Confirm Password',
     placeholderIdentityNumber: 'Enter your identity number',
+    verifyId: 'Verify your ID',
+    waitVerifyId: 'Please wait, we are currently verify your identity',
+    idNotReadable: 'Your ID Card is Unreadable',
+    idNotReadableDesc:
+      "Sorry we can't verify your identity.\nPlease re-upload your ID Card or select Verify ID later.",
   },
   registration: {
     registrationSuccess: 'Event Registration Success',
@@ -144,6 +150,8 @@ export default {
     chooseProfilePicture: 'Choose profile picture',
     alertNotVerifiedMessage:
       'Your account is still in process to verification.',
+    enterPob: 'Enter your place of birth',
+    chooseGender: 'Choose Gender',
   },
   consent: {
     title: 'Data Confirmation',
@@ -192,6 +200,7 @@ export default {
     paymentExpired: 'Payment Expired',
     waitingBallotResult: 'Waiting ballot result',
     sorryNotPassedBallot: 'Sorry, you are not passed for ballot',
+    payBefore: 'Pay before',
     choosePaymentMethod: 'Choose Payment Method',
     changePaymentMethod: 'Change Payment Method',
     payNowVia: 'Pay Now via',

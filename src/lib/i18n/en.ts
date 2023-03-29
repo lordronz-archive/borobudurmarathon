@@ -240,6 +240,7 @@ export default {
     errorTitle: 'Something wrong',
     errorMessage:
       'Please try again. Makesure your connection is stable. If you still got the same error, let us know.',
+    emailInvalid: 'Please use a valid email',
     emailAlreadyTaken: 'Email already taken. Use another email.',
     forgotPasswordSuccess:
       'Link for reset password has been sent to your email. Please check your inbox and follow the instructions.',

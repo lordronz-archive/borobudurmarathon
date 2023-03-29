@@ -178,6 +178,22 @@ export default function MyEventDetail() {
       });
   };
 
+  useEffect(() => {
+    if (detailTransaction && eventDetail) {
+      if (detailTransaction?.linked?.trihTrnsId?.length !== 0) {
+        const currentPayment = detailTransaction?.linked?.trihTrnsId?.find(
+          item => item.trihIsCurrent === 1,
+        );
+        if (currentPayment) {
+          const findPayment = eventDetail.payments?.find(
+            item => item.evptMsptName === currentPayment.trihPaymentType,
+          );
+          setConfirmPayment(findPayment);
+        }
+      }
+    }
+  }, [detailTransaction, eventDetail]);
+
   const fetchTransaction = (eventId: number) => {
     // get transactions
     httpRequest
@@ -224,9 +240,8 @@ export default function MyEventDetail() {
     },
     {
       title: t('event.registrationDate'),
-      value: datetime.getDateRangeString(
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhRegistrationStart,
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhRegistrationEnd,
+      value: datetime.getDateString(
+        detailTransaction?.data?.trnsCreatedTime,
         'short',
         'short',
       ),

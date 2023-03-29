@@ -240,6 +240,7 @@ export default {
     errorTitle: 'Terjadi kesalahan.',
     errorMessage:
       'Silakan coba lagi. Pastikan koneksi internet stabil. Jika error berlanjut, silakan hubungi kami.',
+    emailInvalid: 'Harap gunakan email yang valid',
     emailAlreadyTaken: 'Email sudah terdaftar. Gunakan email lain.',
     forgotPasswordSuccess:
       'Link untuk reset password telah dikirim via email. Silakan cek inbox dan ikuti petunjuknya.',

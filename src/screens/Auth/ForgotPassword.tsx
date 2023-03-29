@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, Text, useToast, VStack} from 'native-base';
+import {Box, HStack, Text, useToast, VStack} from 'native-base';
 import React, {useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -10,6 +10,8 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import {handleErrorMessage} from '../../helpers/apiErrors';
+import {validateEmail} from '../../helpers/validate';
+import Button from '../../components/buttons/Button';
 
 export default function ForgotPasswordScreen() {
   const navigation =
@@ -57,6 +59,10 @@ export default function ForgotPasswordScreen() {
               <TextInput
                 placeholder={t('auth.placeholderEmail') || ''}
                 label="Email"
+                keyboardType="email-address"
+                _inputProps={{
+                  textContentType: 'emailAddress',
+                }}
                 value={email}
                 onChangeText={text => setEmail(text)}
               />
@@ -74,14 +80,14 @@ export default function ForgotPasswordScreen() {
           </Text>
         </HStack> */}
         </Box>
-        <Button
-          h="12"
-          mb="3"
-          onPress={() => forgotPassword()}
-          isLoading={loading}>
-          {/* {t('profile.sendOtp')} */}
-          {t('auth.resetPassword')}
-        </Button>
+        <HStack my={3}>
+          <Button
+            onPress={() => forgotPassword()}
+            isLoading={loading}
+            disabled={!validateEmail(email || '')}>
+            {t('auth.resetPassword')}
+          </Button>
+        </HStack>
       </VStack>
     </AppContainer>
   );

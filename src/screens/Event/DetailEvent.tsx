@@ -47,6 +47,7 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import useInit from '../../hooks/useInit';
 import {GetTransactionsResponse} from '../../types/transactions.type';
 import moment from 'moment';
+import { getTextBasedOnLanguage } from '../../helpers/text';
 
 type Price = {
   id: string;
@@ -335,7 +336,7 @@ export default function DetailEvent() {
               <VStack alignItems="center">
                 <WarningOutlineIcon color="gray.600" size="xl" mb="2" />
                 <Text ml="1" fontSize="sm" textAlign="center" color="gray.700">
-                  {event.notif}
+                  {getTextBasedOnLanguage(event.notif || '')}
                 </Text>
               </VStack>
             </NBAlert>

@@ -6,11 +6,12 @@ import ListSponsorCard, {
 } from '../../components/card/ListSponsorCard';
 import {EventService} from '../../api/event.service';
 import {ISponsorData} from '../../types/sponsor.type';
-import i18next from 'i18next';
+import i18next, {t} from 'i18next';
 import EmptyMessage from '../../components/EmptyMessage';
 import useEvent from '../../hooks/useEvent';
 import moment from 'moment';
 import AppContainer from '../../layout/AppContainer';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 
 // function getPriority(val: number | string): 'high' | 'medium' | 'low' {
 //   val = Number(val);
@@ -23,12 +24,7 @@ import AppContainer from '../../layout/AppContainer';
 //   }
 // }
 
-const PRIORITIES = ['high', 'medium', 'low'];
-const PRIORITY: any = {
-  Komite: 'high',
-  Official: 'medium',
-  'Co-Sponsor': 'low',
-};
+const PRIORITIES = ['high', 'medium', 'low', 'low', 'low', 'low', 'low'];
 
 function getTitleOrGroup(val: string) {
   console.info('------val', val);
@@ -116,7 +112,9 @@ export default function PartnerScreen() {
         setIsLoading(false);
       })
       .catch(err => {
-        console.info('fetchList Sponsors err', err);
+        handleErrorMessage(err, t('error.failedToGetPartners'), {
+          ignore404: true,
+        });
         setIsLoading(false);
       });
   };

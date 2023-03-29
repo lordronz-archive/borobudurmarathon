@@ -292,6 +292,7 @@ export default {
     categoryPricingNotFound: 'Category & pricing not exist for now',
     Field: 'Field',
     isRequired: 'is required',
+    failedToGetPartners: 'Failed to get partners',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',

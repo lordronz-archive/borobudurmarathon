@@ -295,6 +295,7 @@ export default {
     categoryPricingNotFound: 'Kategori dan harga tidak tersedia untuk saat ini',
     Field: 'Data',
     isRequired: 'wajib diisi',
+    failedToGetPartners: 'Gagal mendapatkan data partner/sponsor',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',

@@ -47,7 +47,7 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import useInit from '../../hooks/useInit';
 import {GetTransactionsResponse} from '../../types/transactions.type';
 import moment from 'moment';
-import { getTextBasedOnLanguage } from '../../helpers/text';
+import {getTextBasedOnLanguage} from '../../helpers/text';
 
 type Price = {
   id: string;
@@ -123,16 +123,6 @@ export default function DetailEvent() {
       description: cat.evncDesc
         ? cat.evncDesc
         : [
-            // cat.evncVrReps,
-            // 'Quota: ' +
-            //   (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
-            //   Number(cat.evncQuotaRegistration)
-            //     ? (
-            //         Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
-            //       ).toLocaleString('id-ID') +
-            //       '/' +
-            //       Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-            //     : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
             datetime.getDateRangeString(
               cat.evncStartDate,
               cat.evncVrEndDate || undefined,
@@ -155,32 +145,8 @@ export default function DetailEvent() {
       benefits: parseUnknownDataToArray(cat.evncBenefit).map(
         item => item.label,
       ),
-      // benefits: [
-      //   'Medal',
-      //   'Jersey (Merchandise)',
-      //   'Local UMKM Merchandise',
-      //   'Free Ongkir',
-      //   'This is Dummy Data',
-      // ],
     };
   });
-  // [
-  //   {
-  //     raceCategory: 'Race Category',
-  //     raceDescription:
-  //       'Young Talent 10 Km, Tilik Candi 21 Km, Elite Race 42 Km',
-  //   },
-  //   {
-  //     raceCategory: 'Race Category',
-  //     raceDescription:
-  //       'Young Talent 10 Km, Tilik Candi 21 Km, Elite Race 42 Km',
-  //   },
-  //   {
-  //     raceCategory: 'Race Category',
-  //     raceDescription:
-  //       'Young Talent 10 Km, Tilik Candi 21 Km, Elite Race 42 Km',
-  //   },
-  // ];
 
   useEffect(() => {
     fetchDetail();

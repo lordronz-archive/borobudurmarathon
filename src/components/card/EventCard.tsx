@@ -73,7 +73,7 @@ export default function CardEvent({
           <HStack space={1}>
             <VStack width="40%" flex={1}>
               <Text fontSize="xs" color="coolGray.500">
-                {t('event.registrationDate')}
+                {t('event.eventDate')}
               </Text>
               <Text fontSize="xs" color="coolGray.800">
                 {date}

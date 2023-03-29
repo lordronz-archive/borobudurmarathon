@@ -167,6 +167,7 @@ export default {
     totalPayment: 'Total Pembayaran',
     registerNow: 'Daftar Sekarang',
     registrationDate: 'Pendaftaran',
+    eventDate: 'Tanggal Event',
     place: 'Lokasi',
     quota: 'Kuota',
     distance: 'Jarak',

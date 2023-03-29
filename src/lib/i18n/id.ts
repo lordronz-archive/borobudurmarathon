@@ -192,6 +192,11 @@ export default {
     paymentExpired: 'Pembayaran Expired',
     waitingBallotResult: 'Menunggu hasil ballot',
     sorryNotPassedBallot: 'Maaf anda tidak lolos tahap ballot',
+    choosePaymentMethod: 'Pilih Metode Pembayaran',
+    changePaymentMethod: 'Ubah Metode Pembayaran',
+    payNowVia: 'Bayar via',
+    choosePaymentMethodDescription:
+      'Silahkan pilih metode pembayaran untuk event ini',
   },
   gender: {
     male: 'Laki-laki',
@@ -279,5 +284,17 @@ export default {
     categoryPricingNotFound: 'Kategori dan harga tidak tersedia untuk saat ini',
     Field: 'Data',
     isRequired: 'wajib diisi',
+  },
+  aboutUsContent: {
+    title_1: 'VOICE OF UNITY ',
+    description_1a:
+      'Semangat kemenangan ada di depan mata, gelora persatuan turut menyuarakan asa. Kini saatnya kita kembali, bersama-sama memupuk harapan. Bersatu padu menyuarakan kemenangan.',
+    description_1b:
+      'Borobudur Marathon 2023 Powered by Bank Jateng kembali mengundang pelari untuk bersatu menyuarakan semangat juang bersama masyarakat Magelang. Tahun ini, mari saling menginspirasi melalui suara persatuan.',
+    title_2: 'SWARA MANUNGGAL',
+    description_2a:
+      'Tahun ini menjadi saksi bahwa kita semua mampu bangkit dari segala tantangan. Perjuangan ini tidak luput dari peran semangat satu sama lain yang saling menginspirasi.',
+    description_2b:
+      'Borobudur Marathon 2023 Powered by Bank Jateng mengundang kalian para pejuang, untuk merayakan dan menyuarakan ketangguhan yang telah kita tunjukkan di tempat yang sudah akrab dengan persatuan yaitu di Magelang.',
   },
 };

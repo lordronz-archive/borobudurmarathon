@@ -81,7 +81,7 @@ export type RootStackParamList = {
   FAQ: undefined;
   Partner: undefined;
   AboutUs: undefined;
-  WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
+  WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string; title?: string};
 
   Register: undefined;
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};

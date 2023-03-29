@@ -202,11 +202,8 @@ export default function PaymentScreen() {
                     {t('event.registrationDate')}
                   </Text>
                   <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-                    {datetime.getDateRangeString(
-                      detailTransaction?.linked?.trnsEventId?.[0]
-                        ?.evnhRegistrationStart,
-                      detailTransaction?.linked?.trnsEventId?.[0]
-                        ?.evnhRegistrationEnd,
+                    {datetime.getDateString(
+                      detailTransaction?.data?.trnsCreatedTime,
                       'short',
                       'short',
                     )}

@@ -651,10 +651,10 @@ export default function MyEventDetail() {
         size={'full'}>
         <Actionsheet.Content maxWidth={'100%'}>
           <Text color={'#1E1E1E'} fontSize={'20px'} fontWeight={600}>
-            Choose Payment Method
+            {t('payment.choosePaymentMethod')}
           </Text>
           <Text color={'#768499'} fontSize={'12px'} fontWeight={400}>
-            Silahkan pilih metode pembayarn untuk event ini
+            {t('payment.choosePaymentMethodDescription')}
           </Text>
           <ScrollView
             flexGrow={1}

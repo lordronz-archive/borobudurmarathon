@@ -5,6 +5,7 @@ import {Text, Toast} from 'native-base';
 import React, {useState} from 'react';
 import Button from '../../../components/buttons/Button';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
+import {TouchableOpacity} from 'react-native';
 import {
   GetEventResponse,
   PaymentsEntity,
@@ -92,22 +93,38 @@ export default function ButtonBasedOnStatus(props: Props) {
               color="white"
               fontSize={14}
               textAlign={'center'}>
-              {`Pay Now via ${props.payment?.evptLabel}`}
+              {`${t('payment.payNowVia')} ${props.payment?.evptLabel}`}
             </Text>
           </Button>
         )}
-        <Button
-          onPress={handleButtonChoosePaymentMethod}
-          isLoading={isLoading}
-          style={{marginTop: 12, marginHorizontal: 22}}>
-          <Text
-            fontWeight={500}
-            color="white"
-            fontSize={14}
-            textAlign={'center'}>
-            Choose Payment Method
-          </Text>
-        </Button>
+
+        {props.payment ? (
+          <TouchableOpacity
+            onPress={handleButtonChoosePaymentMethod}
+            disabled={isLoading}
+            style={{marginTop: 12, marginHorizontal: 22}}>
+            <Text
+              fontWeight={500}
+              color="primary.900"
+              fontSize={14}
+              textAlign={'center'}>
+              {t('payment.changePaymentMethod')}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <Button
+            onPress={handleButtonChoosePaymentMethod}
+            isLoading={isLoading}
+            style={{marginTop: 12, marginHorizontal: 22}}>
+            <Text
+              fontWeight={500}
+              color="white"
+              fontSize={14}
+              textAlign={'center'}>
+              {t('payment.choosePaymentMethod')}
+            </Text>
+          </Button>
+        )}
       </>
     );
   } else if (props.status === 'Payment Expired' && !props.isBallot) {

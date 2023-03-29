@@ -192,6 +192,10 @@ export default {
     paymentExpired: 'Payment Expired',
     waitingBallotResult: 'Waiting ballot result',
     sorryNotPassedBallot: 'Sorry, you are not passed for ballot',
+    choosePaymentMethod: 'Choose Payment Method',
+    changePaymentMethod: 'Change Payment Method',
+    payNowVia: 'Pay Now via',
+    choosePaymentMethodDescription: 'Choose payment method for this event',
   },
   gender: {
     male: 'Male',
@@ -278,5 +282,17 @@ export default {
     categoryPricingNotFound: 'Category & pricing not exist for now',
     Field: 'Field',
     isRequired: 'is required',
+  },
+  aboutUsContent: {
+    title_1: 'VOICE OF UNITY ',
+    description_1a:
+      'Now is the moment for us to return, working together to strengthen our faith. Unite to voicing victory.',
+    description_1b:
+      'Borobudur Marathon 2023 Powered by Bank Jateng once again welcomes runners to unite and voice the spirit with the people of Magelang. This year, let us inspire one another through the voice of unity.',
+    title_2: 'SWARA MANUNGGAL',
+    description_2a:
+      'This year is a witness that we all can overcome adversity. This struggle is strongly intertwined with each other’s passion in inspiring one another.',
+    description_2b:
+      'Borobudur Marathon 2022 Powered by Bank Jateng invites you warriors, to celebrate and voice the resilience we have shown in a familiar place with togetherness, the place that we called Magelang.',
   },
 };

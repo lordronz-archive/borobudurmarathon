@@ -1,20 +1,16 @@
 import React from 'react';
 import {Box, useTheme, ScrollView, Image, Text} from 'native-base';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../navigation/RootNavigator';
 import Header from '../../components/header/Header';
 import AppContainer from '../../layout/AppContainer';
+import {t} from 'i18next';
 
 export default function AboutUsScreen() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
 
   return (
     <AppContainer>
       <ScrollView backgroundColor={colors.white}>
-        <Header title="About Us" left="back" />
+        <Header title={t('info.aboutUs')} left="back" />
         <Box borderTopColor={colors.gray[500]} w="full">
           <Image
             w="full"
@@ -31,7 +27,7 @@ export default function AboutUsScreen() {
               textAlign={'center'}
               color="white"
               mb="12px">
-              Stronger to Victory
+              {t('aboutUsContent.title_1')}
             </Text>
             <Text
               fontWeight={400}
@@ -39,19 +35,14 @@ export default function AboutUsScreen() {
               textAlign={'center'}
               color="white"
               mb="12px">
-              Our resilience has been tested by going through challenging years.
-              The challenges we have faced introduce us to stronger versions of
-              ourselves.
+              {t('aboutUsContent.description_1a')}
             </Text>
             <Text
               fontWeight={400}
               fontSize="12px"
               textAlign={'center'}
               color="white">
-              Borobudur Marathon 2-22 Powered by Bank Jateng welcomes back
-              runners to spread the spirit of stronger to victory with the
-              people of Magelang. This year, together we sahre the journey to
-              victory
+              {t('aboutUsContent.description_1b')}
             </Text>
           </Box>
           <Box w="full" px="25px" py="32px">
@@ -61,22 +52,17 @@ export default function AboutUsScreen() {
               textAlign={'center'}
               color="#EB1C23"
               mb="12px">
-              Lelampah Pinuju Menang
+              {t('aboutUsContent.title_2')}
             </Text>
             <Text
               fontWeight={400}
               fontSize="12px"
               textAlign={'center'}
               mb="12px">
-              Our resilience has been tested by going through challenging years.
-              The challenges we have faced introduce us to stronger versions of
-              ourselves.
+              {t('aboutUsContent.description_2a')}
             </Text>
             <Text fontWeight={400} fontSize="12px" textAlign={'center'}>
-              Borobudur Marathon 2-22 Powered by Bank Jateng welcomes back
-              runners to spread the spirit of stronger to victory with the
-              people of Magelang. This year, together we sahre the journey to
-              victory
+              {t('aboutUsContent.description_2b')}
             </Text>
           </Box>
           <Box alignItems={'center'} py="42px">

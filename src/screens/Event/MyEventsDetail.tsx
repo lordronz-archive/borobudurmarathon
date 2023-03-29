@@ -595,7 +595,7 @@ export default function MyEventDetail() {
                   borderTopColor={'#E8ECF3'}
                   borderTopWidth={1}
                   borderTopStyle={'solid'}>
-                  <HStack justifyContent={'space-between'}>
+                  <HStack justifyContent={'space-between'} alignItems="center">
                     <Text
                       fontWeight={400}
                       color="#768499"

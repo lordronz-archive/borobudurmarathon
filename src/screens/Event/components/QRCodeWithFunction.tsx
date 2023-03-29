@@ -1,9 +1,9 @@
-import { t } from 'i18next';
-import {Box} from 'native-base';
+import {t} from 'i18next';
+import {Box, Center, Spinner, Text} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {SvgXml} from 'react-native-svg';
 import {EventService} from '../../../api/event.service';
-import { handleErrorMessage } from '../../../helpers/apiErrors';
+import {handleErrorMessage} from '../../../helpers/apiErrors';
 
 type Props = {
   trnsRefId: string;
@@ -31,9 +31,27 @@ export default function QRCodeWithFunction(props: Props) {
     }
   };
 
+  if (!QR) {
+    return (
+      <Center>
+        <Box
+          width="160"
+          height="160"
+          borderWidth="1"
+          borderColor="gray.300"
+          mb="2"
+          justifyContent="center">
+          <Spinner />
+        </Box>
+      </Center>
+    );
+  }
+
   return (
-    <Box alignItems={'center'}>
-      <SvgXml xml={QR} />
-    </Box>
+    <Center>
+      <Box alignItems={'center'}>
+        <SvgXml xml={QR} />
+      </Box>
+    </Center>
   );
 }

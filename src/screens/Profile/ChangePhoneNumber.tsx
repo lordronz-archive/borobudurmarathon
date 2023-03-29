@@ -97,9 +97,9 @@ export default function ChangePhoneNumberScreen() {
             </Text>
             <VStack space="1.5">
               <TextInput
-                placeholder="Enter your phone number"
-                label="Phone number"
-                helperText="We will send verification code to this number for validation"
+                placeholder={t('auth.placeholderPhone') || ''}
+                label={t('phoneNumber') || ''}
+                helperText={t('auth.willSendToPhone')}
                 onChangeText={setPhoneNumber}
                 value={phoneNumber}
               />

@@ -240,9 +240,8 @@ export default function MyEventDetail() {
     },
     {
       title: t('event.registrationDate'),
-      value: datetime.getDateRangeString(
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhRegistrationStart,
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhRegistrationEnd,
+      value: datetime.getDateString(
+        detailTransaction?.data?.trnsCreatedTime,
         'short',
         'short',
       ),

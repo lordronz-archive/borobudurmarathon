@@ -1087,8 +1087,8 @@ export default function ChooseCitizenScreen({route}: Props) {
           //   setIsOpen(false);
           // }}
           isLoading
-          title={'Verify your ID'}
-          content={'Please wait a moment while we try to verify your ID'}
+          title={t('auth.verifyId')}
+          content={t('auth.waitVerifyId')}
           // buttonContent={'Check My Event'}
         />
         <VerifyID
@@ -1125,11 +1125,9 @@ export default function ChooseCitizenScreen({route}: Props) {
             // nextStep();
             // setStepCount(v => v + 1);
           }}
-          title={'Your ID is not readable'}
-          content={
-            "Sorry we can't verify your ID please re-upload your ID or select Verify ID later"
-          }
-          buttonContent={'Close'}
+          title={t('auth.idNotReadable')}
+          content={t('auth.idNotReadableDesc')}
+          buttonContent={t('close')}
         />
 
         <VerifyID
@@ -1145,7 +1143,7 @@ export default function ChooseCitizenScreen({route}: Props) {
               'Your ID still in processing to validate') +
             ` (${validationTryProcessing})`
           }
-          buttonContent={'Close'}
+          buttonContent={t('close')}
         />
 
         {isOpenProcessing && isShowVerifyLater ? (
@@ -1168,7 +1166,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             onClose={() => {
               setIsOpenProcessing(false);
             }}
-            buttonContent={'Close'}
+            buttonContent={t('close')}
           />
         ) : (
           <VerifyID
@@ -1184,7 +1182,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 'Your ID still in processing to validate') +
               ` (${validationTryProcessing})`
             }
-            buttonContent={'Close'}
+            buttonContent={t('close')}
           />
         )}
       </VStack>

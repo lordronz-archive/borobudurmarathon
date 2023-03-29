@@ -3,7 +3,6 @@ import {
   Box,
   useTheme,
   ScrollView,
-  View,
   HStack,
   Text,
   VStack,
@@ -22,7 +21,6 @@ import IconInfo from '../../assets/icons/IconInfo';
 import {TouchableOpacity} from 'react-native';
 import {EVENT_TYPES} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import datetime from '../../helpers/datetime';
 import moment from 'moment';
 import LoadingBlock from '../../components/loading/LoadingBlock';

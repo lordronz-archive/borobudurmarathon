@@ -13,6 +13,9 @@ export default {
   step: 'Step',
   termsAndConditionsAgreement:
     'By continuing I understand, know, and am willing to comply with all the terms & conditions of the Borobudur Marathon.',
+  termsAndConditionsAgreementPart1:
+    'By continuing I understand, know, and am willing to comply with all the',
+  termsAndConditionsAgreementPart2: 'of the Borobudur Marathon.',
   seeMoreInfo: 'See more info',
   additionalInformation: 'Additional Information',
   name: 'Name',

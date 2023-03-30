@@ -27,7 +27,7 @@ import ViewProfile from '../InputProfile/components/ViewProfile';
 import httpRequest from '../../helpers/httpRequest';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import ImageView from 'react-native-image-viewing';
-import {Platform, View} from 'react-native';
+import {Platform, TouchableOpacity, View} from 'react-native';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 import AppContainer from '../../layout/AppContainer';
 import {
@@ -738,20 +738,45 @@ export default function EventRegisterScreen() {
               ))}
             </VStack>
           </VStack>
-          <Box backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
+          <HStack backgroundColor={'#F4F6F9'} py="3" px="4" pr="8">
             <Checkbox.Group
-              onChange={setCheckbox}
+              onChange={(val) => {
+                console.info('checkbox val', val);
+                setCheckbox(val);
+              }}
               value={checkbox}
               accessibilityLabel="Agree to terms"
-              mr="10">
+              mr="2">
               <Checkbox
                 value="agreed"
                 _text={{fontSize: 12}}
-                isDisabled={isLoading}>
-                {t('termsAndConditionsAgreement')}
-              </Checkbox>
+                isDisabled={isLoading}
+              />
             </Checkbox.Group>
-          </Box>
+            <TouchableOpacity
+              style={{width: '95%'}}
+              onPress={() => {
+                if (checkbox.includes('agreed')) {
+                  setCheckbox([]);
+                } else {
+                  setCheckbox(['agreed']);
+                }
+              }}>
+              <Text fontSize="xs">
+                {t('termsAndConditionsAgreementPart1')}{' '}
+                <Text
+                  onPress={() => {
+                    navigation.navigate('TNC');
+                  }}
+                  fontSize="xs"
+                  color="primary.900"
+                  bold>
+                  terms and conditions{' '}
+                </Text>
+                {t('termsAndConditionsAgreementPart2')}
+              </Text>
+            </TouchableOpacity>
+          </HStack>
 
           {/* <TouchableOpacity
           style={{paddingHorizontal: 20, paddingVertical: 5}}

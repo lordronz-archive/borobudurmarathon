@@ -114,6 +114,7 @@ export default {
     title: 'Event Saya',
     subtitle: 'Seluruh event Borobudur Marathon Saya',
     detailTitle: 'Detail Event',
+    checkMyEvent: 'Periksa Event Saya',
   },
   label: {
     accountInformation: 'Informasi Akun',

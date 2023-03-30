@@ -115,6 +115,7 @@ export default {
     title: 'My Events',
     subtitle: 'All of My Borobudur Marathon Events',
     detailTitle: 'Event Detail',
+    checkMyEvent: 'Check My Event',
   },
   label: {
     accountInformation: 'Account Information',

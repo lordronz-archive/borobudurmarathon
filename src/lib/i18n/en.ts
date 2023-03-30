@@ -176,7 +176,7 @@ export default {
     distance: 'Distance',
     featuredEvents: 'Featured Events',
     expiredEvents: 'Expired Events',
-    runningDate: 'Running Date',
+    runningDate: 'Event Date',
     raceCategory: 'Race Category',
     updatedAt: 'Updated at',
     registerEventAgain: 'Register Event Again',

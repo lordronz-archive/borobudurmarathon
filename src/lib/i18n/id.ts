@@ -173,7 +173,7 @@ export default {
     distance: 'Jarak',
     featuredEvents: 'Event Unggulan',
     expiredEvents: 'Event Terdahulu',
-    runningDate: 'Tanggal Berlari',
+    runningDate: 'Tanggal Event',
     raceCategory: 'Kategori Lari',
     updatedAt: 'Diperbarui pada',
     registerEventAgain: 'Register Ulang Event',

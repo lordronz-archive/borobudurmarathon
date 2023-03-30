@@ -10,6 +10,7 @@ import {
   ChevronUpIcon,
 } from 'native-base';
 import React, {useMemo, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import Accordion from 'react-native-collapsible/Accordion';
 import Header from '../../components/header/Header';
 import AppContainer from '../../layout/AppContainer';
@@ -24,6 +25,8 @@ export default function HowToPayScreen() {
     activeSectionsKonfirmasiStatusBlokir,
     setActiveSectionsKonfirmasiStatusBlokir,
   ] = useState<any>([]);
+
+  const {t} = useTranslation();
 
   const _renderContent = (section: any) => {
     return (
@@ -68,42 +71,20 @@ export default function HowToPayScreen() {
 
   const SECTIONS_VA_BANK_JATENG = [
     {
-      title: 'ATM Bank Jateng',
-      content: [
-        'Masukkan kartu ATM Bank Jateng dan PIN Kamu',
-        'Pilih TRANSAKSI LAINNYA > TRANSFER > pilih REKENING BANK JATENG',
-        'Masukkan nomor Virtual Account',
-        'Masukkan nominal sesuai tagihan',
-        'Validasi pembayaran',
-        'Pembayaran selesai',
-      ],
+      title: t('payment.viaBankJatengAtm'),
+      content: t('payment.viaBankJatengAtmSteps', {returnObjects: true}),
     },
     {
-      title: 'Mobile Banking Bank Jateng',
-      content: [
-        'Login ke Bank Jateng Mobile Application kamu',
-        'Pilih Bayar > Pilih Buat Pembayaran Baru > Pilih Multipayment',
-        'Pilih Penyedia Jasa',
-        'Cari Midtrans atau langsung ketik Midtrans di kolom pencarian',
-        'Masukkan nomor Virtual Account di Kode Bayar',
-        'Masukkan nominal pembayaran sesuai tagihan',
-        'Klik Lanjut > Klik Konfirmasi',
-        'Masukkan PIN',
-        'Transaksi selesai',
-      ],
+      title: t('payment.viaIBankingJateng'),
+      content: t('payment.viaIBankingJatengSteps', {returnObjects: true}),
     },
     {
-      title: 'Internet Banking Bank Jateng',
-      content: [
-        'Login ke Bank Jateng Internet Banking kamu',
-        'Pilih Payment > pilih Multipayment',
-        'Pilih Rekening Sumber',
-        'Cari Midtrans atau langsung ketik Midtrans di kolom pencarian',
-        'Masukkan nomor Virtual Account',
-        'Masukkan nominal pembayaran sesuai tagihan',
-        'Klik Lanjut > Klik Konfirmasi',
-        'Ikuti instruksi selanjutnya untuk menyelesaikan transaksi',
-      ],
+      title: t('payment.viaBimaMobileBankJateng'),
+      content: t('payment.viaBimaMobileBankJatengSteps', {returnObjects: true}),
+    },
+    {
+      title: t('payment.viaOtherBanks'),
+      content: t('payment.viaOtherBanksSteps', {returnObjects: true}),
     },
   ];
 

@@ -29,7 +29,6 @@ import {
 } from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
-import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import {t} from 'i18next';
 import {TransactionDetail} from '../../types/transaction.type';
@@ -69,7 +68,7 @@ export default function MyEventDetail() {
   const [tmpPayment, setTmpPayment] = useState<any>();
   const [confirmPayment, setConfirmPayment] = useState<any>();
 
-  const [registeredEvent, setRegisteredEvent] = useState<any>();
+  // const [registeredEvent, setRegisteredEvent] = useState<any>();
 
   const isBallot =
     Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
@@ -114,37 +113,6 @@ export default function MyEventDetail() {
           trnsConfirmed: resDetailTransaction?.data?.data?.trnsConfirmed,
           trnsExpiredTime: resDetailTransaction?.data?.data?.trnsExpiredTime,
         });
-        // if (isThisBallot) {
-        //   if (regStatus === 0) {
-        //     newStatus = 'Registered';
-        //   } else if (regStatus === 99) {
-        //     newStatus = 'Unqualified';
-        //   } else {
-        //     if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
-        //       newStatus = 'Paid';
-        //     } else if (
-        //       moment(
-        //         resDetailTransaction?.data?.data?.trnsExpiredTime,
-        //       ).isBefore(moment(new Date()))
-        //     ) {
-        //       newStatus = 'Payment Expired';
-        //     } else {
-        //       newStatus = 'Waiting Payment';
-        //     }
-        //   }
-        // } else {
-        //   if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
-        //     newStatus = 'Paid';
-        //   } else if (
-        //     moment(resDetailTransaction?.data?.data?.trnsExpiredTime).isBefore(
-        //       moment(new Date()),
-        //     )
-        //   ) {
-        //     newStatus = 'Payment Expired';
-        //   } else {
-        //     newStatus = 'Waiting Payment';
-        //   }
-        // }
         setStatus(newStatus);
 
         const eventId =
@@ -152,7 +120,6 @@ export default function MyEventDetail() {
 
         if (eventId) {
           fetchDetailEvent(eventId);
-          fetchTransaction(eventId);
         }
       }
     } catch (error) {
@@ -193,37 +160,6 @@ export default function MyEventDetail() {
       }
     }
   }, [detailTransaction, eventDetail]);
-
-  const fetchTransaction = (eventId: number) => {
-    // get transactions
-    httpRequest
-      .get('member_resource/transaction')
-      .then(resTransaction => {
-        if (resTransaction.data) {
-          const findEventRegister =
-            resTransaction.data?.linked?.mregTrnsId?.find(
-              (item: any) =>
-                item.trnsEventId?.toString() === eventId?.toString() &&
-                (item.trnsConfirmed === '1' ||
-                  new Date(item.trnsExpiredTime)?.getTime() >
-                    new Date().getTime(),
-                isBallot),
-            );
-
-          if (findEventRegister) {
-            const findRegisteredEvent = resTransaction?.data?.data?.find(
-              (item: any) => item.mregOrderId === findEventRegister.trnsRefId,
-            );
-            if (findRegisteredEvent) {
-              setRegisteredEvent(findRegisteredEvent);
-            }
-          }
-        }
-      })
-      .catch(err => {
-        console.info('error check registered event', err);
-      });
-  };
 
   useEffect(() => {
     fetchData();
@@ -455,39 +391,11 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {/* {(status === 'Waiting Payment' ||
-                (status === 'Payment Expired' && !isBallot)) && (
-                <AppButton
-                  onPress={handleButton}
-                  isLoading={isLoadingButton}
-                  style={{marginTop: 12, marginHorizontal: 22}}
-                  // width={'100%'}
-                  // marginX={'22px'}
-                  // marginTop={'12px'}
-                  // paddingY={'12px'}
-                  // borderRadius={8}
-                  // alignSelf={'center'}
-                  // bg={'#EB1C23'}
-                >
-                  <Text
-                    fontWeight={500}
-                    color={colors.white}
-                    fontSize={14}
-                    textAlign={'center'}>
-                    {status === 'Waiting Payment'
-                      ? confirmPayment
-                        ? `Pay Now via ${confirmPayment?.evptLabel}`
-                        : 'Choose Payment Method'
-                      : t('event.registerEventAgain')}
-                  </Text>
-                </AppButton>
-              )} */}
               <ButtonBasedOnStatus
                 transactionId={params.transactionId}
                 status={status}
                 payment={confirmPayment}
                 isBallot={isBallot}
-                isRegisteredEvent={!registeredEvent}
                 eventDetail={eventDetail}
                 evpaEvncId={
                   detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
@@ -654,7 +562,7 @@ export default function MyEventDetail() {
             {t('payment.choosePaymentMethod')}
           </Text>
           <Text color={'#768499'} fontSize={'12px'} fontWeight={400}>
-            Silahkan pilih metode pembayaran untuk event ini
+            {t('payment.choosePaymentMethodDescription')}
           </Text>
           <ScrollView
             flexGrow={1}
@@ -700,13 +608,13 @@ export default function MyEventDetail() {
               marginBottom={'12px'}>
               {`Are you sure want to use ${tmpPayment?.evptLabel} as your Payment method?`}
             </Text>
-            <Text
+            {/* <Text
               textAlign={'center'}
               color={'#768499'}
               fontSize={'11px'}
               fontWeight={400}>
               You can't change payment method after confirming your choice.
-            </Text>
+            </Text> */}
           </AlertDialog.Body>
           <AlertDialog.Footer>
             <Button.Group width={'full'}>
@@ -724,7 +632,7 @@ export default function MyEventDetail() {
                 }}
                 ref={confirmRef}>
                 <Text fontSize={'14px'} fontWeight={400}>
-                  Cancel
+                  {t('cancel')}
                 </Text>
               </Button>
               <Button
@@ -735,7 +643,7 @@ export default function MyEventDetail() {
                   setTmpPayment(undefined);
                   setShowModalConfirm(false);
                 }}>
-                Yes, Sure
+                {t('sure')}
               </Button>
             </Button.Group>
           </AlertDialog.Footer>

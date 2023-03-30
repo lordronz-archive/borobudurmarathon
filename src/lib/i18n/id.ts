@@ -20,7 +20,7 @@ export default {
   phoneNumber: 'Nomor HP',
   confirmation: 'Konfirmasi',
   cancel: 'Batal',
-  sure: 'Iya',
+  sure: 'Iya, Yakin',
   required: 'Wajib diisi',
   copy: 'Salin',
   continue: 'Lanjut',

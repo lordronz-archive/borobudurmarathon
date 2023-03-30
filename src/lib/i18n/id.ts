@@ -47,7 +47,7 @@ export default {
     emailValidationBeforeResend: 'sebelum mengirimkan ulang kode',
     emailValidationResend: 'Kirimkan Ulang Kode Verifikasi',
     phoneValidationTitle: 'Validasi Nomor Telefon',
-    phoneValidationSubtitle: 'Nomor telepon Anda akan kami validasi',
+    phoneValidationSubtitle: 'Kami perlu memvalidasi nomor telepon Anda',
     phoneValidation8DigitCode:
       'Masukkan 8 digit kode yang kami kirim ke nomor ini',
     dontHaveAccount: 'Belum memiliki akun?',
@@ -189,7 +189,7 @@ export default {
     seeTutorial: 'Lihat Panduan',
     haveQuestion: 'Punya pertanyaan seputar pembayaran event?',
     paymentStatusExpired:
-      'Status pembayaran sudah expired, jika masih ingin mengikuti event ini silahkan register ulang event ini',
+      'Status pendaftaran Anda sudah tidak berlaku. Apabila Anda masih ingin mengikuti event ini, silakan registrasi kembali.',
     passBallotStage:
       'Selamat anda lolos tahap ballot, silahkan lanjutkan ke pembayaran event.',
     pleaseCompletePayment:
@@ -206,6 +206,7 @@ export default {
     sorryNotPassedBallot: 'Maaf anda tidak lolos tahap ballot',
     choosePaymentMethod: 'Pilih Metode Pembayaran',
     changePaymentMethod: 'Ubah Metode Pembayaran',
+    payNow: 'Bayar Sekarang',
     payNowVia: 'Bayar via',
     choosePaymentMethodDescription:
       'Silahkan pilih metode pembayaran untuk event ini',
@@ -268,6 +269,7 @@ export default {
       'Transaksi sukses dan akan muncul bukti pembayaran',
       'Dapatkan email konfirmasi pembayaran berhasil setelah transaksi selesai dari Borobudur Marathon\nCatatan : Gunakan hanya metode transfer online dengan biaya Rp 6.500 sebagai pilihan metode transfer antar Bank.',
     ],
+    checkPaymentStatus: 'Periksa Status Pembayaran',
   },
   gender: {
     male: 'Laki-laki',

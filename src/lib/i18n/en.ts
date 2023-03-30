@@ -189,10 +189,10 @@ export default {
     ensurePayment:
       'To complete Event Registration please ensure you have paid registration fee.',
     completePaymentBefore: 'Complete your payment before',
-    seeTutorial: 'See Tutorial',
-    haveQuestion: 'Have a question about payment?',
+    seeTutorial: 'View Guide',
+    haveQuestion: 'Have questions about event payments?',
     paymentStatusExpired:
-      'The payment status has expired, if you still want to take part in this event, please re-register for this event',
+      'Your registration status has expired. If you still want to take part in this event, please register again.',
     passBallotStage:
       'Congratulations, you have passed the ballot stage, please proceed to paying for the event.',
     pleaseCompletePayment:
@@ -211,6 +211,7 @@ export default {
     confirmPayment: 'Confirm Payment',
     choosePaymentMethod: 'Choose Payment Method',
     changePaymentMethod: 'Change Payment Method',
+    payNow: 'Pay Now',
     payNowVia: 'Pay Now via',
     areYouSureWantToUse: 'Are you sure want to use',
     asYourPaymentMethod: 'as your payment method',
@@ -270,6 +271,7 @@ export default {
       'The transaction is successful and the proof of payment will appear',
       'Get a successful payment confirmation email after the transaction is complete from Borobudur Marathon.',
     ],
+    checkPaymentStatus: 'Check Payment Status',
   },
   gender: {
     male: 'Male',

@@ -395,7 +395,7 @@ export default function PaymentScreen() {
                   fontSize={14}
                   textAlign={'center'}>
                   {detailTransaction?.data?.trnsConfirmed === 0
-                    ? 'Check Payment Status'
+                    ? t('payment.checkPaymentStatus')
                     : 'Check My Event'}
                 </Text>
               </Button>

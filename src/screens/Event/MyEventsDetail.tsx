@@ -247,23 +247,30 @@ export default function MyEventDetail() {
       ),
     },
     {
-      title: t('event.runningDate'),
-      value: datetime.getDateRangeString(
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhStartDate,
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhEndDate,
-        'short',
-        'short',
-      ),
+      title: t('name'),
+      value: detailTransaction?.data?.trnsUserName,
     },
     {
-      title: t('event.place'),
-      value: detailTransaction?.linked?.trnsEventId?.[0]?.evnhPlace || '-',
+      title: t('event.category'),
+      value: detailTransaction?.linked?.trnsEventId?.[0]?.evnhCategory || '-',
     },
     {
       title: t('event.totalPayment'),
       value: `IDR ${Number(
         detailTransaction?.data?.trnsAmount || 0,
       )?.toLocaleString('id-ID')}`,
+    },
+    {
+      title: t('event.paymentTime'),
+      value:
+        detailTransaction?.data?.trnsConfirmed === 1 &&
+        detailTransaction?.data?.trnsConfirmTime
+          ? datetime.getDateString(
+              detailTransaction?.data?.trnsConfirmTime,
+              'short',
+              'short',
+            )
+          : '-',
     },
   ].filter(item => item.value !== null && item.value !== undefined);
 
@@ -588,32 +595,38 @@ export default function MyEventDetail() {
                   </HStack>
                 </Box>
               )}
-              {DATA_LIST.map(item => (
-                <Box
-                  key={item.title}
-                  paddingY={'16px'}
-                  borderTopColor={'#E8ECF3'}
-                  borderTopWidth={1}
-                  borderTopStyle={'solid'}>
-                  <HStack justifyContent={'space-between'} alignItems="center">
-                    <Text
-                      fontWeight={400}
-                      color="#768499"
-                      fontSize={11}
-                      width="35%">
-                      {item.title}
-                    </Text>
-                    <Text
-                      fontWeight={500}
-                      color="#1E1E1E"
-                      fontSize={12}
-                      width="60%"
-                      textAlign="right">
-                      {item.value}
-                    </Text>
-                  </HStack>
-                </Box>
-              ))}
+              {DATA_LIST.map(
+                item =>
+                  (item.title !== t('event.paymentTime') ||
+                    detailTransaction?.data?.trnsConfirmed === 1) && (
+                    <Box
+                      key={item.title}
+                      paddingY={'16px'}
+                      borderTopColor={'#E8ECF3'}
+                      borderTopWidth={1}
+                      borderTopStyle={'solid'}>
+                      <HStack
+                        justifyContent={'space-between'}
+                        alignItems="center">
+                        <Text
+                          fontWeight={400}
+                          color="#768499"
+                          fontSize={11}
+                          width="35%">
+                          {item.title}
+                        </Text>
+                        <Text
+                          fontWeight={500}
+                          color="#1E1E1E"
+                          fontSize={12}
+                          width="60%"
+                          textAlign="right">
+                          {item.value}
+                        </Text>
+                      </HStack>
+                    </Box>
+                  ),
+              )}
             </VStack>
             <HStack>
               <View flex={1} bg={'#EB1C23'} height={'6px'} />
@@ -663,7 +676,7 @@ export default function MyEventDetail() {
             showsVerticalScrollIndicator={false}>
             {eventDetail &&
               eventDetail?.payments
-                ?.filter(item => item.evptMsptId !== '9')
+                ?.filter(item => item.evptIsPublic === '1')
                 ?.sort((a, b) =>
                   a.evptLabel < b.evptLabel
                     ? -1

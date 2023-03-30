@@ -208,6 +208,8 @@ export default {
       'Silahkan pilih metode pembayaran untuk event ini',
     payBefore: 'Bayar sebelum',
     confirmPayment: 'Konfirmasi Pembayaran',
+    areYouSureWantToUse: 'Apakah Anda yakin ingin menggunakan',
+    asYourPaymentMethod: 'sebagai metode pembayaran',
     viaBankJatengAtm: 'Pembayaran melalui ATM Bank Jateng',
     viaBankJatengAtmSteps: [
       'Masukkan BPD Card/ATM Bank Jateng dan PIN ATM',

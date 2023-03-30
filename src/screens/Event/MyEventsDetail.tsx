@@ -606,7 +606,9 @@ export default function MyEventDetail() {
               fontSize={'16px'}
               fontWeight={600}
               marginBottom={'12px'}>
-              {`Are you sure want to use ${tmpPayment?.evptLabel} as your Payment method?`}
+              {`${t('payment.areYouSureWantToUse')} ${
+                tmpPayment?.evptLabel
+              } ${t('payment.asYourPaymentMethod')}?`}
             </Text>
             {/* <Text
               textAlign={'center'}

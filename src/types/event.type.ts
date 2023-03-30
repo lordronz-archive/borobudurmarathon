@@ -274,7 +274,7 @@ export interface Transaction {
   data: Datum[];
   linked: TransactionLinked;
   fields: Field[];
-  status: TransactionStatus;
+  status: TransactionSummary;
 }
 
 export interface Datum {
@@ -355,6 +355,8 @@ export interface MregEventID {
   evnhRegistrationStatus: number;
   evnhTransactionExpired: number;
   evnhStatus: number;
+
+  evnhBallot: number;
 }
 
 export interface MregTrnsID {
@@ -393,7 +395,14 @@ export interface MregZmemID {
   zmemLanguage: number;
 }
 
-export interface TransactionStatus {
+export interface TransactionSummary {
   page: number;
   totalRecords: number;
 }
+
+export type TransactionStatus =
+  | 'Registered'
+  | 'Unqualified'
+  | 'Waiting Payment'
+  | 'Paid'
+  | 'Payment Expired';

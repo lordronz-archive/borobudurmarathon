@@ -81,15 +81,15 @@ export type RootStackParamList = {
   FAQ: undefined;
   Partner: undefined;
   AboutUs: undefined;
-  WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string};
+  WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string; title?: string};
 
   Register: undefined;
   EventRegister: {event: GetEventResponse; selectedCategoryId: string};
   MyEventsDetail: {
     transactionId: string;
-    eventId: number;
-    isBallot: boolean;
-    regStatus: number;
+    // eventId: number;
+    // isBallot: boolean;
+    // regStatus: number;
   };
   Payment: {transactionId: string};
   HowToPay: undefined;

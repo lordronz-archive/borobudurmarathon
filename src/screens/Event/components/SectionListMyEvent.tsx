@@ -1,7 +1,8 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {t} from 'i18next';
 import moment from 'moment';
-import {Box, Center, Divider, FlatList, Spinner, Toast} from 'native-base';
+import {Center, Divider, FlatList, Spinner} from 'native-base';
 import React, {ComponentType, useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
@@ -9,10 +10,11 @@ import CategoryButton from '../../../components/buttons/CategoryButton';
 import MyEventCard from '../../../components/card/MyEventCard';
 import EmptyMessage from '../../../components/EmptyMessage';
 import Section from '../../../components/section/Section';
-import {getErrorMessage} from '../../../helpers/errorHandler';
-import httpRequest from '../../../helpers/httpRequest';
+import {handleErrorMessage} from '../../../helpers/apiErrors';
+import {getTransactionStatus} from '../../../helpers/transaction';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {Datum, EventProperties, Transaction} from '../../../types/event.type';
+import {Datum, EventProperties} from '../../../types/event.type';
+import {GetTransactionsResponse} from '../../../types/transactions.type';
 
 enum CategoryEnum {
   ALL = 0,
@@ -59,10 +61,11 @@ export default function SectionListMyEvent() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<Transaction>();
+  const [resTransactions, setResTransactions] =
+    useState<GetTransactionsResponse>();
   const [eventL, setEvent] = useState<EventProperties[]>([]);
   let filteredEvents = [...(eventL || [])];
-  let filteredData = [...(data?.data || [])];
+  let filteredData = [...(resTransactions?.data || [])];
   const [selectedCategory, setSelectedCategory] = useState<{
     id: CategoryEnum | null;
     value: string;
@@ -84,12 +87,11 @@ export default function SectionListMyEvent() {
 
   const fetchList = () => {
     setIsLoading(true);
-    httpRequest
-      .get('member_resource/transaction')
+    EventService.getTransaction()
       .then(res => {
         console.info('res transaction', JSON.stringify(res.data));
         if (res.data) {
-          setData(res.data);
+          setResTransactions(res.data);
         }
         EventService.getEvents()
           .then(ress => {
@@ -98,28 +100,18 @@ export default function SectionListMyEvent() {
             }
           })
           .catch(err => {
-            if (getErrorMessage(err).includes('Not Found')) {
-              //
-            } else {
-              Toast.show({
-                title: 'Failed to get events',
-                description: getErrorMessage(err),
-              });
-            }
+            handleErrorMessage(err, t('error.failedToGetEvents'), {
+              ignore404: true,
+            });
           })
           .finally(() => {
             setIsLoading(false);
           });
       })
       .catch(err => {
-        if (getErrorMessage(err).includes('Not Found')) {
-          //
-        } else {
-          Toast.show({
-            title: 'Failed to get events',
-            description: getErrorMessage(err),
-          });
-        }
+        handleErrorMessage(err, t('error.failedToGetEvents'), {
+          ignore404: true,
+        });
       })
       .finally(() => {
         setIsLoading(false);
@@ -131,15 +123,15 @@ export default function SectionListMyEvent() {
   }, [IsFocused]);
 
   const _renderItem = ({item}: {item: Datum}) => {
-    const event = data?.linked.mregEventId.find(
+    const event = resTransactions?.linked.mregEventId.find(
       ({id}) => id.toString() === item.links.mregEventId.toString(),
     );
 
-    const transaction = data?.linked.mregTrnsId.find(
+    const transaction = resTransactions?.linked.mregTrnsId.find(
       ({id}) => id.toString() === item.links.mregTrnsId.toString(),
     );
 
-    const category = data?.linked.mregEvncId.find(
+    const category = resTransactions?.linked.mregEvncId.find(
       ({id}) => id.toString() === item.links.mregEvncId.toString(),
     );
 
@@ -151,45 +143,15 @@ export default function SectionListMyEvent() {
 
     const cleanTransactionExpTime = transaction.trnsExpiredTime;
 
-    const checkStatus = () => {
-      let status;
-      if (item.mregType === 'MB') {
-        if (item.mregStatus === 0) {
-          status = 'Registered';
-        } else if (item.mregStatus === 99) {
-          status = 'Unqualified';
-        } else {
-          if (transaction?.trnsConfirmed === 1) {
-            status = 'Paid';
-          } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
-            status = 'Payment Expired';
-          } else {
-            status = 'Waiting Payment';
-          }
-        }
-      } else {
-        if (transaction?.trnsConfirmed === 1) {
-          status = 'Paid';
-        } else if (moment(transaction?.trnsExpiredTime).isBefore(moment())) {
-          status = 'Payment Expired';
-        } else {
-          status = 'Waiting Payment';
-        }
-      }
-      return status;
-    };
-
     return (
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('MyEventsDetail', {
             transactionId: item.mregOrderId,
-            eventId: event.evnhId,
-            isBallot: item.mregType === 'MB' ? true : false,
-            regStatus: item.mregStatus,
           })
         }>
         <MyEventCard
+          regId={transaction.trnsRefId}
           title={event.evnhName}
           date={
             moment(cleanStartDate).format(
@@ -202,16 +164,21 @@ export default function SectionListMyEvent() {
               ? ' - ' + moment(cleanEndDate).format('MMM D YYYY')
               : '')
           }
-          status={checkStatus()}
+          status={getTransactionStatus({
+            isBallot: event.evnhBallot === 1,
+            regStatus: transaction.trnsStatus,
+            trnsConfirmed: transaction?.trnsConfirmed,
+            trnsExpiredTime: transaction?.trnsExpiredTime,
+          })}
           category={category?.evncName || ''}
           transactionExpirationTime={cleanTransactionExpTime}
           isAvailable={false}
           onPayNowClick={() =>
             navigation.navigate('MyEventsDetail', {
               transactionId: item.mregOrderId,
-              eventId: event.evnhId,
-              isBallot: item.mregType === 'MB' ? true : false,
-              regStatus: item.mregStatus,
+              // eventId: event.evnhId,
+              // isBallot: item.mregType === 'MB' ? true : false,
+              // regStatus: item.mregStatus,
             })
           }
         />

@@ -1,22 +1,24 @@
 import moment from 'moment';
 import {HStack, VStack, Text, Box, Stack, Badge, Alert} from 'native-base';
 import React, {useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import IconRun from '../../assets/icons/IconRun';
 import IconTag from '../../assets/icons/IconTag';
 import MButton from '../buttons/Button';
-import {useNavigation} from '@react-navigation/native';
 
 type MyCardEventProps = {
+  regId: string;
   title: string;
   status: string;
   date: string;
-  transactionExpirationTime?: string;
+  transactionExpirationTime?: Date | string;
   isAvailable?: boolean;
   category: string;
   onPayNowClick: () => void;
 };
 
 export default function MyCardEvent({
+  regId,
   title,
   date,
   status,
@@ -55,6 +57,8 @@ export default function MyCardEvent({
     }
   }
 
+  const {t} = useTranslation();
+
   const statusComp = useMemo(() => {
     const color = statusColor(status || '');
 
@@ -77,6 +81,9 @@ export default function MyCardEvent({
     <Box alignItems="flex-start" my={3} width="100%">
       <HStack flex={1}>
         <Stack pl={3} flexGrow={1} space="2">
+          <Text fontSize="xs" color="coolGray.500">
+            {regId}
+          </Text>
           <HStack flex="1" justifyContent={'space-between'} space="1">
             <Text
               flex={'1'}
@@ -119,7 +126,7 @@ export default function MyCardEvent({
                     <HStack space={2} flexShrink={1} alignItems="center">
                       <Alert.Icon mt="1" />
                       <Text fontSize={12} color="coolGray.800">
-                        Pay before{' '}
+                        {t('payment.payBefore')}{' '}
                         {moment(transactionExpirationTime).format(
                           'DD MMM YYYY, H:mm',
                         )}

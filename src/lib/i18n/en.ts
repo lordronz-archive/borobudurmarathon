@@ -24,6 +24,7 @@ export default {
   required: 'Required',
   copy: 'Copy',
   continue: 'Continue',
+  close: 'Close',
   auth: {
     forgotPassword: 'Forgot password?',
     forgotPasswordTitle: 'Forgot Password',
@@ -74,12 +75,23 @@ export default {
     placeholderFullName: 'Enter your full name here',
     helperFullName: 'Name as stated on your official ID document',
     placeholderEmail: 'Enter your email here',
+    placeholderPob: 'Enter your place of birth',
+    placeholderBloodType: 'Choose blood type',
     placeholderPhone: 'Enter your phone here',
     placeholderPassword: 'Enter your password here',
     placeholderPasswordAgain: 'Enter your password to confirm',
+    placeholderCountry: 'Choose Country',
+    placeholderNationality: 'Choose Nationality',
+    placeholderAddress: 'Enter your address',
+    chooseAddress: 'Choose your address',
     password: 'Password',
     passwordAgain: 'Confirm Password',
     placeholderIdentityNumber: 'Enter your identity number',
+    verifyId: 'Verify your ID',
+    waitVerifyId: 'Please wait, we are currently verify your identity',
+    idNotReadable: 'Your ID Card is Unreadable',
+    idNotReadableDesc:
+      "Sorry we can't verify your identity.\nPlease re-upload your ID Card or select Verify ID later.",
   },
   registration: {
     registrationSuccess: 'Event Registration Success',
@@ -99,6 +111,7 @@ export default {
   myEvent: {
     title: 'My Events',
     subtitle: 'All of My Borobudur Marathon Events',
+    detailTitle: 'Event Detail',
   },
   label: {
     accountInformation: 'Account Information',
@@ -137,6 +150,8 @@ export default {
     chooseProfilePicture: 'Choose profile picture',
     alertNotVerifiedMessage:
       'Your account is still in process to verification.',
+    enterPob: 'Enter your place of birth',
+    chooseGender: 'Choose Gender',
   },
   consent: {
     title: 'Data Confirmation',
@@ -152,6 +167,7 @@ export default {
     totalPayment: 'Total Payment',
     registerNow: 'Register Now',
     registrationDate: 'Registration Date',
+    eventDate: 'Event Date',
     place: 'Place',
     quota: 'Quota',
     distance: 'Distance',
@@ -181,6 +197,15 @@ export default {
     qrWillAppear: 'The QR Code event will appear here after you',
     passedBallot: 'passed the ballot',
     makeAPayment: 'make a payment',
+    waitingPayment: 'Waiting Payment',
+    paymentExpired: 'Payment Expired',
+    waitingBallotResult: 'Waiting ballot result',
+    sorryNotPassedBallot: 'Sorry, you are not passed for ballot',
+    payBefore: 'Pay before',
+    choosePaymentMethod: 'Choose Payment Method',
+    changePaymentMethod: 'Change Payment Method',
+    payNowVia: 'Pay Now via',
+    choosePaymentMethodDescription: 'Choose payment method for this event',
   },
   gender: {
     male: 'Male',
@@ -229,11 +254,13 @@ export default {
     errorTitle: 'Something wrong',
     errorMessage:
       'Please try again. Makesure your connection is stable. If you still got the same error, let us know.',
+    emailInvalid: 'Please use a valid email',
     emailAlreadyTaken: 'Email already taken. Use another email.',
     forgotPasswordSuccess:
       'Link for reset password has been sent to your email. Please check your inbox and follow the instructions.',
     otpHasBeenSentToEmail: 'OTP has been sent to your email',
     passwordNotSame: 'Password and Confirm Password is not same',
+    youHaveRegisteredToThisEvent: 'You have registered to this event',
   },
   chooseOne: 'Choose one',
   stepTitle: {
@@ -244,5 +271,39 @@ export default {
   uploadPhotoOptions: {
     openCamera: 'Open Camera',
     chooseFromGallery: 'Choose From Gallery',
+  },
+  error: {
+    failedToRegister: 'Failed to register',
+    failedToLogin: 'Failed to login',
+    failedToSendOTP: 'Failed to send otp',
+    failedToGetProfile: 'Failed to get profile',
+    failedToSaveProfile: 'Failed to save profile',
+    profileIsNotComplete: 'Your profile is not complete',
+    profileIsNotCompleteDescription: 'Please complete your profile to continue',
+    failedToGetEvents: 'Failed to get events',
+    failedToGetEvent: 'Failed to get event',
+    failedToGetTransactions: 'Failed to get transactions',
+    failedToGetTransaction: 'Failed to get transaction',
+    failedToApplyCoupon: 'Failed to Apply Coupon',
+    failedToPayNow: 'Failed to pay now',
+    failedToRegisterEvent: 'Failed to register event',
+    failedToGenerateQR: 'Failed to generate QR Code',
+    cannotRegisterEvent: 'Cannot register event',
+    categoryPricingNotFound: 'Category & pricing not exist for now',
+    Field: 'Field',
+    isRequired: 'is required',
+    failedToGetPartners: 'Failed to get partners',
+  },
+  aboutUsContent: {
+    title_1: 'VOICE OF UNITY ',
+    description_1a:
+      'Now is the moment for us to return, working together to strengthen our faith. Unite to voicing victory.',
+    description_1b:
+      'Borobudur Marathon 2023 Powered by Bank Jateng once again welcomes runners to unite and voice the spirit with the people of Magelang. This year, let us inspire one another through the voice of unity.',
+    title_2: 'SWARA MANUNGGAL',
+    description_2a:
+      'This year is a witness that we all can overcome adversity. This struggle is strongly intertwined with each other’s passion in inspiring one another.',
+    description_2b:
+      'Borobudur Marathon 2022 Powered by Bank Jateng invites you warriors, to celebrate and voice the resilience we have shown in a familiar place with togetherness, the place that we called Magelang.',
   },
 };

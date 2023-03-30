@@ -89,7 +89,7 @@ export default function FAQScreen() {
               key={index}
               onPress={() => {
                 if (menu.route) {
-                  navigation.navigate(menu.route, menu.params);
+                  navigation.navigate(menu.route, {...menu.params, title: menu.name});
                 }
               }}>
               <HStack

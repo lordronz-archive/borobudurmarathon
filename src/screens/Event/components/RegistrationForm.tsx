@@ -33,6 +33,7 @@ export default function RegistrationForm(
     value: item.id || '',
   }));
 
+  const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<Option[]>(opts);
 
   const [dateField, setDateField] = useState<Date>();
@@ -43,7 +44,9 @@ export default function RegistrationForm(
   }, []);
 
   const getListOptions = async () => {
+    setIsLoading(true);
     setOptions((await getOptions(props)) ?? opts);
+    setIsLoading(false);
   };
 
   if (props.static) {
@@ -80,18 +83,6 @@ export default function RegistrationForm(
         </Box>
       </Row>
     );
-    // <Box key={props.evhfLabel} flex={1}>
-    //   <Text color="gray.500" fontSize="sm">
-    //     {props.evhfLabel}
-    //   </Text>
-    //   {props.value ? (
-    //     <Text>{props.value}</Text>
-    //   ) : (
-    //     <Text color="gray.500" italic>
-    //       ~ Not Set
-    //     </Text>
-    //   )}
-    // </Box>
   }
 
   if (props.evhfType === 'Option') {
@@ -105,6 +96,7 @@ export default function RegistrationForm(
         helperText={props.helperText}
         hideSearch={options.length <= 10}
         required={props.required}
+        isLoading={isLoading}
       />
     );
   } else if (['number', 'phone'].includes(props.evhfType.toLowerCase())) {

@@ -5,7 +5,6 @@ import {
   Button,
   ArrowBackIcon,
   HStack,
-  Avatar,
   VStack,
   useTheme,
   Image,
@@ -23,12 +22,10 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {useAuthUser} from '../../context/auth.context';
 import IconBadge from '../../assets/icons/IconBadge';
 import IconSingleUser from '../../assets/icons/IconSingleUser';
 import IconInfo from '../../assets/icons/IconInfo';
 import IconFileDocument from '../../assets/icons/IconFileDocument';
-import {getShortCodeName} from '../../helpers/name';
 import {TouchableOpacity} from 'react-native';
 import {AuthService} from '../../api/auth.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
@@ -42,13 +39,11 @@ import {useTranslation} from 'react-i18next';
 import {LanguageID} from '../../types/language.type';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
+import SummaryProfile from './components/SummaryProfile';
 
 export default function MyProfile() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {colors} = useTheme();
-  const {user, isVerified} = useAuthUser();
-
   // logout
   const [isOpenModalLogout, setIsOpenModalLogout] = React.useState(false);
   const onCloseModalLogout = () => setIsOpenModalLogout(false);
@@ -66,45 +61,45 @@ export default function MyProfile() {
   }[] = [
     {
       key: 'edit-profile',
-      icon: <IconSingleUser color={colors.black} size={6} />,
+      icon: <IconSingleUser color="black" size={6} />,
       name: t('profile.viewProfile'),
       route: 'UpdateProfile',
     },
     {
       key: 'edit-phone',
-      icon: <IconPhone color={colors.black} size={6} />,
+      icon: <IconPhone color="black" size={6} />,
       name: t('profile.changePhoneNumber'),
       route: 'UpdatePhone',
     },
     {
       key: 'language',
-      icon: <IconGlobe color={colors.black} size={6} />,
+      icon: <IconGlobe color="black" size={6} />,
       name: t('profile.language'),
       onPress: onOpen,
     },
     {
       key: 'faqs',
-      icon: <IconInfo color={colors.black} size={6} />,
+      icon: <IconInfo color="black" size={6} />,
       name: t('info.faqs'),
       route: 'FAQ',
     },
     {
       key: 'tnc',
-      icon: <IconFileDocument color={colors.black} size={6} />,
+      icon: <IconFileDocument color="black" size={6} />,
       name: t('info.termsAndConditions'),
       route: 'WebView',
       params: {page: 'tnc'},
     },
     {
       key: 'about',
-      icon: <IconInfo color={colors.black} size={6} />,
+      icon: <IconInfo color="black" size={6} />,
       name: t('info.aboutUs'),
       route: 'AboutUs',
       params: {page: 'about'},
     },
     {
       key: 'partner',
-      icon: <IconUserGroup color={colors.black} size={6} />,
+      icon: <IconUserGroup color="black" size={6} />,
       name: 'Partner',
       route: 'Partner',
     },
@@ -121,21 +116,21 @@ export default function MyProfile() {
 
   return (
     <AppContainer>
-      <ScrollView backgroundColor={colors.white}>
+      <ScrollView backgroundColor="white">
         <Box alignItems="flex-start" padding={1}>
           <IconButton
             onPress={() => navigation.navigate('Main', {screen: t('tab.home')})}
             icon={<ArrowBackIcon />}
             borderRadius="full"
             _icon={{
-              color: colors.black,
+              color: 'black',
               size: 'md',
             }}
             _hover={{
-              bg: colors.primary[900] + ':alpha.20',
+              bg: 'primary.900' + ':alpha.20',
             }}
             _pressed={{
-              bg: colors.primary[900] + ':alpha.20',
+              bg: 'primary.900' + ':alpha.20',
               _icon: {
                 name: 'emoji-flirt',
               },
@@ -143,85 +138,7 @@ export default function MyProfile() {
           />
         </Box>
 
-        <Pressable onPress={() => navigation.navigate('UpdateProfile')}>
-          <HStack
-            space={2}
-            paddingLeft={3}
-            paddingRight={3}
-            alignItems="center">
-            <Avatar
-              bg="gray.400"
-              mx={2}
-              source={{
-                uri:
-                  user &&
-                  user.data &&
-                  user.data.length > 0 &&
-                  user?.data[0]?.zmemPhoto
-                    ? `https://openpub.oss-ap-southeast-5.aliyuncs.com/${user?.data[0]?.zmemPhoto}`
-                    : undefined,
-              }}>
-              {getShortCodeName(
-                user &&
-                  user.data &&
-                  user.data.length > 0 &&
-                  user?.data[0].zmemFullName
-                  ? user?.data[0].zmemFullName
-                  : '',
-              )}
-            </Avatar>
-            <VStack paddingLeft={2}>
-              <HStack alignItems="center" width="75%">
-                <Text fontWeight="bold" fontSize="md" numberOfLines={1} mr="2">
-                  {user && user.data && user.data.length > 0
-                    ? user?.data?.[0]?.zmemFullName
-                    : ''}
-                </Text>
-                {isVerified && <CheckCircleIcon color="blue.600" />}
-                {/* <Badge ml="2" colorScheme="success" variant="subtle">
-                  <HStack alignItems="center">
-                    <CheckIcon color="white" />
-                    <Text color="white" fontSize="sm" ml="1">
-                      verified
-                    </Text>
-                  </HStack>
-                </Badge> */}
-              </HStack>
-              <Text color={colors.gray[500]} fontSize="sm">
-                {user &&
-                user.linked &&
-                user?.linked.zmemAuusId.length > 0 &&
-                user?.linked.zmemAuusId[0].auusEmail
-                  ? user?.linked.zmemAuusId[0].auusEmail
-                  : ''}
-              </Text>
-            </VStack>
-          </HStack>
-          {!config.isShowFeatureCertificate && (
-            <Box
-              marginX={0}
-              marginTop={0}
-              marginBottom={7}
-              backgroundColor={colors.white}>
-              <Image
-                alt="hiasan"
-                source={require('../../assets/images/hiasan-color.png')}
-                position="absolute"
-                right={0}
-                top={-90}
-                zIndex={-1}
-              />
-              <Image
-                alt="hiasan"
-                source={require('../../assets/images/hiasan-shadow.png')}
-                position="absolute"
-                right={0}
-                top={-95}
-                zIndex={-2}
-              />
-            </Box>
-          )}
-        </Pressable>
+        <SummaryProfile />
 
         {config.isShowFeatureCertificate && (
           <Pressable onPress={() => navigation.navigate('Certificates')}>
@@ -230,12 +147,12 @@ export default function MyProfile() {
               marginTop={5}
               marginBottom={7}
               borderWidth={1}
-              borderColor={colors.gray[300]}
+              borderColor="gray.300"
               borderRadius={8}
-              backgroundColor={colors.white}
+              backgroundColor="white"
               shadow="1">
               <VStack padding={3} justifyContent="space-between">
-                <IconBadge color={colors.primary[900]} size="lg" />
+                <IconBadge color={'primary.900'} size="lg" />
                 <Text marginTop={3} fontWeight={600}>
                   View Certificate
                 </Text>
@@ -268,7 +185,7 @@ export default function MyProfile() {
           </HStack>
         </Alert> */}
 
-        <Box borderTopColor={colors.gray[500]}>
+        <Box borderTopColor="gray.500">
           {menus.map((menu, index) => (
             <TouchableOpacity
               onPress={() => {
@@ -286,10 +203,10 @@ export default function MyProfile() {
                 alignItems="center"
                 paddingX="3"
                 paddingY="4"
-                borderTopColor={colors.gray[300]}
+                borderTopColor="gray.300"
                 borderTopWidth={0.5}
                 borderBottomColor={
-                  index === menus.length - 1 ? colors.gray[300] : undefined
+                  index === menus.length - 1 ? 'gray.300' : undefined
                 }
                 borderBottomWidth={
                   index === menus.length - 1 ? 0.5 : undefined
@@ -359,13 +276,13 @@ export default function MyProfile() {
         </Box>
       </ScrollView>
 
-      <Box padding={3} backgroundColor={colors.white}>
+      <Box padding={3} backgroundColor="white">
         <Button
           width="100%"
-          backgroundColor={colors.white}
-          borderColor={colors.gray[500]}
+          backgroundColor="white"
+          borderColor="gray.500"
           borderWidth="0.5"
-          _text={{color: colors.black, fontWeight: 600}}
+          _text={{color: 'black', fontWeight: 600}}
           onPress={() => {
             setIsOpenModalLogout(true);
             // setIsLoggingOut(true);
@@ -376,10 +293,10 @@ export default function MyProfile() {
         {config.isShowDemoSettings && (
           <Button
             width="100%"
-            backgroundColor={colors.white}
-            borderColor={colors.gray[500]}
+            backgroundColor="white"
+            borderColor="gray.500"
             borderWidth="0.5"
-            _text={{color: colors.black, fontWeight: 600}}
+            _text={{color: 'black', fontWeight: 600}}
             onPress={() => {
               AuthService.deleteprofile()
                 .then(_res => {
@@ -396,12 +313,12 @@ export default function MyProfile() {
         )}
 
         <Center marginTop={5}>
-          <Text color={colors.gray[500]} fontSize="xs">
+          <Text color="gray.500" fontSize="xs">
             v{Config.APP_VERSION_NAME} (build: {Config.APP_VERSION_BUILD})
           </Text>
 
           {config.isDev && (
-            <Text color={colors.gray[500]} fontSize="xs">
+            <Text color="gray.500" fontSize="xs">
               ~ development ~
             </Text>
           )}

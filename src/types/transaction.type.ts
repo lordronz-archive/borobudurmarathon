@@ -148,7 +148,7 @@ export interface EvrlTrnsIdEntity {
   evpaEvncId: string;
   evpaName: string;
   evpaGender: string;
-  evpaBIBNo?: null;
+  evpaBIBNo?: null | string | number;
   evpaBirthPlace: string;
   evpaBirthDate: string;
   evpaAddress: string;

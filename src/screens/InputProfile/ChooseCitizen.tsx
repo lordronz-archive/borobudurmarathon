@@ -49,7 +49,7 @@ import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import Button from '../../components/buttons/Button';
 import {useDemo} from '../../context/demo.context';
 import {getIDNumberType} from '../../assets/data/ktpPassport';
-import {GENDER_OPTIONS} from '../../assets/data/gender';
+import {getGenderOptions} from '../../assets/data/gender';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
@@ -75,7 +75,7 @@ const PROCESSING_MESSAGES = [
 ];
 
 const IMAGE_WIDTH = 1280;
-const IMAGE_HEIGHT = 640;
+const IMAGE_HEIGHT = 853.3;
 
 export default function ChooseCitizenScreen({route}: Props) {
   const {user} = useAuthUser();
@@ -208,12 +208,12 @@ export default function ChooseCitizenScreen({route}: Props) {
     },
     {
       note: t('step') + ' 2 ' + t('auth.of3Step'),
-      title: 'Personal Data',
+      title: t('label.personalData'),
       subtitle: t('auth.accountFormDesc'),
     },
     {
       note: t('step') + ' 3 ' + t('auth.of3Step'),
-      title: 'Address Information',
+      title: t('label.addressInformation'),
       subtitle: t('auth.accountFormDesc'),
     },
   ];
@@ -384,7 +384,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             });
           } catch (err) {
             toast.show({
-              title: 'Failed to send otp',
+              title: t('error.failedToSendOTP'),
               description: getErrorMessage(err),
             });
             setProfileStep(1);
@@ -692,6 +692,7 @@ export default function ChooseCitizenScreen({route}: Props) {
               )}
 
               <ImagePicker
+                title={t('stepTitle.UploadID')}
                 setVisible={setVisible}
                 visible={visible}
                 onChange={image => {
@@ -762,9 +763,12 @@ export default function ChooseCitizenScreen({route}: Props) {
                     keyboardType={'numeric'}
                   />
                   <SelectInput
-                    items={GENDER_OPTIONS}
+                    items={getGenderOptions(
+                      t('gender.male'),
+                      t('gender.female'),
+                    )}
                     placeholder={t('chooseOne') || ''}
-                    label="Gender"
+                    label={t('profile.gender') || ''}
                     hideSearch
                     value={profile.mbsdGender}
                     onValueChange={val =>
@@ -787,11 +791,11 @@ export default function ChooseCitizenScreen({route}: Props) {
                       }));
                     }}
                     placeholder="DD MMM YYYY"
-                    label="Date of birth"
+                    label={t('profile.dob') || 'Date of birth'}
                   />
                   <TextInput
-                    placeholder="Enter your place of birth"
-                    label="Place of birth"
+                    placeholder={t('auth.placeholderPob') || ''}
+                    label={t('profile.pob') || 'Place of birth'}
                     value={profile.mbsdBirthPlace}
                     onChangeText={val =>
                       setProfile(oldVal => ({
@@ -803,8 +807,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                   <SelectInput
                     items={BLOOD_OPTIONS}
                     value={profile.mbsdBloodType?.toString()}
-                    placeholder="Choose blood type"
-                    label="Blood Type"
+                    placeholder={t('auth.placeholderBloodType') || ''}
+                    label={t('profile.bloodType') || 'Blood Type'}
                     onValueChange={val =>
                       setProfile(oldVal => ({
                         ...oldVal,
@@ -820,8 +824,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                           value: en_short_name,
                         }))}
                         value={profile.mbsdCountry}
-                        placeholder="Choose your country"
-                        label="Country"
+                        placeholder={t('auth.placeholderCountry') || ''}
+                        label={t('profile.country') || ''}
                         onValueChange={val =>
                           setProfile(oldVal => ({
                             ...oldVal,
@@ -835,8 +839,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                           value: nationality,
                         }))}
                         value={profile.mbsdNationality}
-                        placeholder="Choose your nationality"
-                        label="Nationality"
+                        placeholder={t('auth.placeholderNationality') || ''}
+                        label={t('profile.nationality') || ''}
                         onValueChange={val =>
                           setProfile(oldVal => ({
                             ...oldVal,
@@ -896,13 +900,13 @@ export default function ChooseCitizenScreen({route}: Props) {
                         profile.mbsdProvinces &&
                         profile.mbsdAddress
                           ? 'Edit'
-                          : 'Choose your address'}
+                          : t('auth.chooseAddress')}
                       </Button>
                     </Box>
                   ) : (
                     <TextInput
-                      placeholder="Enter your address"
-                      label="Address"
+                      placeholder={t('auth.placeholderAddress') || ''}
+                      label={t('profile.address') || ''}
                       value={profile.mbsdAddress}
                       onChangeText={val =>
                         setProfile(oldVal => ({
@@ -1083,8 +1087,8 @@ export default function ChooseCitizenScreen({route}: Props) {
           //   setIsOpen(false);
           // }}
           isLoading
-          title={'Verify your ID'}
-          content={'Please wait a moment while we try to verify your ID'}
+          title={t('auth.verifyId')}
+          content={t('auth.waitVerifyId')}
           // buttonContent={'Check My Event'}
         />
         <VerifyID
@@ -1121,11 +1125,9 @@ export default function ChooseCitizenScreen({route}: Props) {
             // nextStep();
             // setStepCount(v => v + 1);
           }}
-          title={'Your ID is not readable'}
-          content={
-            "Sorry we can't verify your ID please re-upload your ID or select Verify ID later"
-          }
-          buttonContent={'Close'}
+          title={t('auth.idNotReadable')}
+          content={t('auth.idNotReadableDesc')}
+          buttonContent={t('close')}
         />
 
         <VerifyID
@@ -1141,7 +1143,7 @@ export default function ChooseCitizenScreen({route}: Props) {
               'Your ID still in processing to validate') +
             ` (${validationTryProcessing})`
           }
-          buttonContent={'Close'}
+          buttonContent={t('close')}
         />
 
         {isOpenProcessing && isShowVerifyLater ? (
@@ -1164,7 +1166,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             onClose={() => {
               setIsOpenProcessing(false);
             }}
-            buttonContent={'Close'}
+            buttonContent={t('close')}
           />
         ) : (
           <VerifyID
@@ -1180,7 +1182,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                 'Your ID still in processing to validate') +
               ` (${validationTryProcessing})`
             }
-            buttonContent={'Close'}
+            buttonContent={t('close')}
           />
         )}
       </VStack>

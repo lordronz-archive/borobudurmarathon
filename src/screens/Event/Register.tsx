@@ -8,22 +8,19 @@ import {
   ScrollView,
   Divider,
   useToast,
-  Center,
-  Button,
-  Spinner,
   HStack,
+  WarningOutlineIcon,
 } from 'native-base';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import RegistrationForm from './components/RegistrationForm';
 import {EventFieldsEntity} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import Congratulation from '../../components/modal/Congratulation';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
-import datetime, {toAcceptableApiFormat} from '../../helpers/datetime';
+import datetime, {getAge, toAcceptableApiFormat} from '../../helpers/datetime';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
 import ViewProfile from '../InputProfile/components/ViewProfile';
@@ -39,6 +36,8 @@ import {
 } from '../../helpers/registerEvent';
 import {EvhfName} from '../../types/registerEvent.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import {handleErrorMessage} from '../../helpers/apiErrors';
+import Button from '../../components/buttons/Button';
 
 type Price = {
   id: string;
@@ -68,6 +67,7 @@ const bannedField = [
 ];
 
 export default function EventRegisterScreen() {
+  const ref = React.useRef(null);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -82,6 +82,7 @@ export default function EventRegisterScreen() {
   const route = useRoute();
   const params = route.params as RootStackParamList['EventRegister'];
   const [showFields, setShowFields] = useState<EvhfName[]>([]);
+  const [errors, setErrors] = useState<any>({});
 
   // const [fields, setFields] = useState<EventFieldsEntity[]>([]);
 
@@ -135,7 +136,11 @@ export default function EventRegisterScreen() {
     //   return x.static === y.static ? 0 : x ? -1 : 1;
     // });
 
-    const newFields = [...fieldTop, ...fieldBottom];
+    let newFields = [...fieldTop, ...fieldBottom];
+    newFields = newFields.map(item => {
+      delete item.static;
+      return item;
+    });
 
     const fieldNames = newFields
       .filter(item => !isSubField(item.evhfName))
@@ -289,52 +294,98 @@ export default function EventRegisterScreen() {
     user,
   ]);
 
-  const register = async () => {
-    setIsLoading(true);
-    let valid = true;
+  const validate = (payload: any) => {
+    let objErrors = {};
+    let newPayload = {};
     let toastDescription = '';
+    for (const f of fields) {
+      if (showFields.includes(f.evhfName)) {
+        if (f.evhfIsRequired.toString() === '1') {
+          if (
+            payload[f.evhfName] === undefined ||
+            payload[f.evhfName] === null
+          ) {
+            console.info('INVALID: ', f);
 
-    let payload = {
-      ...fieldsData,
-      evpaEvnhId: params.event.data.evnhId,
-      evpaEvncId: params.selectedCategoryId,
-      evpaName:
-        user?.data && user?.data.length > 0 ? user?.data[0].zmemFullName : null,
-      evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
-      evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
-      evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
-      evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
-      evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
-      evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
-      evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
-      evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
-      evpaBirthDate: toAcceptableApiFormat(
-        user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
-      ),
-      evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
-      evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
-      evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
-      evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
-      evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
-    };
-
-    fields.forEach((f: EventFieldsEntity) => {
-      if (
-        f.evhfIsRequired.toString() === '1' &&
-        (!(f.evhfName in payload) || !payload[f.evhfName])
-      ) {
-        valid = false;
-        console.info('INVALID: ', f);
-        toastDescription = `Field "${f.evhfLabel}" is required`;
+            if (!toastDescription) {
+              toastDescription = `${t('error.Field')} "${f.evhfLabel}" ${t(
+                'error.isRequired',
+              )}`;
+            }
+            objErrors = {
+              ...objErrors,
+              [f.evhfName]: 'required',
+            };
+          }
+        }
+      } else {
+        // jika field itu tidak di show, biasanya ini sub fields yg NO, jadi harusnya memang tidak akan pernah diisi
+        if (f.evhfIsRequired.toString() === '1') {
+          // ini mau diapain?
+          newPayload = {
+            ...newPayload,
+            [f.evhfName]: '-',
+          };
+        }
       }
-    });
+    }
 
-    if (!valid) {
-      setIsLoading(false);
+    console.info('objErrors', objErrors);
+    if (newPayload && Object.keys(newPayload).length > 0) {
+      register(newPayload);
+    } else if (Object.keys(objErrors).length > 0) {
       toast.show({
-        title: 'Failed to register event',
+        title: t('error.failedToRegisterEvent'),
         description: toastDescription,
       });
+      if (ref && ref.current) {
+        (ref.current as any).scrollTo({x: 0, y: 900, animated: true});
+      }
+      setErrors({...objErrors});
+      return false;
+    } else {
+      setErrors({});
+      return true;
+    }
+  };
+
+  const register = async (newPayload?: any) => {
+    setIsLoading(true);
+
+    let payload = {};
+    if (newPayload) {
+      payload = {...newPayload};
+    } else {
+      payload = {
+        ...fieldsData,
+        evpaEvnhId: params.event.data.evnhId,
+        evpaEvncId: params.selectedCategoryId,
+        evpaName:
+          user?.data && user?.data.length > 0
+            ? user?.data[0].zmemFullName
+            : null,
+        evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
+        evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
+        evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
+        evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
+        evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+        evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+        evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
+        evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
+        evpaBirthDate: toAcceptableApiFormat(
+          user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
+        ),
+        evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
+        evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
+        evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
+        evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
+        evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
+      };
+    }
+
+    const isValid = validate(payload);
+    if (!isValid) {
+      setIsLoading(false);
       return;
     }
 
@@ -385,10 +436,7 @@ export default function EventRegisterScreen() {
       console.info(JSON.stringify(res.data));
       setIsOpen(true);
     } catch (error) {
-      toast.show({
-        title: 'Failed to register event',
-        description: getErrorMessage(error),
-      });
+      handleErrorMessage(error, t('error.failedToRegisterEvent'));
     } finally {
       setIsLoading(false);
     }
@@ -452,28 +500,41 @@ export default function EventRegisterScreen() {
     [],
   );
 
-  const displayedFields = useMemo(
-    () =>
-      fields
-        .filter(f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId')
-        .filter(f => !bannedField.includes(f.evhfName))
-        .filter(f => showFields.includes(f.evhfName)),
-    [fields, bannedField, showFields],
-  );
-
-  const isRequiredFilled = useCallback(() => {
-    for (let i = 0, j = fields.length; i < j; ++i) {
-      if (fields[i].evhfIsRequired.toString() === '1') {
-        if (
-          fieldsData[fields[i].evhfName] == null ||
-          fieldsData[fields[i].evhfName] === ''
-        ) {
-          return false;
-        }
-      }
+  const guardianFields = [
+    'evpaGuardianName',
+    'evpaGuardianCardIDNumber',
+    'evpaGuardianPhoneNumber',
+    'evpaGuardianEmail',
+  ];
+  const displayedFields = useMemo(() => {
+    const res = fields
+      .filter(f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId')
+      .filter(f => !bannedField.includes(f.evhfName))
+      .filter(f => showFields.includes(f.evhfName));
+    if (
+      getAge(
+        user?.linked?.mbsdZmemId?.[0]?.mbsdBirthDate,
+        event?.data.evnhStartDate,
+      ) >= 17
+    ) {
+      return res.filter(f => !guardianFields.includes(f.evhfName));
     }
-    return true;
-  }, [fields, fieldsData]);
+    return res;
+  }, [fields, bannedField, showFields, user]);
+
+  // const isRequiredFilled = useCallback(() => {
+  //   for (let i = 0, j = fields.length; i < j; ++i) {
+  //     if (fields[i].evhfIsRequired.toString() === '1') {
+  //       if (
+  //         fieldsData[fields[i].evhfName] == null ||
+  //         fieldsData[fields[i].evhfName] === ''
+  //       ) {
+  //         return false;
+  //       }
+  //     }
+  //   }
+  //   return true;
+  // }, [fields, fieldsData]);
 
   // const originalPrice = prices[0].originalPrice;
   // const finalPrice = prices[0].finalPrice;
@@ -500,20 +561,20 @@ export default function EventRegisterScreen() {
     return [textOriginalPriceReturn, textFinalPriceReturn];
   }, []);
 
-  // console.info(
-  //   'fields --->',
-  //   JSON.stringify(
-  //     fields.map(item => ({
-  //       evhfName: item.evhfName,
-  //       evhfLabel: item.evhfLabel,
-  //     })),
-  //   ),
-  // );
-  // console.info('showFields --->', JSON.stringify(showFields));
+  console.info(
+    'fields --->',
+    JSON.stringify(
+      fields.map(item => ({
+        evhfName: item.evhfName,
+        evhfLabel: item.evhfLabel,
+      })),
+    ),
+  );
+  console.info('showFields --->', JSON.stringify(showFields));
 
   return (
     <AppContainer>
-      <ScrollView>
+      <ScrollView ref={ref}>
         <Header title={t('event.registrationForm')} left="back" />
         <VStack space="4" pb="3">
           <EventRegistrationCard
@@ -662,6 +723,17 @@ export default function EventRegisterScreen() {
                     }
                     file={files ? files[field.evhfName] : undefined}
                   />
+                  {errors[field.evhfName] === 'required' && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        right: -10,
+                        paddingRight: 20,
+                        top: 10,
+                      }}>
+                      <WarningOutlineIcon color="red.600" size="sm" />
+                    </View>
+                  )}
                 </View>
               ))}
             </VStack>
@@ -670,10 +742,11 @@ export default function EventRegisterScreen() {
             <Checkbox.Group
               onChange={setCheckbox}
               value={checkbox}
-              accessibilityLabel="Agree to terms">
+              accessibilityLabel="Agree to terms"
+              mr="10">
               <Checkbox
                 value="agreed"
-                _text={{fontSize: 12, flexWrap: 'wrap'}}
+                _text={{fontSize: 12}}
                 isDisabled={isLoading}>
                 {t('termsAndConditionsAgreement')}
               </Checkbox>
@@ -732,14 +805,13 @@ export default function EventRegisterScreen() {
           </HStack>
           <Box px="4">
             <Button
-              h="12"
               isLoading={isLoading}
               // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
-              isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
+              // isDisabled={checkbox[0] !== 'agreed' || !isRequiredFilled()}
               onPress={() => {
                 if (checkbox[0] !== 'agreed') {
                   toast.show({
-                    title: 'Failed to register event',
+                    title: t('error.failedToRegisterEvent'),
                     description: 'Please agree to terms and service',
                   });
                   return;

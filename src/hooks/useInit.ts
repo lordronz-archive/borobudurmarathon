@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ProfileService} from '../api/profile.service';
 import {EAuthUserAction, useAuthUser} from '../context/auth.context';
 import {RootStackParamList} from '../navigation/RootNavigator';
 import {SessionService} from '../api/session.service';
 import {useToast} from 'native-base';
-import {getErrorMessage} from '../helpers/errorHandler';
 import {AuthService} from '../api/auth.service';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import CookieManager from '@react-native-cookies/cookies';
@@ -19,9 +18,11 @@ import i18next from 'i18next';
 import {Platform} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {WelcomeService} from '../api/welcome.service';
+import {handleErrorMessage} from '../helpers/apiErrors';
+import {useState} from 'react';
 
 export default function useInit() {
-  const route = useRoute();
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const toast = useToast();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -33,9 +34,7 @@ export default function useInit() {
     isShowDemoVerifyEmail,
     setDemoVerifyEmail,
     isShowDemoConsent,
-    setDemoConsent,
     isShowDemoNewUser,
-    setDemoNewUser,
   } = useDemo();
 
   const {dispatch} = useAuthUser();
@@ -72,6 +71,7 @@ export default function useInit() {
 
   const getProfile = async () => {
     try {
+      setIsLoadingProfile(true);
       const resProfile = await ProfileService.getMemberDetail();
 
       // console.info('resProfile', resProfile);
@@ -85,131 +85,23 @@ export default function useInit() {
         +resProfile.data[0].zmemLanguage === 1 ? 'en' : 'id',
       );
 
+      setIsLoadingProfile(false);
+
       return resProfile;
-      // if (cookie) {
-      //   SessionService.saveSession(cookie);
-      // }
-      // if (resProfile.data && resProfile.data.length > 0) {
-      //   if (
-      //     resProfile.linked.zmemAuusId &&
-      //     resProfile.linked.zmemAuusId[0] &&
-      //     resProfile.linked.zmemAuusId[0].auusVerification
-      //   ) {
-      //     // start trial
-      //     if (isShowDemoVerifyEmail) {
-      //       toast.show({
-      //         id: 'need-to-verify-email',
-      //         description: '(DEMO) Please confirm your email to continue',
-      //       });
-      //       AuthService.verificationEmail().then(() =>
-      //         navigation.navigate('EmailValidation', {
-      //           email: resProfile.linked.zmemAuusId[0].auusEmail,
-      //           onSuccess: () => {
-      //             setDemoVerifyEmail(false);
-      //             checkProfileIsCompleteOrNot(resProfile);
-      //           },
-      //         }),
-      //       );
-      //     } else {
-      //       checkProfileIsCompleteOrNot(resProfile);
-      //     }
-      //   } else if (
-      //     resProfile.linked.zmemAuusId &&
-      //     resProfile.linked.zmemAuusId[0] &&
-      //     !resProfile.linked.zmemAuusId[0].auusVerification
-      //   ) {
-      //     // need to complete profile
-      //     toast.show({
-      //       id: 'need-to-verify-email',
-      //       description: 'Please confirm your email to continue',
-      //     });
-      //     AuthService.verificationEmail().then(() =>
-      //       navigation.navigate('EmailValidation', {
-      //         email: resProfile.linked.zmemAuusId[0].auusEmail,
-      //         onSuccess: () => {
-      //           checkProfileIsCompleteOrNot(resProfile);
-      //         },
-      //       }),
-      //     );
-      //   } else {
-      //     toast.show({
-      //       id: 'logout',
-      //       description: 'Something wrong, please try again',
-      //     });
-      //     navigation.navigate('Logout');
-      //   }
-      // } else {
-      //   toast.show({
-      //     id: 'logout',
-      //     description: 'Something wrong, please try again',
-      //   });
-      //   navigation.navigate('Auth');
-      // }
     } catch (err: any) {
+      setIsLoadingProfile(false);
       console.info('### error resProfile', err);
       console.info('### error resProfile --- ', JSON.stringify(err));
       if (err && err.status === 409) {
         navigation.navigate('Logout');
-        // setIsNotRegistered(true);
       } else if (err && err.errorCode === 409) {
         navigation.navigate('Logout');
-        // setIsNotRegistered(true);
       } else {
-        toast.show({
-          title: 'Failed to get profile',
-          variant: 'subtle',
-          description: getErrorMessage(err),
-        });
+        handleErrorMessage(err, t('error.failedToGetProfile'));
         navigation.navigate('Initial');
       }
     }
   };
-
-  // const checkProfileIsCompleteOrNot = (resProfile: IMemberDetailResponse) => {
-  //   if (resProfile.linked.mbsdZmemId && resProfile.linked.mbsdZmemId[0]) {
-  //     // profile has been completed
-  //     if (isShowDemoNewUser) {
-  //       toast.show({
-  //         id: 'welcome',
-  //         description: 'Welcome, New Runner',
-  //       });
-  //       // need to complete profile
-  //       // navigation.navigate('InputProfile');
-  //       navigation.replace('ChooseCitizen');
-  //       setDemoNewUser(false);
-  //     } else {
-  //       if (resProfile.linked.zmemAuusId[0].auusConsent === 1) {
-  //         if (isShowDemoConsent) {
-  //           navigation.replace('DataConfirmation');
-  //           setDemoConsent(false);
-  //         } else {
-  //           if (route.name !== 'Home') {
-  //             navigation.replace('Main', {screen: 'Home'});
-  //             if (!toast.isActive('welcome')) {
-  //               toast.show({
-  //                 id: 'welcome',
-  //                 description: 'Welcome, ' + resProfile.data[0].zmemFullName,
-  //               });
-  //             }
-  //           }
-  //         }
-  //       } else {
-  //         navigation.replace('DataConfirmation');
-  //       }
-  //     }
-  //   } else {
-  //     // toast.show({
-  //     //   description: "Let's complete your data",
-  //     // });
-  //     toast.show({
-  //       id: 'welcome',
-  //       description: 'Welcome, New Runner',
-  //     });
-  //     // need to complete profile
-  //     // navigation.navigate('InputProfile');
-  //     navigation.replace('ChooseCitizen');
-  //   }
-  // };
 
   const checkAccount = async (
     data: IAuthResponseData,
@@ -265,11 +157,7 @@ export default function useInit() {
           });
         })
         .catch(err => {
-          toast.show({
-            title: 'Failed to send otp',
-            variant: 'subtle',
-            description: getErrorMessage(err),
-          });
+          handleErrorMessage(err, t('error.failedToSendOTP'));
         });
     } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
       console.info("data.login === 'KompasId' && Number(data.consent) === 0");
@@ -280,8 +168,8 @@ export default function useInit() {
       }
     } else if (Number(data.authProfile) === 0) {
       toast.show({
-        title: 'Your profile is not complete',
-        description: 'Please complete your profile to continue',
+        title: t('error.profileIsNotComplete'),
+        description: t('error.profileIsNotCompleteDescription'),
       });
       console.info('Number(data.authProfile) === 0');
       // artinya, ada profil yang belum lengkap, atau ktp belum terverifikasi (authProfile = 0 sama dengan mbsdStatus = 0)
@@ -329,11 +217,7 @@ export default function useInit() {
               });
             })
             .catch(err => {
-              toast.show({
-                title: 'Failed to send otp',
-                variant: 'subtle',
-                description: getErrorMessage(err),
-              });
+              handleErrorMessage(err, t('error.failedToSendOTP'));
             });
         } else {
           navigation.replace('ChooseCitizen');
@@ -419,6 +303,7 @@ export default function useInit() {
   return {
     init,
     checkAccount,
+    isLoadingProfile,
     getProfile,
     clearCookies,
     logout,

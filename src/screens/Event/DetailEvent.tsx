@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   ShareIcon,
@@ -17,6 +17,7 @@ import {
   Alert as NBAlert,
   Spinner,
   WarningOutlineIcon,
+  Badge,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {EventService} from '../../api/event.service';
@@ -42,7 +43,11 @@ import BannerFull from '../../components/carousel/BannerFull';
 import AppContainer from '../../layout/AppContainer';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {useAuthUser} from '../../context/auth.context';
-import {getApiErrors} from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
+import useInit from '../../hooks/useInit';
+import {GetTransactionsResponse} from '../../types/transactions.type';
+import moment from 'moment';
+import {getTextBasedOnLanguage} from '../../helpers/text';
 
 type Price = {
   id: string;
@@ -53,17 +58,25 @@ type Price = {
   benefits: string[];
 };
 export default function DetailEvent() {
+  const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
   const params = route.params as RootStackParamList['EventDetail'];
   const {isVerified} = useAuthUser();
+  const {getProfile, isLoadingProfile} = useInit();
 
   const [event, setEvent] = useState<GetEventResponse>();
   const [registeredEvent, setRegisteredEvent] = useState<any>();
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
+
+  useEffect(() => {
+    if (isFocused) {
+      getProfile();
+    }
+  }, [isFocused]);
 
   const informations: {icon: any; label: string; description: string}[] = [
     {
@@ -110,16 +123,6 @@ export default function DetailEvent() {
       description: cat.evncDesc
         ? cat.evncDesc
         : [
-            // cat.evncVrReps,
-            // 'Quota: ' +
-            //   (Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota) !==
-            //   Number(cat.evncQuotaRegistration)
-            //     ? (
-            //         Number(cat.evncQuotaRegistration) - Number(cat.evncUseQuota)
-            //       ).toLocaleString('id-ID') +
-            //       '/' +
-            //       Number(cat.evncQuotaRegistration).toLocaleString('id-ID')
-            //     : Number(cat.evncQuotaRegistration).toLocaleString('id-ID')),
             datetime.getDateRangeString(
               cat.evncStartDate,
               cat.evncVrEndDate || undefined,
@@ -142,34 +145,14 @@ export default function DetailEvent() {
       benefits: parseUnknownDataToArray(cat.evncBenefit).map(
         item => item.label,
       ),
-      // benefits: [
-      //   'Medal',
-      //   'Jersey (Merchandise)',
-      //   'Local UMKM Merchandise',
-      //   'Free Ongkir',
-      //   'This is Dummy Data',
-      // ],
     };
   });
-  // [
-  //   {
-  //     raceCategory: 'Race Category',
-  //     raceDescription:
-  //       'Young Talent 10 Km, Tilik Candi 21 Km, Elite Race 42 Km',
-  //   },
-  //   {
-  //     raceCategory: 'Race Category',
-  //     raceDescription:
-  //       'Young Talent 10 Km, Tilik Candi 21 Km, Elite Race 42 Km',
-  //   },
-  //   {
-  //     raceCategory: 'Race Category',
-  //     raceDescription:
-  //       'Young Talent 10 Km, Tilik Candi 21 Km, Elite Race 42 Km',
-  //   },
-  // ];
 
   useEffect(() => {
+    fetchDetail();
+  }, []);
+
+  const fetchDetail = async () => {
     setIsLoading(true);
     EventService.getEvent(params.id)
       .then(resEvent => {
@@ -178,60 +161,65 @@ export default function DetailEvent() {
 
         httpRequest
           .get('member_resource/transaction')
-          .then(resTransaction => {
+          .then((resTransaction: {data: GetTransactionsResponse}) => {
             if (resTransaction.data) {
+              console.info(
+                'resTransaction.data',
+                JSON.stringify(resTransaction.data),
+              );
+              // const findEventRegister =
+              //   resTransaction.data?.linked?.mregTrnsId?.find(
+              //     (item: any) =>
+              //       item.trnsEventId?.toString() ===
+              //         resEvent.data?.evnhId?.toString() &&
+              //       (item.trnsConfirmed === '1' ||
+              //         new Date(item.trnsExpiredTime)?.getTime() >
+              //           new Date().getTime(),
+              //       resEvent.data?.evnhBallot === '1'),
+              //   );
+              (resTransaction.data.linked?.mregTrnsId || []).sort(
+                (a, b) => b.id - a.id,
+              );
               const findEventRegister =
                 resTransaction.data?.linked?.mregTrnsId?.find(
                   (item: any) =>
                     item.trnsEventId?.toString() ===
-                      resEvent.data?.evnhId?.toString() &&
-                    (item.trnsConfirmed === '1' ||
-                      new Date(item.trnsExpiredTime)?.getTime() >
-                        new Date().getTime(),
-                    resEvent.data?.evnhBallot === '1'),
+                    resEvent.data?.evnhId?.toString(),
                 );
 
               if (findEventRegister) {
-                const registeredEvent = resTransaction?.data?.data?.find(
+                const findRegisteredEvent = resTransaction?.data?.data?.find(
                   (item: any) =>
                     item.mregOrderId === findEventRegister.trnsRefId,
                 );
-                if (registeredEvent) {
-                  setRegisteredEvent(registeredEvent);
+                if (findRegisteredEvent) {
+                  setRegisteredEvent(findRegisteredEvent);
                 }
               }
             }
+            setIsLoading(false);
           })
           .catch(err => {
             console.info('error check registered event', err);
+            const error = handleErrorMessage(
+              err,
+              t('error.failedToGetTransactions'),
+              {
+                ignore404: true,
+              },
+            );
+
+            if (!error) {
+              setIsLoading(false);
+            }
           });
       })
       .catch(err => {
-        const objErrors = getApiErrors(err);
-        if (objErrors && objErrors.message) {
-          Toast.show({
-            description: objErrors.message,
-          });
-        } else if (objErrors) {
-          Toast.show({
-            title: 'Failed to get profile',
-            description: Object.keys(objErrors)
-              .map(field => `${objErrors[field]} [${field}]`)
-              .join('. '),
-          });
-        } else {
-          console.info('err get event detail', JSON.stringify(err));
-          Toast.show({
-            title: 'Failed to get event',
-            description: getErrorMessage(err),
-          });
-        }
+        console.info('err get event detail', JSON.stringify(err));
+        handleErrorMessage(err, t('error.failedToGetEvent'));
         navigation.goBack();
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
-  }, []);
+  };
 
   const buildLink = async () => {
     const link = await buildShortDynamicLink('events' + '/' + params.id, {
@@ -281,6 +269,12 @@ export default function DetailEvent() {
     }
   };
 
+  const isExpiredRegistration = event?.data?.evnhRegistrationEnd
+    ? moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
+        moment(),
+      )
+    : false;
+
   return (
     <AppContainer>
       <VStack>
@@ -290,22 +284,25 @@ export default function DetailEvent() {
             left="back"
             right={
               isLoading ? (
-                <Spinner size="sm" />
+                <Spinner size="sm" mr="3" />
               ) : (
                 <IconButton
                   onPress={shareHandler}
                   icon={<ShareIcon color="black" />}
                   borderRadius="full"
+                  mr="2"
+                  p="2"
                 />
               )
             }
           />
+
           {event && !event?.access ? (
             <NBAlert bgColor="warning.300" py="5">
               <VStack alignItems="center">
                 <WarningOutlineIcon color="gray.600" size="xl" mb="2" />
                 <Text ml="1" fontSize="sm" textAlign="center" color="gray.700">
-                  {event.notif}
+                  {getTextBasedOnLanguage(event.notif || '')}
                 </Text>
               </VStack>
             </NBAlert>
@@ -323,14 +320,36 @@ export default function DetailEvent() {
           )}
 
           <Stack mx={4}>
-            <Text fontSize="sm" color={'#768499'} fontWeight={600} my={2}>
-              {(event?.data.evnhType
-                ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
-                : 'OTHER'
-              ).toUpperCase() +
-                ' ' +
-                (Number(event?.data.envhFuture || 0) === 1 ? '~' : '')}
-            </Text>
+            <HStack alignItems="center" justifyContent="space-between">
+              <Text
+                fontSize="sm"
+                color={'#768499'}
+                fontWeight={600}
+                my={2}
+                mr="2">
+                {(event?.data.evnhType
+                  ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
+                  : 'OTHER'
+                ).toUpperCase()}
+              </Text>
+              {isExpiredRegistration && (
+                <Badge
+                  backgroundColor="gray.200"
+                  px="3"
+                  py="0.5"
+                  my="2"
+                  borderRadius="4"
+                  alignSelf="flex-start"
+                  _text={{
+                    color: 'gray.500',
+                    fontWeight: 'bold',
+                    fontSize: 'xs',
+                  }}>
+                  {t('event.expiredEvents')}
+                </Badge>
+              )}
+            </HStack>
+
             <Text fontSize="xl" fontWeight={700} mb="2">
               {event?.data?.evnhName}
             </Text>
@@ -444,6 +463,7 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
+                      disabled={!!registeredEvent || isExpiredRegistration}
                     />
                   ))}
               </Radio.Group>
@@ -452,9 +472,38 @@ export default function DetailEvent() {
           <View py={100} />
         </ScrollView>
 
-        {isLoading && <LoadingBlock style={{opacity: 0.7}} />}
+        {(isLoading || isLoadingProfile) && (
+          <LoadingBlock style={{opacity: 0.7}} />
+        )}
 
-        {event && selected ? (
+        {event && registeredEvent ? (
+          <Box
+            position="absolute"
+            bottom="0"
+            width="100%"
+            px="3"
+            py="3"
+            background="white"
+            shadow="3">
+            <Text color="warning.500" textAlign="center" mb="2">
+              {t('message.youHaveRegisteredToThisEvent')}
+            </Text>
+            <Button
+              disabled={
+                !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
+              }
+              onPress={() => {
+                navigation.navigate('MyEventsDetail', {
+                  transactionId: registeredEvent.mregOrderId,
+                  // eventId: registeredEvent.links?.mregEventId,
+                  // isBallot: registeredEvent.mregType === 'MB' ? true : false,
+                  // regStatus: registeredEvent.mregStatus,
+                });
+              }}>
+              View Detail
+            </Button>
+          </Box>
+        ) : event && selected && !registeredEvent ? (
           <Box
             position="absolute"
             bottom="0"
@@ -468,19 +517,10 @@ export default function DetailEvent() {
                 !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
               }
               onPress={() => {
-                if (!registeredEvent) {
-                  navigation.navigate('EventRegister', {
-                    event,
-                    selectedCategoryId: selected.id,
-                  });
-                } else {
-                  navigation.navigate('MyEventsDetail', {
-                    transactionId: registeredEvent.mregOrderId,
-                    eventId: registeredEvent.links?.mregEventId,
-                    isBallot: registeredEvent.mregType === 'MB' ? true : false,
-                    regStatus: registeredEvent.mregStatus,
-                  });
-                }
+                navigation.navigate('EventRegister', {
+                  event,
+                  selectedCategoryId: selected.id,
+                });
               }}>
               {'Continue with ' +
                 selected?.name +

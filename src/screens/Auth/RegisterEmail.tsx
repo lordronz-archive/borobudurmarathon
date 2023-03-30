@@ -15,9 +15,10 @@ import Button from '../../components/buttons/Button';
 import Icon from 'react-native-vector-icons/Feather';
 import AppContainer from '../../layout/AppContainer';
 import {handleErrorMessage} from '../../helpers/apiErrors';
-import {GENDER_OPTIONS} from '../../assets/data/gender';
+import {getGenderOptions} from '../../assets/data/gender';
 import i18next from 'i18next';
 import {LanguageID} from '../../types/language.type';
+import {validateEmail} from '../../helpers/validate';
 
 export default function RegisterEmailScreen() {
   const navigation =
@@ -56,7 +57,7 @@ export default function RegisterEmailScreen() {
   }, [emailWillBeCheck]);
 
   const checkEmail = () => {
-    if (!form.ptmmEmail) {
+    if (!form.ptmmEmail || !validateEmail(form.ptmmEmail)) {
       setIsEmailCanUse(undefined);
       return false;
     }
@@ -105,7 +106,7 @@ export default function RegisterEmailScreen() {
         },
       });
     } catch (err: any) {
-      const objErrors = handleErrorMessage(err, 'Failed to register');
+      const objErrors = handleErrorMessage(err, t('error.failedToRegister'));
       setErrors({...objErrors});
     } finally {
       setLoading(false);
@@ -119,7 +120,8 @@ export default function RegisterEmailScreen() {
     !confirmPassword ||
     !form.ptmmEmail ||
     isEmailCanUse === false ||
-    form.ptmmPassword !== confirmPassword;
+    form.ptmmPassword !== confirmPassword ||
+    !validateEmail(form.ptmmEmail);
 
   return (
     <AppContainer>
@@ -145,7 +147,7 @@ export default function RegisterEmailScreen() {
                 errorMessage={errors.ptmmFullName}
               />
               <SelectInput
-                items={GENDER_OPTIONS}
+                items={getGenderOptions(t('gender.male'), t('gender.female'))}
                 placeholder={t('chooseOne') || ''}
                 label="Gender"
                 onValueChange={val => setForm({...form, ptmmGender: val})}
@@ -156,6 +158,10 @@ export default function RegisterEmailScreen() {
               />
               <TextInput
                 placeholder={t('auth.placeholderEmail') || ''}
+                keyboardType="email-address"
+                _inputProps={{
+                  textContentType: 'emailAddress',
+                }}
                 label="Email"
                 helperText={
                   isEmailCanUse === undefined
@@ -184,7 +190,6 @@ export default function RegisterEmailScreen() {
                     />
                   ) : undefined
                 }
-                _inputProps={{textContentType: 'emailAddress'}}
               />
               <TextInput
                 placeholder={t('auth.placeholderPassword') || ''}

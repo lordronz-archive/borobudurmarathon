@@ -3,7 +3,6 @@ import {
   Box,
   useTheme,
   ScrollView,
-  View,
   HStack,
   Text,
   VStack,
@@ -22,7 +21,6 @@ import IconInfo from '../../assets/icons/IconInfo';
 import {TouchableOpacity} from 'react-native';
 import {EVENT_TYPES} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import datetime from '../../helpers/datetime';
 import moment from 'moment';
 import LoadingBlock from '../../components/loading/LoadingBlock';
@@ -31,6 +29,7 @@ import WebView from 'react-native-webview';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import {TransactionDetail} from '../../types/transaction.type';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 
 export default function PaymentScreen() {
   const {onCopy} = useClipboard();
@@ -62,10 +61,7 @@ export default function PaymentScreen() {
         );
       }
     } catch (err) {
-      Toast.show({
-        title: 'Failed to get featured events',
-        description: getErrorMessage(err),
-      });
+      handleErrorMessage(err, t('error.failedToGetTransaction'));
     } finally {
       setIsLoading(false);
     }
@@ -134,7 +130,7 @@ export default function PaymentScreen() {
     <AppContainer>
       <Header title="" left="back" />
       {isLoading ? (
-        <LoadingBlock />
+        <LoadingBlock style={{opacity: 0.7}} />
       ) : (
         <>
           {activePayment?.trihPaymentType?.includes('snap') &&
@@ -170,7 +166,7 @@ export default function PaymentScreen() {
                   alt="Event Thumbnail"
                 />
 
-                <VStack flex={1}>
+                <VStack flex={1} width="90%">
                   <Text fontSize={12} fontWeight={600} color={'#768499'}>
                     {(detailTransaction?.linked?.trnsEventId?.[0]?.evnhType
                       ? EVENT_TYPES[
@@ -201,14 +197,11 @@ export default function PaymentScreen() {
                 paddingY={'16px'}>
                 <VStack width={'50%'}>
                   <Text fontWeight={400} color="#768499" fontSize={10}>
-                    Registration date
+                    {t('event.registrationDate')}
                   </Text>
                   <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-                    {datetime.getDateRangeString(
-                      detailTransaction?.linked?.trnsEventId?.[0]
-                        ?.evnhRegistrationStart,
-                      detailTransaction?.linked?.trnsEventId?.[0]
-                        ?.evnhRegistrationEnd,
+                    {datetime.getDateString(
+                      detailTransaction?.data?.trnsCreatedTime,
                       'short',
                       'short',
                     )}

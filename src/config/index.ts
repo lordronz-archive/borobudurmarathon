@@ -83,6 +83,10 @@ export default {
 						}
 					}
 				*/
+        resendOTPEmail: {
+          path: 'member/signup_resend_otp/1',
+          method: 'POST',
+        },
         uaLink: {
           path: 'au/url',
           method: 'GET',

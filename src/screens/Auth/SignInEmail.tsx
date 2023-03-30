@@ -18,7 +18,8 @@ import {useTranslation} from 'react-i18next';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AppContainer from '../../layout/AppContainer';
-import { getApiErrors, handleErrorMessage } from '../../helpers/apiErrors';
+import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
+import {validateEmail} from '../../helpers/validate';
 
 export default function SignInEmailScreen() {
   const navigation =
@@ -47,60 +48,8 @@ export default function SignInEmailScreen() {
       console.info('login result', result);
 
       setLoggingInData(result.data);
-      // var request = new XMLHttpRequest();
-      // request.onreadystatechange = e => {
-      //   if (request.readyState !== 4) {
-      //     return;
-      //   }
-
-      //   // Get the raw header string
-      //   const headers = request.getAllResponseHeaders();
-      //   console.info('XMLHttpRequest====headers', headers);
-
-      //   console.warn('XMLHttpRequest====response', request.response);
-      //   if (request.status === 200) {
-      //     console.log('XMLHttpRequest====success', request.responseText);
-      //   } else {
-      //     console.warn('XMLHttpRequest====error', e);
-      //   }
-      // };
-
-      // request.open(
-      //   'POST',
-      //   config.apiUrl.href.href + config.apiUrl.apis.member.login.path,
-      // );
-      // request.setRequestHeader(
-      //   'Content-Type',
-      //   'application/json;charset=UTF-8',
-      // );
-      // // request.setRequestHeader(
-      // //   'Content-type',
-      // //   'application/x-www-form-urlencoded',
-      // // );
-      // request.send(
-      //   JSON.stringify({data: {email: body.username, password: body.password}}),
-      // );
-
-      // const resCheckSession = await AuthService.checkSession();
-      // console.info('resCheckSession', resCheckSession);
-
-      // checkAccount(result.data);
     } catch (err) {
-      handleErrorMessage(err, 'Failed to login');
-
-      // const errStd = getErrorStd(e);
-      // if (errStd.errorCode === 409) {
-      //   toast.show({
-      //     description: 'Failed to login',
-      //     placement: 'top',
-      //   });
-      // } else {
-      //   toast.show({
-      //     title: 'Failed to login',
-      //     description: getErrorMessage(e),
-      //     placement: 'top',
-      //   });
-      // }
+      handleErrorMessage(err, t('error.failedToLogin'));
     } finally {
       setLoading(false);
     }
@@ -132,7 +81,7 @@ export default function SignInEmailScreen() {
     );
   }
 
-  const isDisabledButton = !email || !password;
+  const isDisabledButton = !email || !password || !validateEmail(email);
 
   return (
     <AppContainer>
@@ -154,7 +103,10 @@ export default function SignInEmailScreen() {
                 label="Email"
                 value={email}
                 onChangeText={setEmail}
-                _inputProps={{textContentType: 'emailAddress'}}
+                keyboardType="email-address"
+                _inputProps={{
+                  textContentType: 'emailAddress',
+                }}
               />
               <TextInput
                 placeholder={t('auth.placeholderPassword') || ''}

@@ -6,6 +6,7 @@ import QRCode from 'qrcode';
 import {ISponsorResponse} from '../types/sponsor.type';
 import {GetGalleryResponse} from '../types/gallery.type';
 import { TransactionDetail } from '../types/transaction.type';
+import { GetTransactionsResponse } from '../types/transactions.type';
 
 function qs(obj: any, prefix: any) {
   const str: string[] = [];
@@ -55,13 +56,11 @@ const EventService = {
       throw new ResponseError(msg.status, msg.error.message);
     }
   },
-  getTransaction: async function () {
+  getTransaction: async function (): Promise<{data: GetTransactionsResponse}> {
     try {
-      return ApiService.get(config.apiUrl.apis.member.getTransaction.path);
+      return httpRequest.get(config.apiUrl.apis.member.getTransaction.path);
     } catch (error) {
-      console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getTransactionDetail: async function (transactionId: string): Promise<{
@@ -69,7 +68,7 @@ const EventService = {
   }> {
     console.log('Transaction id to get : ', transactionId);
     try {
-      return ApiService.get(
+      return httpRequest.get(
         config.apiUrl.apis.member.getTransactionDetail.path +
           '/' +
           transactionId,
@@ -208,6 +207,7 @@ const EventService = {
         evnhStatusPublish: 1,
         ...(featured && {evnhFuture: 1}),
       },
+      pageSize: 25,
       sort: '-evnhStartDate',
     };
     if (config.isDev) {

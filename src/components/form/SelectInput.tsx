@@ -1,9 +1,17 @@
-import {Box, FormControl, HStack, Text, WarningOutlineIcon} from 'native-base';
+import {
+  Box,
+  FormControl,
+  HStack,
+  Spinner,
+  Text,
+  WarningOutlineIcon,
+} from 'native-base';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {SelectList} from 'react-native-dropdown-select-list';
 
 type SelectInputProps = {
+  isLoading?: boolean;
   isInvalid?: boolean;
   helperText?: React.ReactNode;
   errorMessage?: string;
@@ -40,17 +48,21 @@ export default function SelectInput(props: SelectInputProps) {
         <FormControl.Label flexWrap={'wrap'} px={3}>
           <HStack>
             {props.required && <Text color="primary.900">* </Text>}
-            <Text style={{fontSize: 12, color: '#768499'}}>{props.label}</Text>
-          </HStack>
-          {props.required && (
-            <Text
-              style={{fontSize: 12, color: '#EB1C23'}}
-              italic
-              ml="2"
-              fontSize="xs">
-              {t('required')}
+            <Text style={{fontSize: 12, color: '#768499'}}>
+              {props.label}{' '}
+              {props.required && (
+                <Text
+                  style={{fontSize: 12, color: '#EB1C23'}}
+                  italic
+                  ml="2"
+                  fontSize="xs">
+                  {t('required')}
+                </Text>
+              )}
             </Text>
-          )}
+
+            {props.isLoading && <Spinner size="sm" />}
+          </HStack>
         </FormControl.Label>
         <SelectList
           setSelected={(val: string) => props.onValueChange?.(val)}

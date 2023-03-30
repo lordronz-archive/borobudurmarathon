@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 
 import {useAuthUser} from '../../context/auth.context';
-import {getShortCodeName} from '../../helpers/name';
+import {getFullNameFromData, getShortCodeName} from '../../helpers/name';
 import SectionListEvent from './components/SectionListEvent';
 import SectionFeaturedEvents from './components/SectionFeaturedEvents';
 import {TouchableOpacity} from 'react-native';
@@ -64,10 +64,9 @@ export default function HomeScreen() {
                 </Avatar>
                 <Text fontSize={'lg'} mx={2} fontWeight={700}>
                   {t('Hello')},{' '}
-                  {user?.data[0].zmemFullName &&
-                  user?.data[0].zmemFullName.length > 15
-                    ? user?.data[0].zmemFullName.substring(0, 12) + '...'
-                    : user?.data[0].zmemFullName}
+                  {getFullNameFromData(user)?.length > 14
+                    ? getFullNameFromData(user).substring(0, 12) + '...'
+                    : getFullNameFromData(user)}
                 </Text>
               </Flex>
             </TouchableOpacity>

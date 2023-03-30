@@ -24,6 +24,7 @@ export default {
   required: 'Wajib diisi',
   copy: 'Salin',
   continue: 'Lanjut',
+  close: 'Tutup',
   auth: {
     forgotPassword: 'Lupa password?',
     forgotPasswordTitle: 'Lupa Password',
@@ -76,12 +77,23 @@ export default {
     placeholderFullName: 'Masukkan nama lengkap di sini',
     helperFullName: 'Nama sesuai dokumen identitas resmi',
     placeholderEmail: 'Masukkan email di sini',
+    placeholderPob: 'Masukkan tempat lahir Anda',
+    placeholderBloodType: 'Pilih golongan darah',
     placeholderPhone: 'Masukkan nomor handphone di sini',
     placeholderPassword: 'Masukkan kata sandi di sini',
     placeholderPasswordAgain: 'Masukkan ulang kata sandi di sini',
+    placeholderCountry: 'Pilih Negara',
+    placeholderNationality: 'Pilih Kewarganegaraan',
+    placeholderAddress: 'Masukkan alamat anda',
+    chooseAddress: 'Pilih alamat anda',
     password: 'Kata sandi',
     passwordAgain: 'Ketik ulang kata sandi',
     placeholderIdentityNumber: 'Masukkan nomor identitas',
+    verifyId: 'Verifikasi Identitas Anda',
+    waitVerifyId: 'Verifikasi identitas anda sedang kami proses',
+    idNotReadable: 'KTP Anda Tidak Terbaca',
+    idNotReadableDesc:
+      'Identitas Anda gagal diverifikasi.\nHarap unggah ulang kartu identitas Anda atau pilih Verifikasi Identitas nanti.',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',
@@ -101,6 +113,7 @@ export default {
   myEvent: {
     title: 'Event Saya',
     subtitle: 'Seluruh event Borobudur Marathon Saya',
+    detailTitle: 'Detail Event',
   },
   label: {
     accountInformation: 'Informasi Akun',
@@ -139,6 +152,8 @@ export default {
     address: 'Alamat',
     chooseProfilePicture: 'Pilih foto profil',
     alertNotVerifiedMessage: 'Akun Anda masih dalam proses verifikasi.',
+    chooseGender: 'Pilih Jenis Kelamin',
+    enterPob: 'Masukkan tempat lahir anda',
   },
   consent: {
     title: 'Konfirmasi Data',
@@ -152,6 +167,7 @@ export default {
     totalPayment: 'Total Pembayaran',
     registerNow: 'Daftar Sekarang',
     registrationDate: 'Pendaftaran',
+    eventDate: 'Tanggal Event',
     place: 'Lokasi',
     quota: 'Kuota',
     distance: 'Jarak',
@@ -181,6 +197,17 @@ export default {
     qrWillAppear: 'QR Code event akan tampil disini setalah anda',
     passedBallot: 'lolos ballot',
     makeAPayment: 'melakukan pembayaran',
+    waitingPayment: 'Menunggu Pembayaran',
+    paymentExpired: 'Pembayaran Expired',
+    waitingBallotResult: 'Menunggu hasil ballot',
+    sorryNotPassedBallot: 'Maaf anda tidak lolos tahap ballot',
+    choosePaymentMethod: 'Pilih Metode Pembayaran',
+    changePaymentMethod: 'Ubah Metode Pembayaran',
+    payNowVia: 'Bayar via',
+    choosePaymentMethodDescription:
+      'Silahkan pilih metode pembayaran untuk event ini',
+    payBefore: 'Bayar sebelum',
+    confirmPayment: 'Konfirmasi Pembayaran',
   },
   gender: {
     male: 'Laki-laki',
@@ -229,11 +256,13 @@ export default {
     errorTitle: 'Terjadi kesalahan.',
     errorMessage:
       'Silakan coba lagi. Pastikan koneksi internet stabil. Jika error berlanjut, silakan hubungi kami.',
+    emailInvalid: 'Harap gunakan email yang valid',
     emailAlreadyTaken: 'Email sudah terdaftar. Gunakan email lain.',
     forgotPasswordSuccess:
       'Link untuk reset password telah dikirim via email. Silakan cek inbox dan ikuti petunjuknya.',
     otpHasBeenSentToEmail: 'OTP sudah dikirim via email',
     passwordNotSame: 'Kata sandi tidak sama, silakan cek ulang',
+    youHaveRegisteredToThisEvent: 'Anda sudah mendaftar ke event ini',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {
@@ -244,5 +273,40 @@ export default {
   uploadPhotoOptions: {
     openCamera: 'Buka Kamera',
     chooseFromGallery: 'Pilih Dari Galeri',
+  },
+  error: {
+    failedToRegister: 'Gagal mendaftar',
+    failedToLogin: 'Gagal login',
+    failedToSendOTP: 'Gagal mengirim OTP',
+    failedToGetProfile: 'Gagal mendapatkan data profil',
+    failedToSaveProfile: 'Gagal menyimpan profil',
+    profileIsNotComplete: 'Profil belum lengkap',
+    profileIsNotCompleteDescription:
+      'Silakan lengkapi profil Anda untuk melanjutkan',
+    failedToGetEvents: 'Gagal mendapatkan daftar event',
+    failedToGetEvent: 'Gagal mendapatkan data event',
+    failedToGetTransactions: 'Gagal mendapatkan data transaksi.',
+    failedToGetTransaction: 'Gagal mendapatkan data transaksi',
+    failedToApplyCoupon: 'Gagal menerapkan kupon',
+    failedToPayNow: 'Gagal melakukan pembayaran',
+    failedToRegisterEvent: 'Gagal mendaftar event',
+    failedToGenerateQR: 'Gagal membuat QR Code',
+    cannotRegisterEvent: 'Tidak bisa mendaftar',
+    categoryPricingNotFound: 'Kategori dan harga tidak tersedia untuk saat ini',
+    Field: 'Data',
+    isRequired: 'wajib diisi',
+    failedToGetPartners: 'Gagal mendapatkan data partner/sponsor',
+  },
+  aboutUsContent: {
+    title_1: 'VOICE OF UNITY ',
+    description_1a:
+      'Semangat kemenangan ada di depan mata, gelora persatuan turut menyuarakan asa. Kini saatnya kita kembali, bersama-sama memupuk harapan. Bersatu padu menyuarakan kemenangan.',
+    description_1b:
+      'Borobudur Marathon 2023 Powered by Bank Jateng kembali mengundang pelari untuk bersatu menyuarakan semangat juang bersama masyarakat Magelang. Tahun ini, mari saling menginspirasi melalui suara persatuan.',
+    title_2: 'SWARA MANUNGGAL',
+    description_2a:
+      'Tahun ini menjadi saksi bahwa kita semua mampu bangkit dari segala tantangan. Perjuangan ini tidak luput dari peran semangat satu sama lain yang saling menginspirasi.',
+    description_2b:
+      'Borobudur Marathon 2023 Powered by Bank Jateng mengundang kalian para pejuang, untuk merayakan dan menyuarakan ketangguhan yang telah kita tunjukkan di tempat yang sudah akrab dengan persatuan yaitu di Magelang.',
   },
 };

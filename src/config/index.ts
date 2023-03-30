@@ -259,7 +259,8 @@ export default {
           method: 'GET',
         },
         checkout: {
-          path: 'checkout/',
+          // path: 'checkout/',
+          path: 'member_zone/checkout/',
           method: 'GET',
         },
         // data validation

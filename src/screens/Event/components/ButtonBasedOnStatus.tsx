@@ -20,7 +20,6 @@ type Props = {
   isBallot: boolean;
   eventDetail?: GetEventResponse;
   evpaEvncId: string;
-  isRegisteredEvent: boolean;
   onChoosePaymentMethod: () => void;
   onPayNow: () => void;
   onAfterButtonFinished: () => void;
@@ -35,13 +34,7 @@ export default function ButtonBasedOnStatus(props: Props) {
     setIsLoading(true);
 
     if (props.status === 'Waiting Payment') {
-      if (
-        props.isPaymentGenerated
-        // detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-        // detailTransaction?.linked?.trihTrnsId?.find(
-        //   (item: any) => item.trihIsCurrent === 1,
-        // )?.trihPaymentType === payment?.evptMsptName
-      ) {
+      if (props.isPaymentGenerated) {
         navigation.navigate('Payment', {
           transactionId: props.transactionId,
         });

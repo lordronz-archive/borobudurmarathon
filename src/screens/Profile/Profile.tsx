@@ -87,8 +87,7 @@ export default function MyProfile() {
       key: 'tnc',
       icon: <IconFileDocument color="black" size={6} />,
       name: t('info.termsAndConditions'),
-      route: 'WebView',
-      params: {page: 'tnc'},
+      route: 'TNC',
     },
     {
       key: 'about',

@@ -29,7 +29,6 @@ import {
 } from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
-import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import {t} from 'i18next';
 import {TransactionDetail} from '../../types/transaction.type';
@@ -69,7 +68,7 @@ export default function MyEventDetail() {
   const [tmpPayment, setTmpPayment] = useState<any>();
   const [confirmPayment, setConfirmPayment] = useState<any>();
 
-  const [registeredEvent, setRegisteredEvent] = useState<any>();
+  // const [registeredEvent, setRegisteredEvent] = useState<any>();
 
   const isBallot =
     Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
@@ -114,37 +113,6 @@ export default function MyEventDetail() {
           trnsConfirmed: resDetailTransaction?.data?.data?.trnsConfirmed,
           trnsExpiredTime: resDetailTransaction?.data?.data?.trnsExpiredTime,
         });
-        // if (isThisBallot) {
-        //   if (regStatus === 0) {
-        //     newStatus = 'Registered';
-        //   } else if (regStatus === 99) {
-        //     newStatus = 'Unqualified';
-        //   } else {
-        //     if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
-        //       newStatus = 'Paid';
-        //     } else if (
-        //       moment(
-        //         resDetailTransaction?.data?.data?.trnsExpiredTime,
-        //       ).isBefore(moment(new Date()))
-        //     ) {
-        //       newStatus = 'Payment Expired';
-        //     } else {
-        //       newStatus = 'Waiting Payment';
-        //     }
-        //   }
-        // } else {
-        //   if (resDetailTransaction?.data?.data?.trnsConfirmed === 1) {
-        //     newStatus = 'Paid';
-        //   } else if (
-        //     moment(resDetailTransaction?.data?.data?.trnsExpiredTime).isBefore(
-        //       moment(new Date()),
-        //     )
-        //   ) {
-        //     newStatus = 'Payment Expired';
-        //   } else {
-        //     newStatus = 'Waiting Payment';
-        //   }
-        // }
         setStatus(newStatus);
 
         const eventId =
@@ -152,12 +120,15 @@ export default function MyEventDetail() {
 
         if (eventId) {
           fetchDetailEvent(eventId);
-          fetchTransaction(eventId);
         }
       }
     } catch (error) {
       console.info('Error to fetch data', getErrorMessage(error));
-      handleErrorMessage(error);
+      handleErrorMessage(error, t('error.failedToGetTransaction'), {
+        on404: () => {
+          navigation.goBack();
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -194,37 +165,6 @@ export default function MyEventDetail() {
     }
   }, [detailTransaction, eventDetail]);
 
-  const fetchTransaction = (eventId: number) => {
-    // get transactions
-    httpRequest
-      .get('member_resource/transaction')
-      .then(resTransaction => {
-        if (resTransaction.data) {
-          const findEventRegister =
-            resTransaction.data?.linked?.mregTrnsId?.find(
-              (item: any) =>
-                item.trnsEventId?.toString() === eventId?.toString() &&
-                (item.trnsConfirmed === '1' ||
-                  new Date(item.trnsExpiredTime)?.getTime() >
-                    new Date().getTime(),
-                isBallot),
-            );
-
-          if (findEventRegister) {
-            const findRegisteredEvent = resTransaction?.data?.data?.find(
-              (item: any) => item.mregOrderId === findEventRegister.trnsRefId,
-            );
-            if (findRegisteredEvent) {
-              setRegisteredEvent(findRegisteredEvent);
-            }
-          }
-        }
-      })
-      .catch(err => {
-        console.info('error check registered event', err);
-      });
-  };
-
   useEffect(() => {
     fetchData();
   }, [IsFocused]);
@@ -247,23 +187,30 @@ export default function MyEventDetail() {
       ),
     },
     {
-      title: t('event.runningDate'),
-      value: datetime.getDateRangeString(
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhStartDate,
-        detailTransaction?.linked?.trnsEventId?.[0]?.evnhEndDate,
-        'short',
-        'short',
-      ),
+      title: t('name'),
+      value: detailTransaction?.data?.trnsUserName,
     },
     {
-      title: t('event.place'),
-      value: detailTransaction?.linked?.trnsEventId?.[0]?.evnhPlace || '-',
+      title: t('event.category'),
+      value: detailTransaction?.linked?.trnsEventId?.[0]?.evnhCategory || '-',
     },
     {
       title: t('event.totalPayment'),
       value: `IDR ${Number(
         detailTransaction?.data?.trnsAmount || 0,
       )?.toLocaleString('id-ID')}`,
+    },
+    {
+      title: t('event.paymentTime'),
+      value:
+        detailTransaction?.data?.trnsConfirmed === 1 &&
+        detailTransaction?.data?.trnsConfirmTime
+          ? datetime.getDateString(
+              detailTransaction?.data?.trnsConfirmTime,
+              'short',
+              'short',
+            )
+          : '-',
     },
   ].filter(item => item.value !== null && item.value !== undefined);
 
@@ -455,39 +402,11 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {/* {(status === 'Waiting Payment' ||
-                (status === 'Payment Expired' && !isBallot)) && (
-                <AppButton
-                  onPress={handleButton}
-                  isLoading={isLoadingButton}
-                  style={{marginTop: 12, marginHorizontal: 22}}
-                  // width={'100%'}
-                  // marginX={'22px'}
-                  // marginTop={'12px'}
-                  // paddingY={'12px'}
-                  // borderRadius={8}
-                  // alignSelf={'center'}
-                  // bg={'#EB1C23'}
-                >
-                  <Text
-                    fontWeight={500}
-                    color={colors.white}
-                    fontSize={14}
-                    textAlign={'center'}>
-                    {status === 'Waiting Payment'
-                      ? confirmPayment
-                        ? `Pay Now via ${confirmPayment?.evptLabel}`
-                        : 'Choose Payment Method'
-                      : t('event.registerEventAgain')}
-                  </Text>
-                </AppButton>
-              )} */}
               <ButtonBasedOnStatus
                 transactionId={params.transactionId}
                 status={status}
                 payment={confirmPayment}
                 isBallot={isBallot}
-                isRegisteredEvent={!registeredEvent}
                 eventDetail={eventDetail}
                 evpaEvncId={
                   detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
@@ -588,32 +507,38 @@ export default function MyEventDetail() {
                   </HStack>
                 </Box>
               )}
-              {DATA_LIST.map(item => (
-                <Box
-                  key={item.title}
-                  paddingY={'16px'}
-                  borderTopColor={'#E8ECF3'}
-                  borderTopWidth={1}
-                  borderTopStyle={'solid'}>
-                  <HStack justifyContent={'space-between'} alignItems="center">
-                    <Text
-                      fontWeight={400}
-                      color="#768499"
-                      fontSize={11}
-                      width="35%">
-                      {item.title}
-                    </Text>
-                    <Text
-                      fontWeight={500}
-                      color="#1E1E1E"
-                      fontSize={12}
-                      width="60%"
-                      textAlign="right">
-                      {item.value}
-                    </Text>
-                  </HStack>
-                </Box>
-              ))}
+              {DATA_LIST.map(
+                item =>
+                  (item.title !== t('event.paymentTime') ||
+                    detailTransaction?.data?.trnsConfirmed === 1) && (
+                    <Box
+                      key={item.title}
+                      paddingY={'16px'}
+                      borderTopColor={'#E8ECF3'}
+                      borderTopWidth={1}
+                      borderTopStyle={'solid'}>
+                      <HStack
+                        justifyContent={'space-between'}
+                        alignItems="center">
+                        <Text
+                          fontWeight={400}
+                          color="#768499"
+                          fontSize={11}
+                          width="35%">
+                          {item.title}
+                        </Text>
+                        <Text
+                          fontWeight={500}
+                          color="#1E1E1E"
+                          fontSize={12}
+                          width="60%"
+                          textAlign="right">
+                          {item.value}
+                        </Text>
+                      </HStack>
+                    </Box>
+                  ),
+              )}
             </VStack>
             <HStack>
               <View flex={1} bg={'#EB1C23'} height={'6px'} />
@@ -654,7 +579,7 @@ export default function MyEventDetail() {
             {t('payment.choosePaymentMethod')}
           </Text>
           <Text color={'#768499'} fontSize={'12px'} fontWeight={400}>
-            Silahkan pilih metode pembayaran untuk event ini
+            {t('payment.choosePaymentMethodDescription')}
           </Text>
           <ScrollView
             flexGrow={1}
@@ -663,7 +588,7 @@ export default function MyEventDetail() {
             showsVerticalScrollIndicator={false}>
             {eventDetail &&
               eventDetail?.payments
-                ?.filter(item => item.evptMsptId !== '9')
+                ?.filter(item => item.evptIsPublic === '1')
                 ?.sort((a, b) =>
                   a.evptLabel < b.evptLabel
                     ? -1
@@ -698,15 +623,17 @@ export default function MyEventDetail() {
               fontSize={'16px'}
               fontWeight={600}
               marginBottom={'12px'}>
-              {`Are you sure want to use ${tmpPayment?.evptLabel} as your Payment method?`}
+              {`${t('payment.areYouSureWantToUse')} ${
+                tmpPayment?.evptLabel
+              } ${t('payment.asYourPaymentMethod')}?`}
             </Text>
-            <Text
+            {/* <Text
               textAlign={'center'}
               color={'#768499'}
               fontSize={'11px'}
               fontWeight={400}>
               You can't change payment method after confirming your choice.
-            </Text>
+            </Text> */}
           </AlertDialog.Body>
           <AlertDialog.Footer>
             <Button.Group width={'full'}>
@@ -724,7 +651,7 @@ export default function MyEventDetail() {
                 }}
                 ref={confirmRef}>
                 <Text fontSize={'14px'} fontWeight={400}>
-                  Cancel
+                  {t('cancel')}
                 </Text>
               </Button>
               <Button
@@ -735,7 +662,7 @@ export default function MyEventDetail() {
                   setTmpPayment(undefined);
                   setShowModalConfirm(false);
                 }}>
-                Yes, Sure
+                {t('sure')}
               </Button>
             </Button.Group>
           </AlertDialog.Footer>

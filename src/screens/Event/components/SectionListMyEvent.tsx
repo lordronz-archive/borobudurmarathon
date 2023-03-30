@@ -13,7 +13,7 @@ import Section from '../../../components/section/Section';
 import {handleErrorMessage} from '../../../helpers/apiErrors';
 import {getTransactionStatus} from '../../../helpers/transaction';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {Datum, EventProperties} from '../../../types/event.type';
+import {Datum} from '../../../types/event.type';
 import {GetTransactionsResponse} from '../../../types/transactions.type';
 
 enum CategoryEnum {
@@ -63,27 +63,11 @@ export default function SectionListMyEvent() {
   const [isLoading, setIsLoading] = useState(false);
   const [resTransactions, setResTransactions] =
     useState<GetTransactionsResponse>();
-  const [eventL, setEvent] = useState<EventProperties[]>([]);
-  let filteredEvents = [...(eventL || [])];
   let filteredData = [...(resTransactions?.data || [])];
   const [selectedCategory, setSelectedCategory] = useState<{
     id: CategoryEnum | null;
     value: string;
   }>();
-  if (selectedCategory?.id) {
-    filteredEvents = filteredEvents.filter(item => {
-      if (selectedCategory.id === CategoryEnum.ACTIVE) {
-        return moment().isBefore(moment(item.evnhEndDate));
-      }
-      if (selectedCategory.id === CategoryEnum.PAST) {
-        return moment().isAfter(moment(item.evnhEndDate));
-      }
-      return Number(item.evnhType) === Number(selectedCategory.id);
-    });
-    filteredData = filteredData.filter(item =>
-      filteredEvents.find(s => s.id === item.links.mregEventId),
-    );
-  }
 
   const fetchList = () => {
     setIsLoading(true);
@@ -93,24 +77,13 @@ export default function SectionListMyEvent() {
         if (res.data) {
           setResTransactions(res.data);
         }
-        EventService.getEvents()
-          .then(ress => {
-            if (ress.data) {
-              setEvent(ress.data);
-            }
-          })
-          .catch(err => {
-            handleErrorMessage(err, t('error.failedToGetEvents'), {
-              ignore404: true,
-            });
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
       })
       .catch(err => {
         handleErrorMessage(err, t('error.failedToGetEvents'), {
           ignore404: true,
+          on409: () => {
+            navigation.navigate('Logout');
+          },
         });
       })
       .finally(() => {
@@ -176,9 +149,6 @@ export default function SectionListMyEvent() {
           onPayNowClick={() =>
             navigation.navigate('MyEventsDetail', {
               transactionId: item.mregOrderId,
-              // eventId: event.evnhId,
-              // isBallot: item.mregType === 'MB' ? true : false,
-              // regStatus: item.mregStatus,
             })
           }
         />

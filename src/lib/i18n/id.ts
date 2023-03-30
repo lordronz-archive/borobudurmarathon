@@ -177,6 +177,9 @@ export default {
     raceCategory: 'Kategori Lari',
     updatedAt: 'Diperbarui pada',
     registerEventAgain: 'Register Ulang Event',
+    category: 'Kategori',
+    transactionTime: 'Waktu Transaksi',
+    paymentTime: 'Waktu Pembayaran',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',

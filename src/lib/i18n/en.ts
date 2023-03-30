@@ -180,6 +180,9 @@ export default {
     raceCategory: 'Race Category',
     updatedAt: 'Updated at',
     registerEventAgain: 'Register Event Again',
+    category: 'Category',
+    transactionTime: 'Transaction Time',
+    paymentTime: 'Payment Time',
   },
   payment: {
     paymentInformation: 'Payment Information',

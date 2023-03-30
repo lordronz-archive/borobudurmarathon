@@ -41,12 +41,20 @@ export function handleErrorMessage(
   title?: string | null,
   options?: {
     ignore404?: boolean;
+    on409?: () => void;
   },
 ) {
   if (options && options.ignore404) {
     if (err.status === 404) {
       return null;
     }
+  }
+  if (options && options.on409) {
+    options.on409();
+    Toast.show({
+      description: 'Session expired',
+    });
+    return;
   }
   const objErrors = getApiErrors(err);
   console.info('objErrors', objErrors);

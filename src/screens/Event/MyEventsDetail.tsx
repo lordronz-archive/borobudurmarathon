@@ -124,7 +124,11 @@ export default function MyEventDetail() {
       }
     } catch (error) {
       console.info('Error to fetch data', getErrorMessage(error));
-      handleErrorMessage(error);
+      handleErrorMessage(error, t('error.failedToGetTransaction'), {
+        on404: () => {
+          navigation.goBack();
+        },
+      });
     } finally {
       setIsLoading(false);
     }

@@ -41,6 +41,7 @@ export function handleErrorMessage(
   title?: string | null,
   options?: {
     ignore404?: boolean;
+    on404?: () => void;
     on409?: () => void;
   },
 ) {
@@ -91,6 +92,10 @@ export function handleErrorMessage(
       description: getErrorMessage(err),
       placement: 'top',
     });
+  }
+  if (options && options.on404) {
+    options.on404();
+    return;
   }
   return objErrors;
 }

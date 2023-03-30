@@ -31,6 +31,7 @@ import RegisterEmailScreen from '../screens/Auth/RegisterEmail';
 import ForgotPasswordScreen from '../screens/Auth/ForgotPassword';
 import EmailVerificationWhenRegisterScreen from '../screens/InputProfile/EmailVerificationWhenRegister';
 import InfoVerifyLaterScreen from '../screens/Information/InfoVerifyLater';
+import TNCScreen from '../screens/Information/TNCScreen';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -79,6 +80,7 @@ export type RootStackParamList = {
   InfoVerifyLater: undefined;
 
   FAQ: undefined;
+  TNC: undefined;
   Partner: undefined;
   AboutUs: undefined;
   WebView: {page?: 'faq' | 'about' | 'tnc'; customUrl?: string; title?: string};
@@ -220,6 +222,11 @@ function RootNavigator() {
         <Stack.Screen
           name="FAQ"
           component={FAQScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TNC"
+          component={TNCScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

@@ -202,7 +202,7 @@ export default function InputProfileScreen() {
               <TextInput
                 placeholder="Enter your phone number"
                 label="Phone number"
-                helperText="We will send verification code to this number for validation"
+                helperText={t('auth.willSendToPhone')}
                 onChangeText={setPhoneNumber}
                 value={phoneNumber}
                 keyboardType="numeric"

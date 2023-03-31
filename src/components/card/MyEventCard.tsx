@@ -139,7 +139,7 @@ export default function MyCardEvent({
                 variant="outline"
                 _text={{fontSize: 12}}
                 onPress={() => onPayNowClick()}>
-                Pay Now
+                {t('payment.payNow')}
               </MButton>
             </HStack>
           )}

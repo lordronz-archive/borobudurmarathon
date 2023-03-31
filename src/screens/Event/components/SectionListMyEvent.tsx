@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {t} from 'i18next';
 import moment from 'moment';
 import {Center, Divider, FlatList, Spinner} from 'native-base';
-import React, {ComponentType, useEffect, useState} from 'react';
+import React, {ComponentType, useEffect, useMemo, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {EventService} from '../../../api/event.service';
 import CategoryButton from '../../../components/buttons/CategoryButton';
@@ -13,20 +13,20 @@ import Section from '../../../components/section/Section';
 import {handleErrorMessage} from '../../../helpers/apiErrors';
 import {getTransactionStatus} from '../../../helpers/transaction';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {Datum} from '../../../types/event.type';
-import {GetTransactionsResponse} from '../../../types/transactions.type';
+import {Datum, TransactionStatus} from '../../../types/event.type';
+import {
+  GetTransactionsResponse,
+  MregEventID,
+  MregTrnsID,
+} from '../../../types/transactions.type';
 
 enum CategoryEnum {
   ALL = 0,
   ACTIVE,
-  VIRTUAL,
   PAST,
-  OFFLINE,
-  RACE,
-  ELITE_RUNNER,
-  TILIK_CANDI,
-  YOUNG_TALENT,
-  FRIENDSHIP_RUN,
+  REGISTERED,
+  WAITING_PAYMENT,
+  PAID,
 }
 
 const EVENT_TYPES = {
@@ -38,21 +38,17 @@ const EVENT_TYPES = {
     id: CategoryEnum.PAST,
     value: 'Past',
   },
-  [CategoryEnum.OFFLINE]: {
-    id: CategoryEnum.OFFLINE,
-    value: 'Offline',
+  [CategoryEnum.REGISTERED]: {
+    id: CategoryEnum.REGISTERED,
+    value: 'Registered',
   },
-  [CategoryEnum.RACE]: {
-    id: CategoryEnum.RACE,
-    value: 'Race',
+  [CategoryEnum.WAITING_PAYMENT]: {
+    id: CategoryEnum.WAITING_PAYMENT,
+    value: 'Waiting Payment',
   },
-  [CategoryEnum.VIRTUAL]: {
-    id: CategoryEnum.VIRTUAL,
-    value: 'Virtual',
-  },
-  [CategoryEnum.ELITE_RUNNER]: {
-    id: CategoryEnum.ELITE_RUNNER,
-    value: 'Elite Runner',
+  [CategoryEnum.PAID]: {
+    id: CategoryEnum.PAID,
+    value: 'Paid',
   },
 };
 
@@ -63,11 +59,70 @@ export default function SectionListMyEvent() {
   const [isLoading, setIsLoading] = useState(false);
   const [resTransactions, setResTransactions] =
     useState<GetTransactionsResponse>();
-  let filteredData = [...(resTransactions?.data || [])];
   const [selectedCategory, setSelectedCategory] = useState<{
     id: CategoryEnum | null;
     value: string;
   }>();
+
+  const filteredData = useMemo(() => {
+    return (
+      resTransactions?.data.filter(v => {
+        if (selectedCategory?.id === CategoryEnum.ALL) {
+          return true;
+        }
+        const event = resTransactions.linked.mregEventId.find(
+          u => u.evnhId === v.links.mregEventId,
+        ) as MregEventID;
+        switch (selectedCategory?.id) {
+          case CategoryEnum.ACTIVE: {
+            const start = new Date(event.evnhRegistrationStart);
+            const end = new Date(event.evnhEndDate);
+            const now = new Date();
+            return now > start && now < end;
+          }
+          case CategoryEnum.PAST: {
+            const end = new Date(event.evnhEndDate);
+            const now = new Date();
+            return now > end;
+          }
+          case CategoryEnum.PAST: {
+            const end = new Date(event.evnhEndDate);
+            const now = new Date();
+            return now > end;
+          }
+        }
+        const transaction = resTransactions.linked.mregTrnsId.find(
+          u => u.trnsId === v.links.mregTrnsId,
+        ) as MregTrnsID;
+        const isThisBallot = Number(event.evnhBallot) === 1;
+        const regStatus = transaction.trnsStatus;
+
+        let status: TransactionStatus = getTransactionStatus({
+          isBallot: isThisBallot,
+          regStatus,
+          trnsConfirmed: transaction.trnsConfirmed,
+          trnsExpiredTime: transaction.trnsExpiredTime,
+        });
+        switch (selectedCategory?.id) {
+          case CategoryEnum.REGISTERED: {
+            return status === 'Registered';
+          }
+          case CategoryEnum.WAITING_PAYMENT: {
+            return status === 'Waiting Payment';
+          }
+          case CategoryEnum.PAID: {
+            return status === 'Paid';
+          }
+        }
+        return true;
+      }) || []
+    );
+  }, [
+    resTransactions?.data,
+    resTransactions?.linked.mregEventId,
+    resTransactions?.linked.mregTrnsId,
+    selectedCategory?.id,
+  ]);
 
   const fetchList = () => {
     setIsLoading(true);
@@ -94,6 +149,8 @@ export default function SectionListMyEvent() {
   useEffect(() => {
     fetchList();
   }, [IsFocused]);
+
+  console.log(JSON.stringify(resTransactions));
 
   const _renderItem = ({item}: {item: Datum}) => {
     const event = resTransactions?.linked.mregEventId.find(

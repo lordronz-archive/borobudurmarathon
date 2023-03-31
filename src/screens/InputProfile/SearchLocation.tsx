@@ -40,7 +40,6 @@ export default function SearchLocationScreen() {
       filter: {
         mlocName: searchValue?.trim(),
       },
-      pageSize: 25,
     };
 
     await ProfileService.getLocation(parameter)

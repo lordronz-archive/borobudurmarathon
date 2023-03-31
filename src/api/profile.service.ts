@@ -98,8 +98,8 @@ const ProfileService = {
       const url =
         config.steelytoeUrl.href +
         config.steelytoeUrl.apis.masterLocation.path +
-        (parameter ? '?' + qs(parameter, false) : '');
-      console.info('url');
+        (parameter ? '?' + qs(parameter, false) : '') + '&pageSize=25';
+      console.info('url getLocation', url);
       return await httpRequest.get<MasterLocationResponse>(url);
     } catch (error) {
       console.info('getLocation error', error);

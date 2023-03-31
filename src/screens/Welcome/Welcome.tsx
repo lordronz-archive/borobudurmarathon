@@ -21,6 +21,7 @@ import {WelcomeService} from '../../api/welcome.service';
 import AppContainer from '../../layout/AppContainer';
 // import useuser from '../../hooks/useuser';
 import useInit from '../../hooks/useInit';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 
 export default function WelcomeScreen() {
   const {user} = useAuthUser();
@@ -36,9 +37,13 @@ export default function WelcomeScreen() {
       WelcomeService.updateLatestView(user?.data[0].zmemId);
     }
     (async () => {
-      const {data} = await EventService.getGallery();
-      console.log('GALLERY', JSON.stringify(data));
-      setGalleries(data);
+      try {
+        const {data} = await EventService.getGallery();
+        console.log('GALLERY', JSON.stringify(data));
+        setGalleries(data);
+      } catch (err) {
+        handleErrorMessage(err);
+      }
     })();
 
     getProfile();

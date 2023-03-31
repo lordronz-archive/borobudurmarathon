@@ -61,6 +61,7 @@ export const linking = {
       Auth: 'auth-me',
       InitialEvent: 'events/:id',
       InitialPayment: 'INVOICE',
+      Welcome: 'welcome',
     },
   },
   getStateFromPath: (path: any, options: any) => {

@@ -52,9 +52,13 @@ export function handleErrorMessage(
   }
   if (options && options.on409) {
     options.on409();
-    Toast.show({
-      description: 'Session expired',
-    });
+
+    if (!Toast.isActive('session-expired')) {
+      Toast.show({
+        id: 'session-expired',
+        description: 'Session expired',
+      });
+    }
     return;
   }
   const objErrors = getApiErrors(err);

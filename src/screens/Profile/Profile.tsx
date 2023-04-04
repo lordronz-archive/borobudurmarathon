@@ -283,8 +283,6 @@ export default function MyProfile() {
           borderWidth="0.5"
           _text={{color: 'black', fontWeight: 600}}
           onPress={() => {
-            navigation.navigate('Voucher');
-            return;
             setIsOpenModalLogout(true);
             // setIsLoggingOut(true);
           }}>

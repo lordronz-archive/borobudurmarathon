@@ -56,16 +56,10 @@ export default function HowToPayScreen() {
 
   const SECTIONS_KONFIRMASI_STATUS_BLOKIR = [
     {
-      title: 'Melalui Ibanking Bank Jateng',
-      content: [
-        'Login ke ibanking.bankjateng.co.id',
-        'Pilih menu "informasi rekening"',
-        'Pilih menu "saldo mutasi"',
-        'Pilih "detail"',
-        'Cermati kolom "saldo blokir"',
-        'Akan tertera saldo yang telah terblokir',
-        'Selesai',
-      ],
+      title: t('payment.confirmBlockedStatusViaIBanking'),
+      content: t('payment.confirmBlockedStatusViaIBankingSteps', {
+        returnObjects: true,
+      }),
     },
   ];
 
@@ -90,43 +84,27 @@ export default function HowToPayScreen() {
 
   const SECTIONS_SAVE_DUIT = [
     {
-      title: 'ATM Bank Jateng',
-      content: [
-        'Masukkan Kart BPD Card ke mesin ATM Bank Jateng',
-        'Pilih menu "Pembelian"',
-        'Pilih menu "Lainnya"',
-        'Masuk menu pembelian Borobudur Marathon; Pilih "Lanjut"',
-        'Masukkan "Nomor Saveduit" pada kolom "kode bayar", pilih "benar"',
-        'Transaksi diproses',
-        'Cermati nominal dan rincian permintaan',
-        'Pilih "Bayar"',
-        'Transaksi telah berhasil, resi terbit',
-        'Selesai',
-        'Kunci saldo Anda telah berhasil',
-      ],
+      title: t('payment.viaSaveDuitBankJatengTitle'),
+      content: t('payment.viaSaveDuitBankJatengSteps', {returnObjects: true}),
     },
     {
-      title: 'Ibanking Bank Jateng',
-      content: [
-        'Login di ibanking.bankjateng.co.id',
-        'Pilih menu pembelian',
-        'Pilih menu "Reward Tiket"',
-        'Masuk ke form Pembelian Reward Saveduit',
-        'Masukkan "Nomor Saveduit" pada kolom "ID Billing"',
-        'Pilih Lanjut',
-        'Cermati nominal dan rincian permintaan;',
-        'Masukkan Pin (SMS} OTP (SMS)',
-        'Pilih "proses"',
-        'Terbit notifikasi berhasil',
-        'Selesai',
-        'Kunci saldo Anda telah berhasil',
-      ],
+      title: t('payment.viaSaveDuitIBankingJatengTitle'),
+      content: t('payment.viaSaveDuitIBankingJatengSteps', {
+        returnObjects: true,
+      }),
     },
     {
-      title: 'Konfirmasi Status Blokir',
+      title: t('payment.viaSaveDuitBimaMobileTitle'),
+      content: t('payment.viaSaveDuitBimaMobileSteps', {
+        returnObjects: true,
+      }),
+    },
+    {
+      title: t('payment.confirmBlockedStatus'),
       content: [
-        'Simpan bukti status transaksi yang dilakukan, Resi dari ATM Bank Jateng atau tangkapan layar ibanking Bank Jateng.',
-        'Melalui Customer Service Bank Jateng, datang ke kantor Bank Jateng terdekat dengan membawa Buku Tabungan dan Kartu BPD Card.',
+        ...(t('payment.confirmBlockedStatusSteps', {
+          returnObjects: true,
+        }) as []),
         <Accordion
           sections={SECTIONS_KONFIRMASI_STATUS_BLOKIR}
           activeSections={activeSectionsKonfirmasiStatusBlokir}

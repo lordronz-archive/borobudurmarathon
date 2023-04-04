@@ -10,13 +10,7 @@ import {
 // import {IInputProps} from 'native-base/lib/typescript/components/primitives/Input/types';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {
-  KeyboardTypeOptions,
-  TextInput as BaseTextInput,
-  TextInputAndroidProps,
-  TextInputIOSProps,
-  View,
-} from 'react-native';
+import {KeyboardTypeOptions, TextInput as BaseTextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {validateEmail} from '../../helpers/validate';
 
@@ -33,6 +27,7 @@ type TextInputProps = {
   _inputProps?: any;
   type?: 'text' | 'password';
   keyboardType?: KeyboardTypeOptions;
+  maxW?: string | number;
   onChangeText?: (text: string) => void;
 };
 
@@ -45,7 +40,8 @@ export default function TextInput(props: TextInputProps) {
         props.keyboardType === 'email-address'
           ? props.isInvalid || (!!props.value && !validateEmail(props.value))
           : props.isInvalid
-      }>
+      }
+      maxW={props.maxW}>
       <Box
         borderWidth={1}
         borderColor="#C5CDDB"
@@ -53,10 +49,14 @@ export default function TextInput(props: TextInputProps) {
         px={'12px'}
         py={'6px'}>
         <FormControl.Label flexWrap={'wrap'}>
-          <HStack>
-            {props.required && <Text color="primary.900">* </Text>}
-            <Text style={{fontSize: 12, color: '#768499'}}>{props.label}</Text>
-          </HStack>
+          {props.label && (
+            <HStack>
+              {props.required && <Text color="primary.900">* </Text>}
+              <Text style={{fontSize: 12, color: '#768499'}}>
+                {props.label}
+              </Text>
+            </HStack>
+          )}
           {props.required && (
             <Text
               style={{fontSize: 12, color: '#EB1C23'}}

@@ -32,6 +32,7 @@ import ForgotPasswordScreen from '../screens/Auth/ForgotPassword';
 import EmailVerificationWhenRegisterScreen from '../screens/InputProfile/EmailVerificationWhenRegister';
 import InfoVerifyLaterScreen from '../screens/Information/InfoVerifyLater';
 import TNCScreen from '../screens/Information/TNCScreen';
+import VoucherScreen from '../screens/Payment/Voucher';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -94,6 +95,7 @@ export type RootStackParamList = {
     // regStatus: number;
   };
   Payment: {transactionId: string};
+  Voucher: undefined;
   HowToPay: undefined;
 
   Logout: undefined;
@@ -252,6 +254,11 @@ function RootNavigator() {
         <Stack.Screen
           name="Payment"
           component={PaymentScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Voucher"
+          component={VoucherScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

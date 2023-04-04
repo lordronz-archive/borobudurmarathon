@@ -39,6 +39,7 @@ import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import i18next from 'i18next';
 import {LanguageID} from '../../types/language.type';
+import Config from 'react-native-config';
 
 export default function AuthScreen() {
   console.info('===render AuthScreen');
@@ -400,6 +401,18 @@ export default function AuthScreen() {
             </HStack>
           </Center>
         </VStack>
+
+        <Center marginY={5}>
+          <Text color="gray.500" fontSize="xs">
+            v{Config.APP_VERSION_NAME} (build: {Config.APP_VERSION_BUILD})
+          </Text>
+
+          {config.isDev && (
+            <Text color="gray.500" fontSize="xs">
+              ~ development ~
+            </Text>
+          )}
+        </Center>
       </VStack>
 
       <Actionsheet

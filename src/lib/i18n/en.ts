@@ -9,6 +9,10 @@ export default {
   confirm: 'Confirm',
   dataEmpty: 'Data Empty',
   dataEmptyDesc: 'No data to display',
+  emptyMessage: {
+    partnerTitle: 'No Partner / Sponsor',
+    partnerDescription: 'There is no active partner / sponsor for now',
+  },
   account: 'Account',
   step: 'Step',
   termsAndConditionsAgreement:

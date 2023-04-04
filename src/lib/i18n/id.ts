@@ -9,6 +9,10 @@ export default {
   confirm: 'Konfirmasi',
   dataEmpty: 'Data Kosong',
   dataEmptyDesc: 'Tidak ada data untuk ditampilkan',
+  emptyMessage: {
+    partnerTitle: 'Belum Ada Partner / Sponsor',
+    partnerDescription: 'Belum ada partner / sponsor aktif untuk saat ini',
+  },
   account: 'Akun',
   step: 'Langkah',
   termsAndConditionsAgreement:

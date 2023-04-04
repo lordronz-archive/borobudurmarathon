@@ -304,35 +304,35 @@ export default function AuthScreen() {
 
   return (
     <AppContainer>
-      <Box px="4" flex="1">
-        <Box position="absolute" right="2" top="2" zIndex={10}>
-          <TouchableOpacity
-            onPress={() => {
-              onOpenChangeLanguage();
-            }}
-            style={{padding: 10}}>
-            <HStack alignItems="center">
-              {i18next.language === 'en' && (
-                <Image
-                  alt="English"
-                  source={require('../../assets/images/english.png')}
-                  shadow="2"
-                  mr="1"
-                />
-              )}
-              {i18next.language === 'id' && (
-                <Image
-                  alt="Indonesia"
-                  source={require('../../assets/images/indonesia.png')}
-                  shadow="2"
-                  mr="1"
-                />
-              )}
-              <ChevronDownIcon size="sm" />
-            </HStack>
-          </TouchableOpacity>
-        </Box>
-        <HStack justifyContent="center" flex={config.isDev ? '2' : '5'}>
+      <Box position="absolute" right="2" top="2" zIndex={10}>
+        <TouchableOpacity
+          onPress={() => {
+            onOpenChangeLanguage();
+          }}
+          style={{padding: 10}}>
+          <HStack alignItems="center">
+            {i18next.language === 'en' && (
+              <Image
+                alt="English"
+                source={require('../../assets/images/english.png')}
+                shadow="2"
+                mr="1"
+              />
+            )}
+            {i18next.language === 'id' && (
+              <Image
+                alt="Indonesia"
+                source={require('../../assets/images/indonesia.png')}
+                shadow="2"
+                mr="1"
+              />
+            )}
+            <ChevronDownIcon size="sm" />
+          </HStack>
+        </TouchableOpacity>
+      </Box>
+      <VStack px="4" flex="1" justifyContent="space-between">
+        <HStack justifyContent="center" flex={config.isDev ? '2' : '3'}>
           <VStack space="3" alignItems="center" justifyContent="center">
             <Heading textAlign={'center'}>
               {t('welcomeTo') + '\n'}
@@ -341,9 +341,6 @@ export default function AuthScreen() {
             <Text fontWeight={400} textAlign={'center'} color="#768499">
               {t('auth.description')}
             </Text>
-            {/* <Text>{initialCookieString}</Text>
-
-            <Button onPress={clearCookies}>Clear Cookies</Button> */}
           </VStack>
         </HStack>
         <VStack flex="1" justifyContent={'center'} space="1.5">
@@ -403,7 +400,7 @@ export default function AuthScreen() {
             </HStack>
           </Center>
         </VStack>
-      </Box>
+      </VStack>
 
       <Actionsheet
         isOpen={isOpenChangeLanguage}

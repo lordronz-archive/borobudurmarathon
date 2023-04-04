@@ -65,6 +65,12 @@ export default function PartnerScreen() {
       )
       .map(item => item.evnhId);
     console.info('eventIds', eventIds);
+
+    if (eventIds.length === 0) {
+      setIsLoading(false);
+      return;
+    }
+
     EventService.getSponsors(eventIds)
       .then(res => {
         if (res && res.data && res.data.data) {
@@ -134,7 +140,14 @@ export default function PartnerScreen() {
           </Center>
         )}
 
-        {!isLoading && sponsors.length === 0 ? <EmptyMessage /> : false}
+        {!isLoading && sponsors.length === 0 ? (
+          <EmptyMessage
+            title={t('emptyMessage.partnerTitle') || ''}
+            description={t('emptyMessage.partnerDescription') || ''}
+          />
+        ) : (
+          false
+        )}
 
         {sponsors.map(sponsor => (
           <ListSponsorCard

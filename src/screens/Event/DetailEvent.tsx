@@ -82,9 +82,8 @@ export default function DetailEvent() {
     {
       icon: <IconTag size="5" mt="0.5" color="gray.500" />,
       label: t('event.raceCategory'),
-      description: event?.data.evnhCategory
-        ? event?.data.evnhCategory
-        : (event?.categories || []).map(cat => cat.evncName).join(', '),
+      description: event?.data.evnhCategory ? event?.data.evnhCategory : '',
+      // : (event?.categories || []).map(cat => cat.evncName).join(', '),
     },
     {
       icon: <IconCalendar size="5" mt="0.5" color="gray.500" />,
@@ -120,24 +119,23 @@ export default function DetailEvent() {
     return {
       id: cat.evncId,
       name: cat.evncName,
-      description: cat.evncDesc
-        ? cat.evncDesc
-        : [
-            datetime.getDateRangeString(
-              cat.evncStartDate,
-              cat.evncVrEndDate || undefined,
-              'short',
-              'short',
-            ),
-            cat.evncMaxDistance
-              ? 'Distance: ' + cat.evncMaxDistance + ' km'
-              : undefined,
-            cat.evncMaxDistancePoint
-              ? cat.evncMaxDistancePoint + ' point'
-              : undefined,
-          ]
-            .filter(item => item)
-            .join(', '),
+      description: cat.evncDesc ? cat.evncDesc : '',
+      // : [
+      //     datetime.getDateRangeString(
+      //       cat.evncStartDate,
+      //       cat.evncVrEndDate || undefined,
+      //       'short',
+      //       'short',
+      //     ),
+      //     cat.evncMaxDistance
+      //       ? 'Distance: ' + cat.evncMaxDistance + ' km'
+      //       : undefined,
+      //     cat.evncMaxDistancePoint
+      //       ? cat.evncMaxDistancePoint + ' point'
+      //       : undefined,
+      //   ]
+      //     .filter(item => item)
+      //     .join(', '),
       originalPrice: Number(cat.evncPrice),
       finalPrice: earlyBirdPrice
         ? Number(earlyBirdPrice.evcpPrice)

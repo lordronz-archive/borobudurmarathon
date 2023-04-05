@@ -1,5 +1,5 @@
 export default {
-  welcomeTo: 'Selamat datang di',
+  welcomeTo: 'Selamat Datang di',
   welcome: 'Selamat datang',
   Hello: 'Halo',
   partOf: 'Sekarang Anda adalah bagian dari',

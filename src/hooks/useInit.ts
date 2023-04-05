@@ -21,6 +21,8 @@ import {WelcomeService} from '../api/welcome.service';
 import {handleErrorMessage} from '../helpers/apiErrors';
 import {useState} from 'react';
 import useGallery from './useGallery';
+import httpRequest from '../helpers/httpRequest';
+import {LanguageID} from '../types/language.type';
 
 export default function useInit() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
@@ -53,6 +55,11 @@ export default function useInit() {
       if (res) {
         setLoginType(res.data.login);
         console.info('AuthService.checkSession', res);
+        console.info('i18next.language', i18next.language);
+
+        await changeLanguage(
+          i18next.language === 'en' ? LanguageID.EN : LanguageID.ID,
+        );
 
         const [profile, _galleries] = await Promise.all([
           getProfile(),
@@ -303,6 +310,15 @@ export default function useInit() {
     //   toast.show({title: 'BERHASSSIIILL', placement: 'top'});
     // }
     // navigation.replace('Initial');
+  };
+
+  const changeLanguage = async (langId: LanguageID) => {
+    i18next.changeLanguage(langId === LanguageID.EN ? 'en' : 'id');
+    const url =
+      config.apiUrl.href.href +
+      config.apiUrl.apis.member.setLanguage.path +
+      langId;
+    await httpRequest.get(url);
   };
 
   return {

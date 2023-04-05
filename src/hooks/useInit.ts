@@ -20,6 +20,7 @@ import {useTranslation} from 'react-i18next';
 import {WelcomeService} from '../api/welcome.service';
 import {handleErrorMessage} from '../helpers/apiErrors';
 import {useState} from 'react';
+import useGallery from './useGallery';
 
 export default function useInit() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
@@ -29,6 +30,7 @@ export default function useInit() {
 
   const {setLoginType} = useAuthUser();
   const {t} = useTranslation();
+  const {fetchGalleries} = useGallery();
 
   const {
     isShowDemoVerifyEmail,
@@ -52,7 +54,10 @@ export default function useInit() {
         setLoginType(res.data.login);
         console.info('AuthService.checkSession', res);
 
-        const profile = await getProfile();
+        const [profile, _galleries] = await Promise.all([
+          getProfile(),
+          fetchGalleries(),
+        ]);
 
         if (profile) {
           checkAccount(res.data, profile, undefined, nextScreens);
@@ -116,6 +121,8 @@ export default function useInit() {
       params?: NativeStackNavigationProp<RootStackParamList>;
     }[],
   ) => {
+    navigation.navigate('Welcome');
+    return;
     console.info('checkAccount: data', data);
     console.info('checkAccount: replace', data);
     if (config.isShowDemoSettings) {

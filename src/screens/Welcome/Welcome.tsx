@@ -8,46 +8,49 @@ import {
   Text,
   VStack,
 } from 'native-base';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Heading} from '../../components/text/Heading';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {useAuthUser} from '../../context/auth.context';
 import LoadingBlock from '../../components/loading/LoadingBlock';
-import {EventService} from '../../api/event.service';
-import {GetGalleryResponse} from '../../types/gallery.type';
 import {useTranslation} from 'react-i18next';
-import {WelcomeService} from '../../api/welcome.service';
 import AppContainer from '../../layout/AppContainer';
 // import useuser from '../../hooks/useuser';
 import useInit from '../../hooks/useInit';
-import {handleErrorMessage} from '../../helpers/apiErrors';
+import FastImage from 'react-native-fast-image';
+import useGallery from '../../hooks/useGallery';
 
 export default function WelcomeScreen() {
   const {user} = useAuthUser();
   const {getProfile} = useInit();
+  const {galleries} = useGallery();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
-  const [galleries, setGalleries] = useState<GetGalleryResponse>();
+  // const [galleries, setGalleriesRandomized] = useState<string[]>([]);
 
-  // const user = useuser();
   useEffect(() => {
-    if (user?.data && user?.data.length > 0 && user?.data[0].zmemId) {
-      WelcomeService.updateLatestView(user?.data[0].zmemId);
-    }
-    (async () => {
-      try {
-        const {data} = await EventService.getGallery();
-        console.log('GALLERY', JSON.stringify(data));
-        setGalleries(data);
-      } catch (err) {
-        handleErrorMessage(err);
-      }
-    })();
-
+    // fetchGallery();
     getProfile();
   }, []);
+
+  // const fetchGallery = async () => {
+  //   if (user?.data && user?.data.length > 0 && user?.data[0].zmemId) {
+  //     WelcomeService.updateLatestView(user?.data[0].zmemId);
+  //   }
+  //   const galleriesRaw = [...(galleries || [])];
+  //   const randomized =
+  //     galleriesRaw && galleriesRaw?.length > 7 ? galleriesRaw : [];
+  //   if (galleriesRaw && !randomized.length) {
+  //     for (let i = 0; i < 8; ++i) {
+  //       const temp =
+  //         galleriesRaw[Math.floor(Math.random() * galleriesRaw.length)];
+  //       randomized.push(temp);
+  //     }
+  //   }
+  //   setGalleriesRandomized(randomized);
+  // };
 
   if (!user) {
     return (
@@ -57,34 +60,24 @@ export default function WelcomeScreen() {
     );
   }
 
-  const galleriesRaw = galleries?.data.map(v => v.mgalUrl);
-  const galleriesRandomized =
-    galleriesRaw && galleriesRaw?.length > 7 ? galleriesRaw : [];
-  if (galleriesRaw && !galleriesRandomized.length) {
-    for (let i = 0; i < 9; ++i) {
-      const temp =
-        galleriesRaw[Math.floor(Math.random() * galleriesRaw.length)];
-      galleriesRandomized.push(temp);
-    }
-  }
-
   return (
     <AppContainer>
       <VStack px="2" flex="1">
         <HStack flex="9" space={10.51} py="3">
           <VStack flex="1" space="2">
-            <Image
-              flex="2"
-              borderRadius={8}
+            <FastImage
+              defaultSource={require('../../assets/images/no-image.png')}
+              style={{flex: 2, borderRadius: 8}}
               source={
-                galleriesRandomized[0]
+                galleries[0]
                   ? {
-                      uri: galleriesRandomized[0],
+                      uri: galleries[0],
+                      priority: FastImage.priority.normal,
                     }
                   : require('../../assets/images/no-image.png')
               }
-              fallbackSource={require('../../assets/images/no-image.png')}
-              alt="Welcome Image"
+              resizeMode={FastImage.resizeMode.cover}
+              fallback={require('../../assets/images/no-image.png')}
             />
             <Box
               flex="3"
@@ -96,9 +89,9 @@ export default function WelcomeScreen() {
                 flex="2"
                 borderRadius={8}
                 source={
-                  galleriesRandomized[1]
+                  galleries[1]
                     ? {
-                        uri: galleriesRandomized[1],
+                        uri: galleries[1],
                       }
                     : require('../../assets/images/no-image.png')
                 }
@@ -131,7 +124,7 @@ export default function WelcomeScreen() {
                         : user.data[0].zmemFullName.split(' ')[1]}
                     </Text>
                     <Heading fontWeight={600} fontSize={20}>
-                      {t('welcomeTo') + '\n'} Borobudur Marathon
+                      {t('welcomeTo') + '\n'}Borobudur Marathon
                     </Heading>
                   </Box>
                   <Text py="4" fontSize={10}>
@@ -142,100 +135,113 @@ export default function WelcomeScreen() {
               </Box>
               {/* <Box backgroundColor={'#EB1C23'} height={2} /> */}
             </Box>
-            <Image
+            <FastImage
+              defaultSource={require('../../assets/images/no-image.png')}
+              style={{flex: 1.5, borderRadius: 8}}
+              source={
+                galleries[1]
+                  ? {
+                      uri: galleries[1],
+                      priority: FastImage.priority.normal,
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              resizeMode={FastImage.resizeMode.cover}
+            />
+            {/* <Image
               flex="1.5"
               borderRadius={8}
               source={
-                galleriesRandomized[2]
+                galleries[2]
                   ? {
-                      uri: galleriesRandomized[2],
+                      uri: galleries[2],
                     }
                   : require('../../assets/images/no-image.png')
               }
               fallbackSource={require('../../assets/images/no-image.png')}
               alt="Welcome Image"
-            />
+            /> */}
           </VStack>
           <VStack flex="1" space="2">
             <HStack space={10.51} flex="1.5">
-              <Image
-                flex="1.5"
-                borderRadius={8}
+              <FastImage
+                defaultSource={require('../../assets/images/no-image.png')}
+                style={{flex: 1.5, borderRadius: 8}}
                 source={
-                  galleriesRandomized[3]
+                  galleries[2]
                     ? {
-                        uri: galleriesRandomized[3],
+                        uri: galleries[2],
+                        priority: FastImage.priority.normal,
                       }
                     : require('../../assets/images/no-image.png')
                 }
-                fallbackSource={require('../../assets/images/no-image.png')}
-                alt="Welcome Image"
+                resizeMode={FastImage.resizeMode.cover}
               />
-              <Image
-                flex="2.4"
-                borderRadius={8}
+              <FastImage
+                defaultSource={require('../../assets/images/no-image.png')}
+                style={{flex: 2.4, borderRadius: 8}}
                 source={
-                  galleriesRandomized[4]
+                  galleries[3]
                     ? {
-                        uri: galleriesRandomized[4],
+                        uri: galleries[3],
+                        priority: FastImage.priority.normal,
                       }
                     : require('../../assets/images/no-image.png')
                 }
-                fallbackSource={require('../../assets/images/no-image.png')}
-                alt="Welcome Image"
+                resizeMode={FastImage.resizeMode.cover}
               />
             </HStack>
-            <Image
-              flex="1.5"
-              borderRadius={8}
+            <FastImage
+              defaultSource={require('../../assets/images/no-image.png')}
+              style={{flex: 1.5, borderRadius: 8}}
               source={
-                galleriesRandomized[5]
+                galleries[4]
                   ? {
-                      uri: galleriesRandomized[5],
+                      uri: galleries[4],
+                      priority: FastImage.priority.normal,
                     }
                   : require('../../assets/images/no-image.png')
               }
-              fallbackSource={require('../../assets/images/no-image.png')}
-              alt="Welcome Image"
+              resizeMode={FastImage.resizeMode.cover}
             />
-            <Image
-              flex="2.4"
-              borderRadius={8}
+            <FastImage
+              defaultSource={require('../../assets/images/no-image.png')}
+              style={{flex: 2.4, borderRadius: 8}}
               source={
-                galleriesRandomized[6]
+                galleries[5]
                   ? {
-                      uri: galleriesRandomized[6],
+                      uri: galleries[5],
+                      priority: FastImage.priority.normal,
                     }
                   : require('../../assets/images/no-image.png')
               }
-              fallbackSource={require('../../assets/images/no-image.png')}
-              alt="Welcome Image"
+              resizeMode={FastImage.resizeMode.cover}
             />
-            <Image
-              flex="3"
-              borderRadius={8}
+            <FastImage
+              defaultSource={require('../../assets/images/no-image.png')}
+              style={{flex: 3, borderRadius: 8}}
               source={
-                galleriesRandomized[7]
+                galleries[6]
                   ? {
-                      uri: galleriesRandomized[7],
+                      uri: galleries[6],
+                      priority: FastImage.priority.normal,
                     }
                   : require('../../assets/images/no-image.png')
               }
-              fallbackSource={require('../../assets/images/no-image.png')}
-              alt="Welcome Image"
+              resizeMode={FastImage.resizeMode.cover}
             />
-            <Image
-              flex="1.5"
-              borderRadius={8}
+            <FastImage
+              defaultSource={require('../../assets/images/no-image.png')}
+              style={{flex: 1.5, borderRadius: 8}}
               source={
-                galleriesRandomized[8]
+                galleries[7]
                   ? {
-                      uri: galleriesRandomized[8],
+                      uri: galleries[7],
+                      priority: FastImage.priority.normal,
                     }
                   : require('../../assets/images/no-image.png')
               }
-              fallbackSource={require('../../assets/images/no-image.png')}
-              alt="Welcome Image"
+              resizeMode={FastImage.resizeMode.cover}
             />
           </VStack>
         </HStack>

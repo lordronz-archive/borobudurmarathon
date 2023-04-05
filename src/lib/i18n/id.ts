@@ -53,7 +53,7 @@ export default {
     phoneValidationTitle: 'Validasi Nomor Telefon',
     phoneValidationSubtitle: 'Kami perlu memvalidasi nomor telepon Anda',
     phoneValidation8DigitCode:
-      'Masukkan 8 digit kode yang kami kirim ke nomor ini',
+      'Masukkan 6 digit kode yang kami kirim ke nomor ini',
     dontHaveAccount: 'Belum memiliki akun?',
     haveAccount: 'Sudah memiliki akun?',
     register: 'Daftar',

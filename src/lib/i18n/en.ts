@@ -53,7 +53,7 @@ export default {
     emailValidationResend: 'Resend Verification Code',
     phoneValidationTitle: 'Phone Number Validation',
     phoneValidationSubtitle: 'We need to validate your phone number',
-    phoneValidation8DigitCode: 'Enter 8 digit code that we send to this number',
+    phoneValidation8DigitCode: 'Enter 6 digit code that we send to this number',
     dontHaveAccount: "Don't have an account?",
     haveAccount: 'Already have an account?',
     register: 'Register',

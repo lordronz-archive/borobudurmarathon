@@ -49,6 +49,7 @@ export function handleErrorMessage(
     ignore404?: boolean;
     on404?: () => void;
     on409?: () => void;
+    onAnyError?: () => void;
   },
 ) {
   if (options && options.ignore404) {
@@ -105,6 +106,10 @@ export function handleErrorMessage(
   }
   if (options && options.on404) {
     options.on404();
+    return;
+  }
+  if (options && options.onAnyError) {
+    options.onAnyError();
     return;
   }
   return objErrors;

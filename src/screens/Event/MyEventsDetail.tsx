@@ -144,7 +144,11 @@ export default function MyEventDetail() {
       })
       .catch(err => {
         console.info('err get event detail', JSON.stringify(err));
-        handleErrorMessage(err, t('error.failedToGetEvent'));
+        handleErrorMessage(err, t('error.failedToGetEvent'), {
+          onAnyError: () => {
+            navigation.goBack();
+          },
+        });
         setIsLoadingEvent(false);
       });
   };

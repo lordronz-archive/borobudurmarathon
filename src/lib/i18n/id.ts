@@ -395,6 +395,7 @@ export default {
     passwordNotSame: 'Kata sandi tidak sama, silakan cek ulang',
     youHaveRegisteredToThisEvent: 'Anda sudah mendaftar ke event ini',
     successApplyCoupon: 'Berhasil menggunakan kupon/voucher',
+    authenticating: 'Sedang memvalidasi. Harap tunggu...',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {

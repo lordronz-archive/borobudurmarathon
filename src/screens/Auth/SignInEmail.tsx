@@ -7,7 +7,6 @@ import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {getErrorMessage, getErrorStd} from '../../helpers/errorHandler';
 import useInit from '../../hooks/useInit';
 import WebView from 'react-native-webview';
 import config from '../../config';
@@ -18,13 +17,12 @@ import {useTranslation} from 'react-i18next';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AppContainer from '../../layout/AppContainer';
-import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
 import {validateEmail} from '../../helpers/validate';
 
 export default function SignInEmailScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const toast = useToast();
   const {init} = useInit();
   const {setLoginType} = useAuthUser();
   const {t} = useTranslation();
@@ -76,7 +74,7 @@ export default function SignInEmailScreen() {
           thirdPartyCookiesEnabled={true}
           sharedCookiesEnabled={true}
         />
-        <LoadingBlock text="Authenticating. Please wait..." />
+        <LoadingBlock text={t('message.authenticating')} />
       </Box>
     );
   }

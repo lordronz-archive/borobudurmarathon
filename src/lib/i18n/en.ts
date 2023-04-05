@@ -396,6 +396,7 @@ export default {
     passwordNotSame: 'Password and Confirm Password is not same',
     youHaveRegisteredToThisEvent: 'You have registered to this event',
     successApplyCoupon: 'Success to Apply Coupon',
+    authenticating: 'Authenticating. Please wait...',
   },
   chooseOne: 'Choose one',
   stepTitle: {

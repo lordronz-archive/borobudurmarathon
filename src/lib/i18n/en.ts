@@ -395,6 +395,7 @@ export default {
     otpHasBeenSentToEmail: 'OTP has been sent to your email',
     passwordNotSame: 'Password and Confirm Password is not same',
     youHaveRegisteredToThisEvent: 'You have registered to this event',
+    successApplyCoupon: 'Success to Apply Coupon',
   },
   chooseOne: 'Choose one',
   stepTitle: {

@@ -394,6 +394,7 @@ export default {
     otpHasBeenSentToEmail: 'OTP sudah dikirim via email',
     passwordNotSame: 'Kata sandi tidak sama, silakan cek ulang',
     youHaveRegisteredToThisEvent: 'Anda sudah mendaftar ke event ini',
+    successApplyCoupon: 'Berhasil menggunakan kupon/voucher',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {

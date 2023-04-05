@@ -272,7 +272,7 @@ export default function MyEventDetail() {
       console.info('res apply coupon', JSON.stringify(resApplyCoupon));
       if (resApplyCoupon) {
         Toast.show({
-          title: 'Success to Apply Coupon',
+          title: t('message.successApplyCoupon'),
         });
       }
     } catch (err) {

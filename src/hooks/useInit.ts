@@ -267,6 +267,7 @@ export default function useInit() {
   ) => {
     console.info('will logout');
     InAppBrowser.closeAuth();
+    console.info('will clearCookies');
     await clearCookies();
 
     console.info('will dispatch logout');
@@ -277,6 +278,7 @@ export default function useInit() {
     }
 
     if (!toast.isActive('logout')) {
+      console.info('before show toast');
       toast.show({
         id: 'logout',
         description: 'Logout successfully',

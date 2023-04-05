@@ -14,6 +14,7 @@ import AppContainer from '../../layout/AppContainer';
 import {t} from 'i18next';
 import LoadingBlockWithChecklist from '../../components/loading/LoadingBlockWithChecklist';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import ErrorMessage from '../../components/ErrorMessage';
 
 type Status = 'loading' | 'done' | 'failed' | 'skipped';
 
@@ -60,9 +61,11 @@ export default function LogoutScreen() {
     }
     return checks;
   };
+  console.info('getChecklists', getChecklists());
 
   const isDone = () => {
     const checks = getChecklists();
+    console.info('will check isDone');
     return (
       checks.filter(item => item.status === 'done' || item.status === 'skipped')
         .length === checks.length
@@ -232,7 +235,20 @@ export default function LogoutScreen() {
         // injectedJavaScript={jsCode}
         onLoadEnd={() => {
           console.info('onLoadEnd logout-bormar-webview');
-          setLogoutBormarWebviewStatus('done');
+
+          setIsLoading(false);
+          if (loginType === 'KompasId') {
+            setLogoutBormarWebviewStatus('done');
+          } else {
+            logout(
+              () => {},
+              () => {
+                console.info('success');
+                navigation.navigate('Initial');
+                setIsLoading(false);
+              },
+            );
+          }
         }}
         onError={event => {
           console.info('logout-bormar-webview -- onError', event);
@@ -254,11 +270,11 @@ export default function LogoutScreen() {
           text={`Logout. ${t('pleaseWait')}...`}
           checklists={getChecklists()}
         />
+      ) : logoutBormarWebviewStatus === 'failed' ? (
+        <ErrorMessage />
       ) : isLoading ? (
         <LoadingBlock text={`Logout. ${t('pleaseWait')}...`} />
-      ) : (
-        false
-      )}
+      ) : false}
     </AppContainer>
   );
 }

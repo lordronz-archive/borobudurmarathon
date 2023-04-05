@@ -35,6 +35,7 @@ export default function useGallery() {
         FastImage.preload(galleriesRaw.map(uri => ({uri})));
         console.info('galleriesRaw before sort random', galleriesRaw);
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         galleriesRaw.sort((a, b) => 0.5 - Math.random());
         console.info('galleriesRaw after sort random', galleriesRaw);
         setGalleries([...galleriesRaw]);

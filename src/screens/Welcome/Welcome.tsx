@@ -20,6 +20,7 @@ import AppContainer from '../../layout/AppContainer';
 import useInit from '../../hooks/useInit';
 import FastImage from 'react-native-fast-image';
 import useGallery from '../../hooks/useGallery';
+import AppRandomImage from '../../components/images/AppRandomImage';
 
 export default function WelcomeScreen() {
   const {user} = useAuthUser();
@@ -65,7 +66,7 @@ export default function WelcomeScreen() {
       <VStack px="2" flex="1">
         <HStack flex="9" space={10.51} py="3">
           <VStack flex="1" space="2">
-            <FastImage
+            <AppRandomImage
               defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 2, borderRadius: 8}}
               source={
@@ -78,6 +79,7 @@ export default function WelcomeScreen() {
               }
               resizeMode={FastImage.resizeMode.cover}
               fallback={require('../../assets/images/no-image.png')}
+              images={galleries}
             />
             <Box
               flex="3"
@@ -135,7 +137,7 @@ export default function WelcomeScreen() {
               </Box>
               {/* <Box backgroundColor={'#EB1C23'} height={2} /> */}
             </Box>
-            <FastImage
+            <AppRandomImage
               defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
@@ -147,6 +149,7 @@ export default function WelcomeScreen() {
                   : require('../../assets/images/no-image.png')
               }
               resizeMode={FastImage.resizeMode.cover}
+              images={galleries}
             />
             {/* <Image
               flex="1.5"
@@ -164,7 +167,7 @@ export default function WelcomeScreen() {
           </VStack>
           <VStack flex="1" space="2">
             <HStack space={10.51} flex="1.5">
-              <FastImage
+              <AppRandomImage
                 defaultSource={require('../../assets/images/no-image.png')}
                 style={{flex: 1.5, borderRadius: 8}}
                 source={
@@ -176,8 +179,9 @@ export default function WelcomeScreen() {
                     : require('../../assets/images/no-image.png')
                 }
                 resizeMode={FastImage.resizeMode.cover}
+                images={galleries}
               />
-              <FastImage
+              <AppRandomImage
                 defaultSource={require('../../assets/images/no-image.png')}
                 style={{flex: 2.4, borderRadius: 8}}
                 source={
@@ -189,9 +193,10 @@ export default function WelcomeScreen() {
                     : require('../../assets/images/no-image.png')
                 }
                 resizeMode={FastImage.resizeMode.cover}
+                images={galleries}
               />
             </HStack>
-            <FastImage
+            <AppRandomImage
               defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
@@ -203,8 +208,9 @@ export default function WelcomeScreen() {
                   : require('../../assets/images/no-image.png')
               }
               resizeMode={FastImage.resizeMode.cover}
+              images={galleries}
             />
-            <FastImage
+            <AppRandomImage
               defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 2.4, borderRadius: 8}}
               source={
@@ -216,8 +222,9 @@ export default function WelcomeScreen() {
                   : require('../../assets/images/no-image.png')
               }
               resizeMode={FastImage.resizeMode.cover}
+              images={galleries}
             />
-            <FastImage
+            <AppRandomImage
               defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 3, borderRadius: 8}}
               source={
@@ -229,8 +236,9 @@ export default function WelcomeScreen() {
                   : require('../../assets/images/no-image.png')
               }
               resizeMode={FastImage.resizeMode.cover}
+              images={galleries}
             />
-            <FastImage
+            <AppRandomImage
               defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
@@ -242,6 +250,7 @@ export default function WelcomeScreen() {
                   : require('../../assets/images/no-image.png')
               }
               resizeMode={FastImage.resizeMode.cover}
+              images={galleries}
             />
           </VStack>
         </HStack>

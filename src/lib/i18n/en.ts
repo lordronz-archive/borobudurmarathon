@@ -69,6 +69,7 @@ export default {
     uploadIdSubtitleWNA:
       'Upload your Passport and please make sure still readable',
     uploadIdTitle: 'Upload National ID Card',
+    uploadIdTitleWNA: 'Upload Passport',
     selectCitizenCard: 'WNI (Indonesia Citizen)',
     selectCitizenCardWna: 'WNA (Foreign Citizen)',
     chooseCitizenSubtitle: 'Choose your citizen according to your identity',

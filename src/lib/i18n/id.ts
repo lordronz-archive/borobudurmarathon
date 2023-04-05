@@ -68,6 +68,7 @@ export default {
     uploadIdSubtitleWNA:
       'Harap unggah Passport Anda dan pastikan terlihat jelas',
     uploadIdTitle: 'Unggah KTP',
+    uploadIdTitleWNA: 'Unggah Passport',
     selectCitizenCard: 'Warga Negara Indonesia',
     selectCitizenCardWna: 'Warga Negara Asing',
     chooseCitizenSubtitle: 'Pilih kewarganegaraan Anda berdasarkan identitas',

@@ -194,7 +194,8 @@ export default function ChooseCitizenScreen({route}: Props) {
       subtitle: t('auth.chooseCitizenSubtitle'),
     },
     {
-      title: citizen === 'WNI' ? t('auth.uploadIdTitle') : 'Upload Passport',
+      title:
+        citizen === 'WNI' ? t('auth.uploadIdTitle') : t('auth.uploadIdTitleWNA'),
       subtitle:
         citizen === 'WNI'
           ? t('auth.uploadIdSubtitle')

@@ -43,7 +43,6 @@ import IconLocation from '../../assets/icons/IconLocation';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
-import {useTranslation} from 'react-i18next';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import Button from '../../components/buttons/Button';
@@ -54,35 +53,35 @@ import {ImageOrVideo} from 'react-native-image-crop-picker';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
 import {getApiErrors} from '../../helpers/apiErrors';
+import {t} from 'i18next';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
 type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 
-const PROCESSING_MESSAGES = [
-  {
-    title: 'Processing...',
-    content: 'Your ID still in processing to validate.',
-  },
-  {
-    title: 'We still check your ID',
-    content: 'Please wait... Your ID still in processing to validate.',
-  },
-  {
-    title: 'Please wait...',
-    content: 'We still processing to validate.',
-  },
-];
-
 const IMAGE_WIDTH = 1280;
 const IMAGE_HEIGHT = 853.3;
 
 export default function ChooseCitizenScreen({route}: Props) {
+  const PROCESSING_MESSAGES = [
+    {
+      title: t('idProcessing.title1'),
+      content: t('idProcessing.description1'),
+    },
+    {
+      title: t('idProcessing.title2'),
+      content: t('idProcessing.description2'),
+    },
+    {
+      title: t('idProcessing.title3'),
+      content: t('idProcessing.description3'),
+    },
+  ];
+
   const {user} = useAuthUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {demoKTPVerification} = useDemo();
-  const {t} = useTranslation();
   const {getProfile} = useInit();
 
   const {
@@ -199,7 +198,7 @@ export default function ChooseCitizenScreen({route}: Props) {
       subtitle:
         citizen === 'WNI'
           ? t('auth.uploadIdSubtitle')
-          : 'Upload your Passport and please make sure still readable',
+          : t('auth.uploadIdSubtitleWNA'),
     },
     {
       note: t('step') + ' 1 ' + t('auth.of3Step'),
@@ -399,17 +398,17 @@ export default function ChooseCitizenScreen({route}: Props) {
         !resValidation.data.isValid
       ) {
         toast.show({
-          title: 'Invalid ID',
+          title: t('error.invalidID'),
           description:
-            resValidation.data.message || 'Please check your ID and try again',
+            resValidation.data.message || t('error.pleaseRecheckYourID'),
         });
         setIsOpenNotReadable(true);
         setValidationTry(v => v + 1);
         setIsOpen(false);
       } else {
         toast.show({
-          title: 'Invalid ID',
-          description: 'Please recheck your ID and try again',
+          title: t('error.invalidID'),
+          description: t('error.pleaseRecheckYourID'),
         });
         setIsOpenNotReadable(true);
         setValidationTry(v => v + 1);
@@ -418,17 +417,20 @@ export default function ChooseCitizenScreen({route}: Props) {
     } catch (err: any) {
       if (err.status === 400) {
         toast.show({
-          title: 'Invalid ID',
-          description:
-            getErrorMessage(err) || 'Please check your ID and try again',
+          title: t('error.invalidID'),
+          description: getErrorMessage(err) || t('error.pleaseRecheckYourID'),
         });
         setIsOpenNotReadable(true);
       } else {
         toast.show({
-          title: 'Failed',
-          description: 'Please try again later',
+          title: t('error.failed'),
+          description: t('error.tryAgainLater'),
         });
-        console.info(err, getErrorMessage(err), 'Failed confirm profile');
+        console.info(
+          err,
+          getErrorMessage(err),
+          t('error.failedToConfirmProfile'),
+        );
       }
       if (validationTry >= MIN_VALIDATION_TRY_INVALID) {
         setIsShowVerifyLater(true);

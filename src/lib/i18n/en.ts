@@ -66,6 +66,8 @@ export default {
       'Maximum file size is 5MB in .jpg format with clear images. Recommendation, mininum width 1280px.',
     uploadIdSubtitle:
       'Please upload your National Identity Card and make sure its clearly visible',
+    uploadIdSubtitleWNA:
+      'Upload your Passport and please make sure still readable',
     uploadIdTitle: 'Upload National ID Card',
     selectCitizenCard: 'WNI (Indonesia Citizen)',
     selectCitizenCardWna: 'WNA (Foreign Citizen)',
@@ -404,11 +406,13 @@ export default {
     chooseFromGallery: 'Choose From Gallery',
   },
   error: {
+    failed: 'Failed',
     failedToRegister: 'Failed to register',
     failedToLogin: 'Failed to login',
     failedToSendOTP: 'Failed to send otp',
     failedToGetProfile: 'Failed to get profile',
     failedToSaveProfile: 'Failed to save profile',
+    failedToConfirmProfile: 'Failed confirm profile',
     profileIsNotComplete: 'Your profile is not complete',
     profileIsNotCompleteDescription: 'Please complete your profile to continue',
     failedToGetEvents: 'Failed to get events',
@@ -424,6 +428,9 @@ export default {
     Field: 'Field',
     isRequired: 'is required',
     failedToGetPartners: 'Failed to get partners',
+    invalidID: 'Invalid ID',
+    pleaseRecheckYourID: 'Please check your ID and try again',
+    tryAgainLater: 'Please try again later',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',
@@ -436,5 +443,13 @@ export default {
       'This year is a witness that we all can overcome adversity. This struggle is strongly intertwined with each other’s passion in inspiring one another.',
     description_2b:
       'Borobudur Marathon 2022 Powered by Bank Jateng invites you warriors, to celebrate and voice the resilience we have shown in a familiar place with togetherness, the place that we called Magelang.',
+  },
+  idProcessing: {
+    title1: 'Processing...',
+    description1: 'Your ID still in processing to validate.',
+    title2: 'We still check your ID',
+    description2: 'Please wait... Your ID still in processing to validate.',
+    title3: 'Please wait...',
+    description3: 'We still processing to validate.',
   },
 };

@@ -65,6 +65,8 @@ export default {
     maxIdSize:
       'Ukuran file maksimum adalah 5MB dalam format .jpg. Rekomendasi ukuran lebar minimal 1280px.',
     uploadIdSubtitle: 'Harap unggah KTP Anda dan pastikan terlihat jelas',
+    uploadIdSubtitleWNA:
+      'Harap unggah Passport Anda dan pastikan terlihat jelas',
     uploadIdTitle: 'Unggah KTP',
     selectCitizenCard: 'Warga Negara Indonesia',
     selectCitizenCardWna: 'Warga Negara Asing',
@@ -403,11 +405,13 @@ export default {
     chooseFromGallery: 'Pilih Dari Galeri',
   },
   error: {
+    failed: 'Terjadi kesalahan',
     failedToRegister: 'Gagal mendaftar',
     failedToLogin: 'Gagal login',
     failedToSendOTP: 'Gagal mengirim OTP',
     failedToGetProfile: 'Gagal mendapatkan data profil',
     failedToSaveProfile: 'Gagal menyimpan profil',
+    failedToConfirmProfile: 'Gagal memverifikasi profil',
     profileIsNotComplete: 'Profil belum lengkap',
     profileIsNotCompleteDescription:
       'Silakan lengkapi profil Anda untuk melanjutkan',
@@ -424,6 +428,9 @@ export default {
     Field: 'Data',
     isRequired: 'wajib diisi',
     failedToGetPartners: 'Gagal mendapatkan data partner/sponsor',
+    invalidID: 'ID tidak valid',
+    pleaseRecheckYourID: 'Cek ulang identitas yang Anda upload dan coba lagi',
+    tryAgainLater: 'Silakan coba lagi nanti',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',
@@ -436,5 +443,13 @@ export default {
       'Tahun ini menjadi saksi bahwa kita semua mampu bangkit dari segala tantangan. Perjuangan ini tidak luput dari peran semangat satu sama lain yang saling menginspirasi.',
     description_2b:
       'Borobudur Marathon 2023 Powered by Bank Jateng mengundang kalian para pejuang, untuk merayakan dan menyuarakan ketangguhan yang telah kita tunjukkan di tempat yang sudah akrab dengan persatuan yaitu di Magelang.',
+  },
+  idProcessing: {
+    title1: 'Memproses...',
+    description1: 'ID Anda sedang divalidasi.',
+    title2: 'Kami masih mengecek ID Anda',
+    description2: 'Harap tunggu... ID Anda masih dalam proses validasi.',
+    title3: 'Tunggu sebentar...',
+    description3: 'Kami masih melakukan proses validasi.',
   },
 };

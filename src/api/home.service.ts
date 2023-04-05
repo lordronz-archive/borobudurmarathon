@@ -18,16 +18,14 @@ const HomeService = {
     try {
       return ApiService.get('/api/v1/member_resource/member/');
     } catch (error) {
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   secretArea: async function () {
     try {
       return ApiService.get('/api/v1/member_resource/member/');
     } catch (error) {
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
 };

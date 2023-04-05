@@ -3,6 +3,7 @@ import {Toast} from 'native-base';
 import {getErrorMessage} from './errorHandler';
 
 export function getApiErrors(err: any): {[key: string]: string} | null {
+  console.info('===>> errorr', err);
   if (err?.data?.status?.error?.errors) {
     let objErrors = {};
     if (Array.isArray(err?.data?.status?.error?.errors)) {
@@ -27,7 +28,12 @@ export function getApiErrors(err: any): {[key: string]: string} | null {
       return null;
     }
   } else if (err?.data?.status?.error?.message) {
-    let objErrors = {errorMessage: err?.data?.status?.error?.message};
+    let errorMessage = err?.data?.status?.error?.message;
+
+    if (errorMessage.includes('Syntax error')) {
+      errorMessage = 'Syntax error';
+    }
+    let objErrors = {errorMessage};
 
     console.info('objErrors', objErrors);
 

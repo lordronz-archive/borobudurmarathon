@@ -5,8 +5,8 @@ import ApiService from './api.service';
 import QRCode from 'qrcode';
 import {ISponsorResponse} from '../types/sponsor.type';
 import {GetGalleryResponse} from '../types/gallery.type';
-import { TransactionDetail } from '../types/transaction.type';
-import { GetTransactionsResponse } from '../types/transactions.type';
+import {TransactionDetail} from '../types/transaction.type';
+import {GetTransactionsResponse} from '../types/transactions.type';
 
 function qs(obj: any, prefix: any) {
   const str: string[] = [];
@@ -52,8 +52,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getTransaction: async function (): Promise<{data: GetTransactionsResponse}> {
@@ -77,8 +76,7 @@ const EventService = {
       }>;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getGarminAuthLink: async function () {
@@ -87,8 +85,7 @@ const EventService = {
       return ApiService.get(config.apiUrl.apis.vr.authGarmin.path);
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getGallery: async function (): Promise<{data: GetGalleryResponse}> {
@@ -98,8 +95,7 @@ const EventService = {
       }>;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   async generateQR(data: any) {
@@ -111,9 +107,9 @@ const EventService = {
       });
       // console.log('QR Response : ', resp);
       return resp;
-    } catch (e) {
-      console.log('Generate QR Error:', e);
-      return e;
+    } catch (error) {
+      console.log('Generate QR Error:', error);
+      return Promise.reject(error);
     }
   },
   getGarminActivities: async function (memberId: string) {
@@ -134,8 +130,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getVRBIB: async function (participantId: string) {
@@ -148,8 +143,7 @@ const EventService = {
       return fileBlob;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getVRCertificate: async function (certificateURL: string) {
@@ -165,8 +159,7 @@ const EventService = {
       return fileBlob;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getEvent: async function (eventId: number): Promise<GetEventResponse> {
@@ -178,8 +171,7 @@ const EventService = {
       return res.data;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   confirmVRRecord: async function (transactionId: string, data: any) {
@@ -193,8 +185,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getEvents: async function (featured = false): Promise<GetEventsResponse> {
@@ -225,8 +216,7 @@ const EventService = {
       return res.data;
     } catch (error) {
       console.info('ERROR getEvents ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error?.message);
+      return Promise.reject(error);
     }
   },
   registerVREvent: async function (data: any) {
@@ -238,8 +228,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   registerEvent: async function (data: any) {
@@ -251,8 +240,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   submitVRActivity: async function (transactionId: string, data: any) {
@@ -264,8 +252,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   generateBillingID: async function (data: any) {
@@ -274,8 +261,7 @@ const EventService = {
       // return ApiService.post(config.apiUrl.apis.member.addVRRecord.path + transactionId, {data: data});
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   logVRActivity: async function (id: string, data: any) {
@@ -284,8 +270,7 @@ const EventService = {
       return ApiService.post('lumbini/log_myborobudur/' + id, {data: data});
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   checkoutTransaction: async function (data: any): Promise<any> {
@@ -299,11 +284,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      throw error;
-      // const msg = (error as any);
-      // throw new ResponseError(
-      // msg
-      // );
+      return Promise.reject(error);
     }
   },
   applyCoupon: async function (data: {cupnCode: string; trnsRefId: string}) {
@@ -315,11 +296,7 @@ const EventService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      throw error;
-      // const msg = (error as any);
-      // throw new ResponseError(
-      // msg
-      // );
+      return Promise.reject(error);
     }
   },
   getSponsors: async function (eventIds: number[]) {
@@ -332,7 +309,7 @@ const EventService = {
       return res;
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      throw error;
+      return Promise.reject(error);
     }
   },
   // export function checkout({transactionId, paymentType}){

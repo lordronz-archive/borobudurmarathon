@@ -63,8 +63,7 @@ const AuthService = {
       });
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   authorizeKompas: async function (
@@ -82,8 +81,7 @@ const AuthService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   checkEmail: async function (email: any) {
@@ -95,8 +93,7 @@ const AuthService = {
       });
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   resetPass: async function (emailForm: any) {
@@ -111,8 +108,7 @@ const AuthService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   signup: async function (basicData: any) {
@@ -139,8 +135,7 @@ const AuthService = {
       );
     } catch (error) {
       // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   setprofile: async function (personalData: any) {
@@ -167,8 +162,7 @@ const AuthService = {
         config.apiUrl.apis.member.deleteProfile.path,
       );
     } catch (error) {
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   newPassword: async function (passwordData: any) {
@@ -182,16 +176,14 @@ const AuthService = {
         {data: passwordData.form},
       );
     } catch (error) {
-      const msg = error as any;
-      throw msg;
+      return Promise.reject(error);
     }
   },
   authenticateKompas: async function (authenticationUrl: string) {
     try {
       return await httpRequest.get(authenticationUrl);
     } catch (error) {
-      const msg = error as any;
-      throw msg;
+      return Promise.reject(error);
     }
   },
   confirmOTP: async function (otpCode: any) {
@@ -200,9 +192,8 @@ const AuthService = {
         config.apiUrl.apis.member.verifyPhone.path + otpCode.otpCode,
       );
     } catch (error) {
-      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
     }
   },
   emailVerification: async function (otpCode: any) {
@@ -211,9 +202,8 @@ const AuthService = {
         config.apiUrl.apis.member.verification.path + otpCode.otpCode,
       );
     } catch (error) {
-      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
     }
   },
   verificationEmail: async function () {
@@ -222,9 +212,8 @@ const AuthService = {
         config.apiUrl.apis.member.verificationEmail.path,
       );
     } catch (error) {
-      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
     }
   },
   inputVerificationEmail: async function (code: string) {
@@ -233,9 +222,8 @@ const AuthService = {
         config.apiUrl.apis.member.inputVerificationEmail.path + code,
       );
     } catch (error) {
-      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
     }
   },
   signIn: async function (signInData: any): Promise<IAuthResponse> {
@@ -358,8 +346,7 @@ const AuthService = {
       return response.data.access_token;
     } catch (error) {
       console.info('AuthService.refreshToken - error', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
 
@@ -367,9 +354,8 @@ const AuthService = {
     try {
       return await httpRequest.get(config.apiUrl.apis.member.logout.path);
     } catch (error) {
-      // console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
     }
 
     // const requestData: AxiosRequestConfig = {
@@ -407,8 +393,7 @@ const AuthService = {
         throw msg;
       }
     } catch (error) {
-      const msg = error as any;
-      throw msg;
+      return Promise.reject(error);
     }
   },
 
@@ -417,8 +402,7 @@ const AuthService = {
       return await httpRequest.get(config.ssoKompasUrl.apis.member.path);
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
 
@@ -429,8 +413,7 @@ const AuthService = {
       );
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
 
@@ -443,8 +426,7 @@ const AuthService = {
       return res.data;
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
-      const msg = error as any;
-      throw new AuthenticationError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
 

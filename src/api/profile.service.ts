@@ -42,8 +42,7 @@ const ProfileService = {
       return res.data;
     } catch (error) {
       console.log('Error getting member detail : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   markAsAgreeTheConsent: async function (): Promise<IMemberDetailResponse> {
@@ -54,16 +53,14 @@ const ProfileService = {
       return res.data;
     } catch (error) {
       console.log('Error getting member detail : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   secretArea: async function () {
     try {
       return httpRequest.get('/member_resource/member/');
     } catch (error) {
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.data.status.error.message);
+      return Promise.reject(error);
     }
   },
   getKabupaten: async function (parameter: any) {
@@ -74,8 +71,7 @@ const ProfileService = {
           qs(parameter, false),
       );
     } catch (error) {
-      const msg = error as any;
-      throw msg;
+      return Promise.reject(error);
     }
   },
   updatePhoto: async function (id: string) {
@@ -89,8 +85,7 @@ const ProfileService = {
         },
       );
     } catch (error) {
-      const msg = error as any;
-      throw msg;
+      return Promise.reject(error);
     }
   },
   getLocation: async function (parameter?: any) {
@@ -98,13 +93,13 @@ const ProfileService = {
       const url =
         config.steelytoeUrl.href +
         config.steelytoeUrl.apis.masterLocation.path +
-        (parameter ? '?' + qs(parameter, false) : '') + '&pageSize=25';
+        (parameter ? '?' + qs(parameter, false) : '') +
+        '&pageSize=25';
       console.info('url getLocation', url);
       return await httpRequest.get<MasterLocationResponse>(url);
     } catch (error) {
       console.info('getLocation error', error);
-      const msg = error as any;
-      throw msg;
+      return Promise.reject(error);
     }
   },
 };

@@ -42,8 +42,7 @@ const FitsyncService = {
       return fitnessProfile;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   getFitnessActivity: async function (memberId: string) {
@@ -59,8 +58,7 @@ const FitsyncService = {
       return fitnessActivities;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   revokeTrackerConnection: async function (trackerId: string) {
@@ -77,8 +75,7 @@ const FitsyncService = {
       return fitnessActivities;
     } catch (error) {
       console.log('E : ', error);
-      const msg = error as any;
-      throw new ResponseError(msg.status, msg.error.message);
+      return Promise.reject(error);
     }
   },
   // submitVRActivity: async function(transactionId, data) {

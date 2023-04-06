@@ -32,7 +32,9 @@ export default function useGallery() {
             galleriesRaw.push(temp);
           }
         }
-        FastImage.preload(galleriesRaw.map(uri => ({uri})));
+        FastImage.preload(
+          galleriesRaw.map(uri => ({uri, priority: FastImage.priority.high})),
+        );
         console.info('galleriesRaw before sort random', galleriesRaw);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,6 +1,7 @@
 import {t} from 'i18next';
 import {useState} from 'react';
 import {createGlobalState} from 'react-hooks-global-state';
+import FastImage from 'react-native-fast-image';
 import {EventService} from '../api/event.service';
 import {handleErrorMessage} from '../helpers/apiErrors';
 import {GetEventsResponse} from '../types/event.type';
@@ -26,7 +27,6 @@ export default function useEvent() {
       .then(res => {
         console.info('res getEvents', JSON.stringify(res));
         if (res) {
-
           // featured events
           res.data = (res.data || []).map(item => ({
             ...item,
@@ -35,6 +35,14 @@ export default function useEvent() {
             ),
           }));
           setResEvents(res);
+          FastImage.preload(
+            res.data
+              .filter(item => item.evnhThumbnail)
+              .map(item => ({
+                uri: item.evnhThumbnail || '',
+                priority: FastImage.priority.high,
+              })),
+          );
         }
         setIsLoading(false);
       })

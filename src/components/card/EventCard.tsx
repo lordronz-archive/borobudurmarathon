@@ -1,17 +1,8 @@
-import {
-  HStack,
-  Image,
-  VStack,
-  Text,
-  Box,
-  AspectRatio,
-  Stack,
-  Badge,
-} from 'native-base';
+import {HStack, VStack, Text, Box, AspectRatio, Badge} from 'native-base';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ImageSourcePropType} from 'react-native';
-import LoadingBlock from '../loading/LoadingBlock';
+import FastImage from 'react-native-fast-image';
 
 type CardEventProps = {
   title: string;
@@ -34,7 +25,7 @@ export default function CardEvent({
     <Box alignItems="flex-start" my={3} width="100%">
       <HStack flex={1} alignItems={isAvailable ? 'center' : 'flex-start'}>
         <AspectRatio w="20%" ratio={1 / 1}>
-          <Image
+          {/* <Image
             source={image}
             w="100%"
             h="100%"
@@ -42,6 +33,23 @@ export default function CardEvent({
             fallbackSource={require('../../assets/images/no-image.png')}
             loadingIndicatorSource={require('../../assets/images/no-image.png')}
             alt={title}
+          /> */}
+          <FastImage
+            style={{width: '100%', height: '100%', borderRadius: 5}}
+            source={
+              image && (image as any).uri
+                ? {
+                    uri: (image as any).uri,
+                    priority: FastImage.priority.high,
+                  }
+                : require('../../assets/images/no-image.png')
+            }
+            resizeMode={FastImage.resizeMode.cover}
+            // onError={() => {
+            //   setUri(
+            //     props.images[Math.floor(Math.random() * props.images.length)],
+            //   );
+            // }}
           />
         </AspectRatio>
         <VStack pl={3} width="80%">

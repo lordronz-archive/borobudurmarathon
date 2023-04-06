@@ -9,6 +9,7 @@ import {
 import {Image, VStack, Text, Box, HStack} from 'native-base';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import FastImage from 'react-native-fast-image';
 
 const defaultImage = require('../../assets/images/no-image.png');
 
@@ -65,7 +66,7 @@ export default function BannerNew(props: IProps) {
                   navigation.navigate('EventDetail', {id: Number(item.id)})
                 }>
                 <VStack>
-                  <Image
+                  {/* <Image
                     key={index}
                     source={item.imageUrl ? {uri: item.imageUrl} : defaultImage}
                     alt={item.title || 'image'}
@@ -76,6 +77,24 @@ export default function BannerNew(props: IProps) {
                     onLoad={() => {
                       setImageLoaded(true);
                     }}
+                  /> */}
+                  <FastImage
+                    key={index}
+                    style={{width: '100%', height: 200, borderRadius: 20}}
+                    source={
+                      item.imageUrl
+                        ? {
+                            uri: item.imageUrl,
+                            priority: FastImage.priority.high,
+                          }
+                        : defaultImage
+                    }
+                    resizeMode={FastImage.resizeMode.cover}
+                    // onError={() => {
+                    //   setUri(
+                    //     props.images[Math.floor(Math.random() * props.images.length)],
+                    //   );
+                    // }}
                   />
                   <VStack padding={'12px'}>
                     <Text

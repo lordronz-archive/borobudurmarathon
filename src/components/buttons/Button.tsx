@@ -31,7 +31,7 @@ export default function Button({
 }: ButtonProps) {
   const renderChildren = () =>
     isLoading ? (
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
         <Spinner size="sm" color="white" />
       </View>
     ) : typeof children === 'string' ? (

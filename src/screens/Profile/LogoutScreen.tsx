@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Toast, useTheme} from 'native-base';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, Linking} from 'react-native';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
@@ -28,7 +29,6 @@ export default function LogoutScreen() {
     state: {loginType},
   } = useAuthUser();
 
-  const [isLoading, setIsLoading] = useState(true);
   const [logoutBormarWebviewStatus, setLogoutBormarWebviewStatus] =
     useState<Status>('loading');
   const [logoutKompasWebviewStatus, setLogoutKompasWebviewStatus] =
@@ -63,31 +63,32 @@ export default function LogoutScreen() {
   };
   console.info('getChecklists', getChecklists());
 
-  const isDone = () => {
-    const checks = getChecklists();
-    console.info('will check isDone');
-    return (
-      checks.filter(item => item.status === 'done' || item.status === 'skipped')
-        .length === checks.length
-    );
-  };
+  const isLoading = getChecklists().find(item => item.status === 'loading')
+    ? true
+    : false;
+
+  const isDone =
+    getChecklists().length === 0
+      ? false
+      : getChecklists().filter(
+          item => item.status === 'done' || item.status === 'skipped',
+        ).length === getChecklists().length;
 
   useEffect(() => {
-    if (isDone()) {
-      logout(
-        () => {},
-        () => {
-          console.info('success');
-          navigation.navigate('Initial');
-          setIsLoading(false);
-        },
-      );
+    if (isDone) {
+      processLogout();
     }
-  }, [
-    logoutKompasStatus,
-    logoutKompasWebviewStatus,
-    logoutBormarWebviewStatus,
-  ]);
+  }, [isDone]);
+
+  const processLogout = () => {
+    logout(
+      () => {},
+      () => {
+        console.info('success');
+        navigation.replace('Initial');
+      },
+    );
+  };
 
   const redirect_uri = 'bormar://auth-me';
   const url =
@@ -236,18 +237,11 @@ export default function LogoutScreen() {
         onLoadEnd={() => {
           console.info('onLoadEnd logout-bormar-webview');
 
-          setIsLoading(false);
           if (loginType === 'KompasId') {
             setLogoutBormarWebviewStatus('done');
           } else {
-            logout(
-              () => {},
-              () => {
-                console.info('success');
-                navigation.navigate('Initial');
-                setIsLoading(false);
-              },
-            );
+            setLogoutBormarWebviewStatus('done');
+            processLogout();
           }
         }}
         onError={event => {
@@ -273,8 +267,17 @@ export default function LogoutScreen() {
       ) : logoutBormarWebviewStatus === 'failed' ? (
         <ErrorMessage />
       ) : isLoading ? (
-        <LoadingBlock text={`Logout. ${t('pleaseWait')}...`} />
-      ) : false}
+        <LoadingBlock
+          text={`Logout. ${t('pleaseWait')}...`}
+          onRemainingZero={() => processLogout()}
+        />
+      ) : (
+        <LoadingBlock
+          text={`~ Logout. ${t('pleaseWait')}.....`}
+          maxCount={5}
+          onRemainingZero={() => processLogout()}
+        />
+      )}
     </AppContainer>
   );
 }

@@ -40,6 +40,7 @@ import {LanguageID} from '../../types/language.type';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import SummaryProfile from './components/SummaryProfile';
+import { LanguageService } from '../../api/language.service';
 
 export default function MyProfile() {
   const navigation =
@@ -106,6 +107,7 @@ export default function MyProfile() {
 
   const changeLanguage = async (langId: LanguageID) => {
     i18next.changeLanguage(langId === LanguageID.EN ? 'en' : 'id');
+    LanguageService.setLanguage(langId === LanguageID.EN ? 'en' : 'id');
     const url =
       config.apiUrl.href.href +
       config.apiUrl.apis.member.setLanguage.path +

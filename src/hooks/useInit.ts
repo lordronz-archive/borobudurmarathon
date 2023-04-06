@@ -23,6 +23,7 @@ import {useState} from 'react';
 import useGallery from './useGallery';
 import httpRequest from '../helpers/httpRequest';
 import {LanguageID} from '../types/language.type';
+import { LanguageService } from '../api/language.service';
 
 export default function useInit() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
@@ -49,6 +50,11 @@ export default function useInit() {
       params?: NativeStackNavigationProp<RootStackParamList>;
     }[],
   ) => {
+    const language = await LanguageService.getLanguage();
+    if (language) {
+      await i18next.changeLanguage(language);
+    }
+
     try {
       const res = await AuthService.checkSession();
 
@@ -265,29 +271,34 @@ export default function useInit() {
     setIsLoggingOut?: (val: boolean) => void,
     onCloseModalLogout?: () => void,
   ) => {
-    console.info('will logout');
-    InAppBrowser.closeAuth();
-    console.info('will clearCookies');
-    await clearCookies();
+    try {
+      console.info('will logout');
+      InAppBrowser.closeAuth();
+      console.info('will clearCookies');
+      await clearCookies();
 
-    console.info('will dispatch logout');
-    dispatch({type: EAuthUserAction.LOGOUT});
+      console.info('will dispatch logout');
+      dispatch({type: EAuthUserAction.LOGOUT});
 
-    if (setIsLoggingOut) {
-      setIsLoggingOut(false);
-    }
+      if (!toast.isActive('logout')) {
+        console.info('before show toast');
+        toast.show({
+          id: 'logout',
+          description: 'Logout successfully',
+        });
+      }
 
-    if (!toast.isActive('logout')) {
-      console.info('before show toast');
-      toast.show({
-        id: 'logout',
-        description: 'Logout successfully',
-      });
-    }
+      console.info('will onCloseModalLogout');
+    } catch (err) {
+      //
+    } finally {
+      if (onCloseModalLogout) {
+        onCloseModalLogout();
+      }
 
-    console.info('will dispatch logout');
-    if (onCloseModalLogout) {
-      onCloseModalLogout();
+      if (setIsLoggingOut) {
+        setIsLoggingOut(false);
+      }
     }
   };
 
@@ -316,6 +327,7 @@ export default function useInit() {
 
   const changeLanguage = async (langId: LanguageID) => {
     i18next.changeLanguage(langId === LanguageID.EN ? 'en' : 'id');
+    LanguageService.setLanguage(langId === LanguageID.EN ? 'en' : 'id');
     const url =
       config.apiUrl.href.href +
       config.apiUrl.apis.member.setLanguage.path +

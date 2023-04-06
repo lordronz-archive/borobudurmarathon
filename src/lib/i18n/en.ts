@@ -397,6 +397,8 @@ export default {
     youHaveRegisteredToThisEvent: 'You have registered to this event',
     successApplyCoupon: 'Success to Apply Coupon',
     authenticating: 'Authenticating. Please wait...',
+    checkingSession: 'Checking your session...',
+    youAreNotRegistered: 'You are not registered. Please wait...',
   },
   chooseOne: 'Choose one',
   stepTitle: {
@@ -428,6 +430,8 @@ export default {
     failedToGenerateQR: 'Failed to generate QR Code',
     cannotRegisterEvent: 'Cannot register event',
     categoryPricingNotFound: 'Category & pricing not exist for now',
+    failedToGetCookies: 'Failed to get cookies',
+    failedToGetCookiesDesc: "We can't get the cookies, please try again later.",
     Field: 'Field',
     isRequired: 'is required',
     failedToGetPartners: 'Failed to get partners',

@@ -40,6 +40,7 @@ import AppContainer from '../../layout/AppContainer';
 import i18next from 'i18next';
 import {LanguageID} from '../../types/language.type';
 import Config from 'react-native-config';
+import {LanguageService} from '../../api/language.service';
 
 export default function AuthScreen() {
   console.info('===render AuthScreen');
@@ -183,8 +184,8 @@ export default function AuthScreen() {
       init();
     } else if (nTry > 10) {
       toast.show({
-        title: 'Failed to get cookies',
-        description: "We can't get the cookies, please try again later.",
+        title: t('error.failedToGetCookies'),
+        description: t('error.failedToGetCookiesDesc'),
       });
       navigation.navigate('Logout');
     } else {
@@ -243,7 +244,7 @@ export default function AuthScreen() {
         />
 
         {isLoading && (
-          <LoadingBlock text="You are not registered. Please wait..." />
+          <LoadingBlock text={t('message.youAreNotRegistered') || ''} />
         )}
       </Box>
     );
@@ -289,13 +290,16 @@ export default function AuthScreen() {
           // }}
         />
 
-        {isLoading && <LoadingBlock text="Checking your session..." />}
+        {isLoading && (
+          <LoadingBlock text={t('message.checkingSession') || ''} />
+        )}
       </Box>
     );
   }
 
   const changeLanguage = async (langId: LanguageID) => {
     i18next.changeLanguage(langId === LanguageID.EN ? 'en' : 'id');
+    LanguageService.setLanguage(langId === LanguageID.EN ? 'en' : 'id');
     // const url =
     //   config.apiUrl.href.href +
     //   config.apiUrl.apis.member.setLanguage.path +

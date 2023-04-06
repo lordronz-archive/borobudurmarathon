@@ -1,11 +1,37 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Center, Spinner, Text} from 'native-base';
 
 type Props = {
   text?: string;
   style?: any;
+  maxCount?: number;
+  onRemainingZero?: () => void;
 };
 export default function LoadingBlock(props: Props) {
+  const [remainingTime, setRemainingTime] = useState(props.maxCount || 10);
+
+  useEffect(() => {
+    const start = new Date();
+    const interval = setInterval(() => {
+      const now = new Date();
+      const newCount =
+        10 - Math.floor((now.getTime() - start.getTime()) / 1000);
+      setRemainingTime(newCount);
+
+      console.info('newCount', newCount);
+
+      if (newCount <= 0) {
+        clearInterval(interval);
+
+        if (props.onRemainingZero) {
+          console.info('props.onRemainingZero');
+          props.onRemainingZero();
+        }
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Box
       justifyContent="center"

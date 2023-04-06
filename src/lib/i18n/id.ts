@@ -396,6 +396,8 @@ export default {
     youHaveRegisteredToThisEvent: 'Anda sudah mendaftar ke event ini',
     successApplyCoupon: 'Berhasil menggunakan kupon/voucher',
     authenticating: 'Sedang memvalidasi. Harap tunggu...',
+    checkingSession: 'Mengecek sesi...',
+    youAreNotRegistered: 'Belum terdaftar. Harap tunggu...',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {
@@ -428,6 +430,9 @@ export default {
     failedToGenerateQR: 'Gagal membuat QR Code',
     cannotRegisterEvent: 'Tidak bisa mendaftar',
     categoryPricingNotFound: 'Kategori dan harga tidak tersedia untuk saat ini',
+    failedToGetCookies: 'Gagal mendapatkan cookies',
+    failedToGetCookiesDesc:
+      'Gagal mendapatkan cookies. Silakan coba lagi nanti.',
     Field: 'Data',
     isRequired: 'wajib diisi',
     failedToGetPartners: 'Gagal mendapatkan data partner/sponsor',

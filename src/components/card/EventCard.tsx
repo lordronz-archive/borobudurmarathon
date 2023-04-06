@@ -35,6 +35,7 @@ export default function CardEvent({
             alt={title}
           /> */}
           <FastImage
+            defaultSource={require('../../assets/images/no-image.png')}
             style={{width: '100%', height: '100%', borderRadius: 5}}
             source={
               image && (image as any).uri

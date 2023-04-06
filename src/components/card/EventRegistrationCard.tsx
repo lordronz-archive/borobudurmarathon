@@ -16,6 +16,7 @@ type EventRegistrationCardProps = {
   runningDate?: ReactNode;
   title?: ReactNode;
   category?: ReactNode;
+  eventType?: string;
   registrationDate?: ReactNode;
   imgSrc?: any;
 };
@@ -24,6 +25,7 @@ export default function EventRegistrationCard({
   title,
   runningDate,
   category,
+  eventType,
   imgSrc,
   registrationDate,
 }: EventRegistrationCardProps) {
@@ -49,7 +51,7 @@ export default function EventRegistrationCard({
               flexWrap="wrap"
               color="#768499"
               flex="1">
-              OFFLINE • {category}
+              {eventType} • {category}
             </Text>
           </HStack>
           <Text

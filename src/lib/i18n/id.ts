@@ -18,6 +18,9 @@ export default {
   step: 'Langkah',
   termsAndConditionsAgreement:
     'Dengan melanjutkan saya mengerti, mengetahui, dan bersedia untuk mematuhi semua syarat & ketentuan Borobudur Marathon.',
+  termsAndConditionsAgreementPart1:
+    'Dengan melanjutkan saya mengerti, tahu, dan bersedia mematuhi semua',
+  termsAndConditionsAgreementPart2: 'dari Borobudur Marathon.',
   seeMoreInfo: 'Lihat info',
   additionalInformation: 'Informasi Tambahan',
   name: 'Nama',

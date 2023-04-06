@@ -117,10 +117,17 @@ export default function DetailEvent() {
     const earlyBirdPrice = (event?.prices || []).find(
       price => price.evcpEvncId === cat.evncId,
     );
+    console.info('>>> cat.evncBenefit', cat.evncBenefit);
+    console.info('typeof cat.evncBenefit', typeof cat.evncBenefit);
+    const parsed = parseUnknownDataToArray(cat.evncBenefit);
+    console.info('parsed', parsed);
+    console.info('parsed.length', parsed.length);
     return {
       id: cat.evncId,
       name: cat.evncName,
-      description: cat.evncDesc ? cat.evncDesc : '',
+      description: cat.evncDesc
+        ? getTextBasedOnLanguage(cat.evncDesc, i18next.language)
+        : '',
       // : [
       //     datetime.getDateRangeString(
       //       cat.evncStartDate,
@@ -141,8 +148,8 @@ export default function DetailEvent() {
       finalPrice: earlyBirdPrice
         ? Number(earlyBirdPrice.evcpPrice)
         : Number(cat.evncPrice),
-      benefits: parseUnknownDataToArray(cat.evncBenefit).map(
-        item => item.label,
+      benefits: parsed.map(item =>
+        getTextBasedOnLanguage(item.label, i18next.language),
       ),
     };
   });
@@ -524,7 +531,8 @@ export default function DetailEvent() {
                   selectedCategoryId: selected.id,
                 });
               }}>
-              {'Continue with ' +
+              {t('continueWith') +
+                ' ' +
                 selected?.name +
                 (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
             </Button>

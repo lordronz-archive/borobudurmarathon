@@ -50,9 +50,16 @@ export default function EventPricingCard({
   }
   textFinalPrice = finalPrice.toLocaleString('id-ID');
 
-  const _renderBenefitsItem = (item: string) => {
+  const _renderBenefitsItem = (item: string, index: number) => {
     return (
-      <HStack space={2}>
+      <HStack
+        space={2}
+        // style={[
+        //   index % 2 === 0
+        //     ? {backgroundColor: 'red'}
+        //     : {backgroundColor: 'yellow'},
+        // ]}
+      >
         <CheckIcon size="5" mt="0.5" color="#EB1C23" />
         <Text color="#1E1E1E;" fontSize="sm" fontWeight={500}>
           {item}
@@ -62,7 +69,10 @@ export default function EventPricingCard({
   };
 
   return (
-    <TouchableOpacity onPress={onSelect} style={{width: '100%'}} disabled={disabled}>
+    <TouchableOpacity
+      onPress={onSelect}
+      style={{width: '100%'}}
+      disabled={disabled}>
       <Box alignItems="center" w={'100%'} my={3}>
         <Box
           rounded="lg"
@@ -126,7 +136,7 @@ export default function EventPricingCard({
               <Text color={'#768499'}>Benefit :</Text>
               <FlatList
                 data={benefits}
-                renderItem={({item}) => _renderBenefitsItem(item)}
+                renderItem={({item, index}) => _renderBenefitsItem(item, index)}
               />
             </Stack>
           )}

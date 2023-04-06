@@ -13,6 +13,7 @@ export default {
     partnerTitle: 'No Partner / Sponsor',
     partnerDescription: 'There is no active partner / sponsor for now',
   },
+  continueWith: 'Continue with',
   account: 'Account',
   step: 'Step',
   termsAndConditionsAgreement:

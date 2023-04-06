@@ -13,6 +13,7 @@ export default {
     partnerTitle: 'Belum Ada Partner / Sponsor',
     partnerDescription: 'Belum ada partner / sponsor aktif untuk saat ini',
   },
+  continueWith: 'Lanjut dengan',
   account: 'Akun',
   step: 'Langkah',
   termsAndConditionsAgreement:

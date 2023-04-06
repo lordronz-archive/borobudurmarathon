@@ -51,7 +51,7 @@ export default function PaymentScreen() {
     setIsLoading(true);
     try {
       const res = await EventService.getTransactionDetail(params.transactionId);
-      console.info('res transaction', JSON.stringify(res));
+      console.info('payment - res transaction', JSON.stringify(res));
       if (res && res.data) {
         setDetailTransaction(res.data);
         setActivePayment(
@@ -380,7 +380,7 @@ export default function PaymentScreen() {
                 onPress={() =>
                   detailTransaction?.data?.trnsConfirmed === 0
                     ? fetchList()
-                    : navigation.navigate('Main', {screen: 'My Events'})
+                    : navigation.navigate('Main', {screen: t('tab.myEvents')})
                 }
                 width={'100%'}
                 marginX={'22px'}
@@ -396,7 +396,7 @@ export default function PaymentScreen() {
                   textAlign={'center'}>
                   {detailTransaction?.data?.trnsConfirmed === 0
                     ? t('payment.checkPaymentStatus')
-                    : 'Check My Event'}
+                    : t('myEvent.checkMyEvent')}
                 </Text>
               </Button>
               <Text

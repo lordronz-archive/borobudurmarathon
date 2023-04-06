@@ -406,3 +406,35 @@ export type TransactionStatus =
   | 'Waiting Payment'
   | 'Paid'
   | 'Payment Expired';
+
+export const PAYMENT_METHODS = {
+  save_duit: {
+    name: 'Save Duit Bank Jateng',
+    // icon: require('../assets/images/logo-bank-jateng.png'),
+  },
+  virtual_account_jateng: {
+    name: 'VA Bank Jateng',
+    icon: require('../assets/images/logo-bank-jateng.png'),
+  },
+  virtual_account_bni: {
+    name: 'VA Bank BNI',
+    // icon: require('../assets/images/logo-bank-jateng.png'),
+  },
+  snap_cc_bri: {
+    name: 'Credit Card',
+  },
+};
+
+// activePayment?.trihPaymentType === 'save_duit' ? (
+//           'Save Duit'
+//         ) : activePayment?.trihPaymentType === 'virtual_account_jateng' ? (
+//           <Image
+//             source={require('../../assets/images/logo-bank-jateng.png')}
+//             width={'80px'}
+//             height={'40px'}
+//             alt="Bank Sulteng Logo"
+//             resizeMode="contain"
+//           />
+//         ) : (
+//           'Bank BNI Virtual Account'
+//         ),

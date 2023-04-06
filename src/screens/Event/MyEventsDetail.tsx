@@ -24,7 +24,6 @@ import moment from 'moment';
 import datetime from '../../helpers/datetime';
 import {
   EVENT_TYPES,
-  GetEventResponse,
   TransactionStatus,
 } from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
@@ -45,28 +44,19 @@ export default function MyEventDetail() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
-  const screenWidth = Dimensions.get('window').width;
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isLoadingEvent, setIsLoadingEvent] = useState<boolean>(false);
   const [isLoadingApplyCoupon, setIsLoadingApplyCoupon] =
     useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
-
-  const confirmRef = React.useRef(null);
 
   const [detailTransaction, setDetailTransaction] =
     useState<TransactionDetail>();
-  const [eventDetail, setEventDetail] = useState<GetEventResponse>();
-  const eventData = eventDetail?.data;
-  console.info('eventDetail', JSON.stringify(eventDetail));
+  // const [eventDetail, setEventDetail] = useState<GetEventResponse>();
+  // const eventData = eventDetail?.data;
+  // console.info('eventDetail', JSON.stringify(eventDetail));
 
   const [status, setStatus] = useState<TransactionStatus>();
   const [couponCode, setCouponCode] = useState<string>('');
-
-  const [tmpPayment, setTmpPayment] = useState<any>();
-  const [confirmPayment, setConfirmPayment] = useState<any>();
 
   // const [registeredEvent, setRegisteredEvent] = useState<any>();
 
@@ -153,21 +143,21 @@ export default function MyEventDetail() {
   //     });
   // };
 
-  useEffect(() => {
-    if (detailTransaction && eventDetail) {
-      if (detailTransaction?.linked?.trihTrnsId?.length !== 0) {
-        const currentPayment = detailTransaction?.linked?.trihTrnsId?.find(
-          item => item.trihIsCurrent === 1,
-        );
-        if (currentPayment) {
-          const findPayment = eventDetail.payments?.find(
-            item => item.evptMsptName === currentPayment.trihPaymentType,
-          );
-          setConfirmPayment(findPayment);
-        }
-      }
-    }
-  }, [detailTransaction, eventDetail]);
+  // useEffect(() => {
+  //   if (detailTransaction && eventDetail) {
+  //     if (detailTransaction?.linked?.trihTrnsId?.length !== 0) {
+  //       const currentPayment = detailTransaction?.linked?.trihTrnsId?.find(
+  //         item => item.trihIsCurrent === 1,
+  //       );
+  //       if (currentPayment) {
+  //         const findPayment = eventDetail.payments?.find(
+  //           item => item.evptMsptName === currentPayment.trihPaymentType,
+  //         );
+  //         setConfirmPayment(findPayment);
+  //       }
+  //     }
+  //   }
+  // }, [detailTransaction, eventDetail]);
 
   useEffect(() => {
     fetchData();
@@ -287,13 +277,14 @@ export default function MyEventDetail() {
     }
   };
 
-  const handlePayNow = async () => {
+  const handlePayNow = async (paymentType: string) => {
+    // confirmPayment.evptMsptId;
     setIsLoading(true);
 
     try {
       const resPayNow = await EventService.checkoutTransaction({
         transactionId: detailTransaction?.data?.trnsId,
-        paymentType: confirmPayment.evptMsptId,
+        paymentType,
       });
       console.info('res pay now', JSON.stringify(resPayNow));
       if (resPayNow && resPayNow.data) {
@@ -311,7 +302,7 @@ export default function MyEventDetail() {
   return (
     <AppContainer>
       <Header title={t('myEvent.detailTitle')} left="back" />
-      {isLoading || isLoadingEvent ? (
+      {isLoading ? (
         <LoadingBlock style={{opacity: 0.7}} />
       ) : (
         <ScrollView backgroundColor={'#E8ECF3'}>
@@ -410,22 +401,24 @@ export default function MyEventDetail() {
                 eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
                 transactionId={params.transactionId}
                 status={status}
-                payment={confirmPayment}
+                activePayment={detailTransaction?.linked?.trihTrnsId?.find(
+                  item => item.trihIsCurrent === 1,
+                )}
                 isBallot={isBallot}
                 evpaEvncId={
                   detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
                 }
-                onChoosePaymentMethod={() => setShowModal(true)}
-                onPayNow={() => handlePayNow()}
-                isPaymentGenerated={
-                  detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-                  detailTransaction?.linked?.trihTrnsId?.find(
-                    (item: any) => item.trihIsCurrent === 1,
-                  )?.trihPaymentType === confirmPayment?.evptMsptName
-                }
-                onAfterButtonFinished={() => {
-                  setConfirmPayment(undefined);
-                }}
+                // onChoosePaymentMethod={() => setShowModal(true)}
+                onPayNow={handlePayNow}
+                // isPaymentGenerated={
+                //   detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
+                //   detailTransaction?.linked?.trihTrnsId?.find(
+                //     (item: any) => item.trihIsCurrent === 1,
+                //   )?.trihPaymentType === confirmPayment?.evptMsptName
+                // }
+                // onAfterButtonFinished={() => {
+                //   setConfirmPayment(undefined);
+                // }}
               />
 
               <Box
@@ -435,11 +428,13 @@ export default function MyEventDetail() {
                 borderTopWidth={1}
                 borderTopStyle={'solid'}>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('EventDetail', {
-                      id: Number(eventData?.evnhId),
-                    })
-                  }>
+                  onPress={() => {
+                    if (detailTransaction?.linked.trnsEventId?.[0]?.evnhId) {
+                      navigation.navigate('EventDetail', {
+                        id: detailTransaction?.linked.trnsEventId?.[0]?.evnhId,
+                      });
+                    }
+                  }}>
                   <HStack
                     justifyContent={'space-between'}
                     alignItems={'center'}>
@@ -582,105 +577,6 @@ export default function MyEventDetail() {
           </TouchableOpacity>
         </ScrollView>
       )}
-
-      <Actionsheet
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        size={'full'}>
-        <Actionsheet.Content maxWidth={'100%'}>
-          <Text color={'#1E1E1E'} fontSize={'20px'} fontWeight={600}>
-            {t('payment.choosePaymentMethod')}
-          </Text>
-          <Text color={'#768499'} fontSize={'12px'} fontWeight={400}>
-            {t('payment.choosePaymentMethodDescription')}
-          </Text>
-          <ScrollView
-            flexGrow={1}
-            width={'full'}
-            height={screenWidth / 1.4}
-            showsVerticalScrollIndicator={false}>
-            {eventDetail &&
-              eventDetail?.payments
-                ?.filter(item => item.evptIsPublic === '1')
-                ?.sort((a, b) =>
-                  a.evptLabel < b.evptLabel
-                    ? -1
-                    : a.evptLabel > b.evptLabel
-                    ? 1
-                    : 0,
-                )
-                ?.map(item => (
-                  <Actionsheet.Item
-                    key={item.evptMsptId}
-                    onPress={() => {
-                      setTmpPayment(item);
-                      setShowModal(false);
-                      setShowModalConfirm(true);
-                    }}
-                    color={'#1E1E1E'}
-                    fontSize={'14px'}
-                    fontWeight={400}>
-                    {item.evptLabel}
-                  </Actionsheet.Item>
-                ))}
-          </ScrollView>
-        </Actionsheet.Content>
-      </Actionsheet>
-
-      <AlertDialog leastDestructiveRef={confirmRef} isOpen={showModalConfirm}>
-        <AlertDialog.Content>
-          <AlertDialog.Header>{t('payment.confirmPayment')}</AlertDialog.Header>
-          <AlertDialog.Body marginY={'20px'}>
-            <Text
-              textAlign={'center'}
-              fontSize={'16px'}
-              fontWeight={600}
-              marginBottom={'12px'}>
-              {`${t('payment.areYouSureWantToUse')} ${
-                tmpPayment?.evptLabel
-              } ${t('payment.asYourPaymentMethod')}?`}
-            </Text>
-            {/* <Text
-              textAlign={'center'}
-              color={'#768499'}
-              fontSize={'11px'}
-              fontWeight={400}>
-              You can't change payment method after confirming your choice.
-            </Text> */}
-          </AlertDialog.Body>
-          <AlertDialog.Footer>
-            <Button.Group width={'full'}>
-              <Button
-                flex={1}
-                backgroundColor={'#fff'}
-                borderColor={'#C5CDDB'}
-                borderStyle={'solid'}
-                borderWidth={1}
-                borderRadius={'8px'}
-                onPress={() => {
-                  setShowModalConfirm(false);
-                  setTmpPayment(undefined);
-                  setShowModal(true);
-                }}
-                ref={confirmRef}>
-                <Text fontSize={'14px'} fontWeight={400}>
-                  {t('cancel')}
-                </Text>
-              </Button>
-              <Button
-                flex={1}
-                borderRadius={'8px'}
-                onPress={() => {
-                  setConfirmPayment(tmpPayment);
-                  setTmpPayment(undefined);
-                  setShowModalConfirm(false);
-                }}>
-                {t('sure')}
-              </Button>
-            </Button.Group>
-          </AlertDialog.Footer>
-        </AlertDialog.Content>
-      </AlertDialog>
     </AppContainer>
   );
 }

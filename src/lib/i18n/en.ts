@@ -194,6 +194,8 @@ export default {
     transactionTime: 'Transaction Time',
     paymentTime: 'Payment Time',
     registrationID: 'Registration ID',
+    forMoreInformationAboutSize: 'For more information about size',
+    seeJerseyChart: 'See jersey size chart',
   },
   payment: {
     paymentInformation: 'Payment Information',
@@ -441,6 +443,7 @@ export default {
     invalidID: 'Invalid ID',
     pleaseRecheckYourID: 'Please check your ID and try again',
     tryAgainLater: 'Please try again later',
+    jerseySizeChartNotFound: 'Jersey Size chart not found',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',

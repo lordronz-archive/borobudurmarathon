@@ -194,6 +194,8 @@ export default {
     transactionTime: 'Waktu Transaksi',
     paymentTime: 'Waktu Pembayaran',
     registrationID: 'ID Pendaftaran',
+    forMoreInformationAboutSize: 'Untuk informasi terkait ukuran',
+    seeJerseyChart: 'Lihat detail ukuran jersey',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',
@@ -445,6 +447,7 @@ export default {
     invalidID: 'ID tidak valid',
     pleaseRecheckYourID: 'Cek ulang identitas yang Anda upload dan coba lagi',
     tryAgainLater: 'Silakan coba lagi nanti',
+    jerseySizeChartNotFound: 'Diagram ukuran jersey tidak tersedia.',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',

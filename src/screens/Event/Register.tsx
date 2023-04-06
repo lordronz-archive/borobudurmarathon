@@ -109,7 +109,7 @@ export default function EventRegisterScreen() {
     if (jerseyIndex !== -1) {
       fieldResult[jerseyIndex].helperText = params.event.data.evnhSizeChart ? (
         <Text fontSize="xs">
-          For more information about size,{' '}
+          {t('event.forMoreInformationAboutSize')},{' '}
           <Text
             textDecorationLine={'underline'}
             color="primary.900"
@@ -118,11 +118,11 @@ export default function EventRegisterScreen() {
                 setOpenJersey(true);
               } else {
                 toast.show({
-                  description: 'Jersey Size chart not found',
+                  description: t('error.jerseySizeChartNotFound'),
                 });
               }
             }}>
-            See jersey size chart
+            {t('event.seeJerseyChart')}
           </Text>
         </Text>
       ) : null;

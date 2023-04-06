@@ -738,12 +738,15 @@ export default function ChooseCitizenScreen({route}: Props) {
                     helperText={t('auth.willSendToPhone')}
                     value={accountInformation.phoneNumber}
                     keyboardType="numeric"
-                    onChangeText={val =>
+                    onChangeText={val => {
+                      if (val.length > 14) {
+                        return;
+                      }
                       setAccountInformation(oldVal => ({
                         ...oldVal,
                         phoneNumber: val,
-                      }))
-                    }
+                      }));
+                    }}
                   />
                 </VStack>
               )}

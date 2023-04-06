@@ -27,10 +27,10 @@ export default function SignInEmailScreen() {
   const {setLoginType} = useAuthUser();
   const {t} = useTranslation();
 
-  // const [email, setEmail] = useState<string>();
-  // const [password, setPassword] = useState<string>();
-  const [email, setEmail] = useState<string>('aditia.prasetio11@gmail.com');
-  const [password, setPassword] = useState<string>('Secret*123');
+  const [email, setEmail] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  // const [email, setEmail] = useState<string>('aditia.prasetio11@gmail.com');
+  // const [password, setPassword] = useState<string>('Secret*123');
   const [loading, setLoading] = useState(false);
 
   const [loggingInData, setLoggingInData] = useState<IAuthResponseData>();

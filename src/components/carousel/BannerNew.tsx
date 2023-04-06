@@ -80,7 +80,12 @@ export default function BannerNew(props: IProps) {
                   /> */}
                   <FastImage
                     key={index}
-                    style={{width: '100%', height: 200, borderRadius: 20}}
+                    style={{
+                      width: '100%',
+                      height: 200,
+                      borderTopLeftRadius: 20,
+                      borderTopRightRadius: 20,
+                    }}
                     source={
                       item.imageUrl
                         ? {

@@ -550,8 +550,8 @@ export default function EventRegisterScreen() {
   // textFinalPrice = finalPrice.toLocaleString('id-ID');
 
   const [textOriginalPrice, textFinalPrice] = useMemo(() => {
-    const originalPrice = prices?.[0]?.originalPrice;
-    const finalPrice = prices?.[0]?.finalPrice;
+    const originalPrice = prices?.[0]?.originalPrice || 0;
+    const finalPrice = prices?.[0]?.finalPrice || 0;
     let textOriginalPriceReturn;
     let textFinalPriceReturn;
     if (finalPrice < originalPrice) {

@@ -15,7 +15,7 @@ import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import PaymentScreen from '../screens/Payment';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
-import {GetEventResponse} from '../types/event.type';
+import {EventFieldsEntity, GetEventResponse} from '../types/event.type';
 import HowToPayScreen from '../screens/HowToPay';
 import LogoutScreen from '../screens/Profile/LogoutScreen';
 import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
@@ -33,6 +33,7 @@ import EmailVerificationWhenRegisterScreen from '../screens/InputProfile/EmailVe
 import InfoVerifyLaterScreen from '../screens/Information/InfoVerifyLater';
 import TNCScreen from '../screens/Information/TNCScreen';
 import VoucherScreen from '../screens/Payment/Voucher';
+import ViewDetailRegistrationData from '../screens/Event/components/ViewDetailRegistrationData';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -97,6 +98,10 @@ export type RootStackParamList = {
   Payment: {transactionId: string};
   Voucher: undefined;
   HowToPay: undefined;
+  ViewDetailRegistrationData: {
+    data: {[key: string]: string};
+    fields: EventFieldsEntity[];
+  };
 
   Logout: undefined;
 };
@@ -264,6 +269,11 @@ function RootNavigator() {
         <Stack.Screen
           name="HowToPay"
           component={HowToPayScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ViewDetailRegistrationData"
+          component={ViewDetailRegistrationData}
           options={{headerShown: false}}
         />
         <Stack.Screen

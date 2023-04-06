@@ -193,6 +193,7 @@ export default {
     category: 'Kategori',
     transactionTime: 'Waktu Transaksi',
     paymentTime: 'Waktu Pembayaran',
+    registrationID: 'ID Pendaftaran',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',
@@ -219,7 +220,7 @@ export default {
     sorryNotPassedBallot: 'Maaf anda tidak lolos tahap ballot',
     choosePaymentMethod: 'Pilih Metode Pembayaran',
     changePaymentMethod: 'Ubah Metode Pembayaran',
-    payNow: 'Bayar Sekarang',
+    payNow: 'Bayar',
     payNowVia: 'Bayar via',
     choosePaymentMethodDescription:
       'Silahkan pilih metode pembayaran untuk event ini',

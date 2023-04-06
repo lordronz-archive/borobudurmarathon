@@ -193,6 +193,7 @@ export default {
     category: 'Category',
     transactionTime: 'Transaction Time',
     paymentTime: 'Payment Time',
+    registrationID: 'Registration ID',
   },
   payment: {
     paymentInformation: 'Payment Information',

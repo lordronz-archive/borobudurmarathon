@@ -33,7 +33,7 @@ export interface Links {
   trndTrnsId?: number[] | null;
   trihTrnsId?: number[] | null;
   tridTrnsId?: number[] | null;
-  evrlTrnsId?: number[] | null;
+  evrlTrnsId?: {[key: string]: string}[] | null;
   etikTrnsId?: null[] | null;
   tdrwTrnsId?: null[] | null;
   viruTrnsId?: null[] | null;
@@ -50,7 +50,8 @@ export interface Linked {
   trndTrnsId?: TrndTrnsIdEntity[] | null;
   trihTrnsId?: TrihTrnsIdEntity[] | null;
   tridTrnsId?: TridTrnsIdEntity[] | null;
-  evrlTrnsId?: EvrlTrnsIdEntity[] | null;
+  evrlTrnsId?: {[key: string]: string}[] | null;
+  // evrlTrnsId?: EvrlTrnsIdEntity[] | null;
   etikTrnsId?: null[] | null;
   tdrwTrnsId?: null[] | null;
   viruTrnsId?: null[] | null;

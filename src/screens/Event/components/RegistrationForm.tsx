@@ -205,7 +205,7 @@ export async function getOptions(props: EventFieldsEntity) {
         const labelkey = kys.find(v => v.toLowerCase().includes('label'));
         return res.data.data.map((v: {[key: string]: string | number}) => ({
           value: v.id,
-          label: v[labelkey!],
+          label: getTextBasedOnLanguage(v[labelkey!]),
         }));
       } else {
         return [];
@@ -237,7 +237,7 @@ export async function getOptions(props: EventFieldsEntity) {
         ? JSON.parse(props.evhfExternalData)
         : []
     ).map((item: {id: number; label: string}) => ({
-      label: item.label || '',
+      label: getTextBasedOnLanguage(item.label || ''),
       value: item.id || '',
     }));
     return opts;

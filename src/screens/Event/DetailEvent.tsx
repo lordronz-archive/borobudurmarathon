@@ -48,6 +48,7 @@ import useInit from '../../hooks/useInit';
 import {GetTransactionsResponse} from '../../types/transactions.type';
 import moment from 'moment';
 import {getTextBasedOnLanguage} from '../../helpers/text';
+import i18next from 'i18next';
 
 type Price = {
   id: string;
@@ -396,7 +397,10 @@ export default function DetailEvent() {
           consectetur porta, nulla neque tristique justo, vitae sodales mauris
           nisl et quam. Etiam vel feugiat libero. Cras hendrerit leo ac turpis
           sodales, suscipit dignissim leo ornare. */}
-                {event?.data?.evnhDescription || 'No description'}
+                {getTextBasedOnLanguage(
+                  event?.data?.evnhDescription,
+                  i18next.language,
+                ) || 'No description'}
               </Text>
             ) : (
               false

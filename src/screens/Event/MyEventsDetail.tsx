@@ -115,12 +115,12 @@ export default function MyEventDetail() {
         });
         setStatus(newStatus);
 
-        const eventId =
-          resDetailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhId;
+        // const eventId =
+        //   resDetailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhId;
 
-        if (eventId) {
-          fetchDetailEvent(eventId);
-        }
+        // if (eventId && newStatus === 'Payment Expired' && !isBallot) {
+        //   fetchDetailEvent(eventId);
+        // }
       }
     } catch (error) {
       console.info('Error to fetch data', getErrorMessage(error));
@@ -134,24 +134,24 @@ export default function MyEventDetail() {
     }
   };
 
-  const fetchDetailEvent = async (eventId: number) => {
-    setIsLoadingEvent(true);
-    EventService.getEvent(eventId)
-      .then(resEvent => {
-        console.info('res get detail event', JSON.stringify(resEvent));
-        setEventDetail(resEvent);
-        setIsLoadingEvent(false);
-      })
-      .catch(err => {
-        console.info('err get event detail', JSON.stringify(err));
-        handleErrorMessage(err, t('error.failedToGetEvent'), {
-          onAnyError: () => {
-            navigation.goBack();
-          },
-        });
-        setIsLoadingEvent(false);
-      });
-  };
+  // const fetchDetailEvent = async (eventId: number) => {
+  //   setIsLoadingEvent(true);
+  //   EventService.getEvent(eventId)
+  //     .then(resEvent => {
+  //       console.info('res get detail event', JSON.stringify(resEvent));
+  //       setEventDetail(resEvent);
+  //       setIsLoadingEvent(false);
+  //     })
+  //     .catch(err => {
+  //       console.info('err get event detail', JSON.stringify(err));
+  //       handleErrorMessage(err, t('error.failedToGetEvent'), {
+  //         // onAnyError: () => {
+  //         //   navigation.goBack();
+  //         // },
+  //       });
+  //       setIsLoadingEvent(false);
+  //     });
+  // };
 
   useEffect(() => {
     if (detailTransaction && eventDetail) {
@@ -407,11 +407,11 @@ export default function MyEventDetail() {
               )}
 
               <ButtonBasedOnStatus
+                eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
                 transactionId={params.transactionId}
                 status={status}
                 payment={confirmPayment}
                 isBallot={isBallot}
-                eventDetail={eventDetail}
                 evpaEvncId={
                   detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
                 }
@@ -445,9 +445,17 @@ export default function MyEventDetail() {
                     alignItems={'center'}>
                     <VStack width="90%">
                       <Text fontWeight={500} color="#768499" fontSize={12}>
-                        {(eventData?.evnhType
+                        {/* {(eventData?.evnhType
                           ? EVENT_TYPES[eventData?.evnhType as any].value ||
                             'OTHER'
+                          : 'OTHER'
+                        ).toUpperCase() + (isBallot ? ' (BALLOT)' : '')} */}
+
+                        {(detailTransaction?.linked?.trnsEventId?.[0]?.evnhType
+                          ? EVENT_TYPES[
+                              detailTransaction?.linked?.trnsEventId?.[0]
+                                ?.evnhType as any
+                            ].value || 'OTHER'
                           : 'OTHER'
                         ).toUpperCase() + (isBallot ? ' (BALLOT)' : '')}
                       </Text>
@@ -456,7 +464,8 @@ export default function MyEventDetail() {
                         color="#1E1E1E"
                         fontSize={14}
                         numberOfLines={1}>
-                        {eventData?.evnhName}
+                        {/* {eventData?.evnhName} */}
+                        {detailTransaction?.linked?.trnsEventId?.[0]?.evnhName}
                       </Text>
                     </VStack>
                     <ChevronRightIcon />

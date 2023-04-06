@@ -11,14 +11,16 @@ import {
   PaymentsEntity,
   TransactionStatus,
 } from '../../../types/event.type';
+import {EventService} from '../../../api/event.service';
+import {handleErrorMessage} from '../../../helpers/apiErrors';
 
 type Props = {
   transactionId: string;
+  eventId?: number;
   status?: TransactionStatus;
   payment: PaymentsEntity;
   isPaymentGenerated: boolean;
   isBallot: boolean;
-  eventDetail?: GetEventResponse;
   evpaEvncId: string;
   onChoosePaymentMethod: () => void;
   onPayNow: () => void;
@@ -51,24 +53,51 @@ export default function ButtonBasedOnStatus(props: Props) {
     props.onChoosePaymentMethod();
   };
 
-  const handleButtonRegisterAgain = () => {
+  const handleButtonRegisterAgain = async () => {
     setIsLoading(true);
-    if (
-      props.eventDetail &&
-      (props.eventDetail?.categories || []).find(
-        cat => cat.evncId === props.evpaEvncId,
-      )
-    ) {
-      navigation.navigate('EventRegister', {
-        event: props.eventDetail,
-        selectedCategoryId: props.evpaEvncId || '',
-      });
-    } else {
+
+    if (!props.eventId) {
       Toast.show({
         title: t('error.cannotRegisterEvent'),
-        description: t('error.categoryPricingNotFound'),
+        description: 'Event ID not found',
       });
+      return;
     }
+
+    try {
+      const resEvent = await EventService.getEvent(props.eventId);
+      console.info('res get detail event', JSON.stringify(resEvent));
+      navigation.navigate('EventRegister', {
+        event: resEvent,
+        selectedCategoryId: props.evpaEvncId || '',
+      });
+
+      if (
+        props.eventId &&
+        resEvent &&
+        (resEvent?.categories || []).find(
+          cat => cat.evncId === props.evpaEvncId,
+        )
+      ) {
+        //
+      } else {
+        Toast.show({
+          title: t('error.cannotRegisterEvent'),
+          description: t('error.categoryPricingNotFound'),
+        });
+      }
+
+      setIsLoading(false);
+    } catch (err) {
+      console.info('err get event detail', JSON.stringify(err));
+      handleErrorMessage(err, t('error.failedToGetEvent'), {
+        // onAnyError: () => {
+        //   navigation.goBack();
+        // },
+      });
+      setIsLoading(false);
+    }
+
     props.onAfterButtonFinished();
     setIsLoading(false);
   };

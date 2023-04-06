@@ -10,6 +10,8 @@ import {convertOption} from '../../../helpers/convertOption';
 import FileInput from '../../../components/form/FileInput';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import TimeInput from '../../../components/form/TimeInput';
+import {getTextBasedOnLanguage} from '../../../helpers/text';
+import {t} from 'i18next';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -55,7 +57,7 @@ export default function RegistrationForm(
         {props.data.map(dprops => (
           <Box key={dprops.evhfLabel} flex={1}>
             <Text color="gray.500" fontSize="sm">
-              {dprops.evhfLabel}
+              {getTextBasedOnLanguage(dprops.evhfLabel)}
             </Text>
             {dprops.value ? (
               <Text>{dprops.value}</Text>
@@ -71,7 +73,7 @@ export default function RegistrationForm(
       <Row>
         <Box>
           <Text color="gray.500" fontSize="sm">
-            {props.evhfLabel}
+            {getTextBasedOnLanguage(props.evhfLabel)}
           </Text>
           {props.value ? (
             <Text>{convertOption(props.value, props.evhfName)}</Text>
@@ -89,8 +91,8 @@ export default function RegistrationForm(
     return (
       <SelectInput
         items={options}
-        placeholder={'Choose one'}
-        label={props.evhfLabel}
+        placeholder={t('chooseOne') || ''}
+        label={getTextBasedOnLanguage(props.evhfLabel)}
         onValueChange={props.onValueChange}
         value={props.value}
         helperText={props.helperText}
@@ -102,8 +104,10 @@ export default function RegistrationForm(
   } else if (['number', 'phone'].includes(props.evhfType.toLowerCase())) {
     return (
       <TextInput
-        placeholder={`Enter ${props.evhfLabel}`}
-        label={props.evhfLabel}
+        placeholder={`${t('formEnter')} ${getTextBasedOnLanguage(
+          props.evhfLabel,
+        )}`}
+        label={getTextBasedOnLanguage(props.evhfLabel)}
         onChangeText={props.onValueChange}
         keyboardType="numeric"
         value={props.value}
@@ -114,8 +118,10 @@ export default function RegistrationForm(
   } else if (props.evhfType === 'Email') {
     return (
       <TextInput
-        placeholder={`Enter ${props.evhfLabel}`}
-        label={props.evhfLabel}
+        placeholder={`${t('formEnter')} ${getTextBasedOnLanguage(
+          props.evhfLabel,
+        )}`}
+        label={getTextBasedOnLanguage(props.evhfLabel)}
         onChangeText={props.onValueChange}
         keyboardType="numeric"
         value={props.value}
@@ -127,7 +133,7 @@ export default function RegistrationForm(
     return (
       <DateInput
         placeholder="DD MMM YYYY"
-        label={props.evhfLabel}
+        label={getTextBasedOnLanguage(props.evhfLabel)}
         date={dateField as Date}
         setDate={date => {
           setDateField(date);
@@ -141,8 +147,10 @@ export default function RegistrationForm(
   } else if (props.evhfType === 'File' && props.setFileResponse) {
     return (
       <FileInput
-        placeholder={`Enter ${props.evhfLabel}`}
-        label={props.evhfLabel}
+        placeholder={`${t('formEnter')} ${getTextBasedOnLanguage(
+          props.evhfLabel,
+        )}`}
+        label={getTextBasedOnLanguage(props.evhfLabel)}
         onChangeText={props.onValueChange}
         value={props.value}
         helperText={props.helperText}
@@ -157,7 +165,7 @@ export default function RegistrationForm(
         <TimeInput
           items={options}
           placeholder={'--'}
-          label={props.evhfLabel}
+          label={getTextBasedOnLanguage(props.evhfLabel)}
           onValueChange={props.onValueChange}
           value={props.value}
           helperText={props.helperText}
@@ -169,9 +177,11 @@ export default function RegistrationForm(
   } else {
     return (
       <TextInput
-        label={props.evhfLabel}
+        label={getTextBasedOnLanguage(props.evhfLabel)}
         onChangeText={props.onValueChange}
-        placeholder={`Enter ${props.evhfLabel}`}
+        placeholder={`${t('formEnter')} ${getTextBasedOnLanguage(
+          props.evhfLabel,
+        )}`}
         value={props.value}
         helperText={props.helperText}
         required={props.required}

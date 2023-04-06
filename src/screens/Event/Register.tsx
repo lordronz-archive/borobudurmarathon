@@ -738,9 +738,14 @@ export default function EventRegisterScreen() {
               ))}
             </VStack>
           </VStack>
-          <HStack backgroundColor={'#F4F6F9'} py="3" px="4" pr="8" alignItems="center">
+          <HStack
+            backgroundColor={'#F4F6F9'}
+            py="3"
+            px="4"
+            pr="8"
+            alignItems="center">
             <Checkbox.Group
-              onChange={(val) => {
+              onChange={val => {
                 console.info('checkbox val', val);
                 setCheckbox(val);
               }}

@@ -30,6 +30,7 @@ export default {
   copy: 'Salin',
   continue: 'Lanjut',
   close: 'Tutup',
+  formEnter: 'Masukkan',
   auth: {
     forgotPassword: 'Lupa password?',
     forgotPasswordTitle: 'Lupa Password',

@@ -33,6 +33,7 @@ export default {
   copy: 'Copy',
   continue: 'Continue',
   close: 'Close',
+  formEnter: 'Enter',
   auth: {
     forgotPassword: 'Forgot password?',
     forgotPasswordTitle: 'Forgot Password',

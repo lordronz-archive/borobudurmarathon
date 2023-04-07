@@ -226,6 +226,7 @@ export interface EventFieldsEntity {
     | 'Hidden'
     | 'File'
     | 'Time';
+  evhfConditions?: string | null;
   static?: boolean;
   helperText?: ReactNode;
 }

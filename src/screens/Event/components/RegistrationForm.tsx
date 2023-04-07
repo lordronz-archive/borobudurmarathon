@@ -12,6 +12,7 @@ import {DocumentPickerResponse} from 'react-native-document-picker';
 import TimeInput from '../../../components/form/TimeInput';
 import {getTextBasedOnLanguage} from '../../../helpers/text';
 import i18next, {t} from 'i18next';
+import {parseStringToObject} from '../../../helpers/parser';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -26,6 +27,9 @@ export default function RegistrationForm(
     file?: DocumentPickerResponse;
   },
 ) {
+  console.info('props.evhfConditions', props.evhfConditions);
+  const objConditions = parseStringToObject(props.evhfConditions);
+  console.info('objConditions', objConditions);
   const opts = (
     props.evhfExternalData && !props.evhfExternalData.includes('/api/')
       ? JSON.parse(props.evhfExternalData)
@@ -113,6 +117,11 @@ export default function RegistrationForm(
         value={props.value}
         helperText={props.helperText}
         required={props.required}
+        _inputProps={{
+          maxLength: objConditions
+            ? objConditions.maxlength || objConditions.maxLength
+            : undefined,
+        }}
       />
     );
   } else if (props.evhfType === 'Email') {
@@ -127,6 +136,11 @@ export default function RegistrationForm(
         value={props.value}
         helperText={props.helperText}
         required={props.required}
+        _inputProps={{
+          maxLength: objConditions
+            ? objConditions.maxlength || objConditions.maxLength
+            : undefined,
+        }}
       />
     );
   } else if (props.evhfType === 'Date') {
@@ -185,6 +199,11 @@ export default function RegistrationForm(
         value={props.value}
         helperText={props.helperText}
         required={props.required}
+        _inputProps={{
+          maxLength: objConditions
+            ? objConditions.maxlength || objConditions.maxLength
+            : undefined,
+        }}
       />
     );
   }

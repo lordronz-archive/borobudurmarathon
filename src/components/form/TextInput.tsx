@@ -32,6 +32,9 @@ type TextInputProps = {
 };
 
 export default function TextInput(props: TextInputProps) {
+  if (props.label?.includes('Bib')) {
+    console.info('TextInput props', props);
+  }
   const [show, setShow] = useState(false);
   const {t} = useTranslation();
   return (

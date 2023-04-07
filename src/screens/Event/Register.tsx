@@ -28,7 +28,10 @@ import httpRequest from '../../helpers/httpRequest';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import ImageView from 'react-native-image-viewing';
 import {Platform, TouchableOpacity, View} from 'react-native';
-import {parseUnknownDataToArray} from '../../helpers/parser';
+import {
+  parseStringToObject,
+  parseUnknownDataToArray,
+} from '../../helpers/parser';
 import AppContainer from '../../layout/AppContainer';
 import {
   isSubField,

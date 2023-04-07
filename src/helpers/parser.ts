@@ -46,3 +46,17 @@ export function parseUnknownDataToArray(
   }
   return [];
 }
+export function parseStringToObject(data?: string | null): any {
+  if (!data) {
+    return {};
+  }
+  try {
+    data = JSON.parse(data);
+  } catch (err) {
+    return {};
+  }
+  if (typeof data === 'object') {
+    return data;
+  }
+  return {};
+}

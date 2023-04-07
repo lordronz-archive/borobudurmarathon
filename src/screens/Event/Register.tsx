@@ -5,7 +5,6 @@ import {
   Checkbox,
   Text,
   VStack,
-  ScrollView,
   Divider,
   useToast,
   HStack,
@@ -41,6 +40,7 @@ import {EvhfName} from '../../types/registerEvent.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import Button from '../../components/buttons/Button';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 type Price = {
   id: string;
@@ -577,9 +577,9 @@ export default function EventRegisterScreen() {
 
   return (
     <AppContainer>
-      <ScrollView ref={ref}>
+      <KeyboardAwareScrollView>
         <Header title={t('event.registrationForm')} left="back" />
-        <VStack space="4" pb="3">
+        <VStack space="4">
           <EventRegistrationCard
             imgSrc={
               event?.data.evnhThumbnail
@@ -879,7 +879,7 @@ export default function EventRegisterScreen() {
             onRequestClose={() => setOpenJersey(false)}
           />
         )}
-      </ScrollView>
+      </KeyboardAwareScrollView>
       {isLoading && <LoadingBlock style={{opacity: 0.7}} />}
     </AppContainer>
   );

@@ -18,6 +18,9 @@ export default {
   step: 'Langkah',
   termsAndConditionsAgreement:
     'Dengan melanjutkan saya mengerti, mengetahui, dan bersedia untuk mematuhi semua syarat & ketentuan Borobudur Marathon.',
+  termsAndConditionsAgreementPart1:
+    'Dengan melanjutkan saya mengerti, tahu, dan bersedia mematuhi semua',
+  termsAndConditionsAgreementPart2: 'dari Borobudur Marathon.',
   seeMoreInfo: 'Lihat info',
   additionalInformation: 'Informasi Tambahan',
   name: 'Nama',
@@ -30,6 +33,7 @@ export default {
   copy: 'Salin',
   continue: 'Lanjut',
   close: 'Tutup',
+  formEnter: 'Masukkan',
   auth: {
     forgotPassword: 'Lupa password?',
     forgotPasswordTitle: 'Lupa Password',
@@ -189,6 +193,9 @@ export default {
     category: 'Kategori',
     transactionTime: 'Waktu Transaksi',
     paymentTime: 'Waktu Pembayaran',
+    registrationID: 'ID Pendaftaran',
+    forMoreInformationAboutSize: 'Untuk informasi terkait ukuran',
+    seeJerseyChart: 'Lihat detail ukuran jersey',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',
@@ -215,7 +222,7 @@ export default {
     sorryNotPassedBallot: 'Maaf anda tidak lolos tahap ballot',
     choosePaymentMethod: 'Pilih Metode Pembayaran',
     changePaymentMethod: 'Ubah Metode Pembayaran',
-    payNow: 'Bayar Sekarang',
+    payNow: 'Bayar',
     payNowVia: 'Bayar via',
     choosePaymentMethodDescription:
       'Silahkan pilih metode pembayaran untuk event ini',
@@ -440,6 +447,7 @@ export default {
     invalidID: 'ID tidak valid',
     pleaseRecheckYourID: 'Cek ulang identitas yang Anda upload dan coba lagi',
     tryAgainLater: 'Silakan coba lagi nanti',
+    jerseySizeChartNotFound: 'Diagram ukuran jersey tidak tersedia.',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',

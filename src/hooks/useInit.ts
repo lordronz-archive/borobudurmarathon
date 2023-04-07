@@ -23,7 +23,7 @@ import {useState} from 'react';
 import useGallery from './useGallery';
 import httpRequest from '../helpers/httpRequest';
 import {LanguageID} from '../types/language.type';
-import { LanguageService } from '../api/language.service';
+import {LanguageService} from '../api/language.service';
 
 export default function useInit() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);

@@ -112,10 +112,6 @@ export default function ButtonBasedOnStatus(props: Props) {
     try {
       const resEvent = await EventService.getEvent(props.eventId);
       console.info('res get detail event', JSON.stringify(resEvent));
-      navigation.navigate('EventRegister', {
-        event: resEvent,
-        selectedCategoryId: props.evpaEvncId || '',
-      });
 
       if (
         props.eventId &&
@@ -124,7 +120,10 @@ export default function ButtonBasedOnStatus(props: Props) {
           cat => cat.evncId === props.evpaEvncId,
         )
       ) {
-        //
+        navigation.navigate('EventRegister', {
+          event: resEvent,
+          selectedCategoryId: props.evpaEvncId || '',
+        });
       } else {
         Toast.show({
           title: t('error.cannotRegisterEvent'),

@@ -15,7 +15,7 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import RegistrationForm from './components/RegistrationForm';
-import {EventFieldsEntity} from '../../types/event.type';
+import {EventFieldsEntity, EVENT_TYPES} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
 import Congratulation from '../../components/modal/Congratulation';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
@@ -109,7 +109,7 @@ export default function EventRegisterScreen() {
     if (jerseyIndex !== -1) {
       fieldResult[jerseyIndex].helperText = params.event.data.evnhSizeChart ? (
         <Text fontSize="xs">
-          For more information about size,{' '}
+          {t('event.forMoreInformationAboutSize')},{' '}
           <Text
             textDecorationLine={'underline'}
             color="primary.900"
@@ -118,11 +118,11 @@ export default function EventRegisterScreen() {
                 setOpenJersey(true);
               } else {
                 toast.show({
-                  description: 'Jersey Size chart not found',
+                  description: t('error.jerseySizeChartNotFound'),
                 });
               }
             }}>
-            See jersey size chart
+            {t('event.seeJerseyChart')}
           </Text>
         </Text>
       ) : null;
@@ -550,8 +550,8 @@ export default function EventRegisterScreen() {
   // textFinalPrice = finalPrice.toLocaleString('id-ID');
 
   const [textOriginalPrice, textFinalPrice] = useMemo(() => {
-    const originalPrice = prices[0].originalPrice;
-    const finalPrice = prices[0].finalPrice;
+    const originalPrice = prices?.[0]?.originalPrice || 0;
+    const finalPrice = prices?.[0]?.finalPrice || 0;
     let textOriginalPriceReturn;
     let textFinalPriceReturn;
     if (finalPrice < originalPrice) {
@@ -601,6 +601,10 @@ export default function EventRegisterScreen() {
                 cat => cat.evncId === params.selectedCategoryId,
               )?.evncName
             }
+            eventType={(event?.data.evnhType
+              ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
+              : 'OTHER'
+            ).toUpperCase()}
           />
           <Divider
             height="8px"
@@ -776,7 +780,7 @@ export default function EventRegisterScreen() {
                   fontSize="xs"
                   color="primary.900"
                   bold>
-                  terms and conditions{' '}
+                  {t('info.termsAndConditions').toLowerCase()}{' '}
                 </Text>
                 {t('termsAndConditionsAgreementPart2')}
               </Text>

@@ -21,11 +21,12 @@ import useInit from '../../hooks/useInit';
 import FastImage from 'react-native-fast-image';
 import useGallery from '../../hooks/useGallery';
 import AppRandomImage from '../../components/images/AppRandomImage';
+import {WelcomeService} from '../../api/welcome.service';
 
 export default function WelcomeScreen() {
   const {user} = useAuthUser();
   const {getProfile} = useInit();
-  const {galleries} = useGallery();
+  const {isLoading, galleries} = useGallery();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
@@ -33,6 +34,9 @@ export default function WelcomeScreen() {
 
   useEffect(() => {
     // fetchGallery();
+    if (user?.data && user?.data.length > 0 && user?.data[0].zmemId) {
+      WelcomeService.updateLatestView(user?.data[0].zmemId);
+    }
     getProfile();
   }, []);
 
@@ -53,10 +57,10 @@ export default function WelcomeScreen() {
   //   setGalleriesRandomized(randomized);
   // };
 
-  if (!user) {
+  if (!user || isLoading) {
     return (
       <Box flex={1}>
-        <LoadingBlock text="Waiting user data..." />
+        <LoadingBlock text={t('pleaseWait') + '...'} />
       </Box>
     );
   }

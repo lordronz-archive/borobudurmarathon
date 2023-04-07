@@ -10,8 +10,6 @@ import {
   ChevronRightIcon,
   Button,
   Toast,
-  Actionsheet,
-  AlertDialog,
 } from 'native-base';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -22,12 +20,9 @@ import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import moment from 'moment';
 import datetime from '../../helpers/datetime';
-import {
-  EVENT_TYPES,
-  TransactionStatus,
-} from '../../types/event.type';
+import {EVENT_TYPES, TransactionStatus} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
-import {Dimensions, TextInput, TouchableOpacity} from 'react-native';
+import {TextInput, TouchableOpacity} from 'react-native';
 import AppContainer from '../../layout/AppContainer';
 import {t} from 'i18next';
 import {TransactionDetail} from '../../types/transaction.type';
@@ -165,7 +160,7 @@ export default function MyEventDetail() {
 
   const DATA_LIST = [
     {
-      title: 'Registration ID',
+      title: t('event.registrationID'),
       value: detailTransaction?.data?.trnsRefId,
     },
     {
@@ -547,6 +542,11 @@ export default function MyEventDetail() {
                     </Box>
                   ),
               )}
+
+              {/* <RowDetailRegistration
+                data={detailTransaction?.linked.evrlTrnsId?.[0] || {}}
+                evnhId={detailTransaction?.linked.trnsEventId?.[0]?.evnhId || 0}
+              /> */}
             </VStack>
             <HStack>
               <View flex={1} bg={'#EB1C23'} height={'6px'} />

@@ -83,8 +83,8 @@ export default function BannerNew(props: IProps) {
                     style={{
                       width: '100%',
                       height: 200,
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
                     }}
                     source={
                       item.imageUrl

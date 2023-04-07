@@ -11,7 +11,7 @@ import FileInput from '../../../components/form/FileInput';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import TimeInput from '../../../components/form/TimeInput';
 import {getTextBasedOnLanguage} from '../../../helpers/text';
-import {t} from 'i18next';
+import i18next, {t} from 'i18next';
 
 type Option = {value: string; label: string};
 export default function RegistrationForm(
@@ -232,14 +232,21 @@ export async function getOptions(props: EventFieldsEntity) {
       value: nationality || '',
     }));
   } else {
+    if (props.evhfName === 'evpa10KYear') {
+      console.info('=====> evpa10KYear', props.evhfExternalData);
+    }
     const opts = (
       props.evhfExternalData && !props.evhfExternalData.includes('/api/')
         ? JSON.parse(props.evhfExternalData)
         : []
     ).map((item: {id: number; label: string}) => ({
-      label: getTextBasedOnLanguage(item.label || ''),
+      label: getTextBasedOnLanguage(item.label || '', i18next.language),
       value: item.id || '',
     }));
+
+    if (props.evhfName === 'evpa10KYear') {
+      console.info('=====> evpa10KYear opts', opts);
+    }
     return opts;
   }
 }

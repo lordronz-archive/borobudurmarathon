@@ -16,8 +16,17 @@ export function getTextBasedOnLanguage(
     // console.info('JSON.parse(val)', JSON.parse(val));
     try {
       const res: any = JSON.parse(val);
-      return res[language];
+      console.info('res', res);
+
+      if (typeof res === 'object') {
+        console.info('typeof res === string');
+        return res[language];
+      } else {
+        console.info('typeof res not string');
+        return res;
+      }
     } catch {
+      console.info('failed parse, catch');
       return val;
     }
   }

@@ -53,6 +53,9 @@ export default function BannerNew(props: IProps) {
           mode="parallax"
           scrollAnimationDuration={3000}
           // onSnapToItem={index => console.log('current index:', index)}
+          panGestureHandlerProps={{
+            activeOffsetX: [-5, 5],
+          }}
           renderItem={({item, index}) => (
             <Box
               key={index}

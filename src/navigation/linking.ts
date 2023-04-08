@@ -7,7 +7,7 @@ import {getParameterByName} from '../helpers/url';
 export const linking = {
   prefixes: [
     'bormar://',
-    'https://borobudurmarathon.page.link',
+    'https://myborobudurmarathon.page.link',
     'https://my.borobudurmarathon.com',
   ],
 

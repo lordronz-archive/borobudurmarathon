@@ -20,6 +20,7 @@
 #import <ReactCommon/RCTTurboModuleManager.h>
 
 #import <react/config/ReactNativeConfig.h>
+#import <RNFBDynamicLinksAppDelegateInterceptor.h>  // add this line
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 

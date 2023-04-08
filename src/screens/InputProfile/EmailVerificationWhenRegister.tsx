@@ -122,8 +122,7 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
           </VStack>
           <Box mt={26} mb="3">
             <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-              {t('auth.emailValidation8DigitCode')}{' '}
-              <Text bold>{`"${email}"`}</Text>
+              {t('auth.emailValidation8DigitCode')} <Text bold>{email}</Text>
             </Text>
           </Box>
           <VStack space="2.5">

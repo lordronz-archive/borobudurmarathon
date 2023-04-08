@@ -181,7 +181,7 @@ export default function MyEventDetail() {
     },
     {
       title: t('event.category'),
-      value: detailTransaction?.linked?.trnsEventId?.[0]?.evnhCategory || '-',
+      value: detailTransaction?.linked?.trndTrnsId?.[0]?.trndDescription || '-',
     },
     {
       title: t('event.totalPayment'),

@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import FastImage, {FastImageProps} from 'react-native-fast-image';
+import {createImageProgress} from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
+const Image = createImageProgress(FastImage);
 
 type Props = FastImageProps & {images: string[]};
 
@@ -7,7 +10,7 @@ export default function AppRandomImage(props: Props) {
   const [uri, setUri] = useState<string>();
 
   return (
-    <FastImage
+    <Image
       {...props}
       source={
         uri
@@ -19,9 +22,45 @@ export default function AppRandomImage(props: Props) {
           ? props.source
           : require('../../assets/images/no-image.png')
       }
-      onError={() => {
+      indicator={Progress.Pie}
+      indicatorProps={{
+        size: 50,
+        borderWidth: 0,
+        color: 'rgba(150, 150, 150, 1)',
+        unfilledColor: 'rgba(200, 200, 200, 0.2)',
+      }}
+      imageStyle={{borderRadius: 10}}
+      renderError={() => {
         setUri(props.images[Math.floor(Math.random() * props.images.length)]);
+        return (
+          <AppRandomImage
+            {...props}
+            source={{
+              uri: props.images[
+                Math.floor(Math.random() * props.images.length)
+              ],
+            }}
+            images={props.images}
+          />
+        );
+        return require('../../assets/images/no-image.png');
       }}
     />
+    // <FastImage
+    //   {...props}
+    //   source={
+    //     uri
+    //       ? {
+    //           uri: uri,
+    //           priority: FastImage.priority.normal,
+    //         }
+    //       : props.source
+    //       ? props.source
+    //       : require('../../assets/images/no-image.png')
+    //   }
+    //   onError={() => {
+    //     setUri(props.images[Math.floor(Math.random() * props.images.length)]);
+    //   }}
+    // />
   );
 }

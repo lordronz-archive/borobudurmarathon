@@ -57,7 +57,7 @@ export default function WelcomeScreen() {
   //   setGalleriesRandomized(randomized);
   // };
 
-  if (!user || isLoading) {
+  if (!user || isLoading || galleries.length === 0) {
     return (
       <Box flex={1}>
         <LoadingBlock text={t('pleaseWait') + '...'} />
@@ -71,13 +71,13 @@ export default function WelcomeScreen() {
         <HStack flex="9" space={10.51} py="3">
           <VStack flex="1" space="2">
             <AppRandomImage
-              defaultSource={require('../../assets/images/no-image.png')}
+              // defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 2, borderRadius: 8}}
               source={
                 galleries[0]
                   ? {
                       uri: galleries[0],
-                      priority: FastImage.priority.normal,
+                      priority: FastImage.priority.high,
                     }
                   : require('../../assets/images/no-image.png')
               }
@@ -142,13 +142,13 @@ export default function WelcomeScreen() {
               {/* <Box backgroundColor={'#EB1C23'} height={2} /> */}
             </Box>
             <AppRandomImage
-              defaultSource={require('../../assets/images/no-image.png')}
+              // defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
                 galleries[1]
                   ? {
                       uri: galleries[1],
-                      priority: FastImage.priority.normal,
+                      priority: FastImage.priority.high,
                     }
                   : require('../../assets/images/no-image.png')
               }
@@ -172,13 +172,13 @@ export default function WelcomeScreen() {
           <VStack flex="1" space="2">
             <HStack space={10.51} flex="1.5">
               <AppRandomImage
-                defaultSource={require('../../assets/images/no-image.png')}
+                // defaultSource={require('../../assets/images/no-image.png')}
                 style={{flex: 1.5, borderRadius: 8}}
                 source={
                   galleries[2]
                     ? {
                         uri: galleries[2],
-                        priority: FastImage.priority.normal,
+                        priority: FastImage.priority.high,
                       }
                     : require('../../assets/images/no-image.png')
                 }
@@ -186,13 +186,13 @@ export default function WelcomeScreen() {
                 images={galleries}
               />
               <AppRandomImage
-                defaultSource={require('../../assets/images/no-image.png')}
+                // defaultSource={require('../../assets/images/no-image.png')}
                 style={{flex: 2.4, borderRadius: 8}}
                 source={
                   galleries[3]
                     ? {
                         uri: galleries[3],
-                        priority: FastImage.priority.normal,
+                        priority: FastImage.priority.high,
                       }
                     : require('../../assets/images/no-image.png')
                 }
@@ -201,13 +201,13 @@ export default function WelcomeScreen() {
               />
             </HStack>
             <AppRandomImage
-              defaultSource={require('../../assets/images/no-image.png')}
+              // defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
                 galleries[4]
                   ? {
                       uri: galleries[4],
-                      priority: FastImage.priority.normal,
+                      priority: FastImage.priority.high,
                     }
                   : require('../../assets/images/no-image.png')
               }
@@ -215,13 +215,13 @@ export default function WelcomeScreen() {
               images={galleries}
             />
             <AppRandomImage
-              defaultSource={require('../../assets/images/no-image.png')}
+              // defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 2.4, borderRadius: 8}}
               source={
                 galleries[5]
                   ? {
                       uri: galleries[5],
-                      priority: FastImage.priority.normal,
+                      priority: FastImage.priority.high,
                     }
                   : require('../../assets/images/no-image.png')
               }
@@ -229,13 +229,13 @@ export default function WelcomeScreen() {
               images={galleries}
             />
             <AppRandomImage
-              defaultSource={require('../../assets/images/no-image.png')}
+              // defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 3, borderRadius: 8}}
               source={
                 galleries[6]
                   ? {
                       uri: galleries[6],
-                      priority: FastImage.priority.normal,
+                      priority: FastImage.priority.high,
                     }
                   : require('../../assets/images/no-image.png')
               }
@@ -243,13 +243,13 @@ export default function WelcomeScreen() {
               images={galleries}
             />
             <AppRandomImage
-              defaultSource={require('../../assets/images/no-image.png')}
+              // defaultSource={require('../../assets/images/no-image.png')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
                 galleries[7]
                   ? {
                       uri: galleries[7],
-                      priority: FastImage.priority.normal,
+                      priority: FastImage.priority.high,
                     }
                   : require('../../assets/images/no-image.png')
               }

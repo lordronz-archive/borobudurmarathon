@@ -3,6 +3,7 @@ import {createGlobalState} from 'react-hooks-global-state';
 import FastImage from 'react-native-fast-image';
 import {EventService} from '../api/event.service';
 import {handleErrorMessage} from '../helpers/apiErrors';
+const defaultImage = require('../assets/images/no-image.png');
 
 type IStateEvent = {
   galleries: string[];
@@ -24,7 +25,7 @@ export default function useGallery() {
       console.log('GALLERY', JSON.stringify(data));
 
       if (data && data.data) {
-        const galleriesRaw = data.data.map(v => v.mgalUrl);
+        let galleriesRaw = data.data.map(v => v.mgalUrl);
         if (galleriesRaw.length < 10) {
           for (let i = 0; i < 10; ++i) {
             const temp =
@@ -32,9 +33,28 @@ export default function useGallery() {
             galleriesRaw.push(temp);
           }
         }
-        FastImage.preload(
-          galleriesRaw.map(uri => ({uri, priority: FastImage.priority.high})),
-        );
+
+        if (galleriesRaw.length > 0) {
+          FastImage.preload(
+            galleriesRaw
+              .map(uri => ({uri, priority: FastImage.priority.high}))
+              .filter(uri => uri),
+          );
+        }
+
+        if (galleriesRaw.length === 0) {
+          galleriesRaw = [
+            defaultImage,
+            defaultImage,
+            defaultImage,
+            defaultImage,
+            defaultImage,
+            defaultImage,
+            defaultImage,
+            defaultImage,
+          ];
+        }
+
         console.info('galleriesRaw before sort random', galleriesRaw);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

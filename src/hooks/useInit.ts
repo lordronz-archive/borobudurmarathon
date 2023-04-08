@@ -134,8 +134,6 @@ export default function useInit() {
       params?: NativeStackNavigationProp<RootStackParamList>;
     }[],
   ) => {
-    navigation.navigate('Welcome');
-    return;
     console.info('checkAccount: data', data);
     console.info('checkAccount: replace', data);
     if (config.isShowDemoSettings) {

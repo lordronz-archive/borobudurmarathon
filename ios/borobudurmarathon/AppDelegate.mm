@@ -10,6 +10,7 @@
 #import <React/RCTAppSetupUtils.h>
 #import <Firebase.h>
 #import "RNSplashScreen.h"  // here
+#import <RNFBDynamicLinksAppDelegateInterceptor.h>  // add this line
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -20,7 +21,6 @@
 #import <ReactCommon/RCTTurboModuleManager.h>
 
 #import <react/config/ReactNativeConfig.h>
-#import <RNFBDynamicLinksAppDelegateInterceptor.h>  // add this line
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 

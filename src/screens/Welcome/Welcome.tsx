@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from 'native-base';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Heading} from '../../components/text/Heading';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
@@ -30,6 +30,7 @@ export default function WelcomeScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
+  const [countImageLoaded, setCountImageLoaded] = useState(0);
   // const [galleries, setGalleriesRandomized] = useState<string[]>([]);
 
   useEffect(() => {
@@ -58,11 +59,7 @@ export default function WelcomeScreen() {
   // };
 
   if (!user || isLoading || galleries.length === 0) {
-    return (
-      <Box flex={1}>
-        <LoadingBlock text={t('pleaseWait') + '...'} />
-      </Box>
-    );
+    return <LoadingBlock text={t('pleaseWait') + '...'} />;
   }
 
   return (
@@ -71,7 +68,8 @@ export default function WelcomeScreen() {
         <HStack flex="9" space={10.51} py="3">
           <VStack flex="1" space="2">
             <AppRandomImage
-              // defaultSource={require('../../assets/images/no-image.png')}
+              defaultSource={require('../../assets/images/blur-image.jpg')}
+              fallback={require('../../assets/images/blur-image.jpg')}
               style={{flex: 2, borderRadius: 8}}
               source={
                 galleries[0]
@@ -79,11 +77,13 @@ export default function WelcomeScreen() {
                       uri: galleries[0],
                       priority: FastImage.priority.high,
                     }
-                  : require('../../assets/images/no-image.png')
+                  : require('../../assets/images/blur-image.jpg')
               }
               resizeMode={FastImage.resizeMode.cover}
-              fallback={require('../../assets/images/no-image.png')}
               images={galleries}
+              onLoadEnd={() => {
+                setCountImageLoaded(val => val + 1);
+              }}
             />
             <Box
               flex="3"
@@ -99,9 +99,9 @@ export default function WelcomeScreen() {
                     ? {
                         uri: galleries[1],
                       }
-                    : require('../../assets/images/no-image.png')
+                    : require('../../assets/images/blur-image.jpg')
                 }
-                fallbackSource={require('../../assets/images/no-image.png')}
+                fallback={require('../../assets/images/blur-image.jpg')}
                 alt="Welcome Image"
               /> */}
               <Box
@@ -142,7 +142,8 @@ export default function WelcomeScreen() {
               {/* <Box backgroundColor={'#EB1C23'} height={2} /> */}
             </Box>
             <AppRandomImage
-              // defaultSource={require('../../assets/images/no-image.png')}
+              defaultSource={require('../../assets/images/blur-image.jpg')}
+              fallback={require('../../assets/images/blur-image.jpg')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
                 galleries[1]
@@ -150,10 +151,13 @@ export default function WelcomeScreen() {
                       uri: galleries[1],
                       priority: FastImage.priority.high,
                     }
-                  : require('../../assets/images/no-image.png')
+                  : require('../../assets/images/blur-image.jpg')
               }
               resizeMode={FastImage.resizeMode.cover}
               images={galleries}
+              onLoadEnd={() => {
+                setCountImageLoaded(val => val + 1);
+              }}
             />
             {/* <Image
               flex="1.5"
@@ -163,16 +167,17 @@ export default function WelcomeScreen() {
                   ? {
                       uri: galleries[2],
                     }
-                  : require('../../assets/images/no-image.png')
+                  : require('../../assets/images/blur-image.jpg')
               }
-              fallbackSource={require('../../assets/images/no-image.png')}
+              fallback={require('../../assets/images/blur-image.jpg')}
               alt="Welcome Image"
             /> */}
           </VStack>
           <VStack flex="1" space="2">
             <HStack space={10.51} flex="1.5">
               <AppRandomImage
-                // defaultSource={require('../../assets/images/no-image.png')}
+                defaultSource={require('../../assets/images/blur-image.jpg')}
+                fallback={require('../../assets/images/blur-image.jpg')}
                 style={{flex: 1.5, borderRadius: 8}}
                 source={
                   galleries[2]
@@ -180,13 +185,17 @@ export default function WelcomeScreen() {
                         uri: galleries[2],
                         priority: FastImage.priority.high,
                       }
-                    : require('../../assets/images/no-image.png')
+                    : require('../../assets/images/blur-image.jpg')
                 }
                 resizeMode={FastImage.resizeMode.cover}
                 images={galleries}
+                onLoadEnd={() => {
+                  setCountImageLoaded(val => val + 1);
+                }}
               />
               <AppRandomImage
-                // defaultSource={require('../../assets/images/no-image.png')}
+                defaultSource={require('../../assets/images/blur-image.jpg')}
+                fallback={require('../../assets/images/blur-image.jpg')}
                 style={{flex: 2.4, borderRadius: 8}}
                 source={
                   galleries[3]
@@ -194,14 +203,18 @@ export default function WelcomeScreen() {
                         uri: galleries[3],
                         priority: FastImage.priority.high,
                       }
-                    : require('../../assets/images/no-image.png')
+                    : require('../../assets/images/blur-image.jpg')
                 }
                 resizeMode={FastImage.resizeMode.cover}
                 images={galleries}
+                onLoadEnd={() => {
+                  setCountImageLoaded(val => val + 1);
+                }}
               />
             </HStack>
             <AppRandomImage
-              // defaultSource={require('../../assets/images/no-image.png')}
+              defaultSource={require('../../assets/images/blur-image.jpg')}
+              fallback={require('../../assets/images/blur-image.jpg')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
                 galleries[4]
@@ -209,13 +222,17 @@ export default function WelcomeScreen() {
                       uri: galleries[4],
                       priority: FastImage.priority.high,
                     }
-                  : require('../../assets/images/no-image.png')
+                  : require('../../assets/images/blur-image.jpg')
               }
               resizeMode={FastImage.resizeMode.cover}
               images={galleries}
+              onLoadEnd={() => {
+                setCountImageLoaded(val => val + 1);
+              }}
             />
             <AppRandomImage
-              // defaultSource={require('../../assets/images/no-image.png')}
+              defaultSource={require('../../assets/images/blur-image.jpg')}
+              fallback={require('../../assets/images/blur-image.jpg')}
               style={{flex: 2.4, borderRadius: 8}}
               source={
                 galleries[5]
@@ -223,13 +240,17 @@ export default function WelcomeScreen() {
                       uri: galleries[5],
                       priority: FastImage.priority.high,
                     }
-                  : require('../../assets/images/no-image.png')
+                  : require('../../assets/images/blur-image.jpg')
               }
               resizeMode={FastImage.resizeMode.cover}
               images={galleries}
+              onLoadEnd={() => {
+                setCountImageLoaded(val => val + 1);
+              }}
             />
             <AppRandomImage
-              // defaultSource={require('../../assets/images/no-image.png')}
+              defaultSource={require('../../assets/images/blur-image.jpg')}
+              fallback={require('../../assets/images/blur-image.jpg')}
               style={{flex: 3, borderRadius: 8}}
               source={
                 galleries[6]
@@ -237,13 +258,17 @@ export default function WelcomeScreen() {
                       uri: galleries[6],
                       priority: FastImage.priority.high,
                     }
-                  : require('../../assets/images/no-image.png')
+                  : require('../../assets/images/blur-image.jpg')
               }
               resizeMode={FastImage.resizeMode.cover}
               images={galleries}
+              onLoadEnd={() => {
+                setCountImageLoaded(val => val + 1);
+              }}
             />
             <AppRandomImage
-              // defaultSource={require('../../assets/images/no-image.png')}
+              defaultSource={require('../../assets/images/blur-image.jpg')}
+              fallback={require('../../assets/images/blur-image.jpg')}
               style={{flex: 1.5, borderRadius: 8}}
               source={
                 galleries[7]
@@ -251,10 +276,13 @@ export default function WelcomeScreen() {
                       uri: galleries[7],
                       priority: FastImage.priority.high,
                     }
-                  : require('../../assets/images/no-image.png')
+                  : require('../../assets/images/blur-image.jpg')
               }
               resizeMode={FastImage.resizeMode.cover}
               images={galleries}
+              onLoadEnd={() => {
+                setCountImageLoaded(val => val + 1);
+              }}
             />
           </VStack>
         </HStack>
@@ -269,6 +297,9 @@ export default function WelcomeScreen() {
           {t('journey')}
         </Button>
       </VStack>
+      {countImageLoaded < 8 && (
+        <LoadingBlock text={'~ ' + t('pleaseWait') + '...'} />
+      )}
     </AppContainer>
   );
 }

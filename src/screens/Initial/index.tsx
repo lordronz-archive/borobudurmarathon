@@ -99,7 +99,9 @@ export default function InitialScreen() {
             sharedCookiesEnabled={true}
           />
 
-          {isLoadingWebView && <LoadingBlock text="Preparing..." />}
+          {isLoadingWebView && (
+            <LoadingBlock text={t('message.preparing') + '...'} />
+          )}
         </Box>
       </AppContainer>
     );
@@ -107,7 +109,9 @@ export default function InitialScreen() {
 
   return (
     <AppContainer>
-      <LoadingBlock text="Preparing... Please wait..." />
+      <LoadingBlock
+        text={t('message.preparing') + '... ' + t('pleaseWait') + '...'}
+      />
     </AppContainer>
   );
 }

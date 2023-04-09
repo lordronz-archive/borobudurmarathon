@@ -406,6 +406,7 @@ export default {
     authenticating: 'Sedang memvalidasi. Harap tunggu...',
     checkingSession: 'Mengecek sesi...',
     youAreNotRegistered: 'Belum terdaftar. Harap tunggu...',
+    preparing: 'Menyiapkan',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {

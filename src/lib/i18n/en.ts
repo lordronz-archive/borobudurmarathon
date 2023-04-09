@@ -404,6 +404,7 @@ export default {
     authenticating: 'Authenticating. Please wait...',
     checkingSession: 'Checking your session...',
     youAreNotRegistered: 'You are not registered. Please wait...',
+    preparing: 'Preparing',
   },
   chooseOne: 'Choose one',
   stepTitle: {

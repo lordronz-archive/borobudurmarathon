@@ -91,56 +91,40 @@ export default function WelcomeScreen() {
               borderWidth={1}
               borderColor="#E8ECF3"
               borderRadius={8}
-              overflow="hidden">
-              {/* <Image
-                flex="2"
+              justifyContent="space-between">
+              <Image
                 borderRadius={8}
-                source={
-                  galleries[1]
-                    ? {
-                        uri: galleries[1],
-                      }
-                    : require('../../assets/images/blur-image.jpg')
-                }
-                fallback={require('../../assets/images/blur-image.jpg')}
+                source={require('../../assets/images/welcome-card-img.png')}
                 alt="Welcome Image"
-              /> */}
-              <Box
-                flex="3"
-                borderWidth={1}
-                borderColor="#E8ECF3"
-                borderRadius={8}
-                overflow="hidden">
-                <Image
-                  borderRadius={8}
-                  source={require('../../assets/images/welcome-card-img.png')}
-                  alt="Welcome Image"
-                  top="0"
-                  right="0"
-                  position="absolute"
-                />
-                <Box flex="1" justifyContent={'space-between'} px="4">
-                  <Box py="8">
-                    <Text mb={6} color="#EB1C23" fontWeight={600}>
-                      {t('hi')},{' '}
-                      {!user.data[0].zmemFullName
-                        .split(' ')[0]
-                        .match(/^m[uo]c?hamm?[ae]d$/im) ||
-                      !user.data[0].zmemFullName.split(' ')[1]
-                        ? user.data[0].zmemFullName.split(' ')[0]
-                        : user.data[0].zmemFullName.split(' ')[1]}
-                    </Text>
-                    <Heading fontWeight={600} fontSize={20}>
-                      {t('welcomeTo') + '\n'}Borobudur Marathon
-                    </Heading>
-                  </Box>
-                  <Text py="4" fontSize={10}>
-                    {t('partOf')} Borobudur Marathon!
+                top="0"
+                right="0"
+                position="absolute"
+              />
+              <VStack justifyContent={'space-between'} px="4" flex="1" py="3">
+                <VStack justifyContent="center">
+                  <Text py="2" color="#EB1C23" fontWeight={600}>
+                    {t('hi')},{' '}
+                    {!user.data[0].zmemFullName
+                      .split(' ')[0]
+                      .match(/^m[uo]c?hamm?[ae]d$/im) ||
+                    !user.data[0].zmemFullName.split(' ')[1]
+                      ? user.data[0].zmemFullName.split(' ')[0]
+                      : user.data[0].zmemFullName.split(' ')[1]}
                   </Text>
-                </Box>
-                <Box backgroundColor={'#EB1C23'} height={2} />
-              </Box>
-              {/* <Box backgroundColor={'#EB1C23'} height={2} /> */}
+                  <Heading fontWeight={600} fontSize={20}>
+                    {t('welcomeTo') + '\n'}Borobudur Marathon Borobudur Marathon
+                  </Heading>
+                </VStack>
+                <Text py="2" fontSize={10}>
+                  {t('partOf')} Borobudur Marathon!
+                </Text>
+              </VStack>
+              <Box
+                backgroundColor={'#EB1C23'}
+                height={2}
+                borderBottomLeftRadius={5}
+                borderBottomRightRadius={5}
+              />
             </Box>
             <AppRandomImage
               defaultSource={require('../../assets/images/blur-image.jpg')}

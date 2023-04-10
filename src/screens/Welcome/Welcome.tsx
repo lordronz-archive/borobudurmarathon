@@ -40,6 +40,7 @@ export default function WelcomeScreen() {
     }
     getProfile();
   }, []);
+  console.info('countImageLoaded', countImageLoaded);
 
   // const fetchGallery = async () => {
   //   if (user?.data && user?.data.length > 0 && user?.data[0].zmemId) {
@@ -297,8 +298,12 @@ export default function WelcomeScreen() {
           {t('journey')}
         </Button>
       </VStack>
-      {countImageLoaded < 8 && (
-        <LoadingBlock text={'~ ' + t('pleaseWait') + '...'} />
+      {countImageLoaded < 5 && (
+        <LoadingBlock
+          maxCount={5}
+          text={'~ ' + t('pleaseWait') + '...'}
+          onRemainingZero={() => setCountImageLoaded(8)}
+        />
       )}
     </AppContainer>
   );

@@ -22,7 +22,7 @@ export default function AppRandomImage(props: Props) {
           ? props.source
           : require('../../assets/images/blur-image.jpg')
       }
-      indicator={Progress.Pie}
+      indicator={Progress.Bar}
       indicatorProps={{
         size: 50,
         borderWidth: 0,
@@ -31,7 +31,7 @@ export default function AppRandomImage(props: Props) {
       }}
       imageStyle={{borderRadius: 10}}
       renderError={() => {
-        setUri(props.images[Math.floor(Math.random() * props.images.length)]);
+        // setUri(props.images[Math.floor(Math.random() * props.images.length)]);
         return (
           <AppRandomImage
             {...props}

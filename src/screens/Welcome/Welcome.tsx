@@ -111,8 +111,8 @@ export default function WelcomeScreen() {
                       ? user.data[0].zmemFullName.split(' ')[0]
                       : user.data[0].zmemFullName.split(' ')[1]}
                   </Text>
-                  <Heading fontWeight={600} fontSize={20}>
-                    {t('welcomeTo') + '\n'}Borobudur Marathon Borobudur Marathon
+                  <Heading fontWeight={600} fontSize={19}>
+                    {t('welcomeTo') + '\n'}Borobudur Marathon
                   </Heading>
                 </VStack>
                 <Text py="2" fontSize={10}>
@@ -284,9 +284,9 @@ export default function WelcomeScreen() {
       </VStack>
       {countImageLoaded < 5 && (
         <LoadingBlock
-          maxCount={5}
+          maxCount={7}
           text={'~ ' + t('pleaseWait') + '...'}
-          onRemainingZero={() => setCountImageLoaded(8)}
+          onRemainingZero={() => setCountImageLoaded(5)}
         />
       )}
     </AppContainer>

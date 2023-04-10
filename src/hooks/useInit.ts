@@ -134,6 +134,8 @@ export default function useInit() {
       params?: NativeStackNavigationProp<RootStackParamList>;
     }[],
   ) => {
+    // navigation.replace('Welcome');
+    // return;
     console.info('checkAccount: data', data);
     console.info('checkAccount: replace', data);
     if (config.isShowDemoSettings) {
@@ -156,27 +158,7 @@ export default function useInit() {
     if (data.login === 'KompasId' && Number(data.authEmail) === 0) {
       console.info("data.login === 'KompasId' && Number(data.authEmail) === 0");
       // verify email
-      AuthService.verificationEmail()
-        .then(() => {
-          navigation.navigate('EmailValidationForKompas', {
-            email: data.email,
-            onSuccess: () => {
-              setDemoVerifyEmail(false);
-
-              checkAccount(
-                {...data, authEmail: '1'},
-                profile,
-                {
-                  isShowDemoVerifyEmail: false,
-                },
-                nextScreens,
-              );
-            },
-          });
-        })
-        .catch(err => {
-          handleErrorMessage(err, t('error.failedToSendOTP'));
-        });
+      verifyEmailKompasId(data, profile, nextScreens);
     } else if (data.login === 'KompasId' && Number(data.consent) === 0) {
       console.info("data.login === 'KompasId' && Number(data.consent) === 0");
       if (profile.linked.mbsdZmemId && profile.linked.mbsdZmemId.length > 0) {
@@ -265,6 +247,37 @@ export default function useInit() {
         });
       }
     }
+  };
+
+  const verifyEmailKompasId = (
+    data: IAuthResponseData,
+    profile: IMemberDetailResponse,
+    nextScreens?: {
+      path: keyof RootStackParamList;
+      params?: NativeStackNavigationProp<RootStackParamList>;
+    }[],
+  ) => {
+    AuthService.verificationEmail()
+      .then(() => {
+        navigation.navigate('EmailValidationForKompas', {
+          email: data.email,
+          onSuccess: () => {
+            setDemoVerifyEmail(false);
+
+            checkAccount(
+              {...data, authEmail: '1'},
+              profile,
+              {
+                isShowDemoVerifyEmail: false,
+              },
+              nextScreens,
+            );
+          },
+        });
+      })
+      .catch(err => {
+        handleErrorMessage(err, t('error.failedToSendOTP'));
+      });
   };
 
   const logout = async (

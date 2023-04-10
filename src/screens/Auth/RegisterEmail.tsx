@@ -96,7 +96,8 @@ export default function RegisterEmailScreen() {
         ...form,
         ptmmLanguage: i18next.language === 'id' ? LanguageID.ID : LanguageID.EN,
       };
-      console.info('signup data', JSON.stringify(data));
+      console.info('====> signup data', JSON.stringify(data));
+      // return;
       const result = await AuthService.signup(data);
       console.info('register result', result);
 

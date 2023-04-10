@@ -94,6 +94,8 @@ export default function EmailVerificationWhenRegisterScreen({route}: Props) {
     setSeconds(30);
     try {
       setIsLoading(true);
+      console.info('===> email ', email);
+
       const sendOtpRes = await AuthService.resendOTPEmail(email || '');
       console.info('SendOTP result: ', sendOtpRes);
       Toast.show({

@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
-import React, { useCallback, useState } from 'react';
-import {Box, Button, Modal, Text} from 'native-base';
+import React, { useCallback } from 'react';
+import {Box, Modal, Text} from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
 import {TouchableOpacity} from 'react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 type Props = {
   visible: boolean;
@@ -30,6 +31,7 @@ const FilePicker = (props: Props) => {
       })
       .catch(err => {
         console.log('ERROR OEPN GALERY =>>> ', err);
+        crashlytics().recordError(err);
       });
   };
 
@@ -57,6 +59,7 @@ const FilePicker = (props: Props) => {
       })
       .catch(err => {
         console.log('ERROR OPEN CAMERA =>>> ', err);
+        crashlytics().recordError(err);
       });
   };
 

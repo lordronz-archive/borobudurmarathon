@@ -1,6 +1,7 @@
 import i18next from 'i18next';
 import {Toast} from 'native-base';
 import {getErrorMessage} from './errorHandler';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export function getApiErrors(err: any): {[key: string]: string} | null {
   console.info('===>> errorr', err);
@@ -52,6 +53,8 @@ export function handleErrorMessage(
     onAnyError?: () => void;
   },
 ) {
+  crashlytics().recordError(err);
+
   if (options && options.ignore404) {
     if (err.status === 404) {
       return null;

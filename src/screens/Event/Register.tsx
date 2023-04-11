@@ -74,7 +74,6 @@ export default function EventRegisterScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [autofilled, setAutofilled] = useState(false);
   const [openJersey, setOpenJersey] = useState(false);
 
   const {user} = useAuthUser();
@@ -216,86 +215,6 @@ export default function EventRegisterScreen() {
   const [checkbox, setCheckbox] = useState<string[]>([]);
 
   const [files, setFiles] = useState<{[key: string]: DocumentPickerResponse}>();
-
-  useEffect(() => {
-    const data: {[key: string]: any} = {};
-    if (!user || autofilled || fields.length < 1) {
-      return;
-    }
-    console.info(fields);
-    let findIndex = fields.findIndex(f => f.evhfName === 'evpaName');
-    if (findIndex !== -1) {
-      data.evpaName = user?.data[0].zmemFullName;
-      data.static = true;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaPhone');
-    if (findIndex !== -1) {
-      data.evpaPhone = user?.linked?.zmemAuusId?.[0]?.auusPhone;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaEmail');
-    if (findIndex !== -1) {
-      data.evpaEmail = user?.linked?.zmemAuusId?.[0]?.auusEmail;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaAddress');
-    if (findIndex !== -1) {
-      data.evpaAddress = user?.linked?.mbsdZmemId?.[0]?.mbsdAddress;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaCity');
-    if (findIndex !== -1) {
-      data.evpaCity = user?.linked?.mbsdZmemId?.[0]?.mbsdCity;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaProvinces');
-    if (findIndex !== -1) {
-      data.evpaProvinces = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaProvinsi');
-    if (findIndex !== -1) {
-      data.evpaProvinsi = user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaNationality');
-    if (findIndex !== -1) {
-      data.evpaNationality = user?.linked?.mbsdZmemId?.[0]?.mbsdNationality;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaBirthPlace');
-    if (findIndex !== -1) {
-      data.evpaBirthPlace = user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaBirthDate');
-    if (findIndex !== -1) {
-      data.evpaBirthDate = user?.linked?.mbsdZmemId?.[0]?.mbsdBirthDate;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaCountry');
-    if (findIndex !== -1) {
-      data.evpaCountry = user?.linked?.mbsdZmemId?.[0]?.mbsdCountry;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaGender');
-    if (findIndex !== -1) {
-      data.evpaGender = user?.linked?.mbsdZmemId?.[0]?.mbsdGender;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaIDNumberType');
-    if (findIndex !== -1) {
-      data.evpaIDNumberType = user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumberType;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaIDNumber');
-    if (findIndex !== -1) {
-      data.evpaIDNumber = user?.linked?.mbsdZmemId?.[0]?.mbsdIDNumber;
-    }
-    findIndex = fields.findIndex(f => f.evhfName === 'evpaBloodType');
-    if (findIndex !== -1) {
-      data.evpaBloodType = user?.linked?.mbsdZmemId?.[0]?.mbsdBloodType;
-    }
-    data.evpaEvnhId = params.event.data.evnhId;
-    data.evpaEvncId = params.selectedCategoryId;
-    setFieldsData({...fieldsData, ...data});
-    setAutofilled(true);
-  }, [
-    autofilled,
-    fields,
-    fieldsData,
-    params.event.data.evnhId,
-    params.selectedCategoryId,
-    user,
-  ]);
 
   const validate = (payload: any) => {
     let objErrors = {};
@@ -618,7 +537,11 @@ export default function EventRegisterScreen() {
               bg: 'muted.50',
             }}
           />
-          <ViewProfile fields={bannedField} withoutMarginBottom />
+          <ViewProfile
+            fetchProfile={false}
+            fields={bannedField}
+            withoutMarginBottom
+          />
 
           <VStack space="2.5" px="4" mt="0">
             <Text bold fontSize="lg">

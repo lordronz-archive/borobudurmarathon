@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import SelectInput from '../../../components/form/SelectInput';
 import {EventFieldsEntity} from '../../../types/event.type';
 import TextInput from '../../../components/form/TextInput';
@@ -22,7 +22,6 @@ export default function RegistrationForm(
     helperText?: React.ReactNode;
     required?: boolean;
     static?: boolean;
-    data?: (EventFieldsEntity & {value: string})[];
     setFileResponse?: (a: DocumentPickerResponse) => void;
     file?: DocumentPickerResponse;
   },
@@ -30,14 +29,17 @@ export default function RegistrationForm(
   console.info('props.evhfConditions', props.evhfConditions);
   const objConditions = parseStringToObject(props.evhfConditions);
   console.info('objConditions', objConditions);
-  const opts = (
-    props.evhfExternalData && !props.evhfExternalData.includes('/api/')
-      ? JSON.parse(props.evhfExternalData)
-      : []
-  ).map((item: {id: number; label: string}) => ({
-    label: item.label || '',
-    value: item.id || '',
-  }));
+  const opts = useMemo(
+    () =>
+      (props.evhfExternalData && !props.evhfExternalData.includes('/api/')
+        ? JSON.parse(props.evhfExternalData)
+        : []
+      ).map((item: {id: number; label: string}) => ({
+        label: item.label || '',
+        value: item.id || '',
+      })),
+    [props.evhfExternalData],
+  );
 
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState<Option[]>(opts);
@@ -55,41 +57,41 @@ export default function RegistrationForm(
     setIsLoading(false);
   };
 
-  if (props.static) {
-    return props.data && props.data.length > 0 ? (
-      <Row flex={1}>
-        {props.data.map(dprops => (
-          <Box key={dprops.evhfLabel} flex={1}>
-            <Text color="gray.500" fontSize="sm">
-              {getTextBasedOnLanguage(dprops.evhfLabel)}
-            </Text>
-            {dprops.value ? (
-              <Text>{dprops.value}</Text>
-            ) : (
-              <Text color="gray.500" italic>
-                ~ Not Set
-              </Text>
-            )}
-          </Box>
-        ))}
-      </Row>
-    ) : (
-      <Row>
-        <Box>
-          <Text color="gray.500" fontSize="sm">
-            {getTextBasedOnLanguage(props.evhfLabel)}
-          </Text>
-          {props.value ? (
-            <Text>{convertOption(props.value, props.evhfName)}</Text>
-          ) : (
-            <Text color="gray.500" italic>
-              ~ Not Set
-            </Text>
-          )}
-        </Box>
-      </Row>
-    );
-  }
+  // if (props.static) {
+  //   return props.data && props.data.length > 0 ? (
+  //     <Row flex={1}>
+  //       {props.data.map(dprops => (
+  //         <Box key={dprops.evhfLabel} flex={1}>
+  //           <Text color="gray.500" fontSize="sm">
+  //             {getTextBasedOnLanguage(dprops.evhfLabel)}
+  //           </Text>
+  //           {dprops.value ? (
+  //             <Text>{dprops.value}</Text>
+  //           ) : (
+  //             <Text color="gray.500" italic>
+  //               ~ Not Set
+  //             </Text>
+  //           )}
+  //         </Box>
+  //       ))}
+  //     </Row>
+  //   ) : (
+  //     <Row>
+  //       <Box>
+  //         <Text color="gray.500" fontSize="sm">
+  //           {getTextBasedOnLanguage(props.evhfLabel)}
+  //         </Text>
+  //         {props.value ? (
+  //           <Text>{convertOption(props.value, props.evhfName)}</Text>
+  //         ) : (
+  //           <Text color="gray.500" italic>
+  //             ~ Not Set
+  //           </Text>
+  //         )}
+  //       </Box>
+  //     </Row>
+  //   );
+  // }
 
   if (props.evhfType === 'Option') {
     return (
@@ -233,18 +235,16 @@ export async function getOptions(props: EventFieldsEntity) {
       return [];
     }
   } else if (
-    props.evhfType === 'Option' &&
-    (props.evhfLabel.toLowerCase().includes('country') ||
-      props.evhfName.toLowerCase().includes('country'))
+    props.evhfLabel.toLowerCase().includes('country') ||
+    props.evhfName.toLowerCase().includes('country')
   ) {
     return countries.map(({en_short_name}) => ({
       label: en_short_name || '',
       value: en_short_name || '',
     }));
   } else if (
-    props.evhfType === 'Option' &&
-    (props.evhfLabel.toLowerCase().includes('nationality') ||
-      props.evhfName.toLowerCase().includes('nationality'))
+    props.evhfLabel.toLowerCase().includes('nationality') ||
+    props.evhfName.toLowerCase().includes('nationality')
   ) {
     return countries.map(({nationality}) => ({
       label: nationality || '',

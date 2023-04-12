@@ -22,14 +22,15 @@ import {getFullNameFromData} from '../../../helpers/name';
 type Props = {
   fields?: string[];
   withoutMarginBottom?: boolean;
+  fetchProfile?: boolean;
 };
 
-export default function ViewProfile(props: Props) {
+export default function ViewProfile(props: Props = {fetchProfile: true}) {
   const {user, isVerified} = useAuthUser();
   const {getProfile, isLoadingProfile} = useInit();
 
   useEffect(() => {
-    getProfile();
+    props.fetchProfile && getProfile();
   }, []);
 
   let sectionsDataProfile: {

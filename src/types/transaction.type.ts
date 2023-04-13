@@ -61,6 +61,8 @@ export interface Linked {
   jtvaTrnsId?: {jtvaVANumber: string}[] | null;
   bnivTrnsId?: {bnivVANumber: string}[] | null;
   trcpTrnsId?: any[] | null;
+
+  mregTrnsId?: MRegTrnsId[] | null;
 }
 export interface TrnsEventIdEntity {
   id: number;
@@ -208,4 +210,24 @@ export interface FieldsEntity {
   label: string;
   size: number;
   type: string;
+}
+
+export interface MRegTrnsId {
+  id: number;
+  mregId: number;
+  mregTrnsId: number;
+  mregOrderId: string; // KAWANG1DF,
+  mregRaceResult:  null | string;
+  mregNote: null | string;
+  mregYear: null | string;
+  mregZmemId: number;
+  mregEventId: number;
+  mregEvncId: number;
+  mregCity: string; // Pati,
+  mregProvince: string; // Jawa Tengah,
+  mregFatqId: number; // 0,
+  mregType: string; // MB,
+  mregTypeDesc: string; // BALLOT,
+  mregStatus: number; // 0,
+  mregCreatedTime: string; // 2023-04-13 14:01:40
 }

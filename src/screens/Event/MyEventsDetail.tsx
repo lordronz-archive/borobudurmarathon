@@ -86,13 +86,14 @@ export default function MyEventDetail() {
       if (resDetailTransaction && resDetailTransaction.data) {
         setDetailTransaction(resDetailTransaction.data);
 
+        // const isThisBallot =
+        //   Number(
+        //     resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
+        //   ) === 1;
         const isThisBallot =
-          Number(
-            resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
-          ) === 1;
+          resDetailTransaction?.data?.linked.mregTrnsId?.[0]?.mregType === 'MB';
         const regStatus = Number(
-          resDetailTransaction?.data?.linked.trnsEventId?.[0]
-            ?.evnhRegistrationStatus,
+          resDetailTransaction?.data?.linked.mregTrnsId?.[0]?.mregStatus,
         );
 
         let newStatus: TransactionStatus = getTransactionStatus({

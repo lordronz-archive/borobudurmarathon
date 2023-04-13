@@ -13,6 +13,7 @@
     "build:dev": "cd android && ENVFILE=.env.development ./gradlew assembleRelease && cd ..",
     "build:staging": "cd android && ENVFILE=.env.staging ./gradlew assembleRelease && cd ..",
     "build:prod": "cd android && ENVFILE=.env.production ./gradlew assembleRelease && cd ..",
+    "bundle:dev": "cd android && ENVFILE=.env.development ./gradlew bundleRelease && cd ..",
     "bundle:staging": "cd android && ENVFILE=.env.staging ./gradlew bundleRelease && cd ..",
     "bundle:prod": "cd android && ENVFILE=.env.production ./gradlew bundleRelease && cd .."
   },

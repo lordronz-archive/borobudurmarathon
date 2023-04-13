@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import {Toast} from 'native-base';
 import {getErrorMessage} from './errorHandler';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {getTextBasedOnLanguage} from './text';
 
 export function getApiErrors(err: any): {[key: string]: string} | null {
   console.info('===>> errorr', err);
@@ -12,7 +13,7 @@ export function getApiErrors(err: any): {[key: string]: string} | null {
         if (errItem.length > 0) {
           objErrors = {
             ...objErrors,
-            [errItem[0].field]: errItem[0].message,
+            [errItem[0].field]: getTextBasedOnLanguage(errItem[0].message),
           };
         }
       }
@@ -34,7 +35,7 @@ export function getApiErrors(err: any): {[key: string]: string} | null {
     if (errorMessage.includes('Syntax error')) {
       errorMessage = 'Syntax error';
     }
-    let objErrors = {errorMessage};
+    let objErrors = {errorMessage: getTextBasedOnLanguage(errorMessage)};
 
     console.info('objErrors', objErrors);
 

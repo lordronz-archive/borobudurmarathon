@@ -41,6 +41,7 @@ import LoadingBlock from '../../components/loading/LoadingBlock';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {getTextBasedOnLanguage} from '../../helpers/text';
 
 type Price = {
   id: string;
@@ -230,9 +231,9 @@ export default function EventRegisterScreen() {
             console.info('INVALID: ', f);
 
             if (!toastDescription) {
-              toastDescription = `${t('error.Field')} "${f.evhfLabel}" ${t(
-                'error.isRequired',
-              )}`;
+              toastDescription = `${t('error.Field')} "${getTextBasedOnLanguage(
+                f.evhfLabel,
+              )}" ${t('error.isRequired')}`;
             }
             objErrors = {
               ...objErrors,

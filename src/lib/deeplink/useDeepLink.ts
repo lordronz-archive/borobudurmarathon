@@ -119,12 +119,12 @@ export default function useInitialURL() {
             setParams(initParams);
 
             navigation.navigate('Main', {screen: t('tab.myEvents')});
-            navigation.navigate('MyEventsDetail', {
+            // navigation.navigate('MyEventsDetail', {
               // transactionId: item.mregOrderId,
               // eventId: event.evnhId,
               // isBallot: item.mregType === 'MB' ? true : false,
               // regStatus: item.mregStatus,
-            });
+            // });
           }
         }
       }

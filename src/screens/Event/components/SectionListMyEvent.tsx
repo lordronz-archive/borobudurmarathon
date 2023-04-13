@@ -196,7 +196,7 @@ export default function SectionListMyEvent() {
           }
           status={getTransactionStatus({
             isBallot: event.evnhBallot === 1,
-            regStatus: transaction.trnsStatus,
+            regStatus: item.mregStatus,
             trnsConfirmed: transaction?.trnsConfirmed,
             trnsExpiredTime: transaction?.trnsExpiredTime,
           })}

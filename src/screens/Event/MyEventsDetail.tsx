@@ -90,7 +90,10 @@ export default function MyEventDetail() {
           Number(
             resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
           ) === 1;
-        const regStatus = resDetailTransaction?.data?.data.trnsStatus;
+        const regStatus = Number(
+          resDetailTransaction?.data?.linked.trnsEventId?.[0]
+            ?.evnhRegistrationStatus,
+        );
 
         let newStatus: TransactionStatus = getTransactionStatus({
           isBallot: isThisBallot,

@@ -337,6 +337,7 @@ export default function DetailEvent() {
                   ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
                   : 'OTHER'
                 ).toUpperCase()}
+                {Number(event?.data.evnhBallot) === 1 && ' - BALLOT'}
               </Text>
               {isExpiredRegistration && (
                 <Badge

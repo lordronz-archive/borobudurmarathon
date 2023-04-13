@@ -68,9 +68,7 @@ const EventService = {
     console.log('Transaction id to get : ', transactionId);
     try {
       return httpRequest.get(
-        config.apiUrl.apis.member.getTransactionDetail.path +
-          '/' +
-          transactionId,
+        config.apiUrl.apis.member.getTransactionDetail.path + transactionId,
       ) as Promise<{
         data: TransactionDetail;
       }>;

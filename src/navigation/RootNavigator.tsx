@@ -34,6 +34,7 @@ import InfoVerifyLaterScreen from '../screens/Information/InfoVerifyLater';
 import TNCScreen from '../screens/Information/TNCScreen';
 import VoucherScreen from '../screens/Payment/Voucher';
 import ViewDetailRegistrationData from '../screens/Event/components/ViewDetailRegistrationData';
+import ResetPasswordScreen from '../screens/Auth/ResetPassword';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -44,6 +45,7 @@ export type RootStackParamList = {
   SignInEmail: undefined;
   RegisterEmail: undefined;
   ForgotPassword: undefined;
+  ResetPassword: {code: string; key: string};
 
   SignInWithKompas: undefined;
   DataConfirmation: undefined;
@@ -156,6 +158,11 @@ function RootNavigator() {
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPasswordScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPasswordScreen}
           options={{headerShown: false}}
         />
         <Stack.Group>

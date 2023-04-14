@@ -165,15 +165,16 @@ const AuthService = {
       return Promise.reject(error);
     }
   },
-  newPassword: async function (passwordData: any) {
+  newPassword: async function (
+    code: string,
+    key: string,
+    passwordData: {password: string; confirmPassword: string},
+  ) {
     console.log('P : ', passwordData);
     try {
       return await httpRequest.post(
-        config.apiUrl.apis.member.newPassword.path +
-          passwordData.query.code +
-          '/' +
-          passwordData.query.key,
-        {data: passwordData.form},
+        config.apiUrl.apis.member.newPassword.path + code + '/' + key,
+        {data: passwordData},
       );
     } catch (error) {
       return Promise.reject(error);

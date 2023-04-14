@@ -104,6 +104,7 @@ export default {
     idNotReadable: 'Your ID Card is Unreadable',
     idNotReadableDesc:
       "Sorry we can't verify your identity.\nPlease re-upload your ID Card or select Verify ID later.",
+    backToLogin: 'Back to login',
   },
   registration: {
     registrationSuccess: 'Event Registration Success',
@@ -405,6 +406,7 @@ export default {
     checkingSession: 'Checking your session...',
     youAreNotRegistered: 'You are not registered. Please wait...',
     preparing: 'Preparing',
+    success: 'Success',
   },
   chooseOne: 'Choose one',
   stepTitle: {

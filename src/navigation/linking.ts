@@ -62,16 +62,23 @@ export const linking = {
       InitialEvent: 'events/:id',
       InitialPayment: 'INVOICE',
       Welcome: 'welcome',
+      ResetPassword: 'reset-password',
     },
   },
   getStateFromPath: (path: any, options: any) => {
     console.info('getStateFromPath -- path', path);
     console.info('getStateFromPath -- options', options);
 
-    const page = getParameterByName('page', path);
-    const id = getParameterByName('id', path);
-    if (page === 'transaction') {
-      return {routes: [{name: 'InitialPayment', params: {id}}]};
+    if (path.includes('signin/reset')) {
+      const code = getParameterByName('code', path);
+      const key = getParameterByName('key', path);
+      return {routes: [{name: 'ResetPassword', params: {code, key}}]};
+    } else {
+      const page = getParameterByName('page', path);
+      if (page === 'transaction') {
+        const id = getParameterByName('id', path);
+        return {routes: [{name: 'InitialPayment', params: {id}}]};
+      }
     }
 
     return getStateFromPath(path, options);

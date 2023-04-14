@@ -106,6 +106,7 @@ export default {
     idNotReadable: 'KTP Anda Tidak Terbaca',
     idNotReadableDesc:
       'Identitas Anda gagal diverifikasi.\nHarap unggah ulang kartu identitas Anda atau pilih Verifikasi Identitas nanti.',
+    backToLogin: 'Kembali ke halaman login',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',
@@ -407,6 +408,7 @@ export default {
     checkingSession: 'Mengecek sesi...',
     youAreNotRegistered: 'Belum terdaftar. Harap tunggu...',
     preparing: 'Menyiapkan',
+    success: 'Berhasil',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {

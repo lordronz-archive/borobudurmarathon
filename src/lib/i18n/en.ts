@@ -47,6 +47,8 @@ export default {
     registerNewAccount: 'Register your new account here',
     emailValidationTitle: 'Email Validation',
     emailValidationSubtitle: 'Please verify your email address ',
+    emailValidationKompasTitle: 'Email Validation',
+    emailValidationKompasSubtitle: 'Please verify your kompas email address ',
     emailValidation8DigitCode: 'Enter 8 digit code that we send to ',
     emailValidation6DigitCode: 'Enter 6 digit code that we send to ',
     emailValidationLabel: 'Verification Code',

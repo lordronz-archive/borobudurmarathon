@@ -157,6 +157,27 @@ export default function SignInEmailScreen() {
                 {t('auth.forgotPassword')}
               </Text>
             </HStack>
+
+            {!!email && (
+              <HStack space="1" mt={15} justifyContent="center">
+                <Text
+                  fontWeight={600}
+                  color="#EB1C23"
+                  fontSize={12}
+                  textAlign="center"
+                  underline
+                  onPress={() =>
+                    navigation.navigate('EmailVerificationWhenRegister', {
+                      email,
+                      onSuccess: () => {
+                        //
+                      },
+                    })
+                  }>
+                  {t('auth.needToVerifyEmail')} ??
+                </Text>
+              </HStack>
+            )}
           </ScrollView>
           <HStack my={3}>
             <Button

@@ -47,6 +47,8 @@ export default {
     registerNewAccount: 'Buat akun baru anda disini',
     emailValidationTitle: 'Validasi Email',
     emailValidationSubtitle: 'Harap verifikasi alamat email Anda',
+    emailValidationKompasTitle: 'Validasi Email',
+    emailValidationKompasSubtitle: 'Harap verifikasi alamat email kompas Anda',
     emailValidation8DigitCode:
       'Masukkan 8 digit kode verifikasi yang telah kami kirimkan ke',
     emailValidation6DigitCode:

@@ -115,9 +115,9 @@ export default function EmailValidationScreen({route}: Props) {
         <Box flex="10">
           <BackHeader onPress={() => navigation.goBack()} />
           <VStack space="1.5">
-            <Heading>{t('auth.emailValidationTitle')}</Heading>
+            <Heading>{t('auth.emailValidationKompasTitle')}</Heading>
             <Text fontWeight={400} color="#768499" fontSize={11}>
-              {t('auth.emailValidationSubtitle')}
+              {t('auth.emailValidationKompasSubtitle')}
             </Text>
           </VStack>
           <Box mt={26} mb="3">

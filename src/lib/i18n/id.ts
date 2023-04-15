@@ -39,6 +39,7 @@ export default {
     forgotPasswordTitle: 'Lupa Password',
     forgotPasswordSubtitle: 'Reset password anda disini',
     resetPassword: 'Reset Password',
+    resetPasswordDescription: 'Silakan masukkan password baru Anda',
     description:
       'Ayo bergabung dalam Borobudur Marathon, dan jadilah bagian dari Voice of Unity.',
     signInWith: 'Masuk dengan',

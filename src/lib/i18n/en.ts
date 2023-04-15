@@ -39,6 +39,7 @@ export default {
     forgotPasswordTitle: 'Forgot Password',
     forgotPasswordSubtitle: 'Reset your password here',
     resetPassword: 'Reset Password',
+    resetPasswordDescription: 'Fill your new password to continue',
     description:
       "Let's join Borobudur Marathon, and be part of the Voice of Unity.",
     signInWith: 'Sign in with',

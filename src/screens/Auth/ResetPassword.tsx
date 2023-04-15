@@ -89,7 +89,7 @@ export default function ResetPasswordScreen() {
             <VStack space="1.5">
               <Heading>{t('auth.resetPassword')}</Heading>
               <Text fontWeight={400} color="#768499" fontSize={11} mb="3">
-                {t('auth.resetPassword')}
+                {t('auth.resetPasswordDescription')}
               </Text>
             </VStack>
             <VStack space="2.5">

@@ -12,6 +12,7 @@ import datetime from '../../../helpers/datetime';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import useEvent from '../../../hooks/useEvent';
 import {EventPropertiesDetail, EVENT_TYPES} from '../../../types/event.type';
+import { getEventRegistrationStatus } from '../../../helpers/eventStatus';
 
 export default function SectionListEvent() {
   const navigation =
@@ -55,11 +56,10 @@ export default function SectionListEvent() {
               ? {uri: item.evnhThumbnail}
               : require('../../../assets/images/no-image.png')
           }
-          isAvailable={
-            !moment(item.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
-              moment(),
-            )
-          }
+          status={getEventRegistrationStatus(
+            item.evnhRegistrationStart,
+            item.evnhRegistrationEnd,
+          )}
         />
       </TouchableOpacity>
     );

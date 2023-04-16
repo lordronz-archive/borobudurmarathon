@@ -10,6 +10,7 @@ type CardEventProps = {
   date: string;
   image: ImageSourcePropType;
   isAvailable?: boolean;
+  status: 'UPCOMING' | 'REGISTRATION' | 'EXPIRED';
 };
 
 export default function CardEvent({
@@ -17,13 +18,13 @@ export default function CardEvent({
   place,
   date,
   image,
-  isAvailable = true,
+  status,
 }: CardEventProps) {
   const {t} = useTranslation();
 
   return (
     <Box alignItems="flex-start" my={3} width="100%">
-      <HStack flex={1} alignItems={isAvailable ? 'center' : 'flex-start'}>
+      <HStack flex={1} alignItems={status === 'REGISTRATION' ? 'center' : 'flex-start'}>
         <AspectRatio w="20%" ratio={1 / 1}>
           {/* <Image
             source={image}
@@ -58,7 +59,7 @@ export default function CardEvent({
           />
         </AspectRatio>
         <VStack pl={3} width="80%">
-          {!isAvailable && (
+          {status === 'EXPIRED' && (
             <Badge
               backgroundColor="gray.200"
               px="3"
@@ -73,10 +74,25 @@ export default function CardEvent({
               {t('event.expiredEvents')}
             </Badge>
           )}
+          {status === 'UPCOMING' && (
+            <Badge
+              backgroundColor="gray.200"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: 'gray.500',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              {t('event.upcomingEvents')}
+            </Badge>
+          )}
 
           <Text
             fontSize="md"
-            mt={isAvailable ? 0 : 1}
+            mt={status === 'REGISTRATION' ? 0 : 1}
             flex={1}
             fontWeight="600"
             fontFamily="Poppins-Medium">

@@ -49,6 +49,7 @@ import {GetTransactionsResponse} from '../../types/transactions.type';
 import moment from 'moment';
 import {getTextBasedOnLanguage} from '../../helpers/text';
 import i18next from 'i18next';
+import { getEventRegistrationStatus } from '../../helpers/eventStatus';
 
 type Price = {
   id: string;
@@ -289,28 +290,31 @@ export default function DetailEvent() {
     }
   };
 
-  const isExpiredRegistration = event?.data?.evnhRegistrationEnd
-    ? moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
-        moment(new Date()),
-      )
-    : false;
+  // const isExpiredRegistration = event?.data?.evnhRegistrationEnd
+  //   ? moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
+  //       moment(new Date()),
+  //     )
+  //   : false;
 
-  const isRegistrationTimeRange =
-    event?.data?.evnhRegistrationStart && event?.data?.evnhRegistrationEnd
-      ? moment(new Date()).isBetween(
-          moment(event?.data?.evnhRegistrationStart, 'YYYY-MM-DD HH:mm:ss'),
-          moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss'),
-        )
-      : false;
+  // const isRegistrationTimeRange =
+  //   event?.data?.evnhRegistrationStart && event?.data?.evnhRegistrationEnd
+  //     ? moment(new Date()).isBetween(
+  //         moment(event?.data?.evnhRegistrationStart, 'YYYY-MM-DD HH:mm:ss'),
+  //         moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss'),
+  //       )
+  //     : false;
+
+  const status = getEventRegistrationStatus(
+    event?.data?.evnhRegistrationStart,
+    event?.data?.evnhRegistrationEnd,
+  );
 
   return (
     <AppContainer>
       <VStack>
         <ScrollView backgroundColor={'#fff'}>
           <Header
-            title={datetime.getDateTimeString(new Date(), 'short', 'short', {
-              time: true,
-            })}
+            title=""
             left="back"
             right={
               isLoading ? (
@@ -363,7 +367,7 @@ export default function DetailEvent() {
                 ).toUpperCase()}
                 {Number(event?.data.evnhBallot) === 1 && ' - BALLOT'}
               </Text>
-              {isExpiredRegistration && (
+              {status === 'EXPIRED' ? (
                 <Badge
                   backgroundColor="gray.200"
                   px="3"
@@ -378,6 +382,23 @@ export default function DetailEvent() {
                   }}>
                   {t('event.expiredEvents')}
                 </Badge>
+              ) : status === 'UPCOMING' ? (
+                <Badge
+                  backgroundColor="gray.200"
+                  px="3"
+                  py="0.5"
+                  my="2"
+                  borderRadius="4"
+                  alignSelf="flex-start"
+                  _text={{
+                    color: 'gray.500',
+                    fontWeight: 'bold',
+                    fontSize: 'xs',
+                  }}>
+                  {t('event.upcomingEvents')}
+                </Badge>
+              ) : (
+                false
               )}
             </HStack>
 
@@ -499,8 +520,7 @@ export default function DetailEvent() {
                       onSelect={() => setSelected(price)}
                       disabled={
                         !!registeredEvent ||
-                        isExpiredRegistration ||
-                        !isRegistrationTimeRange
+                        status === 'EXPIRED' || status === 'UPCOMING'
                       }
                     />
                   ))}

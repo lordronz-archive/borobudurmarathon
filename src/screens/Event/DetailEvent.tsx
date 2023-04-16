@@ -73,6 +73,18 @@ export default function DetailEvent() {
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
 
+  // console.info('=============================================');
+  // const now = new Date();
+  // console.info('===> moment()', moment(now));
+  // console.info('new Date().toISOString()', now.toISOString());
+  // console.info('moment(now)', moment(now));
+  // const start = '2023-04-17 15:00:00';
+  // const end = '2023-04-18 23:59:59';
+  // console.info('moment(start)', moment(start));
+  // console.info('moment(end)', moment(end));
+  // console.info('isBetween', moment(now).isBetween(start, end));
+  // console.info('=============================================');
+
   useEffect(() => {
     if (isFocused) {
       getProfile();
@@ -89,22 +101,24 @@ export default function DetailEvent() {
     {
       icon: <IconCalendar size="5" mt="0.5" color="gray.500" />,
       label: t('event.registrationDate'),
-      description: datetime.getDateRangeString(
-        event?.data.evnhRegistrationStart,
-        event?.data.evnhRegistrationEnd,
-        'short',
-        'short',
-      ),
+      description:
+        datetime.getDateTimeRangeString(
+          event?.data.evnhRegistrationStart,
+          event?.data.evnhRegistrationEnd,
+          'short',
+          'short',
+        ) + ' WIB',
     },
     {
       icon: <IconRun size="5" mt="0.5" color="gray.500" />,
       label: t('event.runningDate'),
-      description: datetime.getDateRangeString(
-        event?.data.evnhStartDate,
-        event?.data.evnhEndDate,
-        'short',
-        'short',
-      ),
+      description:
+        datetime.getDateTimeRangeString(
+          event?.data.evnhStartDate,
+          event?.data.evnhEndDate,
+          'short',
+          'short',
+        ) + ' WIB',
     },
     {
       icon: <IconLocation size="5" mt="0.5" color="gray.500" />,
@@ -277,16 +291,26 @@ export default function DetailEvent() {
 
   const isExpiredRegistration = event?.data?.evnhRegistrationEnd
     ? moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
-        moment(),
+        moment(new Date()),
       )
     : false;
+
+  const isRegistrationTimeRange =
+    event?.data?.evnhRegistrationStart && event?.data?.evnhRegistrationEnd
+      ? moment(new Date()).isBetween(
+          moment(event?.data?.evnhRegistrationStart, 'YYYY-MM-DD HH:mm:ss'),
+          moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss'),
+        )
+      : false;
 
   return (
     <AppContainer>
       <VStack>
         <ScrollView backgroundColor={'#fff'}>
           <Header
-            title=""
+            title={datetime.getDateTimeString(new Date(), 'short', 'short', {
+              time: true,
+            })}
             left="back"
             right={
               isLoading ? (
@@ -473,7 +497,11 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
-                      disabled={!!registeredEvent || isExpiredRegistration}
+                      disabled={
+                        !!registeredEvent ||
+                        isExpiredRegistration ||
+                        !isRegistrationTimeRange
+                      }
                     />
                   ))}
               </Radio.Group>

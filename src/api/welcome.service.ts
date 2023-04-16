@@ -14,7 +14,6 @@ const WelcomeService = {
   removeToken(userId: string | number) {
     AsyncStorage.removeItem(WELCOME_KEY + '_' + userId);
   },
-
 };
 
 export {WelcomeService};

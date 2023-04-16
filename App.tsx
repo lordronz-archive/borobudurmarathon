@@ -12,7 +12,6 @@ import SplashScreen from 'react-native-splash-screen';
 import {
   Actionsheet,
   Box,
-  Center,
   extendTheme,
   HStack,
   NativeBaseProvider,

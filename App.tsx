@@ -10,12 +10,15 @@
 import 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
 import {
+  Actionsheet,
   Box,
+  Center,
   extendTheme,
   HStack,
   NativeBaseProvider,
   Text,
   VStack,
+  WarningOutlineIcon,
 } from 'native-base';
 import React, {useState} from 'react';
 import {
@@ -23,6 +26,7 @@ import {
   Linking,
   Platform,
   StatusBar,
+  TouchableOpacity,
   useColorScheme,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -76,10 +80,15 @@ remoteConfig()
         'No configs were fetched from the backend, and the local configs were already activated',
       );
     }
+  })
+  .catch(err => {
+    console.info('fetch and activate failed', err);
   });
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [isOpenMaintenanceModal, setIsOpenMaintenanceModal] = useState(false);
+  const [maintenanceMessage, setMaintenanceMessage] = useState<string>();
   const [versionStatus, setVersionStatus] = useState<{
     status: 'FORCE_UPDATE' | 'RECOMMENDED';
     version: string;
@@ -210,68 +219,81 @@ const App = () => {
     await remoteConfig().setConfigSettings({
       minimumFetchIntervalMillis: 60000,
     });
-    const configs = remoteConfig().getAll();
-    console.info('result remote configs', configs);
 
-    Object.entries(configs).forEach($ => {
-      const [key, entry] = $;
-      console.log('Key: ', key);
-      // START CHECK VERSION
-      if (key === 'latest_version' && entry.asString()) {
-        let objLatestVersion: any = {};
-        try {
-          objLatestVersion = JSON.parse(entry.asString());
-        } catch (err) {
-          objLatestVersion = {};
-        }
-        const status = objLatestVersion[Platform.OS + '_status'];
-        // const status = 'RECOMMENDED';
-        if (status) {
-          // const myVersion = '1.0.0';
-          const myVersion = Config.APP_VERSION_NAME || '';
-          const latestVersion = objLatestVersion[Platform.OS + '_version'];
-          const resCompared = compareVersions(myVersion, latestVersion);
+    try {
+      const configs = remoteConfig().getAll();
+      console.info('result remote configs', configs);
 
-          // const resCompared = -1;
+      Object.entries(configs).forEach($ => {
+        const [key, entry] = $;
+        console.log('Key: ', key);
+        // START CHECK VERSION
+        if (key === 'latest_version' && entry.asString()) {
+          let objLatestVersion: any = {};
+          try {
+            objLatestVersion = JSON.parse(entry.asString());
+          } catch (err) {
+            objLatestVersion = {};
+          }
+          const status = objLatestVersion[Platform.OS + '_status'];
+          // const status = 'RECOMMENDED';
+          if (status) {
+            // const myVersion = '1.0.0';
+            const myVersion = Config.APP_VERSION_NAME || '';
+            const latestVersion = objLatestVersion[Platform.OS + '_version'];
+            const resCompared = compareVersions(myVersion, latestVersion);
 
-          if (resCompared === -1) {
-            // need to update
-            if (status === 'FORCE_UPDATE') {
-              // force
-              setVersionStatus({
-                status,
-                version: latestVersion,
-              });
-            } else {
-              // recommended
-              if (myLatestSkippedVersion) {
-                const resComparedSkippedVersion = compareVersions(
-                  myVersion,
-                  myLatestSkippedVersion,
-                );
+            // const resCompared = -1;
 
-                if (resComparedSkippedVersion === 0) {
-                  // has been skipped
+            if (resCompared === -1) {
+              // need to update
+              if (status === 'FORCE_UPDATE') {
+                // force
+                setVersionStatus({
+                  status,
+                  version: latestVersion,
+                });
+              } else {
+                // recommended
+                if (myLatestSkippedVersion) {
+                  const resComparedSkippedVersion = compareVersions(
+                    myVersion,
+                    myLatestSkippedVersion,
+                  );
+
+                  if (resComparedSkippedVersion === 0) {
+                    // has been skipped
+                  } else {
+                    setVersionStatus({
+                      status,
+                      version: latestVersion,
+                    });
+                  }
                 } else {
                   setVersionStatus({
                     status,
                     version: latestVersion,
                   });
                 }
-              } else {
-                setVersionStatus({
-                  status,
-                  version: latestVersion,
-                });
               }
             }
           }
         }
-      }
-      // END CHECK VERSION
-      console.log('Source: ', entry.getSource());
-      console.log('Value: ', entry.asString());
-    });
+        // END CHECK VERSION
+
+        // START CHECK MAINTENANCE MESSAGE
+        if (key === 'maintenance_message') {
+          setMaintenanceMessage(entry.asString());
+        } else {
+          setMaintenanceMessage(undefined);
+        }
+        // END CHECK MAINTENANCE MESSAGE
+        console.log('Source: ', entry.getSource());
+        console.log('Value: ', entry.asString());
+      });
+    } catch (err) {
+      console.info('ERROR GETALL REMOTECONFIG', err);
+    }
   };
 
   console.info('versionStatus', versionStatus);
@@ -286,10 +308,34 @@ const App = () => {
       <AuthUserProvider>
         <DemoProvider>
           <SafeAreaView style={{...backgroundStyle, flex: 1}}>
+            {!!maintenanceMessage && (
+              <TouchableOpacity onPress={() => setIsOpenMaintenanceModal(true)}>
+                <HStack
+                  paddingTop="3"
+                  paddingBottom="3"
+                  width="100%"
+                  px="3"
+                  bg="warning.300"
+                  alignItems="center">
+                  <WarningOutlineIcon />
+                  <Text pl="2" pr="4" textAlign="center" numberOfLines={1}>
+                    {maintenanceMessage}
+                  </Text>
+                </HStack>
+              </TouchableOpacity>
+            )}
             <RootNavigator />
           </SafeAreaView>
         </DemoProvider>
       </AuthUserProvider>
+
+      <Actionsheet
+        isOpen={isOpenMaintenanceModal}
+        onClose={() => setIsOpenMaintenanceModal(false)}>
+        <Actionsheet.Content px="3" py="5">
+          {maintenanceMessage}
+        </Actionsheet.Content>
+      </Actionsheet>
 
       {!!versionStatus && (
         <Box

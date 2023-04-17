@@ -198,6 +198,7 @@ export default {
     category: 'Category',
     transactionTime: 'Transaction Time',
     paymentTime: 'Payment Time',
+    expiredTime: 'Expired Time',
     registrationID: 'Registration ID',
     forMoreInformationAboutSize: 'For more information about size',
     seeJerseyChart: 'See jersey size chart',

@@ -198,6 +198,7 @@ export default {
     category: 'Kategori',
     transactionTime: 'Waktu Transaksi',
     paymentTime: 'Waktu Pembayaran',
+    expiredTime: 'Waktu Kadaluarsa',
     registrationID: 'ID Pendaftaran',
     forMoreInformationAboutSize: 'Untuk informasi terkait ukuran',
     seeJerseyChart: 'Lihat detail ukuran jersey',

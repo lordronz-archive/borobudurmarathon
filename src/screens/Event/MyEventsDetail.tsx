@@ -31,6 +31,7 @@ import TransactionAlertStatus from './components/TransactionAlertStatus';
 import QRCodeWithFunction from './components/QRCodeWithFunction';
 import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
 import {getTransactionStatus} from '../../helpers/transaction';
+import {convertDateTimeToLocalTimezone} from '../../helpers/datetimeTimezone';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -391,7 +392,7 @@ export default function MyEventDetail() {
                     textAlign={'center'}>
                     {`${t('payment.payBefore')} ${moment(
                       detailTransaction?.data?.trnsExpiredTime,
-                    ).format('DD MMM YYYY, HH:mm')}`}
+                    ).format('DD MMM YYYY, HH:mm')}` + ' WIB'}
                   </Text>
                 </Box>
               )}
@@ -546,6 +547,45 @@ export default function MyEventDetail() {
                     </Box>
                   ),
               )}
+
+              {detailTransaction?.data.trnsExpiredTime &&
+                moment(
+                  convertDateTimeToLocalTimezone(
+                    detailTransaction?.data.trnsExpiredTime,
+                  ),
+                ).isBefore(
+                  moment(convertDateTimeToLocalTimezone(new Date())),
+                ) && (
+                  <Box
+                    paddingY={'16px'}
+                    borderTopColor={'#E8ECF3'}
+                    borderTopWidth={1}
+                    borderTopStyle={'solid'}>
+                    <HStack
+                      justifyContent={'space-between'}
+                      alignItems="center">
+                      <Text
+                        fontWeight={400}
+                        color="#768499"
+                        fontSize={11}
+                        width="35%">
+                        {t('event.expiredTime')}
+                      </Text>
+                      <Text
+                        fontWeight={500}
+                        color="#1E1E1E"
+                        fontSize={12}
+                        width="60%"
+                        textAlign="right">
+                        {detailTransaction?.data?.trnsExpiredTime
+                          ? moment(
+                              detailTransaction?.data?.trnsExpiredTime,
+                            ).format('DD MMM YYYY, HH:mm') + ' WIB'
+                          : '-'}
+                      </Text>
+                    </HStack>
+                  </Box>
+                )}
 
               {/* <RowDetailRegistration
                 data={detailTransaction?.linked.evrlTrnsId?.[0] || {}}

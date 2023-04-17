@@ -788,7 +788,7 @@ export default function EventRegisterScreen() {
             onClose={onClose}
             onPress={() => {
               setIsOpen(false);
-              navigation.navigate('Main', {screen: t('tab.myEvents')});
+              navigation.replace('Main', {screen: t('tab.myEvents')});
             }}
             title={t('registration.registrationSuccess')}
             content={t('registration.registrationSuccessDesc')}

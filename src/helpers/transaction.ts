@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {TransactionStatus} from '../types/event.type';
+import {convertDateTimeToLocalTimezone} from './datetimeTimezone';
 
 export function getTransactionStatus(params: {
   isBallot: boolean;
@@ -16,7 +17,11 @@ export function getTransactionStatus(params: {
     } else {
       if (params.trnsConfirmed === 1) {
         newStatus = 'Paid';
-      } else if (moment(params.trnsExpiredTime).isBefore(moment(new Date()))) {
+      } else if (
+        moment(convertDateTimeToLocalTimezone(params.trnsExpiredTime)).isBefore(
+          moment(convertDateTimeToLocalTimezone(new Date())),
+        )
+      ) {
         newStatus = 'Payment Expired';
       } else {
         newStatus = 'Waiting Payment';
@@ -25,7 +30,11 @@ export function getTransactionStatus(params: {
   } else {
     if (params.trnsConfirmed === 1) {
       newStatus = 'Paid';
-    } else if (moment(params.trnsExpiredTime).isBefore(moment(new Date()))) {
+    } else if (
+      moment(convertDateTimeToLocalTimezone(params.trnsExpiredTime)).isBefore(
+        moment(convertDateTimeToLocalTimezone(new Date())),
+      )
+    ) {
       newStatus = 'Payment Expired';
     } else {
       newStatus = 'Waiting Payment';

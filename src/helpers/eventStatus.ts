@@ -1,13 +1,16 @@
 import moment from 'moment';
+import {convertDateTimeToLocalTimezone} from './datetimeTimezone';
 
 export function getEventRegistrationStatus(
   start?: Date | string,
   end?: Date | string,
 ) {
   if (start) {
-    const isUpcoming = moment(new Date(), 'YYYY-MM-DD HH:mm:ss').isBefore(
-      moment(start),
-    );
+    start = convertDateTimeToLocalTimezone(start);
+    const isUpcoming = moment(
+      convertDateTimeToLocalTimezone(new Date()),
+      'YYYY-MM-DD HH:mm:ss',
+    ).isBefore(moment(start));
 
     if (isUpcoming) {
       return 'UPCOMING';
@@ -15,8 +18,9 @@ export function getEventRegistrationStatus(
   }
 
   if (end) {
+    end = convertDateTimeToLocalTimezone(end);
     const isExpired = moment(end, 'YYYY-MM-DD HH:mm:ss').isBefore(
-      moment(new Date()),
+      moment(convertDateTimeToLocalTimezone(new Date())),
     );
 
     if (isExpired) {

@@ -29,6 +29,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import codePush from 'react-native-code-push';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {AuthUserProvider} from './src/context/auth.context';
@@ -411,4 +412,16 @@ const App = () => {
   );
 };
 
-export default App;
+export default codePush({
+  updateDialog: {
+    appendReleaseDescription: true,
+    descriptionPrefix: '\n\nChange log:\n',
+    title: 'An update is available!',
+  },
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  deploymentKey:
+    Platform.OS === 'ios'
+      ? Config.CODEPUSH_DEPLOYMENT_KEY_IOS
+      : Config.CODEPUSH_DEPLOYMENT_KEY_ANDROID,
+  installMode: codePush.InstallMode.IMMEDIATE,
+})(App);

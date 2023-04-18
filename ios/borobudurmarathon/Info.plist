@@ -14,6 +14,8 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>CodePushDeploymentKey</key>
+	<string>CodePushDeploymentKey</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -52,14 +54,25 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
+		<array>
 			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
+				<key>localhost</key>
+				<dict>
+					<key>NSExceptionAllowsInsecureHTTPLoads</key>
+					<true/>
+				</dict>
 			</dict>
-		</dict>
+			<dict>
+				<key>codepush.appcenter.ms</key>
+				<dict>
+					<key>NSExceptionAllowsInsecureHTTPLoads</key>
+					<true/>
+				</dict>
+			</dict>
+		</array>
 	</dict>
+	<key>AppSecret</key>
+  <string>f6322183-5edb-4098-bbaf-dd5ae413cf11</string>
 	<key>NSCameraUsageDescription</key>
 	<string>The app use camera only when you want to change your profile picture by taking photo using camera.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

@@ -92,9 +92,9 @@ export default function ChangePhoneNumberScreen() {
       <ScrollView>
         <VStack space="4" mb="5">
           <VStack space="2.5" px="4">
-            <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
+            {/* <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
               {t('label.accountInformation')}
-            </Text>
+            </Text> */}
             <VStack space="1.5">
               <TextInput
                 placeholder={t('auth.placeholderPhone') || ''}

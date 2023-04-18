@@ -54,6 +54,7 @@ import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
 import {getApiErrors} from '../../helpers/apiErrors';
 import {t} from 'i18next';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
@@ -118,6 +119,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const [isAgreeTermsAndCondition, setIsAgreeTermsAndCondition] =
     React.useState<boolean>(false);
   const [isVerifyLater, setIsVerifyLater] = React.useState<boolean>(false);
+  const [isPhoneEditable, setIsPhoneEditable] = React.useState(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -141,13 +143,23 @@ export default function ChooseCitizenScreen({route}: Props) {
   }, []);
 
   useEffect(() => {
+    crashlytics().log('ChooseCitizen, user: ' + JSON.stringify(user));
+    let phoneNumber;
+    if (user?.linked?.zmemAuusId?.[0]?.auusPhone) {
+      setIsPhoneEditable(false);
+      phoneNumber = user?.linked?.zmemAuusId?.[0]?.auusPhone;
+    } else if (user?.linked?.mbsdZmemId?.[0]?.mbsdPhone) {
+      setIsPhoneEditable(false);
+      phoneNumber = user?.linked?.mbsdZmemId?.[0]?.mbsdPhone;
+    } else {
+      setIsPhoneEditable(true);
+    }
     setAccountInformation({
       name:
         user?.linked.mbsdZmemId?.[0]?.mbsdFullName ||
         user?.data?.[0]?.zmemFullName ||
         '',
-      phoneNumber:
-        cleanPhoneNumber(user?.linked.zmemAuusId[0]?.auusPhone) || '',
+      phoneNumber: cleanPhoneNumber(phoneNumber) || '',
       birthdate: user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate
         ? new Date(user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate)
         : undefined,
@@ -360,18 +372,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         (resValidation && resValidation.data && resValidation.data.isValid) ||
         isVerifyLater
       ) {
-        console.info(
-          'user?.linked?.zmemAuusId?.[0]?.auusPhone',
-          user?.linked?.zmemAuusId?.[0]?.auusPhone,
-        );
-        console.info(
-          'accountInformation.phoneNumber',
-          accountInformation.phoneNumber,
-        );
-        if (
-          cleanPhoneNumber(user?.linked?.zmemAuusId?.[0]?.auusPhone) !==
-          cleanPhoneNumber(accountInformation.phoneNumber)
-        ) {
+        if (isPhoneEditable) {
           try {
             const sendOtpRes = await AuthService.sendOTP({
               phoneNumber: cleanPhoneNumber(accountInformation.phoneNumber),
@@ -738,6 +739,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                     helperText={t('auth.willSendToPhone')}
                     value={accountInformation.phoneNumber}
                     keyboardType="numeric"
+                    _inputProps={{editable: isPhoneEditable}}
                     onChangeText={val => {
                       if (val.length > 14) {
                         return;
@@ -1166,7 +1168,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             content={
               (PROCESSING_MESSAGES[validationTryProcessing % 3].content ||
                 'Your ID still in processing to validate') +
-              `. You can continue by choosing verify later.`
+              '. You can continue by choosing verify later.'
             }
             onPress={() => {
               setIsOpenProcessing(false);

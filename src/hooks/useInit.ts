@@ -24,6 +24,7 @@ import useGallery from './useGallery';
 import httpRequest from '../helpers/httpRequest';
 import {LanguageID} from '../types/language.type';
 import {LanguageService} from '../api/language.service';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export default function useInit() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
@@ -134,8 +135,9 @@ export default function useInit() {
       params?: NativeStackNavigationProp<RootStackParamList>;
     }[],
   ) => {
-    // navigation.replace('Welcome');
-    // return;
+    crashlytics().log('checkAccount, data: ' + JSON.stringify(data));
+    crashlytics().log('checkAccount, profile: ' + JSON.stringify(profile));
+
     console.info('checkAccount: data', data);
     console.info('checkAccount: replace', data);
     if (config.isShowDemoSettings) {

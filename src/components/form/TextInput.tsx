@@ -50,7 +50,12 @@ export default function TextInput(props: TextInputProps) {
         borderColor="#C5CDDB"
         borderRadius={'4px'}
         px={'12px'}
-        py={'6px'}>
+        py={'6px'}
+        backgroundColor={
+          props._inputProps && props._inputProps.editable === false
+            ? 'gray.200'
+            : undefined
+        }>
         <FormControl.Label flexWrap={'wrap'}>
           {props.label && (
             <HStack>

@@ -1,14 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {
-  Box,
-  Text,
-  VStack,
-  ScrollView,
-  View,
-  useTheme,
-  Toast,
-  Button,
-} from 'native-base';
+import {Box, VStack, ScrollView, Toast, Button} from 'native-base';
 import React, {useState} from 'react';
 import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
@@ -16,18 +7,17 @@ import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import {useAuthUser} from '../../context/auth.context';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import {useTranslation} from 'react-i18next';
 import {cleanPhoneNumber} from '../../helpers/phoneNumber';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
-import { handleErrorMessage } from '../../helpers/apiErrors';
+import {handleErrorMessage} from '../../helpers/apiErrors';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
-  const {colors} = useTheme();
   const {user} = useAuthUser();
   const {getProfile} = useInit();
 
@@ -35,6 +25,9 @@ export default function ChangePhoneNumberScreen() {
   const [phoneNumber, setPhoneNumber] = useState<string>();
 
   const sendPhoneOTP = async () => {
+    crashlytics().log(
+      'will sendPhoneOTP [ChangePhoneNumber] user: ' + JSON.stringify(user),
+    );
     setIsLoading(true);
     let valid = true;
     if (!phoneNumber) {
@@ -48,10 +41,13 @@ export default function ChangePhoneNumberScreen() {
       setIsLoading(false);
       return;
     }
-    if (
-      cleanPhoneNumber(user?.linked?.zmemAuusId?.[0]?.auusPhone) !==
-      cleanPhoneNumber(phoneNumber)
-    ) {
+    let existingPhoneNumber;
+    if (user?.linked?.zmemAuusId?.[0]?.auusPhone) {
+      existingPhoneNumber = user?.linked?.zmemAuusId?.[0]?.auusPhone;
+    } else if (user?.linked?.mbsdZmemId?.[0]?.mbsdPhone) {
+      existingPhoneNumber = user?.linked?.mbsdZmemId?.[0]?.mbsdPhone;
+    }
+    if (existingPhoneNumber !== cleanPhoneNumber(phoneNumber)) {
       AuthService.sendOTP({phoneNumber})
         .then(sendOtpRes => {
           console.info('SendOTP result: ', sendOtpRes);

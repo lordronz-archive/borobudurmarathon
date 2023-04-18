@@ -54,6 +54,7 @@ export function handleErrorMessage(
     onAnyError?: () => void;
   },
 ) {
+  crashlytics().log('handleErrorMessage title: ' + title);
   crashlytics().recordError(err);
 
   if (options && options.ignore404) {

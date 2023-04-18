@@ -54,22 +54,20 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
-		<array>
+		<!-- <dict>
+			<key>localhost</key>
 			<dict>
-				<key>localhost</key>
-				<dict>
-					<key>NSExceptionAllowsInsecureHTTPLoads</key>
-					<true/>
-				</dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
 			</dict>
+		</dict> -->
+		<dict>
+			<key>codepush.appcenter.ms</key>
 			<dict>
-				<key>codepush.appcenter.ms</key>
-				<dict>
-					<key>NSExceptionAllowsInsecureHTTPLoads</key>
-					<true/>
-				</dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
 			</dict>
-		</array>
+		</dict>
 	</dict>
 	<key>AppSecret</key>
   <string>f6322183-5edb-4098-bbaf-dd5ae413cf11</string>

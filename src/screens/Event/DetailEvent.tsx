@@ -398,6 +398,21 @@ export default function DetailEvent() {
                   }}>
                   {t('event.upcomingEvents')}
                 </Badge>
+              ) : status === 'REGISTRATION_CLOSED' ? (
+                <Badge
+                  backgroundColor="gray.200"
+                  px="3"
+                  py="0.5"
+                  my="2"
+                  borderRadius="4"
+                  alignSelf="flex-start"
+                  _text={{
+                    color: 'gray.500',
+                    fontWeight: 'bold',
+                    fontSize: 'xs',
+                  }}>
+                  {t('event.registrationClosed')}
+                </Badge>
               ) : (
                 false
               )}

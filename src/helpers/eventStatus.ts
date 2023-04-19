@@ -7,10 +7,9 @@ export function getEventRegistrationStatus(
 ) {
   if (start) {
     start = convertDateTimeToLocalTimezone(start);
-    const isUpcoming = moment(
-      convertDateTimeToLocalTimezone(new Date()),
-      'YYYY-MM-DD HH:mm:ss',
-    ).isBefore(moment(start));
+    const isUpcoming = moment(new Date()).isBefore(
+      moment(convertDateTimeToLocalTimezone(start)),
+    );
 
     if (isUpcoming) {
       return 'UPCOMING';
@@ -19,8 +18,8 @@ export function getEventRegistrationStatus(
 
   if (end) {
     end = convertDateTimeToLocalTimezone(end);
-    const isExpired = moment(end, 'YYYY-MM-DD HH:mm:ss').isBefore(
-      moment(convertDateTimeToLocalTimezone(new Date())),
+    const isExpired = moment(convertDateTimeToLocalTimezone(end)).isBefore(
+      moment(new Date()),
     );
 
     if (isExpired) {

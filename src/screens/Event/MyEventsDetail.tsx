@@ -85,6 +85,7 @@ export default function MyEventDetail() {
       }
 
       if (resDetailTransaction && resDetailTransaction.data) {
+        // resDetailTransaction.data.data.trnsExpiredTime = '2023-04-19 16:00:00'; // WIB
         setDetailTransaction(resDetailTransaction.data);
 
         // const isThisBallot =
@@ -391,8 +392,10 @@ export default function MyEventDetail() {
                     fontSize={14}
                     textAlign={'center'}>
                     {`${t('payment.payBefore')} ${moment(
-                      detailTransaction?.data?.trnsExpiredTime,
-                    ).format('DD MMM YYYY, HH:mm')}` + ' WIB'}
+                      convertDateTimeToLocalTimezone(
+                        detailTransaction?.data?.trnsExpiredTime,
+                      ),
+                    ).format('DD MMM YYYY, HH:mm')}`}
                   </Text>
                 </Box>
               )}
@@ -548,44 +551,37 @@ export default function MyEventDetail() {
                   ),
               )}
 
-              {detailTransaction?.data.trnsExpiredTime &&
-                moment(
-                  convertDateTimeToLocalTimezone(
-                    detailTransaction?.data.trnsExpiredTime,
-                  ),
-                ).isBefore(
-                  moment(convertDateTimeToLocalTimezone(new Date())),
-                ) && (
-                  <Box
-                    paddingY={'16px'}
-                    borderTopColor={'#E8ECF3'}
-                    borderTopWidth={1}
-                    borderTopStyle={'solid'}>
-                    <HStack
-                      justifyContent={'space-between'}
-                      alignItems="center">
-                      <Text
-                        fontWeight={400}
-                        color="#768499"
-                        fontSize={11}
-                        width="35%">
-                        {t('event.expiredTime')}
-                      </Text>
-                      <Text
-                        fontWeight={500}
-                        color="#1E1E1E"
-                        fontSize={12}
-                        width="60%"
-                        textAlign="right">
-                        {detailTransaction?.data?.trnsExpiredTime
-                          ? moment(
+              {true && (
+                <Box
+                  paddingY={'16px'}
+                  borderTopColor={'#E8ECF3'}
+                  borderTopWidth={1}
+                  borderTopStyle={'solid'}>
+                  <HStack justifyContent={'space-between'} alignItems="center">
+                    <Text
+                      fontWeight={400}
+                      color="#768499"
+                      fontSize={11}
+                      width="35%">
+                      {t('event.expiredTime')}
+                    </Text>
+                    <Text
+                      fontWeight={500}
+                      color="#1E1E1E"
+                      fontSize={12}
+                      width="60%"
+                      textAlign="right">
+                      {detailTransaction?.data?.trnsExpiredTime
+                        ? moment(
+                            convertDateTimeToLocalTimezone(
                               detailTransaction?.data?.trnsExpiredTime,
-                            ).format('DD MMM YYYY, HH:mm') + ' WIB'
-                          : '-'}
-                      </Text>
-                    </HStack>
-                  </Box>
-                )}
+                            ),
+                          ).format('DD MMM YYYY, HH:mm')
+                        : '-'}
+                    </Text>
+                  </HStack>
+                </Box>
+              )}
 
               {/* <RowDetailRegistration
                 data={detailTransaction?.linked.evrlTrnsId?.[0] || {}}

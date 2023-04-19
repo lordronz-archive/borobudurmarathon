@@ -46,10 +46,9 @@ import {useAuthUser} from '../../context/auth.context';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import useInit from '../../hooks/useInit';
 import {GetTransactionsResponse} from '../../types/transactions.type';
-import moment from 'moment';
 import {getTextBasedOnLanguage} from '../../helpers/text';
 import i18next from 'i18next';
-import { getEventRegistrationStatus } from '../../helpers/eventStatus';
+import {getEventRegistrationStatus} from '../../helpers/eventStatus';
 
 type Price = {
   id: string;

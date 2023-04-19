@@ -19,7 +19,7 @@ export function getTransactionStatus(params: {
         newStatus = 'Paid';
       } else if (
         moment(convertDateTimeToLocalTimezone(params.trnsExpiredTime)).isBefore(
-          moment(convertDateTimeToLocalTimezone(new Date())),
+          moment(new Date()),
         )
       ) {
         newStatus = 'Payment Expired';
@@ -32,7 +32,7 @@ export function getTransactionStatus(params: {
       newStatus = 'Paid';
     } else if (
       moment(convertDateTimeToLocalTimezone(params.trnsExpiredTime)).isBefore(
-        moment(convertDateTimeToLocalTimezone(new Date())),
+        moment(new Date()),
       )
     ) {
       newStatus = 'Payment Expired';

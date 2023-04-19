@@ -26,7 +26,7 @@ export default function useEvent() {
     EventService.getEvents()
       .then(res => {
         console.info('res getEvents', JSON.stringify(res));
-        if (res) {
+        if (res && res.data) {
           // featured events
           res.data = (res.data || []).map(item => ({
             ...item,

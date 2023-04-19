@@ -186,7 +186,7 @@ const EventService = {
       return Promise.reject(error);
     }
   },
-  getEvents: async function (featured = false): Promise<GetEventsResponse> {
+  getEvents: async function (featured = false): Promise<GetEventsResponse | undefined> {
     const parameter = {
       filter: {
         evnhEmail: 'reg@borobudurmarathon.co.id',
@@ -211,7 +211,11 @@ const EventService = {
         '/member_resource/member_event?' + qs(parameter, false),
       );
 
-      return res.data;
+      if (res) {
+        return res.data;
+      } else {
+        return undefined;
+      }
     } catch (error) {
       console.info('ERROR getEvents ', error);
       return Promise.reject(error);

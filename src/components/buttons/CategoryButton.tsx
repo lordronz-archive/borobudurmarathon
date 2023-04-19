@@ -3,12 +3,12 @@ import {Box, FlatList, Text} from 'native-base';
 import {TouchableOpacity} from 'react-native';
 
 type CategoryOption = {
-  id: number | null;
+  id: number | string | null;
   value: string;
 };
 type CategoryButtonType = {
   categories: CategoryOption[];
-  selected?: number | null;
+  selected?: number | string | null;
   style?: any;
   onSelect: (cat: CategoryOption) => void;
 };

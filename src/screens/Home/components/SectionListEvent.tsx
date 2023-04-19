@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import moment from 'moment';
 import {Box, FlatList, Flex, Image, Spinner, Text} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -21,14 +20,20 @@ export default function SectionListEvent() {
   const {isLoading, events, fetchList} = useEvent();
   // const [selectedCategory, setSelectedCategory] = useState<string>('All Event');
   const [selectedEventCategory, setSelectedEventCategory] = useState<{
-    id: number | null;
+    id: number | string | null;
     value: string;
   }>();
   let filteredEvents = [...events];
   if (selectedEventCategory && selectedEventCategory.id) {
-    filteredEvents = filteredEvents.filter(
-      item => Number(item.evnhType) === Number(selectedEventCategory.id),
-    );
+    if (selectedEventCategory.id === 'ballot') {
+      filteredEvents = filteredEvents.filter(
+        item => Number(item.evnhBallot) === 1,
+      );
+    } else {
+      filteredEvents = filteredEvents.filter(
+        item => Number(item.evnhType) === Number(selectedEventCategory.id),
+      );
+    }
   }
   // console.info('filteredEvents', JSON.stringify(filteredEvents));
 

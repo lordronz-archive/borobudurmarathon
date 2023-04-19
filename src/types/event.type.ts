@@ -26,6 +26,7 @@ export interface EventProperties {
   evnhPlace?: null;
   evnhNote?: null | string;
   evnhThumbnail?: null;
+  evnhBallot?: string; // '0'
   evnhQuotaConfirmation: number;
   evnhTimeLimitRegistration: string;
   evnhTimeLimitConfirmation: string;
@@ -248,11 +249,11 @@ export interface PaymentsEntity {
 }
 
 type IEventType = {
-  id: number | null;
+  id: number | string | null;
   value: string;
 };
 
-export const EVENT_TYPES: {[key: number]: IEventType} = {
+export const EVENT_TYPES: {[key: number | string]: IEventType} = {
   1: {
     id: 1,
     value: 'Reguler',
@@ -261,8 +262,16 @@ export const EVENT_TYPES: {[key: number]: IEventType} = {
     id: 2,
     value: 'Virtual',
   },
-  7: {
-    id: 7,
+  // mainevent: {
+  //   id: 'mainevent',
+  //   value: 'Main Event',
+  // },
+  // friendshiprun: {
+  //   id: 'friendshiprun',
+  //   value: 'Friendship Run',
+  // },
+  ballot: {
+    id: 'ballot',
     value: 'Ballot',
   },
   // {

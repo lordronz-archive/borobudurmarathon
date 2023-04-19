@@ -190,6 +190,7 @@ export default {
     distance: 'Distance',
     featuredEvents: 'Featured Events',
     expiredEvents: 'Expired Events',
+    registrationClosed: 'Registration Closed',
     upcomingEvents: 'Upcoming',
     runningDate: 'Event Date',
     raceCategory: 'Race Category',

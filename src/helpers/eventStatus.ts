@@ -2,13 +2,17 @@ import moment from 'moment';
 import {convertDateTimeToLocalTimezone} from './datetimeTimezone';
 
 export function getEventRegistrationStatus(
-  start?: Date | string,
-  end?: Date | string,
+  evnhRegistrationStart?: Date | string,
+  evnhRegistrationEnd?: Date | string,
+  evnhStartDate?: Date | string,
+  evnhEndDate?: Date | string,
 ) {
-  if (start) {
-    start = convertDateTimeToLocalTimezone(start);
+  if (evnhRegistrationStart) {
+    evnhRegistrationStart = convertDateTimeToLocalTimezone(
+      evnhRegistrationStart,
+    );
     const isUpcoming = moment(new Date()).isBefore(
-      moment(convertDateTimeToLocalTimezone(start)),
+      moment(convertDateTimeToLocalTimezone(evnhRegistrationStart)),
     );
 
     if (isUpcoming) {
@@ -16,14 +20,25 @@ export function getEventRegistrationStatus(
     }
   }
 
-  if (end) {
-    end = convertDateTimeToLocalTimezone(end);
-    const isExpired = moment(convertDateTimeToLocalTimezone(end)).isBefore(
-      moment(new Date()),
-    );
+  if (evnhEndDate) {
+    evnhEndDate = convertDateTimeToLocalTimezone(evnhEndDate);
+    const isExpired = moment(
+      convertDateTimeToLocalTimezone(evnhEndDate),
+    ).isBefore(moment(new Date()));
 
     if (isExpired) {
       return 'EXPIRED';
+    }
+  }
+
+  if (evnhRegistrationEnd) {
+    evnhRegistrationEnd = convertDateTimeToLocalTimezone(evnhRegistrationEnd);
+    const isExpired = moment(
+      convertDateTimeToLocalTimezone(evnhRegistrationEnd),
+    ).isBefore(moment(new Date()));
+
+    if (isExpired) {
+      return 'REGISTRATION_CLOSED';
     }
   }
 

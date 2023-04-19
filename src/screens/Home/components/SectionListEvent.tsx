@@ -59,6 +59,8 @@ export default function SectionListEvent() {
           status={getEventRegistrationStatus(
             item.evnhRegistrationStart,
             item.evnhRegistrationEnd,
+            item.evnhStartDate,
+            item.evnhEndDate,
           )}
         />
       </TouchableOpacity>

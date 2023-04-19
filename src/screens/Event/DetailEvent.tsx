@@ -306,6 +306,8 @@ export default function DetailEvent() {
   const status = getEventRegistrationStatus(
     event?.data?.evnhRegistrationStart,
     event?.data?.evnhRegistrationEnd,
+    event?.data?.evnhStartDate,
+    event?.data?.evnhEndDate,
   );
 
   return (

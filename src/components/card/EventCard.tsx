@@ -10,7 +10,7 @@ type CardEventProps = {
   date: string;
   image: ImageSourcePropType;
   isAvailable?: boolean;
-  status: 'UPCOMING' | 'REGISTRATION' | 'EXPIRED';
+  status: 'UPCOMING' | 'REGISTRATION' | 'REGISTRATION_CLOSED' | 'EXPIRED';
 };
 
 export default function CardEvent({
@@ -24,7 +24,9 @@ export default function CardEvent({
 
   return (
     <Box alignItems="flex-start" my={3} width="100%">
-      <HStack flex={1} alignItems={status === 'REGISTRATION' ? 'center' : 'flex-start'}>
+      <HStack
+        flex={1}
+        alignItems={status === 'REGISTRATION' ? 'center' : 'flex-start'}>
         <AspectRatio w="20%" ratio={1 / 1}>
           {/* <Image
             source={image}
@@ -59,6 +61,21 @@ export default function CardEvent({
           />
         </AspectRatio>
         <VStack pl={3} width="80%">
+          {status === 'REGISTRATION_CLOSED' && (
+            <Badge
+              backgroundColor="gray.200"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: 'gray.500',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              {t('event.registrationClosed')}
+            </Badge>
+          )}
           {status === 'EXPIRED' && (
             <Badge
               backgroundColor="gray.200"

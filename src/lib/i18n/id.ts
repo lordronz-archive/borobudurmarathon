@@ -191,6 +191,7 @@ export default {
     featuredEvents: 'Event Unggulan',
     expiredEvents: 'Event Terdahulu',
     upcomingEvents: 'Akan Datang',
+    registrationClosed: 'Pendaftaran Ditutup',
     runningDate: 'Tanggal Event',
     raceCategory: 'Kategori Lari',
     updatedAt: 'Diperbarui pada',

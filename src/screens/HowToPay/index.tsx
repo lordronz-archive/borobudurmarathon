@@ -84,8 +84,10 @@ export default function HowToPayScreen() {
 
   const SECTIONS_SAVE_DUIT = [
     {
-      title: t('payment.viaSaveDuitBankJatengTitle'),
-      content: t('payment.viaSaveDuitBankJatengSteps', {returnObjects: true}),
+      title: t('payment.viaSaveDuitBimaMobileTitle'),
+      content: t('payment.viaSaveDuitBimaMobileSteps', {
+        returnObjects: true,
+      }),
     },
     {
       title: t('payment.viaSaveDuitIBankingJatengTitle'),
@@ -94,10 +96,8 @@ export default function HowToPayScreen() {
       }),
     },
     {
-      title: t('payment.viaSaveDuitBimaMobileTitle'),
-      content: t('payment.viaSaveDuitBimaMobileSteps', {
-        returnObjects: true,
-      }),
+      title: t('payment.viaSaveDuitBankJatengTitle'),
+      content: t('payment.viaSaveDuitBankJatengSteps', {returnObjects: true}),
     },
     {
       title: t('payment.confirmBlockedStatus'),

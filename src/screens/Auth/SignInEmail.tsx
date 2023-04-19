@@ -158,7 +158,7 @@ export default function SignInEmailScreen() {
               </Text>
             </HStack>
 
-            {!!email && (
+            {/* {!!email && (
               <HStack space="1" mt={15} justifyContent="center">
                 <Text
                   fontWeight={600}
@@ -177,7 +177,7 @@ export default function SignInEmailScreen() {
                   {t('auth.needToVerifyEmail')} ??
                 </Text>
               </HStack>
-            )}
+            )} */}
           </ScrollView>
           <HStack my={3}>
             <Button

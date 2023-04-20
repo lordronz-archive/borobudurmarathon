@@ -9,36 +9,26 @@ export function getTransactionStatus(params: {
   trnsExpiredTime: Date | string;
 }): TransactionStatus {
   let newStatus;
+  if (params.trnsConfirmed === 1) {
+    newStatus = 'Paid';
+  } else if (
+    moment(convertDateTimeToLocalTimezone(params.trnsExpiredTime)).isBefore(
+      moment(new Date()),
+    )
+  ) {
+    newStatus = 'Payment Expired';
+  }
+
   if (params.isBallot) {
     if (params.regStatus === 0) {
       newStatus = 'Registered';
     } else if (params.regStatus === 99) {
       newStatus = 'Unqualified';
     } else {
-      if (params.trnsConfirmed === 1) {
-        newStatus = 'Paid';
-      } else if (
-        moment(convertDateTimeToLocalTimezone(params.trnsExpiredTime)).isBefore(
-          moment(new Date()),
-        )
-      ) {
-        newStatus = 'Payment Expired';
-      } else {
-        newStatus = 'Waiting Payment';
-      }
-    }
-  } else {
-    if (params.trnsConfirmed === 1) {
-      newStatus = 'Paid';
-    } else if (
-      moment(convertDateTimeToLocalTimezone(params.trnsExpiredTime)).isBefore(
-        moment(new Date()),
-      )
-    ) {
-      newStatus = 'Payment Expired';
-    } else {
       newStatus = 'Waiting Payment';
     }
+  } else {
+    newStatus = 'Waiting Payment';
   }
   return newStatus as TransactionStatus;
 }

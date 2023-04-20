@@ -30,7 +30,7 @@ import Section from '../../components/section/Section';
 import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {EVENT_TYPES, GetEventResponse} from '../../types/event.type';
+import {GetEventResponse} from '../../types/event.type';
 import httpRequest from '../../helpers/httpRequest';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
@@ -536,11 +536,7 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
-                      disabled={
-                        !!registeredEvent ||
-                        status === 'EXPIRED' ||
-                        status === 'UPCOMING'
-                      }
+                      disabled={!!registeredEvent || status !== 'REGISTRATION'}
                     />
                   ))}
               </Radio.Group>

@@ -770,7 +770,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                         mbsdIDNumberType: getIDNumberType(citizen).id,
                       }))
                     }
-                    keyboardType={'numeric'}
+                    keyboardType={citizen === 'WNI' ? 'numeric' : 'default'}
                   />
                   <SelectInput
                     items={getGenderOptions(

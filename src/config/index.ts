@@ -7,7 +7,7 @@ export default {
   bypassEmailVerification: false,
   inAppBrowser: true,
   isDev: Config.IS_DEV === 'TRUE',
-  // isDev: true,
+  // isDev: false,
   isShowDemoSettings: false,
   isShowFeatureCertificate: false,
   debug: true,

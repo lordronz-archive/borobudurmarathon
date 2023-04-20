@@ -6,6 +6,7 @@ import {EventService} from '../../../api/event.service';
 import BannerNew from '../../../components/carousel/BannerNew';
 import Section from '../../../components/section/Section';
 import datetime from '../../../helpers/datetime';
+import { getEventTypeName } from '../../../helpers/event';
 import useEvent from '../../../hooks/useEvent';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {EventProperties, EVENT_TYPES} from '../../../types/event.type';
@@ -52,9 +53,10 @@ export default function SectionFeaturedEvents() {
       <BannerNew
         entries={featuredEvents.map(item => ({
           title: item.evnhName || '',
-          eventType: item.evnhType
-            ? EVENT_TYPES[item.evnhType]?.value || 'Other'
-            : 'Other',
+          eventType: getEventTypeName({
+            evnhType: item.evnhType,
+            evnhBallot: item.evnhBallot,
+          }),
           date: datetime.getDateRangeString(
             item.evnhStartDate,
             item.evnhEndDate,

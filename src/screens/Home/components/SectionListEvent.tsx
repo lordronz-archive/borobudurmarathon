@@ -11,7 +11,7 @@ import datetime from '../../../helpers/datetime';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import useEvent from '../../../hooks/useEvent';
 import {EventPropertiesDetail, EVENT_TYPES} from '../../../types/event.type';
-import {getEventRegistrationStatus} from '../../../helpers/eventStatus';
+import {getEventRegistrationStatus} from '../../../helpers/event';
 
 export default function SectionListEvent() {
   const navigation =

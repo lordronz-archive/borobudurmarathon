@@ -42,6 +42,7 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {getTextBasedOnLanguage} from '../../helpers/text';
+import { getEventTypeName } from '../../helpers/event';
 
 type Price = {
   id: string;
@@ -524,10 +525,10 @@ export default function EventRegisterScreen() {
                 cat => cat.evncId === params.selectedCategoryId,
               )?.evncName
             }
-            eventType={(event?.data.evnhType
-              ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
-              : 'OTHER'
-            ).toUpperCase()}
+            eventType={getEventTypeName({
+              evnhType: event?.data.evnhType,
+              evnhBallot: event?.data.evnhBallot,
+            })}
           />
           <Divider
             height="8px"

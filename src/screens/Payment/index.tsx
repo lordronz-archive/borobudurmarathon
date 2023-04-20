@@ -30,6 +30,7 @@ import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import {TransactionDetail} from '../../types/transaction.type';
 import {handleErrorMessage} from '../../helpers/apiErrors';
+import {getEventTypeName} from '../../helpers/event';
 
 export default function PaymentScreen() {
   const {onCopy} = useClipboard();
@@ -168,13 +169,12 @@ export default function PaymentScreen() {
 
                 <VStack flex={1} width="90%">
                   <Text fontSize={12} fontWeight={600} color={'#768499'}>
-                    {(detailTransaction?.linked?.trnsEventId?.[0]?.evnhType
-                      ? EVENT_TYPES[
-                          detailTransaction?.linked?.trnsEventId?.[0]
-                            ?.evnhType as any
-                        ].value || 'OTHER'
-                      : 'OTHER'
-                    ).toUpperCase()}{' '}
+                    {getEventTypeName({
+                      evnhType:
+                        detailTransaction?.linked?.trnsEventId?.[0]?.evnhType,
+                      evnhBallot:
+                        detailTransaction?.linked?.trnsEventId?.[0]?.evnhBallot,
+                    })}{' '}
                     •{' '}
                     {
                       detailTransaction?.linked?.trndTrnsId?.[0]

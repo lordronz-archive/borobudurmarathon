@@ -48,7 +48,10 @@ import useInit from '../../hooks/useInit';
 import {GetTransactionsResponse} from '../../types/transactions.type';
 import {getTextBasedOnLanguage} from '../../helpers/text';
 import i18next from 'i18next';
-import {getEventRegistrationStatus} from '../../helpers/eventStatus';
+import {
+  getEventRegistrationStatus,
+  getEventTypeName,
+} from '../../helpers/event';
 
 type Price = {
   id: string;
@@ -362,11 +365,10 @@ export default function DetailEvent() {
                 fontWeight={600}
                 my={2}
                 mr="2">
-                {(event?.data.evnhType
-                  ? EVENT_TYPES[event?.data.evnhType as any].value || 'OTHER'
-                  : 'OTHER'
-                ).toUpperCase()}
-                {Number(event?.data.evnhBallot) === 1 && ' - BALLOT'}
+                {getEventTypeName({
+                  evnhType: event?.data.evnhType,
+                  evnhBallot: event?.data.evnhBallot,
+                })}
               </Text>
               {status === 'EXPIRED' ? (
                 <Badge
@@ -536,7 +538,8 @@ export default function DetailEvent() {
                       onSelect={() => setSelected(price)}
                       disabled={
                         !!registeredEvent ||
-                        status === 'EXPIRED' || status === 'UPCOMING'
+                        status === 'EXPIRED' ||
+                        status === 'UPCOMING'
                       }
                     />
                   ))}

@@ -1,6 +1,26 @@
 import moment from 'moment';
 import {convertDateTimeToLocalTimezone} from './datetimeTimezone';
 
+export function getEventTypeName(params: {
+  evnhType?: number | string;
+  evnhBallot?: number | string;
+}) {
+  const evnhType = params.evnhType ? Number(params.evnhType) : 0;
+  const evnhBallot = params.evnhBallot ? Number(params.evnhBallot) : 0;
+  let typeName = '';
+  if (evnhType === 2) {
+    typeName = 'VIRTUAL';
+  } else if (evnhType === 1 || evnhType === 7) {
+    typeName = 'REGULER';
+  } else {
+    typeName = 'OTHER (' + evnhType + ')';
+  }
+
+  if (evnhBallot) {
+    typeName = typeName + ' - BALLOT';
+  }
+  return typeName;
+}
 export function getEventRegistrationStatus(
   evnhRegistrationStart?: Date | string,
   evnhRegistrationEnd?: Date | string,

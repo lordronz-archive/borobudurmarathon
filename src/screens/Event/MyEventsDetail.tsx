@@ -32,6 +32,7 @@ import QRCodeWithFunction from './components/QRCodeWithFunction';
 import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
 import {getTransactionStatus} from '../../helpers/transaction';
 import {convertDateTimeToLocalTimezone} from '../../helpers/datetimeTimezone';
+import { getEventTypeName } from '../../helpers/event';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -56,8 +57,9 @@ export default function MyEventDetail() {
 
   // const [registeredEvent, setRegisteredEvent] = useState<any>();
 
-  const isBallot =
-    Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
+  // const isBallot =
+  //   Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
+  const isBallot = detailTransaction?.linked.mregTrnsId?.[0]?.mregType === 'MB';
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -443,19 +445,12 @@ export default function MyEventDetail() {
                     alignItems={'center'}>
                     <VStack width="90%">
                       <Text fontWeight={500} color="#768499" fontSize={12}>
-                        {/* {(eventData?.evnhType
-                          ? EVENT_TYPES[eventData?.evnhType as any].value ||
-                            'OTHER'
-                          : 'OTHER'
-                        ).toUpperCase() + (isBallot ? ' (BALLOT)' : '')} */}
-
-                        {(detailTransaction?.linked?.trnsEventId?.[0]?.evnhType
-                          ? EVENT_TYPES[
-                              detailTransaction?.linked?.trnsEventId?.[0]
-                                ?.evnhType as any
-                            ].value || 'OTHER'
-                          : 'OTHER'
-                        ).toUpperCase() + (isBallot ? ' (BALLOT)' : '')}
+                        {getEventTypeName({
+                          evnhType:
+                            detailTransaction?.linked?.trnsEventId?.[0]
+                              ?.evnhType,
+                          evnhBallot: isBallot ? 1 : 0,
+                        })}
                       </Text>
                       <Text
                         fontWeight={500}

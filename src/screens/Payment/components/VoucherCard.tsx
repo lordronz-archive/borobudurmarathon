@@ -1,7 +1,5 @@
-import {t} from 'i18next';
 import {Box, HStack, VStack, Text, Image, ShareIcon} from 'native-base';
 import React from 'react';
-import IconInfo from '../../../assets/icons/IconInfo';
 import {TransactionStatus} from '../../../types/event.type';
 import Button from '../../../components/buttons/Button';
 import IconQr from '../../../assets/icons/IconQr';

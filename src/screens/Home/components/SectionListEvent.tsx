@@ -29,9 +29,13 @@ export default function SectionListEvent() {
       filteredEvents = filteredEvents.filter(
         item => Number(item.evnhBallot) === 1,
       );
-    } else {
+    } else if (selectedEventCategory.id === 'reguler') {
       filteredEvents = filteredEvents.filter(
-        item => Number(item.evnhType) === Number(selectedEventCategory.id),
+        item => Number(item.evnhType) === 1 || Number(item.evnhType) === 7,
+      );
+    } else if (selectedEventCategory.id === 'virtual') {
+      filteredEvents = filteredEvents.filter(
+        item => Number(item.evnhType) === 2,
       );
     }
   }

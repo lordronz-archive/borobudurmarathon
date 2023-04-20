@@ -254,12 +254,12 @@ type IEventType = {
 };
 
 export const EVENT_TYPES: {[key: number | string]: IEventType} = {
-  1: {
-    id: 1,
+  reguler: {
+    id: 'reguler',
     value: 'Reguler',
   },
-  2: {
-    id: 2,
+  virtual: {
+    id: 'virtual',
     value: 'Virtual',
   },
   // mainevent: {

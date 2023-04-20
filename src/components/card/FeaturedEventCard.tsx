@@ -24,7 +24,7 @@ export default function FeaturedEventCard({
         borderColor="coolGray.200"
         borderWidth="1">
         <Box>
-          <AspectRatio w="100%" ratio={9 / 5}>
+          <AspectRatio w="100%" ratio={250 / 167}>
             <Image source={image} w="100%" h="100%" alt="{title}" />
           </AspectRatio>
         </Box>

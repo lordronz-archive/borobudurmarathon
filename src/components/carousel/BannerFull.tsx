@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
 import {View, Dimensions} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {Image} from 'native-base';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -33,8 +33,8 @@ export default function BannerFull(props: IProps) {
         loop
         sliderWidth={width}
         itemWidth={width}
-        sliderHeight={width / 1.3}
-        itemHeight={width / 1.3}
+        sliderHeight={width * (668 / 1000)}
+        itemHeight={width * (668 / 1000)}
         // autoPlay={props.entries.length > 1}
         // autoPlayInterval={5000}
         data={props.entries}
@@ -53,7 +53,7 @@ export default function BannerFull(props: IProps) {
             alt={item.title || 'image'}
             resizeMode="cover"
             width="100%"
-            height={width / 1.3}
+            height={width * (668 / 1000)}
             onLoad={() => {
               setImageLoaded(true);
             }}

@@ -17,9 +17,7 @@ export function getTransactionStatus(params: {
     )
   ) {
     newStatus = 'Payment Expired';
-  }
-
-  if (params.isBallot) {
+  } else if (params.isBallot) {
     if (params.regStatus === 0) {
       newStatus = 'Registered';
     } else if (params.regStatus === 99) {

@@ -1,3 +1,4 @@
+import {t} from 'i18next';
 import {
   Box,
   HStack,
@@ -22,6 +23,7 @@ type EventPricingCardProps = {
   selected?: boolean;
   onSelect?: () => void;
   disabled?: boolean;
+  status?: 'SOLDOUT' | 'OPEN';
 };
 
 export default function EventPricingCard({
@@ -33,6 +35,7 @@ export default function EventPricingCard({
   selected,
   onSelect,
   disabled,
+  status,
 }: EventPricingCardProps) {
   let textOriginalPrice;
   let textFinalPrice;
@@ -81,10 +84,21 @@ export default function EventPricingCard({
           borderColor="coolGray.200"
           borderWidth="1"
           p={4}>
-          <Flex direction="row" justify="space-between">
-            <Text color={'#EB1C23'} fontWeight={800} fontSize="lg">
+          <HStack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center">
+            <Text color={'#EB1C23'} fontWeight={800} fontSize="lg" width="70%">
               {title}
             </Text>
+
+            {status === 'SOLDOUT' && (
+              <Box bgColor={'#FFE1E2'} px={2} py={1} borderRadius={10}>
+                <Text color={'#EB1C23'} fontSize="xs" fontWeight={600}>
+                  {t('event.soldout')}
+                </Text>
+              </Box>
+            )}
 
             {selected ? (
               <CheckCircleIcon size={30} color="primary.900" />
@@ -102,7 +116,7 @@ export default function EventPricingCard({
             ) : (
               false
             )}
-          </Flex>
+          </HStack>
           <Text color={'#768499'} fontSize="sm" fontWeight={400}>
             {subtitle}
           </Text>

@@ -191,6 +191,7 @@ export default {
     featuredEvents: 'Featured Events',
     expiredEvents: 'Expired Events',
     registrationClosed: 'Registration Closed',
+    soldout: 'Sold Out',
     upcomingEvents: 'Upcoming',
     runningDate: 'Event Date',
     raceCategory: 'Race Category',

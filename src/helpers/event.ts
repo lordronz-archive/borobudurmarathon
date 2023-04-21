@@ -64,3 +64,35 @@ export function getEventRegistrationStatus(
 
   return 'REGISTRATION';
 }
+
+export function getEventQuotaStatus(
+  event: {
+    evnhQuotaRegistration?: string;
+  },
+  categories: {
+    evncHold?: string;
+  }[],
+) {
+  const totalHold = categories.reduce(
+    (acc, curr) => acc + Number(curr.evncHold),
+    0,
+  );
+  console.info('totalHold', totalHold);
+  console.info('event.evnhQuotaRegistration', event.evnhQuotaRegistration);
+  if (totalHold >= Number(event.evnhQuotaRegistration)) {
+    return 'SOLDOUT';
+  } else {
+    return 'OPEN';
+  }
+}
+
+export function getEventCategoryQuotaStatus(cat: {
+  evncQuotaRegistration?: string;
+  evncHold?: string;
+}) {
+  if (Number(cat.evncHold) >= Number(cat.evncQuotaRegistration)) {
+    return 'SOLDOUT';
+  } else {
+    return 'OPEN';
+  }
+}

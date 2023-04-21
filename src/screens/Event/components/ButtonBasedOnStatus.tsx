@@ -113,6 +113,13 @@ export default function ButtonBasedOnStatus(props: Props) {
       const resEvent = await EventService.getEvent(props.eventId);
       console.info('res get detail event', JSON.stringify(resEvent));
 
+      if (resEvent && !resEvent.access) {
+        Toast.show({
+          description: resEvent.notif,
+        });
+        return;
+      }
+
       if (
         props.eventId &&
         resEvent &&

@@ -49,6 +49,8 @@ import {GetTransactionsResponse} from '../../types/transactions.type';
 import {getTextBasedOnLanguage} from '../../helpers/text';
 import i18next from 'i18next';
 import {
+  getEventCategoryQuotaStatus,
+  getEventQuotaStatus,
   getEventRegistrationStatus,
   getEventTypeName,
 } from '../../helpers/event';
@@ -60,6 +62,7 @@ type Price = {
   originalPrice: number;
   finalPrice: number;
   benefits: string[];
+  status: 'SOLDOUT' | 'OPEN';
 };
 export default function DetailEvent() {
   const isFocused = useIsFocused();
@@ -168,6 +171,10 @@ export default function DetailEvent() {
       benefits: parsed.map(item =>
         getTextBasedOnLanguage(item.label, i18next.language),
       ),
+      status: getEventCategoryQuotaStatus({
+        evncHold: cat.evncHold,
+        evncQuotaRegistration: cat.evncQuotaRegistration,
+      }),
     };
   });
 
@@ -311,6 +318,13 @@ export default function DetailEvent() {
     event?.data?.evnhRegistrationEnd,
     event?.data?.evnhStartDate,
     event?.data?.evnhEndDate,
+  );
+
+  const quotaStatus = getEventQuotaStatus(
+    {
+      evnhQuotaRegistration: event?.data?.evnhQuotaRegistration,
+    },
+    (event?.categories || []).map(price => ({evncHold: price.evncHold})),
   );
 
   return (
@@ -539,7 +553,14 @@ export default function DetailEvent() {
                       disabled={
                         !event?.access ||
                         !!registeredEvent ||
-                        status !== 'REGISTRATION'
+                        status !== 'REGISTRATION' ||
+                        price.status === 'SOLDOUT' ||
+                        quotaStatus === 'SOLDOUT'
+                      }
+                      status={
+                        quotaStatus === 'SOLDOUT' || price.status === 'SOLDOUT'
+                          ? 'SOLDOUT'
+                          : price.status
                       }
                     />
                   ))}

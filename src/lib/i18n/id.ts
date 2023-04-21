@@ -192,6 +192,7 @@ export default {
     expiredEvents: 'Event Terdahulu',
     upcomingEvents: 'Akan Datang',
     registrationClosed: 'Pendaftaran Ditutup',
+    soldout: 'Terjual Habis',
     runningDate: 'Tanggal Event',
     raceCategory: 'Kategori Lari',
     updatedAt: 'Diperbarui pada',

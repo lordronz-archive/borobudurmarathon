@@ -536,7 +536,11 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
-                      disabled={!!registeredEvent || status !== 'REGISTRATION'}
+                      disabled={
+                        !event?.access ||
+                        !!registeredEvent ||
+                        status !== 'REGISTRATION'
+                      }
                     />
                   ))}
               </Radio.Group>

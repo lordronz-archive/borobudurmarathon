@@ -204,6 +204,7 @@ export default {
     registrationID: 'Registration ID',
     forMoreInformationAboutSize: 'For more information about size',
     seeJerseyChart: 'See jersey size chart',
+    viewDetail: 'View Detail',
   },
   payment: {
     paymentInformation: 'Payment Information',

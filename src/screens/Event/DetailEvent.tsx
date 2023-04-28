@@ -222,6 +222,7 @@ export default function DetailEvent() {
                   (item: any) =>
                     item.mregOrderId === findEventRegister.trnsRefId,
                 );
+                console.log('REGISTERED EVENT', findRegisteredEvent);
                 if (findRegisteredEvent) {
                   setRegisteredEvent(findRegisteredEvent);
                 }
@@ -590,6 +591,7 @@ export default function DetailEvent() {
               disabled={
                 !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
               }
+              isLoading={isLoading}
               onPress={() => {
                 navigation.navigate('MyEventsDetail', {
                   transactionId: registeredEvent.mregOrderId,
@@ -598,7 +600,7 @@ export default function DetailEvent() {
                   // regStatus: registeredEvent.mregStatus,
                 });
               }}>
-              View Detail
+              {t('event.viewDetail')}
             </Button>
           </Box>
         ) : event && selected && !registeredEvent ? (
@@ -614,6 +616,7 @@ export default function DetailEvent() {
               disabled={
                 !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
               }
+              isLoading={isLoading}
               onPress={() => {
                 navigation.navigate('EventRegister', {
                   event,

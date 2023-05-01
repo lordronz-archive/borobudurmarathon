@@ -204,6 +204,7 @@ export default {
     registrationID: 'ID Pendaftaran',
     forMoreInformationAboutSize: 'Untuk informasi terkait ukuran',
     seeJerseyChart: 'Lihat detail ukuran jersey',
+    viewDetail: 'Lihat Detail',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',
@@ -220,7 +221,7 @@ export default {
       'Silahkan selesaikan pembayaran anda sebelum batas pembayaran berakhir',
     ballotAnnouncement:
       'Pengumuman hasil ballot akan diinformasikan pada periode pengumuman hasil ballot.',
-    paymentStatusExpiredShort: 'Status pembayaran anda sudah expire',
+    paymentStatusExpiredShort: 'Status pembayaran anda sudah expired',
     qrWillAppear: 'QR Code event akan tampil disini setalah anda',
     passedBallot: 'lolos ballot',
     makeAPayment: 'melakukan pembayaran',

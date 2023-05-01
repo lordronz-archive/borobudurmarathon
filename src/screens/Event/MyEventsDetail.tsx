@@ -32,7 +32,7 @@ import QRCodeWithFunction from './components/QRCodeWithFunction';
 import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
 import {getTransactionStatus} from '../../helpers/transaction';
 import {convertDateTimeToLocalTimezone} from '../../helpers/datetimeTimezone';
-import { getEventTypeName } from '../../helpers/event';
+import {getEventTypeName} from '../../helpers/event';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -402,29 +402,33 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              <ButtonBasedOnStatus
-                eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
-                transactionId={params.transactionId}
-                status={status}
-                activePayment={detailTransaction?.linked?.trihTrnsId?.find(
-                  item => item.trihIsCurrent === 1,
-                )}
-                isBallot={isBallot}
-                evpaEvncId={
-                  detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
-                }
-                // onChoosePaymentMethod={() => setShowModal(true)}
-                onPayNow={handlePayNow}
-                // isPaymentGenerated={
-                //   detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-                //   detailTransaction?.linked?.trihTrnsId?.find(
-                //     (item: any) => item.trihIsCurrent === 1,
-                //   )?.trihPaymentType === confirmPayment?.evptMsptName
-                // }
-                // onAfterButtonFinished={() => {
-                //   setConfirmPayment(undefined);
-                // }}
-              />
+              {['Waiting Payment', 'Payment Expired'].includes(
+                status ?? '',
+              ) && (
+                <ButtonBasedOnStatus
+                  eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
+                  transactionId={params.transactionId}
+                  status={status}
+                  activePayment={detailTransaction?.linked?.trihTrnsId?.find(
+                    item => item.trihIsCurrent === 1,
+                  )}
+                  isBallot={isBallot}
+                  evpaEvncId={
+                    detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
+                  }
+                  // onChoosePaymentMethod={() => setShowModal(true)}
+                  onPayNow={handlePayNow}
+                  // isPaymentGenerated={
+                  //   detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
+                  //   detailTransaction?.linked?.trihTrnsId?.find(
+                  //     (item: any) => item.trihIsCurrent === 1,
+                  //   )?.trihPaymentType === confirmPayment?.evptMsptName
+                  // }
+                  // onAfterButtonFinished={() => {
+                  //   setConfirmPayment(undefined);
+                  // }}
+                />
+              )}
 
               <Box
                 marginTop={'15px'}

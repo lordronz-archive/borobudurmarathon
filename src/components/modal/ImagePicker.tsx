@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {Box, Button, Modal, Text, Toast} from 'native-base';
+import {Box, Modal, Text, Toast} from 'native-base';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {TouchableOpacity} from 'react-native';
 import { getErrorMessage } from '../../helpers/errorHandler';
@@ -44,8 +44,12 @@ const ImagePicker = (props: Props) => {
       freeStyleCropEnabled: true,
       mediaType: 'photo',
       useFrontCamera: false,
+      showCropFrame: true,
+      includeExif: true,
+      compressImageQuality: 0.99, // https://github.com/ivpusic/react-native-image-crop-picker/issues/1696
     })
       .then(image => {
+        console.log('EXIF DATA', image.exif);
         onChange(image);
         setVisible(false);
       })

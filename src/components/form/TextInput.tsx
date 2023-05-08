@@ -29,6 +29,7 @@ type TextInputProps = {
   keyboardType?: KeyboardTypeOptions;
   maxW?: string | number;
   onChangeText?: (text: string) => void;
+  width?: number | string;
 };
 
 export default function TextInput(props: TextInputProps) {
@@ -44,6 +45,7 @@ export default function TextInput(props: TextInputProps) {
           ? props.isInvalid || (!!props.value && !validateEmail(props.value))
           : props.isInvalid
       }
+      width={props.width}
       maxW={props.maxW}>
       <Box
         borderWidth={1}

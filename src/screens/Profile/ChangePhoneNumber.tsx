@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Box, VStack, ScrollView, Toast, Button} from 'native-base';
+import {Box, VStack, ScrollView, Toast, Button, HStack} from 'native-base';
 import React, {useState} from 'react';
 import TextInput from '../../components/form/TextInput';
 import {AuthService} from '../../api/auth.service';
@@ -8,11 +8,12 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import {useAuthUser} from '../../context/auth.context';
 import {useTranslation} from 'react-i18next';
-import {cleanPhoneNumber} from '../../helpers/phoneNumber';
+import {cleanPhoneNumber, countryPhoneCodes} from '../../helpers/phoneNumber';
 import useInit from '../../hooks/useInit';
 import AppContainer from '../../layout/AppContainer';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import crashlytics from '@react-native-firebase/crashlytics';
+import SelectInput from '../../components/form/SelectInput';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
@@ -23,6 +24,7 @@ export default function ChangePhoneNumberScreen() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
+  const [countryCode, setCountryCode] = useState<string>();
 
   const sendPhoneOTP = async () => {
     crashlytics().log(
@@ -48,7 +50,10 @@ export default function ChangePhoneNumberScreen() {
       existingPhoneNumber = user?.linked?.mbsdZmemId?.[0]?.mbsdPhone;
     }
     if (existingPhoneNumber !== cleanPhoneNumber(phoneNumber)) {
-      AuthService.sendOTP({phoneNumber})
+      AuthService.sendOTP({
+        phoneNumber,
+        countryCode: countryCode ? +countryCode : 62,
+      })
         .then(sendOtpRes => {
           console.info('SendOTP result: ', sendOtpRes);
           navigation.navigate('PhoneNumberValidation', {
@@ -91,15 +96,26 @@ export default function ChangePhoneNumberScreen() {
             {/* <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
               {t('label.accountInformation')}
             </Text> */}
-            <VStack space="1.5">
+            <HStack space="1.5" width="100%">
+              <SelectInput
+                label={t('countryCode') || ''}
+                placeholder="62"
+                items={countryPhoneCodes.map(v => ({
+                  label: v.code,
+                  value: v.code,
+                }))}
+                width={'30%'}
+                onValueChange={v => setCountryCode(v)}
+              />
               <TextInput
                 placeholder={t('auth.placeholderPhone') || ''}
                 label={t('phoneNumber') || ''}
                 helperText={t('auth.willSendToPhone')}
                 onChangeText={setPhoneNumber}
                 value={phoneNumber}
+                width={'70%'}
               />
-            </VStack>
+            </HStack>
           </VStack>
         </VStack>
         <Box px="4">

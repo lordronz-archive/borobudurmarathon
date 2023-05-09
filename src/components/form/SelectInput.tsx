@@ -20,13 +20,14 @@ type SelectInputProps = {
   value?: string;
   items: {
     label: string;
-    value: string;
+    value: string | number;
   }[];
   hideSearch?: boolean;
   onValueChange?: (text: string) => void;
   isOpen?: boolean;
   setIsOpen?: () => void;
   required?: boolean;
+  width?: number | string;
 };
 
 export default function SelectInput(props: SelectInputProps) {
@@ -43,7 +44,7 @@ export default function SelectInput(props: SelectInputProps) {
   const {t} = useTranslation();
 
   return (
-    <FormControl isInvalid={props.isInvalid}>
+    <FormControl isInvalid={props.isInvalid} width={props.width}>
       <Box borderWidth={1} borderColor="#C5CDDB" borderRadius={5} pb={0}>
         <FormControl.Label flexWrap={'wrap'} px={3}>
           <HStack>

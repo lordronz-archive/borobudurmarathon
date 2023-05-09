@@ -34,6 +34,7 @@ export default {
   continue: 'Continue',
   close: 'Close',
   formEnter: 'Enter',
+  countryCode: 'Code',
   auth: {
     forgotPassword: 'Forgot password?',
     forgotPasswordTitle: 'Forgot Password',

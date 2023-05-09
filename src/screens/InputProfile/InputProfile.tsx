@@ -8,6 +8,7 @@ import {
   Toast,
   Center,
   Button,
+  HStack,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import BackHeader from '../../components/header/BackHeader';
@@ -24,7 +25,7 @@ import {TouchableOpacity} from 'react-native';
 import {useAuthUser} from '../../context/auth.context';
 import {MasterLocationResponse} from '../../types/profile.type';
 import {ProfileService} from '../../api/profile.service';
-import {cleanPhoneNumber} from '../../helpers/phoneNumber';
+import {cleanPhoneNumber, countryPhoneCodes} from '../../helpers/phoneNumber';
 import {ID_NUMBER_TYPE_OPTIONS} from '../../assets/data/ktpPassport';
 import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
@@ -45,6 +46,7 @@ export default function InputProfileScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [birthDate, setBirthDate] = useState<Date>();
   const [phoneNumber, setPhoneNumber] = useState<string>();
+  const [countryCode, setCountryCode] = useState<string>();
   const [mbsdIDNumberType, setIDNumberType] = useState<string>('1');
   const [mbsdIDNumber, setIDNumber] = useState<string>();
   const [mbsdGender, setGender] = useState<string>('1');
@@ -141,7 +143,10 @@ export default function InputProfileScreen() {
         cleanPhoneNumber(user?.linked?.zmemAuusId?.[0]?.auusPhone) !==
         cleanPhoneNumber(phoneNumber)
       ) {
-        const sendOtpRes = await AuthService.sendOTP({phoneNumber});
+        const sendOtpRes = await AuthService.sendOTP({
+          phoneNumber,
+          countryCode: countryCode ? +countryCode : undefined,
+        });
         console.info('SendOTP result: ', sendOtpRes);
         navigation.navigate('PhoneNumberValidation', {
           phoneNumber,
@@ -199,14 +204,26 @@ export default function InputProfileScreen() {
             </Text>
             <VStack space="1.5">
               <TextInput placeholder="Enter your name" label="Name" />
-              <TextInput
-                placeholder="Enter your phone number"
-                label="Phone number"
-                helperText={t('auth.willSendToPhone')}
-                onChangeText={setPhoneNumber}
-                value={phoneNumber}
-                keyboardType="numeric"
-              />
+              <HStack space="1.5" width="100%">
+                <SelectInput
+                  label={t('countryCode') || ''}
+                  placeholder="62"
+                  items={countryPhoneCodes.map(v => ({
+                    label: v.code,
+                    value: v.code,
+                  }))}
+                  width={'30%'}
+                  onValueChange={v => setCountryCode(v)}
+                />
+                <TextInput
+                  placeholder={t('auth.placeholderPhone') || ''}
+                  label={t('phoneNumber') || ''}
+                  helperText={t('auth.willSendToPhone')}
+                  onChangeText={setPhoneNumber}
+                  value={phoneNumber}
+                  width={'70%'}
+                />
+              </HStack>
             </VStack>
           </VStack>
           <VStack space="2.5" px="4">

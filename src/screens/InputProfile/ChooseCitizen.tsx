@@ -44,7 +44,7 @@ import {getErrorMessage} from '../../helpers/errorHandler';
 import {AuthService} from '../../api/auth.service';
 import {useAuthUser} from '../../context/auth.context';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
-import {cleanPhoneNumber} from '../../helpers/phoneNumber';
+import {cleanPhoneNumber, countryPhoneCodes} from '../../helpers/phoneNumber';
 import Button from '../../components/buttons/Button';
 import {useDemo} from '../../context/demo.context';
 import {getIDNumberType} from '../../assets/data/ktpPassport';
@@ -120,6 +120,7 @@ export default function ChooseCitizenScreen({route}: Props) {
     React.useState<boolean>(false);
   const [isVerifyLater, setIsVerifyLater] = React.useState<boolean>(false);
   const [isPhoneEditable, setIsPhoneEditable] = React.useState(false);
+  const [countryCode, setCountryCode] = useState<string>();
 
   useEffect(() => {
     const backAction = () => {
@@ -376,6 +377,7 @@ export default function ChooseCitizenScreen({route}: Props) {
           try {
             const sendOtpRes = await AuthService.sendOTP({
               phoneNumber: cleanPhoneNumber(accountInformation.phoneNumber),
+              countryCode: countryCode ? +countryCode : undefined,
             });
             console.info('SendOTP result: ', sendOtpRes);
             navigation.navigate('PhoneNumberValidation', {
@@ -733,23 +735,36 @@ export default function ChooseCitizenScreen({route}: Props) {
                       }))
                     }
                   />
-                  <TextInput
-                    placeholder={t('auth.placeholderPhone') || ''}
-                    label={t('phoneNumber') || ''}
-                    helperText={t('auth.willSendToPhone')}
-                    value={accountInformation.phoneNumber}
-                    keyboardType="numeric"
-                    _inputProps={{editable: isPhoneEditable}}
-                    onChangeText={val => {
-                      if (val.length > 14) {
-                        return;
-                      }
-                      setAccountInformation(oldVal => ({
-                        ...oldVal,
-                        phoneNumber: val,
-                      }));
-                    }}
-                  />
+                  <HStack space="1.5" width="100%">
+                    <SelectInput
+                      label={t('countryCode') || ''}
+                      placeholder="62"
+                      items={countryPhoneCodes.map(v => ({
+                        label: v.code,
+                        value: v.code,
+                      }))}
+                      width={'30%'}
+                      onValueChange={v => setCountryCode(v)}
+                    />
+                    <TextInput
+                      placeholder={t('auth.placeholderPhone') || ''}
+                      label={t('phoneNumber') || ''}
+                      helperText={t('auth.willSendToPhone')}
+                      value={accountInformation.phoneNumber}
+                      keyboardType="numeric"
+                      width="68%"
+                      _inputProps={{editable: isPhoneEditable}}
+                      onChangeText={val => {
+                        if (val.length > 14) {
+                          return;
+                        }
+                        setAccountInformation(oldVal => ({
+                          ...oldVal,
+                          phoneNumber: val,
+                        }));
+                      }}
+                    />
+                  </HStack>
                 </VStack>
               )}
               {stepCount === 3 && profileStep === 2 && (

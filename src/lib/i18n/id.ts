@@ -34,6 +34,7 @@ export default {
   continue: 'Lanjut',
   close: 'Tutup',
   formEnter: 'Masukkan',
+  countryCode: 'Kode',
   auth: {
     forgotPassword: 'Lupa password?',
     forgotPasswordTitle: 'Lupa Password',

@@ -28,6 +28,7 @@ type SelectInputProps = {
   setIsOpen?: () => void;
   required?: boolean;
   width?: number | string;
+  height?: number | string;
 };
 
 export default function SelectInput(props: SelectInputProps) {
@@ -85,6 +86,7 @@ export default function SelectInput(props: SelectInputProps) {
             margin: 0,
             marginTop: -8,
             marginBottom: -5,
+            height: props.height,
           }} //override default styles
           inputStyles={{
             margin: 0,

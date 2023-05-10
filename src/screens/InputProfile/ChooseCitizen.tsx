@@ -565,7 +565,6 @@ export default function ChooseCitizenScreen({route}: Props) {
       return !identityImage || (identityImage && !identityImage.data);
     }
   };
-  console.log(isAgreeTermsAndCondition);
 
   return (
     <AppContainer>
@@ -744,6 +743,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                         value: v.code,
                       }))}
                       width={'30%'}
+                      height={50}
                       onValueChange={v => setCountryCode(v)}
                     />
                     <TextInput
@@ -753,6 +753,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                       value={accountInformation.phoneNumber}
                       keyboardType="numeric"
                       width="68%"
+                      height={25}
                       _inputProps={{editable: isPhoneEditable}}
                       onChangeText={val => {
                         if (val.length > 14) {

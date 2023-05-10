@@ -30,6 +30,8 @@ type TextInputProps = {
   maxW?: string | number;
   onChangeText?: (text: string) => void;
   width?: number | string;
+  height?: number | string;
+  onLayout?: (event: any) => void;
 };
 
 export default function TextInput(props: TextInputProps) {
@@ -85,6 +87,7 @@ export default function TextInput(props: TextInputProps) {
               paddingHorizontal: 0,
               fontSize: 14,
               color: '#1E1E1E',
+              height: props.height,
             }}
             placeholderTextColor={'#9FACBF'}
             placeholder={props.placeholder}

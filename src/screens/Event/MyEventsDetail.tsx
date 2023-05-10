@@ -189,9 +189,7 @@ export default function MyEventDetail() {
     },
     {
       title: t('event.category'),
-      value:
-        (detailTransaction?.linked?.trndTrnsId?.[0]?.trndDescription || '-') +
-        (isBallot ? ' (BALLOT)' : ''),
+      value: detailTransaction?.linked?.trndTrnsId?.[0]?.trndDescription || '-',
     },
     {
       title: t('event.totalPayment'),

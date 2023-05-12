@@ -32,6 +32,7 @@ import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import {handleErrorMessage} from '../../helpers/apiErrors';
+import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -58,6 +59,7 @@ export default function InputProfileScreen() {
   const [mbsdAddress, setAddress] = useState<string>();
   const [mbsdCity, setCity] = useState<string>();
   const [mbsdProvinces, setProvinces] = useState<string>();
+  const [openOtpWhatsapp, setOpenOtpWhatsapp] = useState(false);
 
   const [locations, setLocations] = useState<MasterLocationResponse>();
 
@@ -70,6 +72,7 @@ export default function InputProfileScreen() {
       setLocations(loc);
     })();
   }, []);
+  const cancelRef = React.useRef(null);
 
   const payload = {
     mbsdIDNumber,
@@ -399,12 +402,30 @@ export default function InputProfileScreen() {
           <Box px="4">
             <Button
               h="12"
-              onPress={setProfile}
+              onPress={() => {
+                if (countryCode && countryCode !== '62') {
+                  setOpenOtpWhatsapp(true);
+                  return;
+                }
+                setProfile();
+              }}
               isLoading={isLoading}
               isDisabled={checkbox[0] !== 'agreed'}>
               {t('continue')}
             </Button>
           </Box>
+          <OtpWhatsapp
+            cancelRef={cancelRef}
+            isOpen={openOtpWhatsapp}
+            onClose={setOpenOtpWhatsapp}
+            onPress={() => {
+              setOpenOtpWhatsapp(false);
+              setProfile();
+            }}
+            title={'WhatsApp OTP'}
+            content={t('auth.otpWhatsappDesc')}
+            buttonContent={t('next')}
+          />
         </VStack>
       </ScrollView>
     </AppContainer>

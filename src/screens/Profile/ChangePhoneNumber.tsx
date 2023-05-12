@@ -14,6 +14,7 @@ import AppContainer from '../../layout/AppContainer';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import crashlytics from '@react-native-firebase/crashlytics';
 import SelectInput from '../../components/form/SelectInput';
+import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
@@ -25,6 +26,8 @@ export default function ChangePhoneNumberScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [countryCode, setCountryCode] = useState<string>();
+  const [openOtpWhatsapp, setOpenOtpWhatsapp] = useState(false);
+  const cancelRef = React.useRef(null);
 
   const sendPhoneOTP = async () => {
     crashlytics().log(
@@ -119,10 +122,31 @@ export default function ChangePhoneNumberScreen() {
           </VStack>
         </VStack>
         <Box px="4">
-          <Button h="12" onPress={sendPhoneOTP} isLoading={isLoading}>
+          <Button
+            h="12"
+            onPress={() => {
+              if (countryCode && countryCode !== '62') {
+                setOpenOtpWhatsapp(true);
+                return;
+              }
+              sendPhoneOTP();
+            }}
+            isLoading={isLoading}>
             {t('profile.sendOtp')}
           </Button>
         </Box>
+        <OtpWhatsapp
+          cancelRef={cancelRef}
+          isOpen={openOtpWhatsapp}
+          onClose={setOpenOtpWhatsapp}
+          onPress={() => {
+            setOpenOtpWhatsapp(false);
+            sendPhoneOTP();
+          }}
+          title={'WhatsApp OTP'}
+          content={t('auth.otpWhatsappDesc')}
+          buttonContent={t('next')}
+        />
         <Box pb={100} />
       </ScrollView>
     </AppContainer>

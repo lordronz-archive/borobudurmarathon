@@ -179,7 +179,7 @@ export default function DetailEvent() {
 
   useEffect(() => {
     fetchDetail();
-  }, []);
+  }, [isFocused]);
 
   const fetchDetail = async () => {
     setIsLoading(true);

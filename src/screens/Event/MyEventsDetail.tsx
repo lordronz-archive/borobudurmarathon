@@ -411,6 +411,7 @@ export default function MyEventDetail() {
                 <ButtonBasedOnStatus
                   eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
                   transactionId={params.transactionId}
+                  // status={status}
                   status={status}
                   activePayment={detailTransaction?.linked?.trihTrnsId?.find(
                     item => item.trihIsCurrent === 1,

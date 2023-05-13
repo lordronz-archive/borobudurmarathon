@@ -33,6 +33,8 @@ import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
 import {getTransactionStatus} from '../../helpers/transaction';
 import {convertDateTimeToLocalTimezone} from '../../helpers/datetimeTimezone';
 import {getEventTypeName} from '../../helpers/event';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -170,6 +172,7 @@ export default function MyEventDetail() {
     {
       title: t('event.registrationID'),
       value: detailTransaction?.data?.trnsRefId,
+      action: 'copy',
     },
     {
       title: 'BIB',
@@ -537,14 +540,36 @@ export default function MyEventDetail() {
                           width="35%">
                           {item.title}
                         </Text>
-                        <Text
-                          fontWeight={500}
-                          color="#1E1E1E"
-                          fontSize={12}
-                          width="60%"
-                          textAlign="right">
-                          {item.value}
-                        </Text>
+                        {item.action === 'copy' ? (
+                          <TouchableOpacity
+                            style={{width: '60%'}}
+                            onPress={() => {
+                              if (item.value) {
+                                Clipboard.setString(item.value);
+                              }
+                            }}>
+                            <Text
+                              fontWeight={500}
+                              color="#1E1E1E"
+                              fontSize={12}
+                              textAlign="right">
+                              {item.value + ' '}
+
+                              <Ionicons
+                                name="copy-outline"
+                                style={{fontSize: 15}}
+                              />
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <Text
+                            fontWeight={500}
+                            color="#1E1E1E"
+                            fontSize={12}
+                            textAlign="right">
+                            {item.value}
+                          </Text>
+                        )}
                       </HStack>
                     </Box>
                   ),

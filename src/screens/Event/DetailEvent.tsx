@@ -31,7 +31,6 @@ import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {GetEventResponse} from '../../types/event.type';
-import httpRequest from '../../helpers/httpRequest';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
@@ -189,8 +188,7 @@ export default function DetailEvent() {
         console.info('res get detail event', JSON.stringify(resEvent));
         setEvent(resEvent);
 
-        httpRequest
-          .get('member_resource/transaction')
+        EventService.getTransaction()
           .then((resTransaction: {data: GetTransactionsResponse}) => {
             if (resTransaction.data) {
               console.info(

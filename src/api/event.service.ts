@@ -186,7 +186,9 @@ const EventService = {
       return Promise.reject(error);
     }
   },
-  getEvents: async function (featured = false): Promise<GetEventsResponse | undefined> {
+  getEvents: async function (
+    featured = false,
+  ): Promise<GetEventsResponse | undefined> {
     const parameter = {
       filter: {
         evnhEmail: 'reg@borobudurmarathon.co.id',
@@ -307,6 +309,18 @@ const EventService = {
         config.apiUrl.resources.sponsor.path +
           `?filter[ehspEvnhId][in]=${eventIds.join(',')}`,
       )) as {data: ISponsorResponse};
+
+      return res;
+    } catch (error) {
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
+    }
+  },
+  getInvitations: async function () {
+    try {
+      const res = (await ApiService.get(
+        config.apiUrl.apis.invitation.getList.path,
+      )) as {data: any};
 
       return res;
     } catch (error) {

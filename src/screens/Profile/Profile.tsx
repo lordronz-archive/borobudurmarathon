@@ -72,6 +72,12 @@ export default function MyProfile() {
       name: t('profile.changePhoneNumber'),
       route: 'UpdatePhone',
     },
+    // {
+    //   key: 'invitations',
+    //   icon: <IconPhone color="black" size={6} />,
+    //   name: t('invitation.list'),
+    //   route: 'ListInvitation',
+    // },
     {
       key: 'language',
       icon: <IconGlobe color="black" size={6} />,

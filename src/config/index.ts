@@ -302,6 +302,12 @@ export default {
           // path: 'member_resource/member_event/',
         },
       },
+      invitation: {
+        getList: {
+          path: 'member_resource/invitation',
+          method: 'GET',
+        },
+      },
     },
     resources: {
       // https://steelytoe.com/dev.titudev.com/api/v1/virtual/record_live/222/769

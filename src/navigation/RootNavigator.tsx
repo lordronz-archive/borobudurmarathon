@@ -35,6 +35,7 @@ import TNCScreen from '../screens/Information/TNCScreen';
 import VoucherScreen from '../screens/Payment/Voucher';
 import ViewDetailRegistrationData from '../screens/Event/components/ViewDetailRegistrationData';
 import ResetPasswordScreen from '../screens/Auth/ResetPassword';
+import ListInvitationScreen from '../screens/Invitation';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -104,6 +105,8 @@ export type RootStackParamList = {
     data: {[key: string]: string};
     fields: EventFieldsEntity[];
   };
+
+  ListInvitation: undefined;
 
   Logout: undefined;
 };
@@ -281,6 +284,11 @@ function RootNavigator() {
         <Stack.Screen
           name="ViewDetailRegistrationData"
           component={ViewDetailRegistrationData}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ListInvitation"
+          component={ListInvitationScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

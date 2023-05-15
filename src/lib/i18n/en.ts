@@ -137,6 +137,7 @@ export default {
     accountInformation: 'Account Information',
     personalData: 'Personal Data',
     addressInformation: 'Address Information',
+    countryCode: 'Country Code',
   },
   profile: {
     completeProfile: 'Complete Profile',

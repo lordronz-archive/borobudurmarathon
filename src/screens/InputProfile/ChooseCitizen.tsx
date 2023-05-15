@@ -63,6 +63,13 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ChooseCitizen'>;
 const IMAGE_WIDTH = 1280;
 const IMAGE_HEIGHT = 853.3;
 
+export const truncate = (input: string) => {
+  if (input.length > 6) {
+    return input.substring(0, 6) + '..';
+  }
+  return input;
+};
+
 export default function ChooseCitizenScreen({route}: Props) {
   const PROCESSING_MESSAGES = [
     {
@@ -739,7 +746,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                       label={t('countryCode') || ''}
                       placeholder="62"
                       items={countryPhoneCodes.map(v => ({
-                        label: v.code,
+                        label: `${v.code} ${v.country}`,
                         value: v.code,
                       }))}
                       width={'30%'}

@@ -137,6 +137,7 @@ export default {
     accountInformation: 'Informasi Akun',
     personalData: 'Data Personal',
     addressInformation: 'Informasi Alamat',
+    countryCode: 'Kode Negara',
   },
   profile: {
     completeProfile: 'Lengkapi Profil',

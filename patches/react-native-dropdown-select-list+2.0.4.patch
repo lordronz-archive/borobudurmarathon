@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-dropdown-select-list/components/SelectList.tsx b/node_modules/react-native-dropdown-select-list/components/SelectList.tsx
+index 00e86e5..6dd4178 100644
+--- a/node_modules/react-native-dropdown-select-list/components/SelectList.tsx
++++ b/node_modules/react-native-dropdown-select-list/components/SelectList.tsx
+@@ -218,7 +218,7 @@ const SelectList: React.FC<SelectListProps> =  ({
+                                                 setTimeout(() => {setFilteredData(data)}, 800)
+                                                 
+                                             }}>
+-                                                <Text style={[{fontFamily},dropdownTextStyles]}>{value}</Text>
++                                                <Text numberOfLines={1} style={[{fontFamily},dropdownTextStyles]}>{value}</Text>
+                                             </TouchableOpacity>
+                                         )
+                                     }

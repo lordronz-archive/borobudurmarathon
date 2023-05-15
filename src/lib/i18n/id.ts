@@ -111,6 +111,8 @@ export default {
     idNotReadableDesc:
       'Identitas Anda gagal diverifikasi.\nHarap unggah ulang kartu identitas Anda atau pilih Verifikasi Identitas nanti.',
     backToLogin: 'Kembali ke halaman login',
+    otpWhatsappDesc:
+      'OTP akan di kirimkan melalui whatsapp, silahkan install whatsapp terlebih dahulu apabila belum terinstall',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',

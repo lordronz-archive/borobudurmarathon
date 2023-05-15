@@ -55,6 +55,7 @@ import AppContainer from '../../layout/AppContainer';
 import {getApiErrors} from '../../helpers/apiErrors';
 import {t} from 'i18next';
 import crashlytics from '@react-native-firebase/crashlytics';
+import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
@@ -121,6 +122,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   const [isVerifyLater, setIsVerifyLater] = React.useState<boolean>(false);
   const [isPhoneEditable, setIsPhoneEditable] = React.useState(false);
   const [countryCode, setCountryCode] = useState<string>();
+  const [openOtpWhatsapp, setOpenOtpWhatsapp] = useState(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -1050,7 +1052,11 @@ export default function ChooseCitizenScreen({route}: Props) {
                     accountInformation.name &&
                     accountInformation.phoneNumber
                   ) {
-                    setProfileStep(v => v + 1);
+                    if (countryCode && countryCode !== '62') {
+                      setOpenOtpWhatsapp(true);
+                    } else {
+                      setProfileStep(v => v + 1);
+                    }
                   } else {
                     Toast.show({
                       title: 'Not Completed',
@@ -1211,6 +1217,20 @@ export default function ChooseCitizenScreen({route}: Props) {
             buttonContent={t('close')}
           />
         )}
+        {
+          <OtpWhatsapp
+            cancelRef={cancelRef}
+            isOpen={openOtpWhatsapp}
+            onClose={setOpenOtpWhatsapp}
+            onPress={() => {
+              setOpenOtpWhatsapp(false);
+              setProfileStep(v => v + 1);
+            }}
+            title={'WhatsApp OTP'}
+            content={t('auth.otpWhatsappDesc')}
+            buttonContent={t('next')}
+          />
+        }
       </VStack>
     </AppContainer>
   );

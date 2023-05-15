@@ -59,6 +59,7 @@ export default {
     emailValidationResend: 'Resend Verification Code',
     phoneValidationTitle: 'Phone Number Validation',
     phoneValidationSubtitle: 'We need to validate your phone number',
+    resendViaWhatsapp: 'Resend Verification Code Via WhatsApp',
     phoneValidation8DigitCode: 'Enter 6 digit code that we send to this number',
     dontHaveAccount: "Don't have an account?",
     haveAccount: 'Already have an account?',

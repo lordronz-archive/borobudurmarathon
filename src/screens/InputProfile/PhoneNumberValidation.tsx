@@ -122,6 +122,24 @@ export default function PhoneNumberValidationScreen({route}: Props) {
     }
   };
 
+  const resendOTPWa = async () => {
+    setSeconds(30);
+    try {
+      setIsLoading(true);
+      const sendOtpRes = await AuthService.sendOTPWhatsApp({phoneNumber});
+      console.info('SendOTP result: ', sendOtpRes);
+      Toast.show({
+        description: 'OTP has been sent successfully',
+      });
+      setIsLoading(false);
+    } catch (err) {
+      Toast.show({
+        description: getErrorMessage(err),
+      });
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AppContainer>
       <VStack px="4" flex="1">
@@ -175,15 +193,26 @@ export default function PhoneNumberValidationScreen({route}: Props) {
                 {t('seconds')} {t('auth.emailValidationBeforeResend')}
               </Text>
             ) : (
-              <Button variant={'ghost'} onPress={resendOTP}>
-                <Text
-                  fontWeight={600}
-                  color="#EB1C23"
-                  fontSize={12}
-                  textAlign="center">
-                  {t('auth.emailValidationResend')}
-                </Text>
-              </Button>
+              <>
+                <Button variant={'ghost'} onPress={resendOTP}>
+                  <Text
+                    fontWeight={600}
+                    color="#EB1C23"
+                    fontSize={12}
+                    textAlign="center">
+                    {t('auth.emailValidationResend')}
+                  </Text>
+                </Button>
+                <Button variant={'ghost'} onPress={resendOTPWa}>
+                  <Text
+                    fontWeight={600}
+                    color="#EB1C23"
+                    fontSize={12}
+                    textAlign="center">
+                    {t('auth.resendViaWhatsapp')}
+                  </Text>
+                </Button>
+              </>
             )}
           </VStack>
         </Box>

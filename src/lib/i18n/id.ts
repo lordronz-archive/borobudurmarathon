@@ -61,6 +61,7 @@ export default {
     emailValidationResend: 'Kirimkan Ulang Kode Verifikasi',
     phoneValidationTitle: 'Validasi Nomor Telefon',
     phoneValidationSubtitle: 'Kami perlu memvalidasi nomor telepon Anda',
+    resendViaWhatsapp: 'Kirimkan Ulang Kode Verifikasi Via WhatsApp',
     phoneValidation8DigitCode:
       'Masukkan 6 digit kode yang kami kirim ke nomor ini',
     dontHaveAccount: 'Belum memiliki akun?',

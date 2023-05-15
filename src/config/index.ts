@@ -206,6 +206,10 @@ export default {
           path: 'member_zone/phone/',
           method: 'POST',
         },
+        otpWa: {
+          path: 'member_zone/phone_wa/',
+          method: 'POST',
+        },
         updatePhoto: {
           path: 'member_zone/foto/',
           method: 'POST',

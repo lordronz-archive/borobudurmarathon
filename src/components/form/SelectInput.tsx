@@ -1,5 +1,6 @@
 import {
   Box,
+  ChevronDownIcon,
   FormControl,
   HStack,
   Spinner,
@@ -8,6 +9,7 @@ import {
 } from 'native-base';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {TouchableOpacity} from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
 
 type SelectInputProps = {
@@ -29,6 +31,8 @@ type SelectInputProps = {
   required?: boolean;
   width?: number | string;
   height?: number | string;
+  useSheet?: boolean;
+  onPress?: () => any;
 };
 
 export default function SelectInput(props: SelectInputProps) {
@@ -66,48 +70,63 @@ export default function SelectInput(props: SelectInputProps) {
             {props.isLoading && <Spinner size="sm" />}
           </HStack>
         </FormControl.Label>
-        <SelectList
-          setSelected={(val: string) => props.onValueChange?.(val)}
-          data={props.items.map(({label, value}) => ({
-            key: value,
-            value: label,
-          }))}
-          save="key"
-          search={
-            props.hideSearch != null
-              ? !props.hideSearch
-              : props.items.length > 4
-          }
-          placeholder={props.placeholder}
-          boxStyles={{
-            borderRadius: 0,
-            borderWidth: 0,
-            padding: 0,
-            margin: 0,
-            marginTop: -8,
-            marginBottom: -5,
-            height: props.height,
-          }} //override default styles
-          inputStyles={{
-            margin: 0,
-            padding: 0,
-            color: props.value ? undefined : 'gray',
-          }}
-          dropdownStyles={{
-            borderRadius: 0,
-            borderWidth: 0,
-            padding: 0,
-            marginTop: -8,
-          }}
-          defaultOption={
-            props.value != null
-              ? {
-                  key: props.value,
-                  value: props.items.find(v => v.value === props.value)?.label,
-                }
-              : undefined
-          }
-        />
+        {!props.useSheet && (
+          <SelectList
+            setSelected={(val: string) => props.onValueChange?.(val)}
+            data={props.items.map(({label, value}) => ({
+              key: value,
+              value: label,
+            }))}
+            save="key"
+            search={
+              props.hideSearch != null
+                ? !props.hideSearch
+                : props.items.length > 4
+            }
+            placeholder={props.placeholder}
+            boxStyles={{
+              borderRadius: 0,
+              borderWidth: 0,
+              padding: 0,
+              margin: 0,
+              marginTop: -8,
+              marginBottom: -5,
+              height: props.height,
+            }} //override default styles
+            inputStyles={{
+              margin: 0,
+              padding: 0,
+              color: props.value ? undefined : 'gray',
+            }}
+            dropdownStyles={{
+              borderRadius: 0,
+              borderWidth: 0,
+              padding: 0,
+              marginTop: -8,
+            }}
+            defaultOption={
+              props.value != null
+                ? {
+                    key: props.value,
+                    value: props.items.find(v => v.value === props.value)
+                      ?.label,
+                  }
+                : undefined
+            }
+          />
+        )}
+        {!!props.useSheet && (
+          <TouchableOpacity onPress={props.onPress}>
+            <Box px={3} height="9">
+              <HStack alignItems={'center'} justifyContent={'space-between'}>
+                <Text numberOfLines={1} color={'#9FACBF'}>
+                  {props.value}
+                </Text>
+                <ChevronDownIcon />
+              </HStack>
+            </Box>
+          </TouchableOpacity>
+        )}
       </Box>
       <FormControl.HelperText>{props.helperText}</FormControl.HelperText>
       <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>

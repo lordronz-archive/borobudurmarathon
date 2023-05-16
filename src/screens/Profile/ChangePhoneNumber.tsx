@@ -15,6 +15,8 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import crashlytics from '@react-native-firebase/crashlytics';
 import SelectInput from '../../components/form/SelectInput';
 import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
+import CountryCodeInput from './components/CountryCodeInput';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 export default function ChangePhoneNumberScreen() {
   const navigation =
@@ -25,9 +27,10 @@ export default function ChangePhoneNumberScreen() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
-  const [countryCode, setCountryCode] = useState<string>();
+  const [countryCode, setCountryCode] = useState<string>('62');
   const [openOtpWhatsapp, setOpenOtpWhatsapp] = useState(false);
   const cancelRef = React.useRef(null);
+  const [openCountryCodeSheet, setOpenCountryCodeSheet] = useState(false);
 
   const sendPhoneOTP = async () => {
     crashlytics().log(
@@ -96,9 +99,9 @@ export default function ChangePhoneNumberScreen() {
   };
 
   return (
-    <AppContainer>
+    <GestureHandlerRootView style={{backgroundColor: 'white', height: '100%'}}>
       <Header title={t('profile.changePhoneNumber')} left="back" />
-      <ScrollView>
+      <ScrollView backgroundColor={'#fff'}>
         <VStack space="4" mb="5">
           <VStack space="2.5" px="4">
             {/* <Text fontWeight={600} color="#1E1E1E" fontSize={14}>
@@ -114,6 +117,9 @@ export default function ChangePhoneNumberScreen() {
                 }))}
                 width={'30%'}
                 onValueChange={v => setCountryCode(v)}
+                value={countryCode}
+                useSheet
+                onPress={() => setOpenCountryCodeSheet(ss => !ss)}
               />
               <TextInput
                 placeholder={t('auth.placeholderPhone') || ''}
@@ -154,6 +160,12 @@ export default function ChangePhoneNumberScreen() {
         />
         <Box pb={100} />
       </ScrollView>
-    </AppContainer>
+      <CountryCodeInput
+        setCountryCode={s => setCountryCode(s.toString())}
+        items={[]}
+        open={openCountryCodeSheet}
+        setOpen={setOpenCountryCodeSheet}
+      />
+    </GestureHandlerRootView>
   );
 }

@@ -6,7 +6,6 @@ import {
   ArrowBackIcon,
   HStack,
   VStack,
-  useTheme,
   Image,
   ScrollView,
   IconButton,
@@ -40,7 +39,8 @@ import {LanguageID} from '../../types/language.type';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import SummaryProfile from './components/SummaryProfile';
-import { LanguageService } from '../../api/language.service';
+import {LanguageService} from '../../api/language.service';
+import IconCalendar from '../../assets/icons/IconCalendar';
 
 export default function MyProfile() {
   const navigation =
@@ -72,12 +72,12 @@ export default function MyProfile() {
       name: t('profile.changePhoneNumber'),
       route: 'UpdatePhone',
     },
-    // {
-    //   key: 'invitations',
-    //   icon: <IconPhone color="black" size={6} />,
-    //   name: t('invitation.list'),
-    //   route: 'ListInvitation',
-    // },
+    {
+      key: 'invitations',
+      icon: <IconCalendar color="black" size={6} />,
+      name: t('invitation.list'),
+      route: 'ListInvitation',
+    },
     {
       key: 'language',
       icon: <IconGlobe color="black" size={6} />,

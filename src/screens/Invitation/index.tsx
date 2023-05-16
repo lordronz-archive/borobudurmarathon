@@ -18,6 +18,7 @@ import AppContainer from '../../layout/AppContainer';
 import TextInput from '../../components/form/TextInput';
 import Button from '../../components/buttons/Button';
 import useInvitation from '../../hooks/useInvitation';
+import SectionListInvitation from './components/SectionListInvitation';
 
 export default function ListInvitationScreen() {
   const isFocused = useIsFocused();
@@ -40,6 +41,8 @@ export default function ListInvitationScreen() {
           <Heading>ListInvitation</Heading>
         </VStack>
       </Box>
+
+      <SectionListInvitation />
     </AppContainer>
   );
 }

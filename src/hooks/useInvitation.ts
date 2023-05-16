@@ -3,9 +3,10 @@ import {useState} from 'react';
 import {createGlobalState} from 'react-hooks-global-state';
 import {EventService} from '../api/event.service';
 import {handleErrorMessage} from '../helpers/apiErrors';
+import {InvitationProperties, InvitationResponse} from '../types/invitation.type';
 
 type IStateInvitation = {
-  resInvitations?: any;
+  resInvitations?: InvitationResponse;
   resFeaturedInvitations?: any;
 };
 
@@ -22,25 +23,33 @@ export default function useInvitation() {
   const fetchList = () => {
     setIsLoading(true);
     EventService.getInvitations()
-      .then(res => {
+      .then((res: {data: InvitationResponse}) => {
         console.info('res getInvitations', JSON.stringify(res));
         if (res && res.data) {
-        //   // featured invitations
-        //   res.data = (res.data || []).map(item => ({
-        //     ...item,
-        //     eimgEvnhId: res.linked.eimgEvnhId?.filter(
-        //       img => img.eimgEvnhId === item.evnhId,
-        //     ),
-        //   }));
-          setResInvitations(res);
-        //   FastImage.preload(
-        //     res.data
-        //       .filter(item => item.evnhThumbnail)
-        //       .map(item => ({
-        //         uri: item.evnhThumbnail || '',
-        //         priority: FastImage.priority.high,
-        //       })),
-        //   );
+          res.data.data = res.data.data.map(item => {
+            const iregEvnhId = res.data.linked.iregEvnhId.find(
+              el =>
+                Number(el.evnhId) === Number(item.linked?.iregEvnhId.evnhId),
+            );
+
+            if (iregEvnhId) {
+              item.linked = {
+                iregEvnhId,
+              };
+            }
+
+            return item;
+          });
+          console.info('res getInvitations data', JSON.stringify(res.data));
+          setResInvitations(res.data);
+          //   FastImage.preload(
+          //     res.data
+          //       .filter(item => item.evnhThumbnail)
+          //       .map(item => ({
+          //         uri: item.evnhThumbnail || '',
+          //         priority: FastImage.priority.high,
+          //       })),
+          //   );
         }
         setIsLoading(false);
       })
@@ -56,7 +65,6 @@ export default function useInvitation() {
     resInvitations,
     invitations:
       resInvitations && resInvitations.data ? resInvitations.data : [],
-    isLoadingFeatured: isLoading,
     fetchList,
   };
 }

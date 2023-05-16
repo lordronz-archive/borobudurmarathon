@@ -12,6 +12,7 @@ import {
   Toast,
   useToast,
   VStack,
+  ZStack,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Heading} from '../../components/text/Heading';
@@ -56,6 +57,8 @@ import {getApiErrors} from '../../helpers/apiErrors';
 import {t} from 'i18next';
 import crashlytics from '@react-native-firebase/crashlytics';
 import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import CountryCodeInput from '../Profile/components/CountryCodeInput';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
@@ -128,8 +131,9 @@ export default function ChooseCitizenScreen({route}: Props) {
     React.useState<boolean>(false);
   const [isVerifyLater, setIsVerifyLater] = React.useState<boolean>(false);
   const [isPhoneEditable, setIsPhoneEditable] = React.useState(false);
-  const [countryCode, setCountryCode] = useState<string>();
+  const [countryCode, setCountryCode] = useState<string>('62');
   const [openOtpWhatsapp, setOpenOtpWhatsapp] = useState(false);
+  const [openCountryCodeSheet, setOpenCountryCodeSheet] = useState(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -581,7 +585,7 @@ export default function ChooseCitizenScreen({route}: Props) {
   };
 
   return (
-    <AppContainer>
+    <GestureHandlerRootView style={{backgroundColor: 'white', height: '100%'}}>
       <VStack px="4" flex="1">
         <VStack>
           <Breadcrumbs
@@ -735,7 +739,7 @@ export default function ChooseCitizenScreen({route}: Props) {
           {step === 'profile' && (
             <>
               {stepCount === 3 && profileStep === 1 && (
-                <VStack my="3" space="2">
+                <VStack my="3" space="2" h="100%">
                   <TextInput
                     placeholder={t('auth.placeholderFullName') || ''}
                     label={t('fullName') || ''}
@@ -757,8 +761,10 @@ export default function ChooseCitizenScreen({route}: Props) {
                         value: v.code,
                       }))}
                       width={'30%'}
-                      height={50}
                       onValueChange={v => setCountryCode(v)}
+                      value={countryCode}
+                      useSheet
+                      onPress={() => setOpenCountryCodeSheet(ss => !ss)}
                     />
                     <TextInput
                       placeholder={t('auth.placeholderPhone') || ''}
@@ -780,6 +786,12 @@ export default function ChooseCitizenScreen({route}: Props) {
                       }}
                     />
                   </HStack>
+                  <CountryCodeInput
+                    setCountryCode={s => setCountryCode(s.toString())}
+                    items={[]}
+                    open={openCountryCodeSheet}
+                    setOpen={setOpenCountryCodeSheet}
+                  />
                 </VStack>
               )}
               {stepCount === 3 && profileStep === 2 && (
@@ -1244,6 +1256,6 @@ export default function ChooseCitizenScreen({route}: Props) {
           />
         }
       </VStack>
-    </AppContainer>
+    </GestureHandlerRootView>
   );
 }

@@ -1,17 +1,12 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import i18next, {t} from 'i18next';
-import {
-  Actionsheet,
-  Box,
-  HStack,
-  CheckCircleIcon,
-  View,
-  Button,
-  useDisclose,
-  ScrollView,
-} from 'native-base';
+import {View} from 'native-base';
 import {Text} from 'native-base';
 import TextInput from '../../../components/form/TextInput';
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {countryPhoneCodes} from '../../../helpers/phoneNumber';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export type CountryCodeProps = {
   onClose?: () => any;
@@ -21,73 +16,112 @@ export type CountryCodeProps = {
     value: string;
   }[];
   selectedValue?: any;
+  open?: boolean;
+  setCountryCode: (i: number | string) => void;
+  setOpen?: (v: any) => any;
+  style?: ViewStyle;
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 500,
+  },
+  contentContainer: {
+    backgroundColor: 'white',
+  },
+  itemContainer: {
+    padding: 6,
+    margin: 6,
+    backgroundColor: '#eee',
+  },
+});
+
 export default function CountryCodeInput(props: CountryCodeProps) {
-  const {isOpen, onOpen, onClose} = useDisclose();
-  const [filteredData, setFilteredData] = useState(props.items);
+  // hooks
+  const sheetRef = useRef<BottomSheet>(null);
   const [search, setSearch] = useState('');
 
+  // variables
+  const data = useMemo(
+    () =>
+      countryPhoneCodes
+        .filter(c => {
+          if (!search) {
+            return true;
+          }
+          const country = c.country.toLowerCase();
+          const s = search.toLowerCase();
+          console.log(s, country);
+          return (
+            s.search(country) > -1 ||
+            country.search(s) > -1 ||
+            c.code.search(s) > -1
+          );
+        })
+        .map((c, i) => ({
+          label: c.code + ' ' + c.country,
+          value: c.code,
+          key: `${c.code}-${c.country}-${c.iso}-${i}`,
+        })),
+    [search],
+  );
+  const snapPoints = useMemo(() => ['25%', '50%', '100%'], []);
+
+  // callbacks
+  const handleSheetChange = useCallback(
+    (index: number) => {
+      console.log('handleSheetChange', index);
+      if (index === -1) {
+        props.setOpen?.(false);
+      }
+    },
+    [props],
+  );
+
+  const handleSnapPress = useCallback((index: number) => {
+    sheetRef.current?.snapToIndex(index);
+  }, []);
+
+  // render
+  const renderItem = useCallback(
+    ({item}: {item: {label: string; value: string}}) => (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => {
+          props.setCountryCode(item.value);
+          sheetRef.current?.close();
+        }}>
+        <Text>{item.label}</Text>
+      </TouchableOpacity>
+    ),
+    [props],
+  );
+
+  useEffect(() => {
+    if (props.open) {
+      sheetRef.current?.expand();
+    } else {
+      sheetRef.current?.close();
+    }
+  }, [handleSnapPress, props.open]);
+
   return (
-    <View>
-      <Button onPress={onOpen} />
-      <Actionsheet isOpen={isOpen} onClose={onClose} hideDragIndicator>
-        <Actionsheet.Content borderTopRadius="0">
-          <Box
-            w="100%"
-            h={60}
-            px={4}
-            justifyContent="center"
-            alignItems="center"
-            fontWeight="bold">
-            <Text
-              fontSize="20"
-              color="gray.900"
-              _dark={{
-                color: 'gray.300',
-              }}>
-              {t('label.countryCode')}
-            </Text>
-          </Box>
-          <Box>
-            <TextInput
-              onChangeText={v => {
-                let result = filteredData.filter(
-                  (item: {value: string; label: string}) => {
-                    let row = item.value.toLowerCase();
-                    let r = item.label.toLowerCase();
-                    return (
-                      row.search(v.toLowerCase()) > -1 ||
-                      r.search(v.toLowerCase())
-                    );
-                  },
-                );
-                setFilteredData(result);
-                setSearch(v);
-              }}
-              width={'100%'}
-              value={search}
-            />
-          </Box>
-          <ScrollView>
-            {filteredData.map(v => (
-              <Actionsheet.Item onPress={() => props.onChange?.(v.value)}>
-                <HStack
-                  w={i18next.language === 'en' ? '85%' : '100%'}
-                  alignItems="center"
-                  justifyContent="space-between">
-                  <HStack alignItems="center" space={2}>
-                    <Text>{v.label}</Text>
-                  </HStack>
-                  {props.selectedValue === v.value && (
-                    <CheckCircleIcon color="primary.900" />
-                  )}
-                </HStack>
-              </Actionsheet.Item>
-            ))}
-          </ScrollView>
-        </Actionsheet.Content>
-      </Actionsheet>
+    <View style={{...styles.container, ...(props.style && props.style)}}>
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        onChange={handleSheetChange}
+        enablePanDownToClose
+        index={-1}>
+        <TextInput value={search} onChangeText={c => setSearch(c)} />
+        <BottomSheetFlatList
+          data={data}
+          keyExtractor={i => i.key}
+          renderItem={renderItem}
+          contentContainerStyle={styles.contentContainer}
+        />
+      </BottomSheet>
     </View>
   );
 }

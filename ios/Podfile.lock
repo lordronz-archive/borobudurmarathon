@@ -502,7 +502,7 @@ PODS:
     - Firebase/RemoteConfig (= 10.3.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.10.0):
     - React-Core
   - RNI18n (2.0.15):
     - React
@@ -517,7 +517,7 @@ PODS:
     - TOCropViewController
   - RNInAppBrowser (3.7.0):
     - React-Core
-  - RNReanimated (2.14.4):
+  - RNReanimated (3.1.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -867,11 +867,11 @@ SPEC CHECKSUMS:
   RNFBCrashlytics: 76c39e34a0c514d10971b914a3c97c3c76759ce5
   RNFBDynamicLinks: f5ce579405932828dd668d4217597e633f73d270
   RNFBRemoteConfig: adb6e5928c78e2efe23745212df53f56a5b540bc
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: e145476da655f3dbc48ef2f0a08cf7a34338c02b
   RNI18n: e2f7e76389fcc6e84f2c8733ea89b92502351fd8
   RNImageCropPicker: 14fe1c29298fb4018f3186f455c475ab107da332
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
-  RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95
+  RNReanimated: 47df570b2e2b9eba34e78a299dd6d44596ff7bb6
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNShare: eaee3dd5a06dad397c7d3b14762007035c5de405
   RNSVG: f2bbcdece1e7d8e5f2f94536ed2a2dcf8f95ea4f
@@ -884,4 +884,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 04e5d97fa453a9cfcda92ce7c4f53c05d833d7cd
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0

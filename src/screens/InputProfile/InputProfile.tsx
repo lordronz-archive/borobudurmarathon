@@ -27,12 +27,13 @@ import {MasterLocationResponse} from '../../types/profile.type';
 import {ProfileService} from '../../api/profile.service';
 import {cleanPhoneNumber, countryPhoneCodes} from '../../helpers/phoneNumber';
 import {ID_NUMBER_TYPE_OPTIONS} from '../../assets/data/ktpPassport';
-import {GENDER_OPTIONS, getGenderOptions} from '../../assets/data/gender';
+import {getGenderOptions} from '../../assets/data/gender';
 import {BLOOD_OPTIONS} from '../../assets/data/blood';
 import {useTranslation} from 'react-i18next';
-import AppContainer from '../../layout/AppContainer';
 import {handleErrorMessage} from '../../helpers/apiErrors';
 import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import CountryCodeInput from '../Profile/components/CountryCodeInput';
 
 export default function InputProfileScreen() {
   const navigation =
@@ -60,6 +61,7 @@ export default function InputProfileScreen() {
   const [mbsdCity, setCity] = useState<string>();
   const [mbsdProvinces, setProvinces] = useState<string>();
   const [openOtpWhatsapp, setOpenOtpWhatsapp] = useState(false);
+  const [openCountryCodeSheet, setOpenCountryCodeSheet] = useState(false);
 
   const [locations, setLocations] = useState<MasterLocationResponse>();
 
@@ -185,7 +187,7 @@ export default function InputProfileScreen() {
   }
 
   return (
-    <AppContainer>
+    <GestureHandlerRootView style={{backgroundColor: 'white', height: '100%'}}>
       <ScrollView>
         <VStack space="4" pb="3">
           <Box px="4">
@@ -217,6 +219,9 @@ export default function InputProfileScreen() {
                   }))}
                   width={'30%'}
                   onValueChange={v => setCountryCode(v)}
+                  value={countryCode}
+                  useSheet
+                  onPress={() => setOpenCountryCodeSheet(ss => !ss)}
                 />
                 <TextInput
                   placeholder={t('auth.placeholderPhone') || ''}
@@ -428,6 +433,12 @@ export default function InputProfileScreen() {
           />
         </VStack>
       </ScrollView>
-    </AppContainer>
+      <CountryCodeInput
+        setCountryCode={s => setCountryCode(s.toString())}
+        items={[]}
+        open={openCountryCodeSheet}
+        setOpen={setOpenCountryCodeSheet}
+      />
+    </GestureHandlerRootView>
   );
 }

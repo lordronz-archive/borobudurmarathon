@@ -111,7 +111,7 @@ export default {
       "Sorry we can't verify your identity.\nPlease re-upload your ID Card or select Verify ID later.",
     backToLogin: 'Back to login',
     otpWhatsappDesc:
-      'OTP will be sent through whatsapp, please install whatsapp if it is not installed yet.',
+      'OTP will be sent through WhatsApp. Please install WhatsApp if it is not installed yet.',
   },
   registration: {
     registrationSuccess: 'Event Registration Success',

@@ -10,6 +10,7 @@ import {
   ChevronRightIcon,
   Button,
   Toast,
+  Badge,
 } from 'native-base';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -20,7 +21,7 @@ import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import moment from 'moment';
 import datetime from '../../helpers/datetime';
-import {EVENT_TYPES, TransactionStatus} from '../../types/event.type';
+import {TransactionStatus} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {TextInput, TouchableOpacity} from 'react-native';
 import AppContainer from '../../layout/AppContainer';
@@ -33,7 +34,6 @@ import ButtonBasedOnStatus from './components/ButtonBasedOnStatus';
 import {getTransactionStatus} from '../../helpers/transaction';
 import {convertDateTimeToLocalTimezone} from '../../helpers/datetimeTimezone';
 import {getEventTypeName} from '../../helpers/event';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 export default function MyEventDetail() {
@@ -165,7 +165,9 @@ export default function MyEventDetail() {
   // }, [detailTransaction, eventDetail]);
 
   useEffect(() => {
-    fetchData();
+    if (IsFocused) {
+      fetchData();
+    }
   }, [IsFocused]);
 
   const DATA_LIST = [
@@ -173,6 +175,14 @@ export default function MyEventDetail() {
       title: t('event.registrationID'),
       value: detailTransaction?.data?.trnsRefId,
       action: 'copy',
+      onPress: () => {
+        if (detailTransaction?.data.trnsRefId) {
+          Clipboard.setString(detailTransaction?.data.trnsRefId);
+          Toast.show({
+            description: 'Copied successfully',
+          });
+        }
+      },
     },
     {
       title: 'BIB',
@@ -543,24 +553,27 @@ export default function MyEventDetail() {
                         </Text>
                         {item.action === 'copy' ? (
                           <TouchableOpacity
-                            style={{width: '60%'}}
-                            onPress={() => {
-                              if (item.value) {
-                                Clipboard.setString(item.value);
-                              }
-                            }}>
+                            style={{
+                              width: '60%',
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'flex-end',
+                              alignItems: 'center',
+                            }}
+                            onPress={item.onPress}>
                             <Text
                               fontWeight={500}
-                              color="#1E1E1E"
                               fontSize={12}
-                              textAlign="right">
-                              {item.value + ' '}
-
-                              <Ionicons
-                                name="copy-outline"
-                                style={{fontSize: 15}}
-                              />
+                              textAlign="right"
+                              mr={3}>
+                              {item.value}
                             </Text>
+                            <Badge
+                              colorScheme="warning"
+                              alignSelf="center"
+                              variant="subtle" fontSize={9}>
+                              copy
+                            </Badge>
                           </TouchableOpacity>
                         ) : (
                           <Text

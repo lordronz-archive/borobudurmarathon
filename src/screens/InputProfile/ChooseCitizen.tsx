@@ -1249,12 +1249,14 @@ export default function ChooseCitizenScreen({route}: Props) {
           />
         }
 
-        <CountryCodeInput
-          setCountryCode={s => setCountryCode(s.toString())}
-          items={[]}
-          open={openCountryCodeSheet}
-          setOpen={setOpenCountryCodeSheet}
-        />
+        {openCountryCodeSheet && (
+          <CountryCodeInput
+            setCountryCode={s => setCountryCode(s.toString())}
+            items={[]}
+            open={openCountryCodeSheet}
+            setOpen={setOpenCountryCodeSheet}
+          />
+        )}
       </VStack>
     </GestureHandlerRootView>
   );

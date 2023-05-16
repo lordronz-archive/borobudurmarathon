@@ -433,12 +433,15 @@ export default function InputProfileScreen() {
           />
         </VStack>
       </ScrollView>
-      <CountryCodeInput
-        setCountryCode={s => setCountryCode(s.toString())}
-        items={[]}
-        open={openCountryCodeSheet}
-        setOpen={setOpenCountryCodeSheet}
-      />
+
+      {openCountryCodeSheet && (
+        <CountryCodeInput
+          setCountryCode={s => setCountryCode(s.toString())}
+          items={[]}
+          open={openCountryCodeSheet}
+          setOpen={setOpenCountryCodeSheet}
+        />
+      )}
     </GestureHandlerRootView>
   );
 }

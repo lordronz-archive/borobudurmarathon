@@ -115,21 +115,21 @@ export default function CountryCodeInput(props: CountryCodeProps) {
 
   return (
     // <View style={{...styles.container, ...(props.style && props.style)}}>
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}
-        enablePanDownToClose
-        style={{padding: 20}}
-        index={1}>
-        <TextInput value={search} onChangeText={c => setSearch(c)} />
-        <BottomSheetFlatList
-          data={data}
-          keyExtractor={i => i.key}
-          renderItem={renderItem}
-          contentContainerStyle={styles.contentContainer}
-        />
-      </BottomSheet>
+    <BottomSheet
+      ref={sheetRef}
+      snapPoints={snapPoints}
+      onChange={handleSheetChange}
+      enablePanDownToClose
+      style={{padding: 20}}
+      index={1}>
+      <TextInput value={search} onChangeText={c => setSearch(c)} />
+      <BottomSheetFlatList
+        data={data}
+        keyExtractor={i => i.key}
+        renderItem={renderItem}
+        contentContainerStyle={styles.contentContainer}
+      />
+    </BottomSheet>
     // </View>
   );
 }

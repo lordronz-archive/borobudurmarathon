@@ -1,10 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import i18next, {t} from 'i18next';
-import {View} from 'native-base';
 import {Text} from 'native-base';
 import TextInput from '../../../components/form/TextInput';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {StyleSheet, ViewStyle} from 'react-native';
 import {countryPhoneCodes} from '../../../helpers/phoneNumber';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
@@ -24,8 +22,12 @@ export type CountryCodeProps = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 500,
+    position: 'absolute',
+    // flex: 1,
+    backgroundColor: '#000000',
+    bottom: 0,
+    width: '100%',
+    // paddingTop: 500,
   },
   contentContainer: {
     backgroundColor: 'white',
@@ -34,6 +36,8 @@ const styles = StyleSheet.create({
     padding: 6,
     margin: 6,
     backgroundColor: '#eee',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 
@@ -60,8 +64,9 @@ export default function CountryCodeInput(props: CountryCodeProps) {
           );
         })
         .map((c, i) => ({
-          label: c.code + ' ' + c.country,
+          label: c.code + ' ~ ' + c.country,
           value: c.code,
+          raw: c,
           key: `${c.code}-${c.country}-${c.iso}-${i}`,
         })),
     [search],
@@ -92,7 +97,9 @@ export default function CountryCodeInput(props: CountryCodeProps) {
           props.setCountryCode(item.value);
           sheetRef.current?.close();
         }}>
-        <Text>{item.label}</Text>
+        <Text style={{width: '25%'}}>{(item as any).raw.code}</Text>
+        <Text style={{width: '75%'}}>{(item as any).raw.country}</Text>
+        {/* <Text>{item.label}</Text> */}
       </TouchableOpacity>
     ),
     [props],
@@ -107,13 +114,14 @@ export default function CountryCodeInput(props: CountryCodeProps) {
   }, [handleSnapPress, props.open]);
 
   return (
-    <View style={{...styles.container, ...(props.style && props.style)}}>
+    // <View style={{...styles.container, ...(props.style && props.style)}}>
       <BottomSheet
         ref={sheetRef}
         snapPoints={snapPoints}
         onChange={handleSheetChange}
         enablePanDownToClose
-        index={-1}>
+        style={{padding: 20}}
+        index={1}>
         <TextInput value={search} onChangeText={c => setSearch(c)} />
         <BottomSheetFlatList
           data={data}
@@ -122,6 +130,6 @@ export default function CountryCodeInput(props: CountryCodeProps) {
           contentContainerStyle={styles.contentContainer}
         />
       </BottomSheet>
-    </View>
+    // </View>
   );
 }

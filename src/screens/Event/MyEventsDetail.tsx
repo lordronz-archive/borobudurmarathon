@@ -571,7 +571,8 @@ export default function MyEventDetail() {
                             <Badge
                               colorScheme="warning"
                               alignSelf="center"
-                              variant="subtle" fontSize={9}>
+                              variant="subtle"
+                              fontSize={9}>
                               copy
                             </Badge>
                           </TouchableOpacity>

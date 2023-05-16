@@ -12,7 +12,6 @@ import {
   Toast,
   useToast,
   VStack,
-  ZStack,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Heading} from '../../components/text/Heading';
@@ -52,8 +51,7 @@ import {getIDNumberType} from '../../assets/data/ktpPassport';
 import {getGenderOptions} from '../../assets/data/gender';
 import {ImageOrVideo} from 'react-native-image-crop-picker';
 import useInit from '../../hooks/useInit';
-import AppContainer from '../../layout/AppContainer';
-import {getApiErrors} from '../../helpers/apiErrors';
+import {getApiErrors, handleErrorMessage} from '../../helpers/apiErrors';
 import {t} from 'i18next';
 import crashlytics from '@react-native-firebase/crashlytics';
 import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
@@ -307,6 +305,7 @@ export default function ChooseCitizenScreen({route}: Props) {
         setStepCount(v => v + 1);
       }
     } catch (error) {
+      handleErrorMessage(error, t('error.failedToUpload'));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -786,12 +785,6 @@ export default function ChooseCitizenScreen({route}: Props) {
                       }}
                     />
                   </HStack>
-                  <CountryCodeInput
-                    setCountryCode={s => setCountryCode(s.toString())}
-                    items={[]}
-                    open={openCountryCodeSheet}
-                    setOpen={setOpenCountryCodeSheet}
-                  />
                 </VStack>
               )}
               {stepCount === 3 && profileStep === 2 && (
@@ -1255,6 +1248,13 @@ export default function ChooseCitizenScreen({route}: Props) {
             buttonContent={t('next')}
           />
         }
+
+        <CountryCodeInput
+          setCountryCode={s => setCountryCode(s.toString())}
+          items={[]}
+          open={openCountryCodeSheet}
+          setOpen={setOpenCountryCodeSheet}
+        />
       </VStack>
     </GestureHandlerRootView>
   );

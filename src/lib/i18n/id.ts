@@ -452,6 +452,7 @@ export default {
     failedToPayNow: 'Gagal melakukan pembayaran',
     failedToRegisterEvent: 'Gagal mendaftar event',
     failedToGenerateQR: 'Gagal membuat QR Code',
+    failedToUpload: 'Gagal mengunggah',
     cannotRegisterEvent: 'Tidak bisa mendaftar',
     categoryPricingNotFound: 'Kategori dan harga tidak tersedia untuk saat ini',
     failedToGetCookies: 'Gagal mendapatkan cookies',

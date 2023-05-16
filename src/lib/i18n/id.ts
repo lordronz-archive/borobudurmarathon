@@ -486,4 +486,7 @@ export default {
     title3: 'Tunggu sebentar...',
     description3: 'Kami masih melakukan proses validasi.',
   },
+  invitation: {
+    list: 'Daftar Undangan',
+  },
 };

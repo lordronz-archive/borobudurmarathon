@@ -482,4 +482,7 @@ export default {
     title3: 'Please wait...',
     description3: 'We still processing to validate.',
   },
+  invitation: {
+    list: 'Invites',
+  },
 };

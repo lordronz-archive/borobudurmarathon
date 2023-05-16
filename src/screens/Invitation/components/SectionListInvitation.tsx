@@ -1,11 +1,10 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Box, FlatList, Flex, Image, Spinner, Text} from 'native-base';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TouchableOpacity} from 'react-native';
 import EventCard from '../../../components/card/EventCard';
-import Section from '../../../components/section/Section';
 import datetime from '../../../helpers/datetime';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {getEventRegistrationStatus} from '../../../helpers/event';
@@ -13,20 +12,25 @@ import useInvitation from '../../../hooks/useInvitation';
 import {InvitationProperties} from '../../../types/invitation.type';
 
 export default function SectionListInvitation() {
+  const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
   const {isLoading, invitations, fetchList} = useInvitation();
 
   useEffect(() => {
-    fetchList();
-  }, []);
+    if (isFocused) {
+      fetchList();
+    }
+  }, [isFocused]);
 
   const _renderItem = ({item}: {item: InvitationProperties}) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate('EventDetail', {id: Number(item.id)})
+          navigation.navigate('EventDetail', {
+            id: Number(item.links.iregEvnhId),
+          })
         }>
         <EventCard
           title={item.linked?.iregEvnhId.evnhName || '-'}
@@ -73,23 +77,21 @@ export default function SectionListInvitation() {
   };
 
   return (
-    <Section title={t('home.eventsTitle')} mt={1} _title={{py: 2, px: 4}}>
-      <FlatList
-        refreshing={isLoading}
-        data={invitations}
-        ListEmptyComponent={() =>
-          isLoading ? (
-            <Box height={100}>
-              <Spinner />
-            </Box>
-          ) : (
-            _renderEmpty()
-          )
-        }
-        renderItem={_renderItem}
-        keyExtractor={item => item.linked?.iregEvnhId.evnhId.toString() || '1'}
-        _contentContainerStyle={{px: 4, py: 3}}
-      />
-    </Section>
+    <FlatList
+      refreshing={isLoading}
+      data={invitations}
+      ListEmptyComponent={() =>
+        isLoading ? (
+          <Box height={100}>
+            <Spinner />
+          </Box>
+        ) : (
+          _renderEmpty()
+        )
+      }
+      renderItem={_renderItem}
+      keyExtractor={item => item.linked?.iregEvnhId.evnhId.toString() || '1'}
+      _contentContainerStyle={{px: 4, py: 3}}
+    />
   );
 }

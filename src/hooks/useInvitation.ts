@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {createGlobalState} from 'react-hooks-global-state';
 import {EventService} from '../api/event.service';
 import {handleErrorMessage} from '../helpers/apiErrors';
-import {InvitationProperties, InvitationResponse} from '../types/invitation.type';
+import {InvitationResponse} from '../types/invitation.type';
 
 type IStateInvitation = {
   resInvitations?: InvitationResponse;
@@ -28,8 +28,7 @@ export default function useInvitation() {
         if (res && res.data) {
           res.data.data = res.data.data.map(item => {
             const iregEvnhId = res.data.linked.iregEvnhId.find(
-              el =>
-                Number(el.evnhId) === Number(item.linked?.iregEvnhId.evnhId),
+              el => Number(el.evnhId) === Number(item.links?.iregEvnhId),
             );
 
             if (iregEvnhId) {

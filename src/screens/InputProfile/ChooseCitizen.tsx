@@ -384,7 +384,12 @@ export default function ChooseCitizenScreen({route}: Props) {
       ) {
         if (isPhoneEditable) {
           try {
-            const sendOtpRes = await AuthService.sendOTP({
+            const finalCountryCode = countryCode ? +countryCode : 62;
+            const service =
+              finalCountryCode === 62
+                ? AuthService.sendOTP
+                : AuthService.sendOTPWhatsApp;
+            const sendOtpRes = await service({
               phoneNumber: cleanPhoneNumber(accountInformation.phoneNumber),
               countryCode: countryCode ? +countryCode : undefined,
             });

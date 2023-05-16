@@ -53,9 +53,14 @@ export default function ChangePhoneNumberScreen() {
       existingPhoneNumber = user?.linked?.mbsdZmemId?.[0]?.mbsdPhone;
     }
     if (existingPhoneNumber !== cleanPhoneNumber(phoneNumber)) {
-      AuthService.sendOTP({
+      const finalCountryCode = countryCode ? +countryCode : 62;
+      const service =
+        finalCountryCode === 62
+          ? AuthService.sendOTP
+          : AuthService.sendOTPWhatsApp;
+      service({
         phoneNumber,
-        countryCode: countryCode ? +countryCode : 62,
+        countryCode: finalCountryCode,
       })
         .then(sendOtpRes => {
           console.info('SendOTP result: ', sendOtpRes);

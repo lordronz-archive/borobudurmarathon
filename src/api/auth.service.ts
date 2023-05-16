@@ -66,6 +66,22 @@ const AuthService = {
       return Promise.reject(error);
     }
   },
+  sendOTPWhatsApp: async function (phoneData: any) {
+    if (!phoneData.countryCode) {
+      phoneData.countryCode = 62;
+    }
+    try {
+      return await httpRequest.post(config.apiUrl.apis.member.otpWa.path, {
+        data: {
+          mbspCountryCode: phoneData.countryCode,
+          mbspNumber: parseInt(phoneData.phoneNumber.replace(/\D/g, ''), 10),
+        },
+      });
+    } catch (error) {
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
+    }
+  },
   authorizeKompas: async function (
     authorization_code: string,
   ): Promise<AuthorizeKompasResponse> {

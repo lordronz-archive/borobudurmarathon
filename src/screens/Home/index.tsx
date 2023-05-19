@@ -1,4 +1,13 @@
-import {Avatar, Box, Divider, Flex, Row, ScrollView, Text} from 'native-base';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Divider,
+  Flex,
+  Row,
+  ScrollView,
+  Text,
+} from 'native-base';
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
@@ -17,6 +26,7 @@ import IconHamburgerMenu from '../../assets/icons/IconHamburgerMenu';
 import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import AlertMessage from '../../components/alert/AlertMessage';
+import useInvitation from '../../hooks/useInvitation';
 // import useDeeplinkInit from '../../lib/deeplink/useDeeplinkInit';
 
 export default function HomeScreen() {
@@ -31,6 +41,7 @@ export default function HomeScreen() {
   //     checkLogin('Main');
   //   }
   // }, [isFocused]);
+  const {invitations} = useInvitation();
 
   return (
     <AppContainer>
@@ -84,6 +95,23 @@ export default function HomeScreen() {
                     screen: t('tab.more'),
                   });
                 }}>
+                {invitations.length > 0 &&
+                  invitations.every(a => a.iregIsUsed.toString() === '0') && (
+                    <Badge
+                      colorScheme="danger"
+                      rounded={9999}
+                      mb={-1}
+                      mr={-1}
+                      zIndex={1}
+                      variant="solid"
+                      top="7px"
+                      right="7px"
+                      w={3}
+                      h={3}
+                      p={0}
+                      position={'absolute'}
+                    />
+                  )}
                 <IconHamburgerMenu size="lg" color="black" />
               </TouchableOpacity>
             </Row>

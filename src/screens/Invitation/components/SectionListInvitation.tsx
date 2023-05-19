@@ -10,6 +10,8 @@ import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {getEventRegistrationStatus} from '../../../helpers/event';
 import useInvitation from '../../../hooks/useInvitation';
 import {InvitationProperties} from '../../../types/invitation.type';
+import moment from 'moment';
+import {convertDateTimeToLocalTimezone} from '../../../helpers/datetimeTimezone';
 
 export default function SectionListInvitation() {
   const isFocused = useIsFocused();
@@ -52,6 +54,13 @@ export default function SectionListInvitation() {
             item.linked?.iregEvnhId.evnhStartDate,
             item.linked?.iregEvnhId.evnhEndDate,
           )}
+          isFree={item.iregIsFree.toString() === '1'}
+          isExpired={
+            !!item.iregExpired &&
+            moment(convertDateTimeToLocalTimezone(item.iregExpired)).isAfter(
+              moment(new Date()),
+            )
+          }
         />
       </TouchableOpacity>
     );

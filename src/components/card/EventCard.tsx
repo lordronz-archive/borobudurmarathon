@@ -10,7 +10,14 @@ type CardEventProps = {
   date: string;
   image: ImageSourcePropType;
   isAvailable?: boolean;
-  status: 'UPCOMING' | 'REGISTRATION' | 'REGISTRATION_CLOSED' | 'EXPIRED';
+  status:
+    | 'UPCOMING'
+    | 'REGISTRATION'
+    | 'REGISTRATION_CLOSED'
+    | 'EXPIRED'
+    | 'INVITED';
+  isFree?: boolean;
+  isExpired?: boolean;
 };
 
 export default function CardEvent({
@@ -19,6 +26,8 @@ export default function CardEvent({
   date,
   image,
   status,
+  isFree,
+  ...props
 }: CardEventProps) {
   const {t} = useTranslation();
 
@@ -104,6 +113,51 @@ export default function CardEvent({
                 fontSize: 'xs',
               }}>
               {t('event.upcomingEvents')}
+            </Badge>
+          )}
+          {status === 'INVITED' && (
+            <Badge
+              backgroundColor="#FFF8E4"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: '#A4660A',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              {t('event.upcomingEvents')}
+            </Badge>
+          )}
+          {isFree && (
+            <Badge
+              backgroundColor="#DFF4E0"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: '#138918',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              {'FREE'}
+            </Badge>
+          )}
+          {props.isExpired && (
+            <Badge
+              backgroundColor="#E8ECF3"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: '#768499',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              {t('event.expiredInvitation')}
             </Badge>
           )}
 

@@ -117,7 +117,7 @@ export default function SelectInput(props: SelectInputProps) {
         )}
         {!!props.useSheet && (
           <TouchableOpacity onPress={props.onPress}>
-            <Box px={3} height="9">
+            <Box px={3} height={props.height || '33px'}>
               <HStack alignItems={'center'} justifyContent={'space-between'}>
                 <Text numberOfLines={1} color={'#9FACBF'}>
                   {props.value}

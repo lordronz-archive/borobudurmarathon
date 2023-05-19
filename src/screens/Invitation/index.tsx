@@ -9,6 +9,7 @@ import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import SectionListInvitation from './components/SectionListInvitation';
 import {t} from 'i18next';
+import Header from '../../components/header/Header';
 
 export default function ListInvitationScreen() {
   const navigation =
@@ -16,12 +17,7 @@ export default function ListInvitationScreen() {
 
   return (
     <AppContainer>
-      <Box px="4">
-        <BackHeader onPress={() => navigation.goBack()} />
-        <VStack space="1.5">
-          <Heading>{t('invitation.list')}</Heading>
-        </VStack>
-      </Box>
+      <Header title={t('profile.invitedEvents')} left="back" />
 
       <SectionListInvitation />
     </AppContainer>

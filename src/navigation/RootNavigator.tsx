@@ -36,6 +36,7 @@ import VoucherScreen from '../screens/Payment/Voucher';
 import ViewDetailRegistrationData from '../screens/Event/components/ViewDetailRegistrationData';
 import ResetPasswordScreen from '../screens/Auth/ResetPassword';
 import ListInvitationScreen from '../screens/Invitation';
+import InvitedEventsScreen from '../screens/Event/InvitedEvents';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -81,6 +82,7 @@ export type RootStackParamList = {
   UpdateProfile: undefined;
   Certificates: undefined;
   UpdatePhone: undefined;
+  InvitedEvents: undefined;
   Welcome: undefined;
   InfoVerifyLater: undefined;
 
@@ -234,6 +236,11 @@ function RootNavigator() {
         <Stack.Screen
           name="UpdatePhone"
           component={ChangePhoneNumberScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="InvitedEvents"
+          component={InvitedEventsScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

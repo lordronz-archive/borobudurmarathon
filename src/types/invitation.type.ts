@@ -8,11 +8,12 @@ export interface InvitationResponse {
 export interface InvitationProperties {
   id: number;
   iregId: number;
-  iregEvncId: null;
+  iregEvncId: null | number | string;
   iregName: null;
   iregEmail: string;
   iregIsFree: number;
-  iregExpired: null;
+  iregIsUsed: number;
+  iregExpired: string | null;
   iregCreatedTime: Date;
   links: Links;
 

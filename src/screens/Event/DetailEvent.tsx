@@ -30,7 +30,7 @@ import Section from '../../components/section/Section';
 import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {GetEventResponse} from '../../types/event.type';
+import {EventProperties, GetEventResponse} from '../../types/event.type';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
@@ -53,6 +53,8 @@ import {
   getEventRegistrationStatus,
   getEventTypeName,
 } from '../../helpers/event';
+import useInvitation from '../../hooks/useInvitation';
+import {InvitationProperties} from '../../types/invitation.type';
 
 type Price = {
   id: string;
@@ -74,8 +76,11 @@ export default function DetailEvent() {
 
   const [event, setEvent] = useState<GetEventResponse>();
   const [registeredEvent, setRegisteredEvent] = useState<any>();
+  const {invitations} = useInvitation();
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isInvitation, setIsInvitation] = useState(false);
+  const [evnInvitation, setEvnInvitation] = useState<InvitationProperties>();
   const {t} = useTranslation();
 
   // console.info('=============================================');
@@ -187,7 +192,12 @@ export default function DetailEvent() {
       .then(resEvent => {
         console.info('res get detail event', JSON.stringify(resEvent));
         setEvent(resEvent);
-
+        const inv = invitations.find(
+          v =>
+            v.links.iregEvnhId.toString() === resEvent.data.evnhId.toString(),
+        );
+        setEvnInvitation(inv);
+        setIsInvitation(inv != null);
         EventService.getTransaction()
           .then((resTransaction: {data: GetTransactionsResponse}) => {
             if (resTransaction.data) {
@@ -550,11 +560,15 @@ export default function DetailEvent() {
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
                       disabled={
-                        !event?.access ||
-                        !!registeredEvent ||
-                        status !== 'REGISTRATION' ||
-                        price.status === 'SOLDOUT' ||
-                        quotaStatus === 'SOLDOUT'
+                        (!isInvitation ||
+                          (evnInvitation?.iregEvncId != null &&
+                            evnInvitation.iregEvncId.toString() !==
+                              price.id.toString())) &&
+                        (!event?.access ||
+                          !!registeredEvent ||
+                          status !== 'REGISTRATION' ||
+                          price.status === 'SOLDOUT' ||
+                          quotaStatus === 'SOLDOUT')
                       }
                       status={
                         quotaStatus === 'SOLDOUT' || price.status === 'SOLDOUT'
@@ -573,7 +587,7 @@ export default function DetailEvent() {
           <LoadingBlock style={{opacity: 0.7}} />
         )}
 
-        {event && registeredEvent ? (
+        {event && registeredEvent && !isInvitation ? (
           <Box
             position="absolute"
             bottom="0"
@@ -601,7 +615,7 @@ export default function DetailEvent() {
               {t('event.viewDetail')}
             </Button>
           </Box>
-        ) : event && selected && !registeredEvent ? (
+        ) : event && selected && (!registeredEvent || isInvitation) ? (
           <Box
             position="absolute"
             bottom="0"

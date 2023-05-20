@@ -16,7 +16,7 @@ import useInvitation from '../hooks/useInvitation';
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
-  const {invitations} = useInvitation();
+  const {showNotification} = useInvitation();
   const {colors} = useTheme();
   const {t} = useTranslation();
   return (
@@ -66,23 +66,22 @@ export default function MainTabNavigator() {
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <View>
-              {invitations.length > 0 &&
-                invitations.some(a => a.iregIsUsed.toString() === '0') && (
-                  <Badge
-                    colorScheme="danger"
-                    rounded={9999}
-                    mb={0}
-                    mr={0}
-                    zIndex={1}
-                    variant="solid"
-                    top="0px"
-                    right="0px"
-                    w={3}
-                    h={3}
-                    p={0}
-                    position={'absolute'}
-                  />
-                )}
+              {showNotification && (
+                <Badge
+                  colorScheme="danger"
+                  rounded={9999}
+                  mb={0}
+                  mr={0}
+                  zIndex={1}
+                  variant="solid"
+                  top="0px"
+                  right="0px"
+                  w={3}
+                  h={3}
+                  p={0}
+                  position={'absolute'}
+                />
+              )}
               <IconMore name="more" color={color} size={size} />
             </View>
           ),

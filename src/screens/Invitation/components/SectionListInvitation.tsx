@@ -18,11 +18,12 @@ export default function SectionListInvitation() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();
-  const {isLoading, invitations, fetchList} = useInvitation();
+  const {isLoading, invitations, fetchList, setInvitationsStorage} =
+    useInvitation();
 
   useEffect(() => {
     if (isFocused) {
-      fetchList();
+      fetchList().then(() => setInvitationsStorage());
     }
   }, [isFocused]);
 

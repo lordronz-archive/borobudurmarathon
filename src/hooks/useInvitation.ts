@@ -8,21 +8,29 @@ import {InvitationResponse} from '../types/invitation.type';
 type IStateInvitation = {
   resInvitations?: InvitationResponse;
   resFeaturedInvitations?: any;
+  showNotification: boolean;
 };
 
 const initialState: IStateInvitation = {
   resInvitations: undefined,
   resFeaturedInvitations: undefined,
+  showNotification: false,
 };
 const {useGlobalState} = createGlobalState(initialState);
 
 export default function useInvitation() {
   const [isLoading, setIsLoading] = useState(false);
   const [resInvitations, setResInvitations] = useGlobalState('resInvitations');
+  const [showNotification, setShowNotification] =
+    useGlobalState('showNotification');
+
+  const setInvitationsStorage = () => {
+    resInvitations?.data && EventService.setInvitations(resInvitations?.data);
+  };
 
   const fetchList = () => {
     setIsLoading(true);
-    EventService.getInvitations()
+    return EventService.getInvitations()
       .then((res: {data: InvitationResponse}) => {
         console.info('res getInvitations', JSON.stringify(res));
         if (res && res.data) {
@@ -41,6 +49,10 @@ export default function useInvitation() {
           });
           console.info('res getInvitations data', JSON.stringify(res.data));
           setResInvitations(res.data);
+          const invitations = res.data && res.data.data ? res.data.data : [];
+          EventService.shouldShowNotification(invitations).then(v =>
+            setShowNotification(v),
+          );
           //   FastImage.preload(
           //     res.data
           //       .filter(item => item.evnhThumbnail)
@@ -50,13 +62,12 @@ export default function useInvitation() {
           //       })),
           //   );
         }
-        setIsLoading(false);
       })
       .catch(err => {
         console.error('error getInvitations', JSON.stringify(err));
         handleErrorMessage(err, t('error.failedToGetInvitations'));
-        setIsLoading(false);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return {
@@ -65,5 +76,7 @@ export default function useInvitation() {
     invitations:
       resInvitations && resInvitations.data ? resInvitations.data : [],
     fetchList,
+    showNotification,
+    setInvitationsStorage,
   };
 }

@@ -8,7 +8,7 @@ import {
   ScrollView,
   Text,
 } from 'native-base';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 
@@ -18,7 +18,7 @@ import SectionListEvent from './components/SectionListEvent';
 import SectionFeaturedEvents from './components/SectionFeaturedEvents';
 import {TouchableOpacity} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import IconInformationCircle from '../../assets/icons/IconInformationCircle';
 import SummaryRecord from './components/SummaryRecord';
@@ -27,6 +27,7 @@ import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import AlertMessage from '../../components/alert/AlertMessage';
 import useInvitation from '../../hooks/useInvitation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import useDeeplinkInit from '../../lib/deeplink/useDeeplinkInit';
 
 export default function HomeScreen() {
@@ -34,6 +35,7 @@ export default function HomeScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {user} = useAuthUser();
   const {t} = useTranslation();
+  const isFocused = useIsFocused();
   // const _resDLI = useDeeplinkInit();
 
   // useEffect(() => {
@@ -41,7 +43,13 @@ export default function HomeScreen() {
   //     checkLogin('Main');
   //   }
   // }, [isFocused]);
-  const {invitations} = useInvitation();
+  const {showNotification, fetchList} = useInvitation();
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchList();
+    }
+  }, [isFocused]);
 
   return (
     <AppContainer>
@@ -95,23 +103,22 @@ export default function HomeScreen() {
                     screen: t('tab.more'),
                   });
                 }}>
-                {invitations.length > 0 &&
-                  invitations.every(a => a.iregIsUsed.toString() === '0') && (
-                    <Badge
-                      colorScheme="danger"
-                      rounded={9999}
-                      mb={-1}
-                      mr={-1}
-                      zIndex={1}
-                      variant="solid"
-                      top="7px"
-                      right="7px"
-                      w={3}
-                      h={3}
-                      p={0}
-                      position={'absolute'}
-                    />
-                  )}
+                {showNotification && (
+                  <Badge
+                    colorScheme="danger"
+                    rounded={9999}
+                    mb={-1}
+                    mr={-1}
+                    zIndex={1}
+                    variant="solid"
+                    top="7px"
+                    right="7px"
+                    w={3}
+                    h={3}
+                    p={0}
+                    position={'absolute'}
+                  />
+                )}
                 <IconHamburgerMenu size="lg" color="black" />
               </TouchableOpacity>
             </Row>

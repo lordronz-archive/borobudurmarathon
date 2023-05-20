@@ -7,6 +7,8 @@ import {ISponsorResponse} from '../types/sponsor.type';
 import {GetGalleryResponse} from '../types/gallery.type';
 import {TransactionDetail} from '../types/transaction.type';
 import {GetTransactionsResponse} from '../types/transactions.type';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {InvitationProperties} from '../types/invitation.type';
 
 function qs(obj: any, prefix: any) {
   const str: string[] = [];
@@ -323,6 +325,25 @@ const EventService = {
       )) as {data: any};
 
       return res;
+    } catch (error) {
+      console.log('Error kah ? sepertinya tidak thrwing kemari', error);
+      return Promise.reject(error);
+    }
+  },
+  setInvitations: async function (invitations: InvitationProperties[]) {
+    return AsyncStorage.setItem('invitation-list', JSON.stringify(invitations));
+  },
+  shouldShowNotification: async function (invitations: InvitationProperties[]) {
+    try {
+      const res = await AsyncStorage.getItem('invitation-list');
+      if (res == null && invitations.length > 0) {
+        return true;
+      }
+      const inv = JSON.parse(res!) as InvitationProperties[];
+      const filteredInv = invitations.filter(
+        v => !inv.find(i => i.id === v.id),
+      );
+      return filteredInv.length > 0;
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);
       return Promise.reject(error);

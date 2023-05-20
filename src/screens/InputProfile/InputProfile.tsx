@@ -20,7 +20,6 @@ import countries from '../../helpers/countries';
 import {AuthService} from '../../api/auth.service';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {getErrorMessage} from '../../helpers/errorHandler';
 import {TouchableOpacity} from 'react-native';
 import {useAuthUser} from '../../context/auth.context';
 import {MasterLocationResponse} from '../../types/profile.type';
@@ -138,6 +137,20 @@ export default function InputProfileScreen() {
       Toast.show({
         title: 'Not Completed',
         description: 'Please complete the required data.',
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    const minimumAge = 10;
+    const inputDate = new Date(mbsdBirthDate!);
+    if (
+      inputDate >
+      new Date(new Date().setFullYear(new Date().getFullYear() - minimumAge))
+    ) {
+      Toast.show({
+        title: 'Invalid Input',
+        description: 'Please provide a valid birth date.',
       });
       setIsLoading(false);
       return;

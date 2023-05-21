@@ -956,18 +956,56 @@ export default function ChooseCitizenScreen({route}: Props) {
                         placeholder={t('auth.placeholderAddress') || ''}
                         onPress={(data, details = null) => {
                           // 'details' is provided when fetchDetails = true
-                          console.log(data, details);
+                          // const city = details?.address_components.filter(
+                          //   f =>
+                          //     JSON.stringify(f.types) ===
+                          //     JSON.stringify(['locality', 'political']),
+                          // )[0].short_name;
+                          // const state = details?.address_components.filter(
+                          //   f =>
+                          //     JSON.stringify(f.types) ===
+                          //     JSON.stringify([
+                          //       'administrative_area_level_1',
+                          //       'political',
+                          //     ]),
+                          // )[0].short_name;
+                          console.log(data, details?.address_components);
+                          const displayCity =
+                            details?.address_components.filter(
+                              f =>
+                                JSON.stringify(f.types) ===
+                                  JSON.stringify(['locality', 'political']) ||
+                                JSON.stringify(f.types) ===
+                                  JSON.stringify([
+                                    'administrative_area_level_2',
+                                    'political',
+                                  ]) ||
+                                JSON.stringify(f.types) ===
+                                  JSON.stringify(['postal_town']),
+                            )[0].long_name;
+                          // const displayState =
+                          //   details?.address_components.filter(
+                          //     f =>
+                          //       JSON.stringify(f.types) ===
+                          //       JSON.stringify([
+                          //         'administrative_area_level_1',
+                          //         'political',
+                          //       ]),
+                          //   )[0].long_name;
                           setProfile(oldVal => ({
                             ...oldVal,
                             mbsdAddress: data.description,
                             mbsdRawAddress: data.description,
+                            mbsdCity: displayCity || '',
                           }));
                           console.log(profile.mbsdAddress);
+                          console.log(displayCity);
                         }}
                         query={{
                           key: Config.MAPS_API_KEY,
                           language: 'en',
                         }}
+                        fetchDetails
                         styles={{
                           textInput: {
                             height: 50,
@@ -992,6 +1030,7 @@ export default function ChooseCitizenScreen({route}: Props) {
                               ...oldVal,
                               mbsdAddress: val,
                               mbsdRawAddress: val,
+                              mbsdCity: oldVal.mbsdCity ?? '',
                             })),
                           // width: '100%',
                         }}

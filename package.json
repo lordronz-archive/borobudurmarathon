@@ -59,6 +59,7 @@
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.10.0",
+    "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-i18n": "^2.0.15",
     "react-native-image-crop-picker": "^0.39.0",
     "react-native-image-progress": "^1.2.0",

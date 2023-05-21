@@ -57,6 +57,8 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import OtpWhatsapp from '../../components/modal/OtpWhatsapp';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import CountryCodeInput from '../Profile/components/CountryCodeInput';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import Config from 'react-native-config';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
@@ -949,18 +951,91 @@ export default function ChooseCitizenScreen({route}: Props) {
                       </Button>
                     </Box>
                   ) : (
-                    <TextInput
-                      placeholder={t('auth.placeholderAddress') || ''}
-                      label={t('profile.address') || ''}
-                      value={profile.mbsdAddress}
-                      onChangeText={val =>
-                        setProfile(oldVal => ({
-                          ...oldVal,
-                          mbsdAddress: val,
-                          mbsdRawAddress: val,
-                        }))
-                      }
-                    />
+                    <>
+                      <GooglePlacesAutocomplete
+                        placeholder={t('auth.placeholderAddress') || ''}
+                        onPress={(data, details = null) => {
+                          // 'details' is provided when fetchDetails = true
+                          // const city = details?.address_components.filter(
+                          //   f =>
+                          //     JSON.stringify(f.types) ===
+                          //     JSON.stringify(['locality', 'political']),
+                          // )[0].short_name;
+                          // const state = details?.address_components.filter(
+                          //   f =>
+                          //     JSON.stringify(f.types) ===
+                          //     JSON.stringify([
+                          //       'administrative_area_level_1',
+                          //       'political',
+                          //     ]),
+                          // )[0].short_name;
+                          console.log(data, details?.address_components);
+                          const displayCity =
+                            details?.address_components.filter(
+                              f =>
+                                JSON.stringify(f.types) ===
+                                  JSON.stringify(['locality', 'political']) ||
+                                JSON.stringify(f.types) ===
+                                  JSON.stringify([
+                                    'administrative_area_level_2',
+                                    'political',
+                                  ]) ||
+                                JSON.stringify(f.types) ===
+                                  JSON.stringify(['postal_town']),
+                            )[0].long_name;
+                          // const displayState =
+                          //   details?.address_components.filter(
+                          //     f =>
+                          //       JSON.stringify(f.types) ===
+                          //       JSON.stringify([
+                          //         'administrative_area_level_1',
+                          //         'political',
+                          //       ]),
+                          //   )[0].long_name;
+                          setProfile(oldVal => ({
+                            ...oldVal,
+                            mbsdAddress: data.description,
+                            mbsdRawAddress: data.description,
+                            mbsdCity: displayCity || '',
+                          }));
+                          console.log(profile.mbsdAddress);
+                          console.log(displayCity);
+                        }}
+                        query={{
+                          key: Config.MAPS_API_KEY,
+                          language: 'en',
+                        }}
+                        fetchDetails
+                        styles={{
+                          textInput: {
+                            height: 50,
+                            color: '#5d5d5d',
+                            fontSize: 16,
+                            borderRadius: 6,
+                            borderColor: '#C5CDDB',
+                            borderWidth: 1,
+                          },
+                          predefinedPlacesDescription: {
+                            color: '#1faadb',
+                          },
+                        }}
+                        disableScroll={false}
+                        textInputProps={{
+                          // InputComp: TextInput,
+                          // placeholder: t('auth.placeholderAddress') || '',
+                          // label: t('profile.address') || '',
+                          // value: profile.mbsdAddress,
+                          onChangeText: val =>
+                            setProfile(oldVal => ({
+                              ...oldVal,
+                              mbsdAddress: val,
+                              mbsdRawAddress: val,
+                              mbsdCity: oldVal.mbsdCity ?? '',
+                            })),
+                          // width: '100%',
+                        }}
+                      />
+                    </>
                   )}
                 </VStack>
               )}

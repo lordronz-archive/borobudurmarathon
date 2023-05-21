@@ -107,7 +107,7 @@ export default function MyProfile() {
       key: 'partner',
       icon: <IconUserGroup color="black" size={6} />,
       name: 'Partner',
-      route: 'ChooseCitizen',
+      route: 'Partner',
     },
   ];
 

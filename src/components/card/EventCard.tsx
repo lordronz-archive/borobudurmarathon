@@ -18,6 +18,8 @@ type CardEventProps = {
     | 'INVITED';
   isFree?: boolean;
   isExpired?: boolean;
+  isInvitation?: boolean;
+  isRegistered?: boolean;
 };
 
 export default function CardEvent({
@@ -158,6 +160,22 @@ export default function CardEvent({
                 fontSize: 'xs',
               }}>
               {t('event.expiredInvitation')}
+            </Badge>
+          )}
+
+          {!props.isExpired && !props.isRegistered && props.isInvitation && (
+            <Badge
+              backgroundColor="#FFF8E4"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: '#A4660A',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              Invited
             </Badge>
           )}
 

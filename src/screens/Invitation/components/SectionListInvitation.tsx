@@ -62,6 +62,8 @@ export default function SectionListInvitation() {
               moment(new Date()),
             )
           }
+          isInvitation
+          isRegistered={+item.iregIsUsed === 1}
         />
       </TouchableOpacity>
     );

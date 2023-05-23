@@ -17,6 +17,7 @@ import {
   PaymentsEntity,
   PAYMENT_METHODS,
   TransactionStatus,
+  PaymentsSpecial,
 } from '../../../types/event.type';
 import {EventService} from '../../../api/event.service';
 import {handleErrorMessage} from '../../../helpers/apiErrors';
@@ -45,8 +46,12 @@ export default function ButtonBasedOnStatus(props: Props) {
   const [isShowModalChoosePaymentMethod, setIsShowModalChoosePaymentMethod] =
     useState(false);
   const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
-  const [tmpPayment, setTmpPayment] = useState<PaymentsEntity>();
-  const [paymentMethods, setPaymentMethods] = useState<PaymentsEntity[]>([]);
+  const [tmpPayment, setTmpPayment] = useState<
+    PaymentsEntity | PaymentsSpecial
+  >();
+  const [paymentMethods, setPaymentMethods] = useState<
+    (PaymentsSpecial | PaymentsEntity)[]
+  >([]);
 
   const handleButtonPayNow = () => {
     setIsLoading(true);
@@ -73,9 +78,16 @@ export default function ButtonBasedOnStatus(props: Props) {
       const resEvent = await EventService.getEvent(props.eventId);
       console.info('res get detail event', JSON.stringify(resEvent));
 
-      let list = (resEvent?.payments || []).filter(
-        item => item.evptIsPublic === '1',
-      );
+      let list = [
+        ...(props.status === 'Waiting Payment'
+          ? resEvent?.payments || []
+          : []
+        ).filter(item => item.evptIsPublic === '1'),
+        ...(props.status === 'Registered' && props.isBallot
+          ? resEvent.payments_special || []
+          : []
+        ).filter(item => item.evptIsPublic.toString() === '1'),
+      ];
 
       list = list.filter(
         item => item.evptMsptName !== props.activePayment?.trihPaymentType,
@@ -155,7 +167,10 @@ export default function ButtonBasedOnStatus(props: Props) {
     setIsLoading(false);
   };
 
-  if (props.status === 'Waiting Payment') {
+  if (
+    props.status === 'Waiting Payment' ||
+    (props.status === 'Registered' && props.isBallot)
+  ) {
     return (
       <>
         {props.activePayment && (

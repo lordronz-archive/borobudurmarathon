@@ -61,8 +61,10 @@ export default function MyEventDetail() {
 
   // const isBallot =
   //   Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
-  const isBallot = detailTransaction?.linked.mregTrnsId?.[0]?.mregType === 'MB';
-
+  const isBallot =
+    +(detailTransaction?.linked?.trnsEventId?.[0].evnhBallot ?? 0) === 1;
+  console.log(isBallot);
+  console.log(detailTransaction?.linked.mregTrnsId?.[0]?.mregType);
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -97,7 +99,9 @@ export default function MyEventDetail() {
         //     resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
         //   ) === 1;
         const isThisBallot =
-          resDetailTransaction?.data?.linked.mregTrnsId?.[0]?.mregType === 'MB';
+          +(
+            resDetailTransaction?.data?.linked?.trnsEventId?.[0].evnhBallot ?? 0
+          ) === 1;
         const regStatus = Number(
           resDetailTransaction?.data?.linked.mregTrnsId?.[0]?.mregStatus,
         );
@@ -415,7 +419,7 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {['Waiting Payment', 'Payment Expired'].includes(
+              {['Waiting Payment', 'Payment Expired', 'Registered'].includes(
                 status ?? '',
               ) && (
                 <ButtonBasedOnStatus

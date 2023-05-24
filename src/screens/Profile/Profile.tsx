@@ -6,7 +6,6 @@ import {
   ArrowBackIcon,
   HStack,
   VStack,
-  useTheme,
   Image,
   ScrollView,
   IconButton,
@@ -18,6 +17,8 @@ import {
   useDisclose,
   Actionsheet,
   CheckCircleIcon,
+  View,
+  Badge,
 } from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -40,7 +41,9 @@ import {LanguageID} from '../../types/language.type';
 import httpRequest from '../../helpers/httpRequest';
 import AppContainer from '../../layout/AppContainer';
 import SummaryProfile from './components/SummaryProfile';
-import { LanguageService } from '../../api/language.service';
+import {LanguageService} from '../../api/language.service';
+import IconCalendar from '../../assets/icons/IconCalendar';
+import useInvitation from '../../hooks/useInvitation';
 
 export default function MyProfile() {
   const navigation =
@@ -51,6 +54,7 @@ export default function MyProfile() {
   const cancelLogoutRef = React.useRef(null);
   const {t} = useTranslation();
   const {isOpen, onOpen, onClose} = useDisclose();
+  const {showNotification} = useInvitation();
 
   const menus: {
     key: string;
@@ -72,12 +76,32 @@ export default function MyProfile() {
       name: t('profile.changePhoneNumber'),
       route: 'UpdatePhone',
     },
-    // {
-    //   key: 'invitations',
-    //   icon: <IconPhone color="black" size={6} />,
-    //   name: t('invitation.list'),
-    //   route: 'ListInvitation',
-    // },
+    {
+      key: 'invitations',
+      icon: (
+        <View>
+          {showNotification && (
+            <Badge
+              colorScheme="danger"
+              rounded={9999}
+              mb={0}
+              mr={0}
+              zIndex={1}
+              variant="solid"
+              top="0px"
+              right="0px"
+              w={3}
+              h={3}
+              p={0}
+              position={'absolute'}
+            />
+          )}
+          <IconCalendar color="black" size={6} />
+        </View>
+      ),
+      name: t('invitation.list'),
+      route: 'ListInvitation',
+    },
     {
       key: 'language',
       icon: <IconGlobe color="black" size={6} />,

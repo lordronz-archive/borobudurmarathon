@@ -148,6 +148,7 @@ export default {
     viewProfile: 'View Profile',
     buttonUpdate: 'Update Profile',
     changePhoneNumber: 'Change Phone Number',
+    invitedEvents: 'Invited Events',
     accountAndPersonalData: 'Account & Personal Data',
     sendOtp: 'Send OTP',
     changeLanguage: 'Change Language',
@@ -195,6 +196,7 @@ export default {
     distance: 'Distance',
     featuredEvents: 'Featured Events',
     expiredEvents: 'Expired Events',
+    expiredInvitation: 'Expired Invitation',
     registrationClosed: 'Registration Closed',
     soldout: 'Sold Out',
     upcomingEvents: 'Upcoming',
@@ -210,6 +212,7 @@ export default {
     forMoreInformationAboutSize: 'For more information about size',
     seeJerseyChart: 'See jersey size chart',
     viewDetail: 'View Detail',
+    invited: 'Invited',
   },
   payment: {
     paymentInformation: 'Payment Information',
@@ -481,5 +484,8 @@ export default {
     description2: 'Please wait... Your ID still in processing to validate.',
     title3: 'Please wait...',
     description3: 'We still processing to validate.',
+  },
+  invitation: {
+    list: 'Invites',
   },
 };

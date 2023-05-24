@@ -151,6 +151,7 @@ export default {
     viewProfile: 'Lihat Profil',
     buttonUpdate: 'Ubah Profil',
     changePhoneNumber: 'Ubah Nomor Handphone',
+    invitedEvents: 'Event yang Diundang',
     accountAndPersonalData: 'Akun & Data Pribadi',
     sendOtp: 'Kirim OTP',
     changeLanguage: 'Ubah Bahasa',
@@ -195,6 +196,7 @@ export default {
     distance: 'Jarak',
     featuredEvents: 'Event Unggulan',
     expiredEvents: 'Event Terdahulu',
+    expiredInvitation: 'Undangan Kadaluarsa',
     upcomingEvents: 'Akan Datang',
     registrationClosed: 'Pendaftaran Ditutup',
     soldout: 'Terjual Habis',
@@ -210,6 +212,7 @@ export default {
     forMoreInformationAboutSize: 'Untuk informasi terkait ukuran',
     seeJerseyChart: 'Lihat detail ukuran jersey',
     viewDetail: 'Lihat Detail',
+    invited: 'Diundang',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',
@@ -485,5 +488,8 @@ export default {
     description2: 'Harap tunggu... ID Anda masih dalam proses validasi.',
     title3: 'Tunggu sebentar...',
     description3: 'Kami masih melakukan proses validasi.',
+  },
+  invitation: {
+    list: 'Daftar Undangan',
   },
 };

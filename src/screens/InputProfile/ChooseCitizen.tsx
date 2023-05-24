@@ -1164,7 +1164,23 @@ export default function ChooseCitizenScreen({route}: Props) {
                     (profile.mbsdBloodType !== null ||
                       profile.mbsdBloodType !== undefined)
                   ) {
-                    setProfileStep(v => v + 1);
+                    const minimumAge = 10;
+                    const inputDate = new Date(profile.mbsdBirthDate);
+                    if (
+                      inputDate >
+                      new Date(
+                        new Date().setFullYear(
+                          new Date().getFullYear() - minimumAge,
+                        ),
+                      )
+                    ) {
+                      Toast.show({
+                        title: 'Invalid Input',
+                        description: 'Please provide a valid birth date.',
+                      });
+                    } else {
+                      setProfileStep(v => v + 1);
+                    }
                   } else {
                     Toast.show({
                       title: 'Not Completed',

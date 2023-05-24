@@ -8,13 +8,15 @@ import IconChart from '../assets/icons/IconChart';
 import HomeScreen from '../screens/Home';
 import MyProfile from '../screens/Profile/Profile';
 import MyRecords from '../screens/Record/MyRecords';
-import {useTheme} from 'native-base';
+import {Badge, View, useTheme} from 'native-base';
 import IconMore from '../assets/icons/IconMore';
 import {useTranslation} from 'react-i18next';
+import useInvitation from '../hooks/useInvitation';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
+  const {showNotification} = useInvitation();
   const {colors} = useTheme();
   const {t} = useTranslation();
   return (
@@ -63,7 +65,25 @@ export default function MainTabNavigator() {
         options={{
           headerShown: false,
           tabBarIcon: ({color, size}) => (
-            <IconMore name="more" color={color} size={size} />
+            <View>
+              {showNotification && (
+                <Badge
+                  colorScheme="danger"
+                  rounded={9999}
+                  mb={0}
+                  mr={0}
+                  zIndex={1}
+                  variant="solid"
+                  top="0px"
+                  right="0px"
+                  w={3}
+                  h={3}
+                  p={0}
+                  position={'absolute'}
+                />
+              )}
+              <IconMore name="more" color={color} size={size} />
+            </View>
           ),
         }}
       />

@@ -468,6 +468,7 @@ export default {
     pleaseRecheckYourID: 'Cek ulang identitas yang Anda upload dan coba lagi',
     tryAgainLater: 'Silakan coba lagi nanti',
     jerseySizeChartNotFound: 'Diagram ukuran jersey tidak tersedia.',
+    noOtherPaymentMethodAvailable: 'Metode pembayaran lainnya tidak tersedia.',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',
@@ -491,5 +492,8 @@ export default {
   },
   invitation: {
     list: 'Daftar Undangan',
+    registered: 'Registered',
+    invited: 'Invited',
+    expired: 'Expired Invitation',
   },
 };

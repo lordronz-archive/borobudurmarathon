@@ -147,23 +147,23 @@ export default function CardEvent({
               {'FREE'}
             </Badge>
           )}
-          {props.isExpired && (
+          {props.isInvitation && props.isExpired && (
             <Badge
-              backgroundColor="#E8ECF3"
+              backgroundColor="gray.200"
               px="3"
               py="0.5"
               borderRadius="4"
               alignSelf="flex-start"
               _text={{
-                color: '#768499',
+                color: 'gray.500',
                 fontWeight: 'bold',
                 fontSize: 'xs',
               }}>
-              {t('event.expiredInvitation')}
+              {t('invitation.expired')}
             </Badge>
           )}
 
-          {!props.isExpired && !props.isRegistered && props.isInvitation && (
+          {props.isInvitation && !props.isExpired && !props.isRegistered && (
             <Badge
               backgroundColor="#FFF8E4"
               px="3"
@@ -175,7 +175,23 @@ export default function CardEvent({
                 fontWeight: 'bold',
                 fontSize: 'xs',
               }}>
-              Invited
+              {t('invitation.invited')}
+            </Badge>
+          )}
+
+          {props.isInvitation && props.isRegistered && (
+            <Badge
+              backgroundColor="#FFF8E4"
+              px="3"
+              py="0.5"
+              borderRadius="4"
+              alignSelf="flex-start"
+              _text={{
+                color: '#A4660A',
+                fontWeight: 'bold',
+                fontSize: 'xs',
+              }}>
+              {t('invitation.registered')}
             </Badge>
           )}
 

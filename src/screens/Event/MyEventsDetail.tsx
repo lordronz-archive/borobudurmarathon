@@ -62,9 +62,9 @@ export default function MyEventDetail() {
 
   // const [registeredEvent, setRegisteredEvent] = useState<any>();
 
-  // const isBallot =
-  //   Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
-  const isBallot = detailTransaction?.linked.mregTrnsId?.[0]?.mregType === 'MB';
+  const isBallot =
+    Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
+  // const isBallot = detailTransaction?.linked.mregTrnsId?.[0]?.mregType === 'MB';
   console.log('isBallot', isBallot);
   console.log('mregType', detailTransaction?.linked.mregTrnsId?.[0]?.mregType);
   const fetchData = async () => {
@@ -96,12 +96,12 @@ export default function MyEventDetail() {
         // resDetailTransaction.data.data.trnsExpiredTime = '2023-04-19 16:00:00'; // WIB
         setDetailTransaction(resDetailTransaction.data);
 
-        // const isThisBallot =
-        //   Number(
-        //     resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
-        //   ) === 1;
         const isThisBallot =
-          resDetailTransaction?.data.linked.mregTrnsId?.[0]?.mregType === 'MB';
+          Number(
+            resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
+          ) === 1;
+        // const isThisBallot =
+        //   resDetailTransaction?.data.linked.mregTrnsId?.[0]?.mregType === 'MB';
         if (isThisBallot) {
           if (
             resDetailTransaction.data.linked &&
@@ -317,20 +317,25 @@ export default function MyEventDetail() {
     }
   };
 
+  let isShowButtonToHandlePayment = false;
+  if (
+    isBallot &&
+    ['Waiting Payment', 'Payment Expired', 'Registered'].includes(
+      status ?? '',
+    ) &&
+    (resEvent?.payments_special || []).length > 0
+  ) {
+    isShowButtonToHandlePayment = true;
+  } else if (
+    !isBallot &&
+    ['Waiting Payment', 'Payment Expired', 'Registered'].includes(status ?? '')
+  ) {
+    isShowButtonToHandlePayment = true;
+  }
+
   return (
     <AppContainer>
-      <Header
-        title={t('myEvent.detailTitle')}
-        left="back"
-        right={
-          (isLoading || isLoadingEvent) && (
-            <HStack>
-              {isLoading && <Spinner size="sm" />}
-              {isLoadingEvent && <Spinner size="sm" />}
-            </HStack>
-          )
-        }
-      />
+      <Header title={t('myEvent.detailTitle')} left="back" />
       {isLoading || isLoadingEvent ? (
         <LoadingBlock
           style={{opacity: 0.7}}
@@ -437,43 +442,21 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {(!isBallot &&
-                ['Waiting Payment', 'Payment Expired', 'Registered'].includes(
-                  status ?? '',
-                )) ||
-                (isBallot &&
-                  ['Waiting Payment', 'Payment Expired', 'Registered'].includes(
-                    status ?? '',
-                  ) &&
-                  (resEvent?.payments_special || []).length > 0 && (
-                    <ButtonBasedOnStatus
-                      eventId={
-                        detailTransaction?.linked?.trnsEventId?.[0]?.evnhId
-                      }
-                      transactionId={params.transactionId}
-                      // status={status}
-                      status={status}
-                      activePayment={detailTransaction?.linked?.trihTrnsId?.find(
-                        item => item.trihIsCurrent === 1,
-                      )}
-                      isBallot={isBallot}
-                      evpaEvncId={
-                        detailTransaction?.linked?.evrlTrnsId?.[0]
-                          ?.evpaEvncId || ''
-                      }
-                      // onChoosePaymentMethod={() => setShowModal(true)}
-                      onPayNow={handlePayNow}
-                      // isPaymentGenerated={
-                      //   detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-                      //   detailTransaction?.linked?.trihTrnsId?.find(
-                      //     (item: any) => item.trihIsCurrent === 1,
-                      //   )?.trihPaymentType === confirmPayment?.evptMsptName
-                      // }
-                      // onAfterButtonFinished={() => {
-                      //   setConfirmPayment(undefined);
-                      // }}
-                    />
-                  ))}
+              {isShowButtonToHandlePayment && (
+                <ButtonBasedOnStatus
+                  eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
+                  transactionId={params.transactionId}
+                  status={status}
+                  activePayment={detailTransaction?.linked?.trihTrnsId?.find(
+                    item => item.trihIsCurrent === 1,
+                  )}
+                  isBallot={isBallot}
+                  evpaEvncId={
+                    detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
+                  }
+                  onPayNow={handlePayNow}
+                />
+              )}
 
               <Box
                 marginTop={'15px'}

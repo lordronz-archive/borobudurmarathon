@@ -310,7 +310,9 @@ export interface Datum {
   id: number;
   mregId: number;
   mregOrderId: string;
-  mregType: string;
+  mregType: 'MB' | 'IR' | string;
+  // MB Ballot
+  // IR Invitation
   mregStatus: number;
   mregCreatedTime: string;
   links: TransactionLinks;

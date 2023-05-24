@@ -82,7 +82,7 @@ export default function ButtonBasedOnStatus(props: Props) {
       console.info('res get detail event', JSON.stringify(resEvent));
 
       let list = [
-        ...(props.status === 'Waiting Payment'
+        ...(props.status === 'Waiting Payment' && !props.isBallot
           ? resEvent?.payments || []
           : []
         ).filter(item => item.evptIsPublic === '1'),
@@ -98,6 +98,16 @@ export default function ButtonBasedOnStatus(props: Props) {
       list.sort((a, b) =>
         a.evptLabel < b.evptLabel ? -1 : a.evptLabel > b.evptLabel ? 1 : 0,
       );
+
+      if (list.length === 0) {
+        Toast.show({
+          description: t('error.noOtherPaymentMethodAvailable'),
+          placement: 'bottom',
+        });
+        setIsLoading(false);
+        return;
+      }
+
       setPaymentMethods([...list]);
       setIsShowModalChoosePaymentMethod(true);
 
@@ -169,6 +179,8 @@ export default function ButtonBasedOnStatus(props: Props) {
     }
     setIsLoading(false);
   };
+
+  console.info('propssss', props);
 
   if (
     props.status === 'Waiting Payment' ||

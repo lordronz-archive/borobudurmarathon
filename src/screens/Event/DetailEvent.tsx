@@ -336,6 +336,24 @@ export default function DetailEvent() {
     (event?.categories || []).map(price => ({evncHold: price.evncHold})),
   );
 
+  const hasActiveInvitation = (priceId: string) => {
+    if (!isInvitation) {
+      return false;
+    }
+
+    if (evnInvitation?.iregIsUsed === 1) {
+      return false;
+    }
+
+    if (evnInvitation?.links.iregEvncId == null) {
+      return true;
+    }
+
+    if (evnInvitation.links.iregEvncId.toString() === priceId.toString()) {
+      return true;
+    }
+  };
+
   return (
     <AppContainer>
       <VStack>
@@ -559,13 +577,7 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
-                      invited={
-                        isInvitation &&
-                        ((evnInvitation?.links.iregEvncId != null &&
-                          evnInvitation.links.iregEvncId.toString() ===
-                            price.id.toString()) ||
-                          evnInvitation?.links.iregEvncId == null)
-                      }
+                      hasActiveInvitation={hasActiveInvitation(price.id)}
                       disabled={
                         (!isInvitation ||
                           (evnInvitation?.links.iregEvncId != null &&

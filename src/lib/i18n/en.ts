@@ -237,7 +237,7 @@ export default {
     paymentExpired: 'Payment Expired',
     waitingBallotResult: 'Waiting ballot result',
     sorryNotPassedBallot: 'Sorry, you are not passed for ballot',
-    payBefore: 'Bayar sebelum',
+    payBefore: 'Pay before',
     confirmPayment: 'Confirm Payment',
     choosePaymentMethod: 'Choose Payment Method',
     changePaymentMethod: 'Change Payment Method',
@@ -464,6 +464,7 @@ export default {
     pleaseRecheckYourID: 'Please check your ID and try again',
     tryAgainLater: 'Please try again later',
     jerseySizeChartNotFound: 'Jersey Size chart not found',
+    noOtherPaymentMethodAvailable: 'Other payment method is not available.',
   },
   aboutUsContent: {
     title_1: 'VOICE OF UNITY ',
@@ -487,5 +488,8 @@ export default {
   },
   invitation: {
     list: 'Invites',
+    registered: 'Registered',
+    invited: 'Invited',
+    expired: 'Expired Invitation',
   },
 };

@@ -58,6 +58,7 @@ export const linking = {
 
   config: {
     screens: {
+      Initial: 'init',
       Auth: 'auth-me',
       InitialEvent: 'events/:id',
       InitialPayment: 'INVOICE',

@@ -94,7 +94,13 @@ export default function EventPricingCard({
               {title}
             </Text>
 
-            {props.hasActiveInvitation ? (
+            {props.hasActiveInvitation && status === 'SOLDOUT' ? (
+              <Box bgColor={'#FFE1E2'} px={2} py={1} borderRadius={10}>
+                <Text color={'#EB1C23'} fontSize="xs" fontWeight={600}>
+                  {t('event.invited')}
+                </Text>
+              </Box>
+            ) : props.hasActiveInvitation ? (
               <Box bgColor={'#FFF8E4'} px={2} py={1} borderRadius={10}>
                 <Text color={'#A4660A'} fontSize="xs" fontWeight={600}>
                   {t('event.invited')}

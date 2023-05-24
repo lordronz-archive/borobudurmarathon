@@ -56,7 +56,10 @@ export default function ButtonBasedOnStatus(props: Props) {
   const handleButtonPayNow = () => {
     setIsLoading(true);
 
-    if (props.status === 'Waiting Payment') {
+    if (
+      props.status === 'Waiting Payment' ||
+      (props.isBallot && props.status === 'Registered')
+    ) {
       navigation.navigate('Payment', {
         transactionId: props.transactionId,
       });

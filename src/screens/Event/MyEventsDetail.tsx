@@ -151,6 +151,7 @@ export default function MyEventDetail() {
     try {
       setIsLoadingEvent(true);
       const res = await EventService.getEvent(eventId);
+      console.info('res fetch event', res);
 
       if (res) {
         setResEvent(res);

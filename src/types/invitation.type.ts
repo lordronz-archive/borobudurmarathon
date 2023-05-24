@@ -24,6 +24,7 @@ export interface InvitationProperties {
 
 export interface Links {
   iregEvnhId: number;
+  iregEvncId: number | string | null;
 }
 
 export interface Field {

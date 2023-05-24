@@ -212,6 +212,7 @@ export default {
     forMoreInformationAboutSize: 'Untuk informasi terkait ukuran',
     seeJerseyChart: 'Lihat detail ukuran jersey',
     viewDetail: 'Lihat Detail',
+    invited: 'Diundang',
   },
   payment: {
     paymentInformation: 'Informasi Pembayaran',

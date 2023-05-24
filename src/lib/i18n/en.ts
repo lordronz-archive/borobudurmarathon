@@ -212,6 +212,7 @@ export default {
     forMoreInformationAboutSize: 'For more information about size',
     seeJerseyChart: 'See jersey size chart',
     viewDetail: 'View Detail',
+    invited: 'Invited',
   },
   payment: {
     paymentInformation: 'Payment Information',

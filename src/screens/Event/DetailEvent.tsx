@@ -559,10 +559,17 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
+                      invited={
+                        isInvitation &&
+                        ((evnInvitation?.links.iregEvncId != null &&
+                          evnInvitation.links.iregEvncId.toString() ===
+                            price.id.toString()) ||
+                          evnInvitation?.links.iregEvncId == null)
+                      }
                       disabled={
                         (!isInvitation ||
-                          (evnInvitation?.iregEvncId != null &&
-                            evnInvitation.iregEvncId.toString() !==
+                          (evnInvitation?.links.iregEvncId != null &&
+                            evnInvitation.links.iregEvncId.toString() !==
                               price.id.toString())) &&
                         (!event?.access ||
                           !!registeredEvent ||

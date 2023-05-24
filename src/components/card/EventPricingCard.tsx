@@ -24,6 +24,7 @@ type EventPricingCardProps = {
   onSelect?: () => void;
   disabled?: boolean;
   status?: 'SOLDOUT' | 'OPEN';
+  invited?: boolean;
 };
 
 export default function EventPricingCard({
@@ -36,6 +37,7 @@ export default function EventPricingCard({
   onSelect,
   disabled,
   status,
+  ...props
 }: EventPricingCardProps) {
   let textOriginalPrice;
   let textFinalPrice;
@@ -92,10 +94,18 @@ export default function EventPricingCard({
               {title}
             </Text>
 
-            {status === 'SOLDOUT' && (
+            {status === 'SOLDOUT' && !props.invited && (
               <Box bgColor={'#FFE1E2'} px={2} py={1} borderRadius={10}>
                 <Text color={'#EB1C23'} fontSize="xs" fontWeight={600}>
                   {t('event.soldout')}
+                </Text>
+              </Box>
+            )}
+
+            {props.invited && (
+              <Box bgColor={'#FFF8E4'} px={2} py={1} borderRadius={10}>
+                <Text color={'#A4660A'} fontSize="xs" fontWeight={600}>
+                  {t('event.invited')}
                 </Text>
               </Box>
             )}

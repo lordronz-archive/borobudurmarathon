@@ -118,7 +118,7 @@ export default function MyEventDetail() {
           resDetailTransaction?.data?.linked.mregTrnsId?.[0]?.mregStatus,
         );
 
-        let newStatus: TransactionStatus = getTransactionStatus({
+        const newStatus: TransactionStatus = getTransactionStatus({
           isBallot: isThisBallot,
           regStatus,
           trnsConfirmed: resDetailTransaction?.data?.data?.trnsConfirmed,

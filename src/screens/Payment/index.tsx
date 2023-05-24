@@ -339,7 +339,12 @@ export default function PaymentScreen() {
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate('HowToPay', {
-                          trihPaymentType: activePayment?.trihPaymentType,
+                          trihPaymentType: [
+                            'virtual_account_jateng',
+                            'save_duit',
+                          ].includes(activePayment?.trihPaymentType || '')
+                            ? activePayment?.trihPaymentType
+                            : undefined,
                         })
                       }
                       style={{

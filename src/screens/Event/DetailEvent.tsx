@@ -354,6 +354,24 @@ export default function DetailEvent() {
     }
   };
 
+  const hasAnyActiveInvitation =
+    prices.map(price => hasActiveInvitation(price.id)).filter(isTrue => isTrue)
+      .length > 0;
+
+  const isDisabled = (price: any) => {
+    if (hasActiveInvitation(price.id)) {
+      return false;
+    } else {
+      return (
+        !event?.access ||
+        !!registeredEvent ||
+        status !== 'REGISTRATION' ||
+        price.status === 'SOLDOUT' ||
+        quotaStatus === 'SOLDOUT'
+      );
+    }
+  };
+
   return (
     <AppContainer>
       <VStack>
@@ -578,17 +596,7 @@ export default function DetailEvent() {
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
                       hasActiveInvitation={hasActiveInvitation(price.id)}
-                      disabled={
-                        (!isInvitation ||
-                          (evnInvitation?.links.iregEvncId != null &&
-                            evnInvitation.links.iregEvncId.toString() !==
-                              price.id.toString())) &&
-                        (!event?.access ||
-                          !!registeredEvent ||
-                          status !== 'REGISTRATION' ||
-                          price.status === 'SOLDOUT' ||
-                          quotaStatus === 'SOLDOUT')
-                      }
+                      disabled={isDisabled(price)}
                       status={
                         quotaStatus === 'SOLDOUT' || price.status === 'SOLDOUT'
                           ? 'SOLDOUT'
@@ -606,7 +614,38 @@ export default function DetailEvent() {
           <LoadingBlock style={{opacity: 0.7}} />
         )}
 
-        {event && registeredEvent && !isInvitation ? (
+        {hasAnyActiveInvitation && event && selected ? (
+          <Box
+            position="absolute"
+            bottom="0"
+            width="100%"
+            px="3"
+            py="3"
+            background="white"
+            shadow="3">
+            <Button
+              disabled={
+                !isVerified || Number(event?.data?.evnhRegistrationStatus) === 0
+              }
+              isLoading={isLoading}
+              onPress={() => {
+                navigation.navigate('EventRegister', {
+                  event,
+                  selectedCategoryId: selected.id,
+                });
+              }}>
+              {t('continueWith') +
+                ' ' +
+                selected?.name +
+                (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
+            </Button>
+            {!isVerified && (
+              <Text color="warning.500" textAlign="center">
+                {t('profile.alertNotVerifiedMessage')}
+              </Text>
+            )}
+          </Box>
+        ) : event && registeredEvent ? (
           <Box
             position="absolute"
             bottom="0"
@@ -634,7 +673,7 @@ export default function DetailEvent() {
               {t('event.viewDetail')}
             </Button>
           </Box>
-        ) : event && selected && (!registeredEvent || isInvitation) ? (
+        ) : event && selected ? (
           <Box
             position="absolute"
             bottom="0"

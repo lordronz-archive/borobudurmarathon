@@ -162,7 +162,7 @@ export default function MyEventDetail() {
         },
       });
     } finally {
-      setIsLoading(false);
+      setIsLoadingEvent(false);
     }
   };
 

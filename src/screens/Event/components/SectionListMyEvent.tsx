@@ -202,7 +202,10 @@ export default function SectionListMyEvent() {
             trnsConfirmed: transaction?.trnsConfirmed,
             trnsExpiredTime: transaction?.trnsExpiredTime,
           })}
-          category={category?.evncName || ''}
+          category={
+            (category?.evncName || '') +
+            (event.evnhBallot === 1 ? ' (BALLOT)' : '')
+          }
           transactionExpirationTime={cleanTransactionExpTime}
           isAvailable={false}
           onPayNowClick={() =>

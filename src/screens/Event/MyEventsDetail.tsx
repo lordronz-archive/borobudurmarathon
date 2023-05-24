@@ -11,6 +11,7 @@ import {
   Button,
   Toast,
   Badge,
+  Spinner,
 } from 'native-base';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -21,7 +22,7 @@ import {EventService} from '../../api/event.service';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import moment from 'moment';
 import datetime from '../../helpers/datetime';
-import {TransactionStatus} from '../../types/event.type';
+import {GetEventResponse, TransactionStatus} from '../../types/event.type';
 import LoadingBlock from '../../components/loading/LoadingBlock';
 import {TextInput, TouchableOpacity} from 'react-native';
 import AppContainer from '../../layout/AppContainer';
@@ -45,11 +46,13 @@ export default function MyEventDetail() {
   const {colors} = useTheme();
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingEvent, setIsLoadingEvent] = useState<boolean>(false);
   const [isLoadingApplyCoupon, setIsLoadingApplyCoupon] =
     useState<boolean>(false);
 
   const [detailTransaction, setDetailTransaction] =
     useState<TransactionDetail>();
+  const [resEvent, setResEvent] = useState<GetEventResponse>();
   // const [eventDetail, setEventDetail] = useState<GetEventResponse>();
   // const eventData = eventDetail?.data;
   // console.info('eventDetail', JSON.stringify(eventDetail));
@@ -61,10 +64,9 @@ export default function MyEventDetail() {
 
   // const isBallot =
   //   Number(detailTransaction?.linked.trnsEventId?.[0]?.evnhBallot) === 1;
-  const isBallot =
-    +(detailTransaction?.linked?.trnsEventId?.[0].evnhBallot ?? 0) === 1;
-  console.log(isBallot);
-  console.log(detailTransaction?.linked.mregTrnsId?.[0]?.mregType);
+  const isBallot = detailTransaction?.linked.mregTrnsId?.[0]?.mregType === 'MB';
+  console.log('isBallot', isBallot);
+  console.log('mregType', detailTransaction?.linked.mregTrnsId?.[0]?.mregType);
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -99,9 +101,21 @@ export default function MyEventDetail() {
         //     resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
         //   ) === 1;
         const isThisBallot =
-          +(
-            resDetailTransaction?.data?.linked?.trnsEventId?.[0].evnhBallot ?? 0
-          ) === 1;
+          resDetailTransaction?.data.linked.mregTrnsId?.[0]?.mregType === 'MB';
+        if (isThisBallot) {
+          if (
+            resDetailTransaction.data.linked &&
+            resDetailTransaction.data.linked.trnsEventId &&
+            resDetailTransaction.data.linked.trnsEventId[0].evnhId
+          ) {
+            fetchEvent(resDetailTransaction.data.linked.trnsEventId[0].evnhId);
+          } else {
+            Toast.show({
+              description: 'Event id not found',
+            });
+            navigation.goBack();
+          }
+        }
         const regStatus = Number(
           resDetailTransaction?.data?.linked.mregTrnsId?.[0]?.mregStatus,
         );
@@ -133,40 +147,24 @@ export default function MyEventDetail() {
     }
   };
 
-  // const fetchDetailEvent = async (eventId: number) => {
-  //   setIsLoadingEvent(true);
-  //   EventService.getEvent(eventId)
-  //     .then(resEvent => {
-  //       console.info('res get detail event', JSON.stringify(resEvent));
-  //       setEventDetail(resEvent);
-  //       setIsLoadingEvent(false);
-  //     })
-  //     .catch(err => {
-  //       console.info('err get event detail', JSON.stringify(err));
-  //       handleErrorMessage(err, t('error.failedToGetEvent'), {
-  //         // onAnyError: () => {
-  //         //   navigation.goBack();
-  //         // },
-  //       });
-  //       setIsLoadingEvent(false);
-  //     });
-  // };
+  const fetchEvent = async (eventId: number) => {
+    try {
+      setIsLoadingEvent(true);
+      const res = await EventService.getEvent(eventId);
 
-  // useEffect(() => {
-  //   if (detailTransaction && eventDetail) {
-  //     if (detailTransaction?.linked?.trihTrnsId?.length !== 0) {
-  //       const currentPayment = detailTransaction?.linked?.trihTrnsId?.find(
-  //         item => item.trihIsCurrent === 1,
-  //       );
-  //       if (currentPayment) {
-  //         const findPayment = eventDetail.payments?.find(
-  //           item => item.evptMsptName === currentPayment.trihPaymentType,
-  //         );
-  //         setConfirmPayment(findPayment);
-  //       }
-  //     }
-  //   }
-  // }, [detailTransaction, eventDetail]);
+      if (res) {
+        setResEvent(res);
+      }
+    } catch (err) {
+      handleErrorMessage(err, t('error.failedToGetEvent'), {
+        on404: () => {
+          navigation.goBack();
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (IsFocused) {
@@ -321,9 +319,29 @@ export default function MyEventDetail() {
 
   return (
     <AppContainer>
-      <Header title={t('myEvent.detailTitle')} left="back" />
-      {isLoading ? (
-        <LoadingBlock style={{opacity: 0.7}} />
+      <Header
+        title={t('myEvent.detailTitle')}
+        left="back"
+        right={
+          (isLoading || isLoadingEvent) && (
+            <HStack>
+              {isLoading && <Spinner size="sm" />}
+              {isLoadingEvent && <Spinner size="sm" />}
+            </HStack>
+          )
+        }
+      />
+      {isLoading || isLoadingEvent ? (
+        <LoadingBlock
+          style={{opacity: 0.7}}
+          text={
+            isLoading
+              ? 'Loading Transaction...'
+              : isLoadingEvent
+              ? 'Loading Event...'
+              : ''
+          }
+        />
       ) : (
         <ScrollView backgroundColor={'#E8ECF3'}>
           <TransactionAlertStatus isBallot={isBallot} status={status} />
@@ -419,34 +437,43 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {['Waiting Payment', 'Payment Expired', 'Registered'].includes(
-                status ?? '',
-              ) && (
-                <ButtonBasedOnStatus
-                  eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
-                  transactionId={params.transactionId}
-                  // status={status}
-                  status={status}
-                  activePayment={detailTransaction?.linked?.trihTrnsId?.find(
-                    item => item.trihIsCurrent === 1,
-                  )}
-                  isBallot={isBallot}
-                  evpaEvncId={
-                    detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId || ''
-                  }
-                  // onChoosePaymentMethod={() => setShowModal(true)}
-                  onPayNow={handlePayNow}
-                  // isPaymentGenerated={
-                  //   detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
-                  //   detailTransaction?.linked?.trihTrnsId?.find(
-                  //     (item: any) => item.trihIsCurrent === 1,
-                  //   )?.trihPaymentType === confirmPayment?.evptMsptName
-                  // }
-                  // onAfterButtonFinished={() => {
-                  //   setConfirmPayment(undefined);
-                  // }}
-                />
-              )}
+              {(!isBallot &&
+                ['Waiting Payment', 'Payment Expired', 'Registered'].includes(
+                  status ?? '',
+                )) ||
+                (isBallot &&
+                  ['Waiting Payment', 'Payment Expired', 'Registered'].includes(
+                    status ?? '',
+                  ) &&
+                  (resEvent?.payments_special || []).length > 0 && (
+                    <ButtonBasedOnStatus
+                      eventId={
+                        detailTransaction?.linked?.trnsEventId?.[0]?.evnhId
+                      }
+                      transactionId={params.transactionId}
+                      // status={status}
+                      status={status}
+                      activePayment={detailTransaction?.linked?.trihTrnsId?.find(
+                        item => item.trihIsCurrent === 1,
+                      )}
+                      isBallot={isBallot}
+                      evpaEvncId={
+                        detailTransaction?.linked?.evrlTrnsId?.[0]
+                          ?.evpaEvncId || ''
+                      }
+                      // onChoosePaymentMethod={() => setShowModal(true)}
+                      onPayNow={handlePayNow}
+                      // isPaymentGenerated={
+                      //   detailTransaction?.linked?.trihTrnsId?.length !== 0 &&
+                      //   detailTransaction?.linked?.trihTrnsId?.find(
+                      //     (item: any) => item.trihIsCurrent === 1,
+                      //   )?.trihPaymentType === confirmPayment?.evptMsptName
+                      // }
+                      // onAfterButtonFinished={() => {
+                      //   setConfirmPayment(undefined);
+                      // }}
+                    />
+                  ))}
 
               <Box
                 marginTop={'15px'}

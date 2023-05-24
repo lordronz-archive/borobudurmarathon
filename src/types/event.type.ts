@@ -448,11 +448,29 @@ export const PAYMENT_METHODS = {
     icon: require('../assets/images/logo-bank-jateng.png'),
   },
   virtual_account_bni: {
-    name: 'VA Bank BNI',
+    name: 'VA BNI',
     // icon: require('../assets/images/logo-bank-jateng.png'),
   },
   snap_cc_bri: {
-    name: 'Credit Card',
+    name: 'CC BRI',
+  },
+  snap_cc: {
+    name: 'CC BNI',
+  },
+  snap_alfamart: {
+    name: 'Alfamart',
+  },
+  snap_gopay: {
+    name: 'GOPAY',
+  },
+  snap_va_bri: {
+    name: 'VA BRI',
+  },
+  snap_va: {
+    name: 'VA Permata',
+  },
+  free_slot: {
+    name: 'Kode Promo / Kode Voucher',
   },
 };
 

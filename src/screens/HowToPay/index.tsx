@@ -1,22 +1,23 @@
+import {useRoute} from '@react-navigation/native';
 import {
   Divider,
   HStack,
   ScrollView,
   Text,
-  VStack,
   View,
-  useTheme,
   ChevronDownIcon,
   ChevronUpIcon,
 } from 'native-base';
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import Accordion from 'react-native-collapsible/Accordion';
 import Header from '../../components/header/Header';
 import AppContainer from '../../layout/AppContainer';
+import {RootStackParamList} from '../../navigation/RootNavigator';
 
 export default function HowToPayScreen() {
-  const {colors} = useTheme();
+  const route = useRoute();
+  const params = route.params as RootStackParamList['HowToPay'];
 
   const [activeSectionsVaBankSulteng, setActiveSectionsVaBankSulteng] =
     useState<any>([]);
@@ -156,44 +157,56 @@ export default function HowToPayScreen() {
     <AppContainer>
       <Header title="How To Pay" left={'back'} />
       <ScrollView>
-        <Text
-          marginX={'15px'}
-          paddingY={'20px'}
-          fontSize={14}
-          fontWeight={600}
-          color={'#201D1D'}>
-          Bank Jateng Virtual Account
-        </Text>
-        <Accordion
-          sections={SECTIONS_VA_BANK_JATENG}
-          activeSections={activeSectionsVaBankSulteng}
-          renderHeader={(item: any, index: number) =>
-            _renderHeader(item, index, activeSectionsVaBankSulteng)
-          }
-          renderContent={_renderContent}
-          onChange={section => setActiveSectionsVaBankSulteng(section)}
-          renderFooter={_renderFooter}
-          underlayColor="transparent"
-        />
-        <Text
-          marginX={'15px'}
-          paddingY={'20px'}
-          fontSize={14}
-          fontWeight={600}
-          color={'#201D1D'}>
-          Save Duit Bank Jateng
-        </Text>
-        <Accordion
-          sections={SECTIONS_SAVE_DUIT}
-          activeSections={activeSectionsSaveDuit}
-          renderHeader={(item: any, index: number) =>
-            _renderHeader(item, index, activeSectionsSaveDuit)
-          }
-          renderContent={_renderContent}
-          onChange={section => setActiveSectionsSaveDuit(section)}
-          renderFooter={_renderFooter}
-          underlayColor="transparent"
-        />
+        {(!params?.trihPaymentType ||
+          (params?.trihPaymentType &&
+            params?.trihPaymentType === 'virtual_account_jateng')) && (
+          <>
+            <Text
+              marginX={'15px'}
+              paddingY={'20px'}
+              fontSize={14}
+              fontWeight={600}
+              color={'#201D1D'}>
+              Bank Jateng Virtual Account
+            </Text>
+            <Accordion
+              sections={SECTIONS_VA_BANK_JATENG}
+              activeSections={activeSectionsVaBankSulteng}
+              renderHeader={(item: any, index: number) =>
+                _renderHeader(item, index, activeSectionsVaBankSulteng)
+              }
+              renderContent={_renderContent}
+              onChange={section => setActiveSectionsVaBankSulteng(section)}
+              renderFooter={_renderFooter}
+              underlayColor="transparent"
+            />
+          </>
+        )}
+        {(!params?.trihPaymentType ||
+          (params?.trihPaymentType &&
+            params?.trihPaymentType === 'save_duit')) && (
+          <>
+            <Text
+              marginX={'15px'}
+              paddingY={'20px'}
+              fontSize={14}
+              fontWeight={600}
+              color={'#201D1D'}>
+              Save Duit Bank Jateng
+            </Text>
+            <Accordion
+              sections={SECTIONS_SAVE_DUIT}
+              activeSections={activeSectionsSaveDuit}
+              renderHeader={(item: any, index: number) =>
+                _renderHeader(item, index, activeSectionsSaveDuit)
+              }
+              renderContent={_renderContent}
+              onChange={section => setActiveSectionsSaveDuit(section)}
+              renderFooter={_renderFooter}
+              underlayColor="transparent"
+            />
+          </>
+        )}
       </ScrollView>
     </AppContainer>
   );

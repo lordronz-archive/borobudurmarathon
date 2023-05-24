@@ -15,7 +15,7 @@ import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import PaymentScreen from '../screens/Payment';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
-import {EventFieldsEntity, GetEventResponse} from '../types/event.type';
+import {EventFieldsEntity, GetEventResponse, PAYMENT_METHODS} from '../types/event.type';
 import HowToPayScreen from '../screens/HowToPay';
 import LogoutScreen from '../screens/Profile/LogoutScreen';
 import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
@@ -102,7 +102,7 @@ export type RootStackParamList = {
   };
   Payment: {transactionId: string};
   Voucher: undefined;
-  HowToPay: undefined;
+  HowToPay: undefined | {trihPaymentType: keyof typeof PAYMENT_METHODS};
   ViewDetailRegistrationData: {
     data: {[key: string]: string};
     fields: EventFieldsEntity[];

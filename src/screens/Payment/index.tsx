@@ -337,7 +337,11 @@ export default function PaymentScreen() {
                     borderBottomWidth={1}
                     borderBottomStyle={'solid'}>
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('HowToPay')}
+                      onPress={() =>
+                        navigation.navigate('HowToPay', {
+                          trihPaymentType: activePayment?.trihPaymentType,
+                        })
+                      }
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',

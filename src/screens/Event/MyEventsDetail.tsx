@@ -92,6 +92,19 @@ export default function MyEventDetail() {
         }
       }
 
+      if (
+        resDetailTransaction.data.linked &&
+        resDetailTransaction.data.linked.trnsEventId &&
+        resDetailTransaction.data.linked.trnsEventId[0].evnhId
+      ) {
+        fetchEvent(resDetailTransaction.data.linked.trnsEventId[0].evnhId);
+      } else {
+        Toast.show({
+          description: 'Event id not found',
+        });
+        navigation.goBack();
+      }
+
       if (resDetailTransaction && resDetailTransaction.data) {
         // resDetailTransaction.data.data.trnsExpiredTime = '2023-04-19 16:00:00'; // WIB
         setDetailTransaction(resDetailTransaction.data);
@@ -100,22 +113,7 @@ export default function MyEventDetail() {
           Number(
             resDetailTransaction?.data?.linked.trnsEventId?.[0]?.evnhBallot,
           ) === 1;
-        // const isThisBallot =
-        //   resDetailTransaction?.data.linked.mregTrnsId?.[0]?.mregType === 'MB';
-        if (isThisBallot) {
-          if (
-            resDetailTransaction.data.linked &&
-            resDetailTransaction.data.linked.trnsEventId &&
-            resDetailTransaction.data.linked.trnsEventId[0].evnhId
-          ) {
-            fetchEvent(resDetailTransaction.data.linked.trnsEventId[0].evnhId);
-          } else {
-            Toast.show({
-              description: 'Event id not found',
-            });
-            navigation.goBack();
-          }
-        }
+
         const regStatus = Number(
           resDetailTransaction?.data?.linked.mregTrnsId?.[0]?.mregStatus,
         );
@@ -448,6 +446,10 @@ export default function MyEventDetail() {
                   eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
                   transactionId={params.transactionId}
                   status={status}
+                  paymentMethodsSpecial={
+                    resEvent?.payments_special || undefined
+                  }
+                  paymentMethods={resEvent?.payments || undefined}
                   activePayment={detailTransaction?.linked?.trihTrnsId?.find(
                     item => item.trihIsCurrent === 1,
                   )}

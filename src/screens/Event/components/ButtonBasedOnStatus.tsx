@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {t} from 'i18next';
@@ -9,7 +10,7 @@ import {
   ScrollView,
   Button as NBButton,
 } from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '../../../components/buttons/Button';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {Dimensions, TouchableOpacity} from 'react-native';
@@ -28,6 +29,8 @@ type Props = {
   transactionId: string;
   eventId?: number;
   status?: TransactionStatus;
+  paymentMethodsSpecial?: PaymentsSpecial[];
+  paymentMethods?: PaymentsEntity[];
   activePayment?: TrihTrnsIdEntity;
   // isPaymentGenerated: boolean;
   isBallot: boolean;
@@ -53,6 +56,11 @@ export default function ButtonBasedOnStatus(props: Props) {
     (PaymentsSpecial | PaymentsEntity)[]
   >([]);
 
+  useEffect(() => {
+    const list = getAvailablePaymentMethods();
+    setPaymentMethods(list);
+  }, [props.paymentMethods, props.paymentMethodsSpecial, props.activePayment]);
+
   const handleButtonPayNow = () => {
     setIsLoading(true);
 
@@ -71,6 +79,28 @@ export default function ButtonBasedOnStatus(props: Props) {
     setIsLoading(false);
   };
 
+  const getAvailablePaymentMethods = () => {
+    let list = [
+      ...(props.status === 'Waiting Payment' && !props.isBallot
+        ? props.paymentMethods || []
+        : []
+      ).filter(item => Number(item.evptIsPublic) === 1),
+      ...(props.status === 'Registered' && props.isBallot
+        ? props.paymentMethodsSpecial || []
+        : []
+      ).filter(item => Number(item.evptIsPublic) === 1),
+    ];
+
+    list = list.filter(
+      item => item.evptMsptName !== props.activePayment?.trihPaymentType,
+    );
+    list.sort((a, b) =>
+      a.evptLabel < b.evptLabel ? -1 : a.evptLabel > b.evptLabel ? 1 : 0,
+    );
+
+    return list;
+  };
+
   const handleButtonChoosePaymentMethod = async () => {
     if (!props.eventId) {
       return;
@@ -78,26 +108,10 @@ export default function ButtonBasedOnStatus(props: Props) {
     setIsLoading(true);
 
     try {
-      const resEvent = await EventService.getEvent(props.eventId);
-      console.info('res get detail event', JSON.stringify(resEvent));
+      // const resEvent = await EventService.getEvent(props.eventId);
+      // console.info('res get detail event', JSON.stringify(resEvent));
 
-      let list = [
-        ...(props.status === 'Waiting Payment' && !props.isBallot
-          ? resEvent?.payments || []
-          : []
-        ).filter(item => item.evptIsPublic === '1'),
-        ...(props.status === 'Registered' && props.isBallot
-          ? resEvent.payments_special || []
-          : []
-        ).filter(item => item.evptIsPublic.toString() === '1'),
-      ];
-
-      list = list.filter(
-        item => item.evptMsptName !== props.activePayment?.trihPaymentType,
-      );
-      list.sort((a, b) =>
-        a.evptLabel < b.evptLabel ? -1 : a.evptLabel > b.evptLabel ? 1 : 0,
-      );
+      const list = getAvailablePaymentMethods();
 
       if (list.length === 0) {
         Toast.show({
@@ -209,7 +223,7 @@ export default function ButtonBasedOnStatus(props: Props) {
           </Button>
         )}
 
-        {props.activePayment ? (
+        {props.activePayment && paymentMethods.length > 0 ? (
           <TouchableOpacity
             onPress={handleButtonChoosePaymentMethod}
             disabled={isLoading}
@@ -222,7 +236,7 @@ export default function ButtonBasedOnStatus(props: Props) {
               {t('payment.changePaymentMethod')}
             </Text>
           </TouchableOpacity>
-        ) : (
+        ) : !props.activePayment ? (
           <Button
             onPress={handleButtonChoosePaymentMethod}
             isLoading={isLoading}
@@ -235,7 +249,7 @@ export default function ButtonBasedOnStatus(props: Props) {
               {t('payment.choosePaymentMethod')}
             </Text>
           </Button>
-        )}
+        ) : false}
 
         <Actionsheet
           isOpen={isShowModalChoosePaymentMethod}

@@ -1169,8 +1169,8 @@ export default function ChooseCitizenScreen({route}: Props) {
                       profile.mbsdIDNumber.toString().length !== 16
                     ) {
                       Toast.show({
-                        title: 'Invalid Input',
-                        description: 'ID number length must equal 16.',
+                        title: t('auth.invalidKtpInput'),
+                        description: t('auth.invalidKtpInputDesc'),
                       });
                       return;
                     }

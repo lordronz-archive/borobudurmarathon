@@ -114,6 +114,8 @@ export default {
     backToLogin: 'Kembali ke halaman login',
     otpWhatsappDesc:
       'OTP akan di kirimkan melalui whatsapp, silahkan install whatsapp terlebih dahulu apabila belum terinstall',
+    invalidKtpInput: 'Input KTP tidak valid',
+    invalidKtpInputDesc: 'Panjang Nomor KTP harus 16',
   },
   registration: {
     registrationSuccess: 'Pendaftaran Event Sukses',

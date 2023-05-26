@@ -65,7 +65,9 @@ export default function useInvitation() {
       })
       .catch(err => {
         console.error('error getInvitations', JSON.stringify(err));
-        handleErrorMessage(err, t('error.failedToGetInvitations'));
+        handleErrorMessage(err, t('error.failedToGetInvitations'), {
+          ignore404: true,
+        });
       })
       .finally(() => setIsLoading(false));
   };

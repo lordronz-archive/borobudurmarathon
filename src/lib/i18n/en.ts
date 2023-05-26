@@ -453,6 +453,7 @@ export default {
     failedToRegisterEvent: 'Failed to register event',
     failedToGenerateQR: 'Failed to generate QR Code',
     failedToUpload: 'Failed to upload',
+    failedToGetInvitations: 'Failed to get invitations',
     cannotRegisterEvent: 'Cannot register event',
     categoryPricingNotFound: 'Category & pricing not exist for now',
     failedToGetCookies: 'Failed to get cookies',

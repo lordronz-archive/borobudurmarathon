@@ -456,6 +456,7 @@ export default {
     failedToRegisterEvent: 'Gagal mendaftar event',
     failedToGenerateQR: 'Gagal membuat QR Code',
     failedToUpload: 'Gagal mengunggah',
+    failedToGetInvitations: 'Gagal mendapatkan invitation',
     cannotRegisterEvent: 'Tidak bisa mendaftar',
     categoryPricingNotFound: 'Kategori dan harga tidak tersedia untuk saat ini',
     failedToGetCookies: 'Gagal mendapatkan cookies',

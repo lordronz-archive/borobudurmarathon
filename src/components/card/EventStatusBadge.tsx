@@ -28,7 +28,7 @@ export default function EventStatusBadge(props: Props) {
     }
   } else {
     if (props.eventStatus === EEventStatus.EXPIRED) {
-      label = t('event.expiredEvents');
+      label = t('event.expiredEvent');
       bgColor = 'gray.200';
       textColor = 'gray.500';
     } else if (props.eventStatus === EEventStatus.REGISTRATION_CLOSED) {

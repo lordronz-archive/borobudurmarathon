@@ -197,7 +197,7 @@ export default {
     quota: 'Kuota',
     distance: 'Jarak',
     featuredEvents: 'Event Unggulan',
-    expiredEvents: 'Event Terdahulu',
+    expiredEvent: 'Event Terdahulu',
     expiredInvitation: 'Undangan Kadaluarsa',
     upcomingEvents: 'Akan Datang',
     registrationClosed: 'Pendaftaran Ditutup',

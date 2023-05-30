@@ -197,7 +197,7 @@ export default {
     quota: 'Quota',
     distance: 'Distance',
     featuredEvents: 'Featured Events',
-    expiredEvents: 'Expired Events',
+    expiredEvent: 'Expired Event',
     expiredInvitation: 'Expired Invitation',
     registrationClosed: 'Registration Closed',
     soldout: 'Sold Out',

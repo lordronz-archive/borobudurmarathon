@@ -39,7 +39,6 @@ export default function SectionListEvent() {
       );
     }
   }
-  // console.info('filteredEvents', JSON.stringify(filteredEvents));
 
   useEffect(() => {
     fetchList();

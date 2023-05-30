@@ -8,7 +8,7 @@ import {
   ScrollView,
   Text,
 } from 'native-base';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 
@@ -16,44 +16,46 @@ import {useAuthUser} from '../../context/auth.context';
 import {getFullNameFromData, getShortCodeName} from '../../helpers/name';
 import SectionListEvent from './components/SectionListEvent';
 import SectionFeaturedEvents from './components/SectionFeaturedEvents';
-import {TouchableOpacity} from 'react-native';
+import {RefreshControl, TouchableOpacity} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import IconInformationCircle from '../../assets/icons/IconInformationCircle';
-import SummaryRecord from './components/SummaryRecord';
 import IconHamburgerMenu from '../../assets/icons/IconHamburgerMenu';
-import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
-import AlertMessage from '../../components/alert/AlertMessage';
 import useInvitation from '../../hooks/useInvitation';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import useDeeplinkInit from '../../lib/deeplink/useDeeplinkInit';
+import useEvent from '../../hooks/useEvent';
+import {t} from 'i18next';
 
 export default function HomeScreen() {
+  const isFocused = useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {user} = useAuthUser();
-  const {t} = useTranslation();
-  const isFocused = useIsFocused();
-  // const _resDLI = useDeeplinkInit();
-
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     checkLogin('Main');
-  //   }
-  // }, [isFocused]);
-  const {showNotification, fetchList} = useInvitation();
+  const {
+    isLoading,
+    showNotification,
+    fetchList: fetchListInvitation,
+  } = useInvitation();
+  const {fetchList: fetchListEvent} = useEvent();
 
   useEffect(() => {
     if (isFocused) {
-      fetchList();
+      fetchListInvitation();
     }
   }, [isFocused]);
 
+  const onRefresh = () => {
+    fetchListInvitation();
+    fetchListEvent();
+  };
+
   return (
     <AppContainer>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }>
         <Box backgroundColor={'#fff'}>
           <Flex
             mx="4"

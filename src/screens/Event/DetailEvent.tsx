@@ -33,7 +33,7 @@ import {GetEventResponse} from '../../types/event.type';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
-import {Alert} from 'react-native';
+import {Alert, RefreshControl} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 import IconLocation from '../../assets/icons/IconLocation';
@@ -95,12 +95,6 @@ export default function DetailEvent() {
   // console.info('moment(end)', moment(end));
   // console.info('isBetween', moment(now).isBetween(start, end));
   // console.info('=============================================');
-
-  useEffect(() => {
-    if (isFocused) {
-      getProfile();
-    }
-  }, [isFocused]);
 
   const informations: {icon: any; label: string; description: string}[] = [
     {
@@ -167,8 +161,13 @@ export default function DetailEvent() {
     };
   });
 
-  useEffect(() => {
+  const onRefresh = () => {
     fetchDetail();
+    getProfile();
+  };
+
+  useEffect(() => {
+    onRefresh();
   }, [isFocused]);
 
   const fetchDetail = async () => {
@@ -351,7 +350,11 @@ export default function DetailEvent() {
   return (
     <AppContainer>
       <VStack>
-        <ScrollView backgroundColor={'#fff'}>
+        <ScrollView
+          backgroundColor={'#fff'}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+          }>
           <Header
             title=""
             left="back"

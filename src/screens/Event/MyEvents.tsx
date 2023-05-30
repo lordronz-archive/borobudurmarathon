@@ -1,14 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {
-  Box,
-  Text,
-  VStack,
-  useTheme,
-  ScrollView,
-  Divider,
-  Image,
-  View,
-} from 'native-base';
+import {Box, Text, VStack, ScrollView, Divider, Image} from 'native-base';
 import React from 'react';
 import BackHeader from '../../components/header/BackHeader';
 import {Heading} from '../../components/text/Heading';
@@ -19,7 +10,6 @@ import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 
 export default function MyEvents() {
-  const {colors} = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useTranslation();

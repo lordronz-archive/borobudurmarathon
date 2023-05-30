@@ -99,8 +99,8 @@ export function getEventCategoryQuotaStatus(cat: {
 }
 
 export function getInvitationStatus(invitationData: {
-  iregExpired: string | null;
-  iregIsUsed: number;
+  iregExpired?: string | null;
+  iregIsUsed?: number;
 }): EInvitationStatus {
   if (invitationData.iregIsUsed === 1) {
     return EInvitationStatus.USED;
@@ -119,22 +119,48 @@ export function getInvitationStatus(invitationData: {
 }
 
 export function isAvailableForRegister(params: {
+  isRegistered: boolean;
+  access?: boolean;
   eventStatus: EEventStatus;
   invitationStatus?: EInvitationStatus;
+  categories: number[];
+  iregEvncId: number | null;
 }) {
+  if (!params.access) {
+    console.info('params.access = false');
+    return false;
+  }
+  if (params.isRegistered) {
+    console.info('params.isRegistered = true');
+    return false;
+  }
   // jika tidak punya invitation, hanya bisa daftar ketika status event REGISTRATION
   if (!params.invitationStatus) {
+    console.info('!params.invitationStatus');
     return params.eventStatus === EEventStatus.REGISTRATION;
   }
 
   if (params.invitationStatus === EInvitationStatus.EXPIRED) {
+    console.info('params.invitationStatus === EInvitationStatus.EXPIRED');
     return false;
   }
   if (params.invitationStatus === EInvitationStatus.USED) {
+    console.info('params.invitationStatus === EInvitationStatus.USED');
     return false;
   }
   if (params.invitationStatus === EInvitationStatus.INVITED) {
-    return true;
+    console.info('params.invitationStatus === EInvitationStatus.INVITED');
+    if (params.eventStatus === EEventStatus.EXPIRED) {
+      console.info('params.eventStatus === EEventStatus.EXPIRED');
+      return false;
+    }
+    if (!params.iregEvncId) {
+      console.info('!params.iregEvncId');
+      return true;
+    }
+
+    console.info('params.categories.includes(params.iregEvncId)');
+    return params.categories.includes(params.iregEvncId);
   }
 
   return false;

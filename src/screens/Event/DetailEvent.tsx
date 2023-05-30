@@ -29,7 +29,7 @@ import Section from '../../components/section/Section';
 import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {EEventStatus, GetEventResponse} from '../../types/event.type';
+import {GetEventResponse} from '../../types/event.type';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
@@ -51,6 +51,8 @@ import {
   getEventQuotaStatus,
   getEventRegistrationStatus,
   getEventTypeName,
+  getInvitationStatus,
+  isAvailableForRegister,
 } from '../../helpers/event';
 import useInvitation from '../../hooks/useInvitation';
 import {InvitationProperties} from '../../types/invitation.type';
@@ -79,7 +81,6 @@ export default function DetailEvent() {
   const {invitations} = useInvitation();
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
-  const [isInvitation, setIsInvitation] = useState(false);
   const [evnInvitation, setEvnInvitation] = useState<InvitationProperties>();
   const {t} = useTranslation();
 
@@ -152,22 +153,6 @@ export default function DetailEvent() {
       description: cat.evncDesc
         ? getTextBasedOnLanguage(cat.evncDesc, i18next.language)
         : '',
-      // : [
-      //     datetime.getDateRangeString(
-      //       cat.evncStartDate,
-      //       cat.evncVrEndDate || undefined,
-      //       'short',
-      //       'short',
-      //     ),
-      //     cat.evncMaxDistance
-      //       ? 'Distance: ' + cat.evncMaxDistance + ' km'
-      //       : undefined,
-      //     cat.evncMaxDistancePoint
-      //       ? cat.evncMaxDistancePoint + ' point'
-      //       : undefined,
-      //   ]
-      //     .filter(item => item)
-      //     .join(', '),
       originalPrice: Number(cat.evncPrice),
       finalPrice: earlyBirdPrice
         ? Number(earlyBirdPrice.evcpPrice)
@@ -197,7 +182,6 @@ export default function DetailEvent() {
             v.links.iregEvnhId.toString() === resEvent.data.evnhId.toString(),
         );
         setEvnInvitation(inv);
-        setIsInvitation(inv != null);
         EventService.getTransaction()
           .then((resTransaction: {data: GetTransactionsResponse}) => {
             if (resTransaction.data) {
@@ -308,20 +292,6 @@ export default function DetailEvent() {
     }
   };
 
-  // const isExpiredRegistration = event?.data?.evnhRegistrationEnd
-  //   ? moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss').isBefore(
-  //       moment(new Date()),
-  //     )
-  //   : false;
-
-  // const isRegistrationTimeRange =
-  //   event?.data?.evnhRegistrationStart && event?.data?.evnhRegistrationEnd
-  //     ? moment(new Date()).isBetween(
-  //         moment(event?.data?.evnhRegistrationStart, 'YYYY-MM-DD HH:mm:ss'),
-  //         moment(event?.data?.evnhRegistrationEnd, 'YYYY-MM-DD HH:mm:ss'),
-  //       )
-  //     : false;
-
   const status = getEventRegistrationStatus(
     event?.data?.evnhRegistrationStart,
     event?.data?.evnhRegistrationEnd,
@@ -336,36 +306,42 @@ export default function DetailEvent() {
     (event?.categories || []).map(price => ({evncHold: price.evncHold})),
   );
 
-  const hasActiveInvitation = (priceId: string) => {
-    if (!isInvitation) {
-      return false;
-    }
+  const isRegistered = registeredEvent ? true : false;
+  const isInvitation = evnInvitation ? true : false;
 
-    if (evnInvitation?.iregIsUsed === 1) {
-      return false;
-    }
+  const invitationStatus = isInvitation
+    ? getInvitationStatus({
+        iregExpired: evnInvitation?.iregExpired,
+        iregIsUsed: evnInvitation?.iregIsUsed,
+      })
+    : undefined;
+  console.info('invitationStatus', invitationStatus);
 
-    if (evnInvitation?.links.iregEvncId == null) {
-      return true;
-    }
+  const isCanRegisterForCategory = (evncId: string) =>
+    isAvailableForRegister({
+      isRegistered,
+      access: event?.access,
+      eventStatus: status,
+      invitationStatus,
+      iregEvncId: Number(evnInvitation?.links.iregEvncId),
+      categories: [Number(evncId)],
+    });
 
-    if (evnInvitation.links.iregEvncId.toString() === priceId.toString()) {
-      return true;
-    }
-  };
-
-  const hasAnyActiveInvitation =
-    prices.map(price => hasActiveInvitation(price.id)).filter(isTrue => isTrue)
-      .length > 0;
+  const isCanRegister = isAvailableForRegister({
+    isRegistered,
+    access: event?.access,
+    eventStatus: status,
+    invitationStatus,
+    categories: prices.map(prc => Number(prc.id)),
+    iregEvncId: Number(evnInvitation?.links.iregEvncId),
+  });
 
   const isDisabled = (price: any) => {
-    if (hasActiveInvitation(price.id)) {
+    if (isCanRegisterForCategory(price.id)) {
       return false;
     } else {
       return (
-        !event?.access ||
-        !!registeredEvent ||
-        status !== EEventStatus.REGISTRATION ||
+        !isCanRegister ||
         price.status === 'SOLDOUT' ||
         quotaStatus === 'SOLDOUT'
       );
@@ -548,7 +524,7 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
-                      hasActiveInvitation={hasActiveInvitation(price.id)}
+                      hasActiveInvitation={isCanRegisterForCategory(price.id)}
                       disabled={isDisabled(price)}
                       status={
                         quotaStatus === 'SOLDOUT' || price.status === 'SOLDOUT'
@@ -567,7 +543,7 @@ export default function DetailEvent() {
           <LoadingBlock style={{opacity: 0.7}} />
         )}
 
-        {hasAnyActiveInvitation && event && selected ? (
+        {isCanRegister && event && selected ? (
           <Box
             position="absolute"
             bottom="0"
@@ -595,7 +571,7 @@ export default function DetailEvent() {
               </Text>
             )}
           </Box>
-        ) : event && registeredEvent ? (
+        ) : event && isRegistered ? (
           <Box
             position="absolute"
             bottom="0"
@@ -643,10 +619,7 @@ export default function DetailEvent() {
                   selectedCategoryId: selected.id,
                 });
               }}>
-              {t('continueWith') +
-                ' ' +
-                selected?.name +
-                (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
+              {t('continueWith') + ' ' + selected?.name}
             </Button>
             {!isVerified && (
               <Text color="warning.500" textAlign="center">

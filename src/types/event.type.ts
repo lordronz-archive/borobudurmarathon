@@ -489,14 +489,14 @@ export const PAYMENT_METHODS = {
 //         ),
 
 export enum EEventStatus {
-  'UPCOMING',
-  'REGISTRATION',
-  'REGISTRATION_CLOSED',
-  'EXPIRED',
+  UPCOMING = 'UPCOMING',
+  REGISTRATION = 'REGISTRATION',
+  REGISTRATION_CLOSED = 'REGISTRATION_CLOSED',
+  EXPIRED = 'EXPIRED',
 }
 
 export enum EInvitationStatus {
-  'INVITED',
-  'USED',
-  'EXPIRED',
+  INVITED = 'INVITED',
+  USED = 'USED',
+  EXPIRED = 'EXPIRED',
 }

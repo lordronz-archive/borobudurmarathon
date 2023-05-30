@@ -18,7 +18,7 @@ export default function EventStatusBadge(props: Props) {
       bgColor = '#FFF8E4';
       textColor = '#A4660A';
     } else if (props.invitationStatus === EInvitationStatus.USED) {
-      label = t('invitation.registered');
+      label = t('invitation.used');
       bgColor = '#FFF8E4';
       textColor = '#A4660A';
     } else if (props.invitationStatus === EInvitationStatus.EXPIRED) {

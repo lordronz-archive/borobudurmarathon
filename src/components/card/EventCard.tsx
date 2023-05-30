@@ -71,27 +71,29 @@ export default function CardEvent({
         </AspectRatio>
 
         <VStack pl={3} width="80%">
-          <EventStatusBadge
-            isInvitation={props.isInvitation}
-            invitationStatus={props.invitationStatus}
-            eventStatus={status}
-          />
+          <HStack space={1}>
+            <EventStatusBadge
+              isInvitation={props.isInvitation}
+              invitationStatus={props.invitationStatus}
+              eventStatus={status}
+            />
 
-          {isFree && (
-            <Badge
-              backgroundColor="#DFF4E0"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: '#138918',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {'FREE'}
-            </Badge>
-          )}
+            {isFree && (
+              <Badge
+                backgroundColor="#DFF4E0"
+                px="3"
+                py="0.5"
+                borderRadius="4"
+                alignSelf="flex-start"
+                _text={{
+                  color: '#138918',
+                  fontWeight: 'bold',
+                  fontSize: 'xs',
+                }}>
+                {'FREE'}
+              </Badge>
+            )}
+          </HStack>
 
           <Text
             fontSize="md"

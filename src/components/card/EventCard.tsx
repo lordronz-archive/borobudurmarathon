@@ -3,6 +3,8 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ImageSourcePropType} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {EEventStatus, EInvitationStatus} from '../../types/event.type';
+import EventStatusBadge from './EventStatusBadge';
 
 type CardEventProps = {
   title: string;
@@ -10,16 +12,10 @@ type CardEventProps = {
   date: string;
   image: ImageSourcePropType;
   isAvailable?: boolean;
-  status:
-    | 'UPCOMING'
-    | 'REGISTRATION'
-    | 'REGISTRATION_CLOSED'
-    | 'EXPIRED'
-    | 'INVITED';
-  isFree?: boolean;
-  isExpired?: boolean;
+  status: EEventStatus;
   isInvitation?: boolean;
-  isRegistered?: boolean;
+  isFree?: boolean;
+  invitationStatus?: EInvitationStatus;
 };
 
 export default function CardEvent({
@@ -37,7 +33,9 @@ export default function CardEvent({
     <Box alignItems="flex-start" my={3} width="100%">
       <HStack
         flex={1}
-        alignItems={status === 'REGISTRATION' ? 'center' : 'flex-start'}>
+        alignItems={
+          status === EEventStatus.REGISTRATION ? 'center' : 'flex-start'
+        }>
         <AspectRatio w="20%" ratio={1 / 1}>
           {/* <Image
             source={image}
@@ -71,67 +69,14 @@ export default function CardEvent({
             // }}
           />
         </AspectRatio>
+
         <VStack pl={3} width="80%">
-          {status === 'REGISTRATION_CLOSED' && (
-            <Badge
-              backgroundColor="gray.200"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: 'gray.500',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {t('event.registrationClosed')}
-            </Badge>
-          )}
-          {status === 'EXPIRED' && (
-            <Badge
-              backgroundColor="gray.200"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: 'gray.500',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {t('event.expiredEvents')}
-            </Badge>
-          )}
-          {status === 'UPCOMING' && (
-            <Badge
-              backgroundColor="gray.200"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: 'gray.500',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {t('event.upcomingEvents')}
-            </Badge>
-          )}
-          {status === 'INVITED' && (
-            <Badge
-              backgroundColor="#FFF8E4"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: '#A4660A',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {t('event.upcomingEvents')}
-            </Badge>
-          )}
+          <EventStatusBadge
+            isInvitation={props.isInvitation}
+            invitationStatus={props.invitationStatus}
+            eventStatus={status}
+          />
+
           {isFree && (
             <Badge
               backgroundColor="#DFF4E0"
@@ -147,57 +92,10 @@ export default function CardEvent({
               {'FREE'}
             </Badge>
           )}
-          {props.isInvitation && props.isExpired && (
-            <Badge
-              backgroundColor="gray.200"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: 'gray.500',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {t('invitation.expired')}
-            </Badge>
-          )}
-
-          {props.isInvitation && !props.isExpired && !props.isRegistered && (
-            <Badge
-              backgroundColor="#FFF8E4"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: '#A4660A',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {t('invitation.invited')}
-            </Badge>
-          )}
-
-          {props.isInvitation && props.isRegistered && (
-            <Badge
-              backgroundColor="#FFF8E4"
-              px="3"
-              py="0.5"
-              borderRadius="4"
-              alignSelf="flex-start"
-              _text={{
-                color: '#A4660A',
-                fontWeight: 'bold',
-                fontSize: 'xs',
-              }}>
-              {t('invitation.registered')}
-            </Badge>
-          )}
 
           <Text
             fontSize="md"
-            mt={status === 'REGISTRATION' ? 0 : 1}
+            mt={status === EEventStatus.REGISTRATION ? 0 : 1}
             flex={1}
             fontWeight="600"
             fontFamily="Poppins-Medium">

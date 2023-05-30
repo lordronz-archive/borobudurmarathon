@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {EEventStatus, EInvitationStatus} from '../types/event.type';
 import {convertDateTimeToLocalTimezone} from './datetimeTimezone';
 
 export function getEventTypeName(params: {
@@ -26,7 +27,7 @@ export function getEventRegistrationStatus(
   evnhRegistrationEnd?: Date | string,
   evnhStartDate?: Date | string,
   evnhEndDate?: Date | string,
-) {
+): EEventStatus {
   if (evnhRegistrationStart) {
     evnhRegistrationStart = convertDateTimeToLocalTimezone(
       evnhRegistrationStart,
@@ -36,7 +37,7 @@ export function getEventRegistrationStatus(
     );
 
     if (isUpcoming) {
-      return 'UPCOMING';
+      return EEventStatus.UPCOMING;
     }
   }
 
@@ -47,7 +48,7 @@ export function getEventRegistrationStatus(
     ).isBefore(moment(new Date()));
 
     if (isExpired) {
-      return 'EXPIRED';
+      return EEventStatus.EXPIRED;
     }
   }
 
@@ -58,11 +59,11 @@ export function getEventRegistrationStatus(
     ).isBefore(moment(new Date()));
 
     if (isExpired) {
-      return 'REGISTRATION_CLOSED';
+      return EEventStatus.REGISTRATION_CLOSED;
     }
   }
 
-  return 'REGISTRATION';
+  return EEventStatus.REGISTRATION;
 }
 
 export function getEventQuotaStatus(
@@ -95,4 +96,46 @@ export function getEventCategoryQuotaStatus(cat: {
   } else {
     return 'OPEN';
   }
+}
+
+export function getInvitationStatus(invitationData: {
+  iregExpired: string | null;
+  iregIsUsed: number;
+}): EInvitationStatus {
+  if (invitationData.iregIsUsed === 1) {
+    return EInvitationStatus.USED;
+  }
+
+  if (
+    !!invitationData.iregExpired &&
+    moment(convertDateTimeToLocalTimezone(invitationData.iregExpired)).isAfter(
+      moment(new Date()),
+    )
+  ) {
+    return EInvitationStatus.EXPIRED;
+  }
+
+  return EInvitationStatus.INVITED;
+}
+
+export function isAvailableForRegister(params: {
+  eventStatus: EEventStatus;
+  invitationStatus?: EInvitationStatus;
+}) {
+  // jika tidak punya invitation, hanya bisa daftar ketika status event REGISTRATION
+  if (!params.invitationStatus) {
+    return params.eventStatus === EEventStatus.REGISTRATION;
+  }
+
+  if (params.invitationStatus === EInvitationStatus.EXPIRED) {
+    return false;
+  }
+  if (params.invitationStatus === EInvitationStatus.USED) {
+    return false;
+  }
+  if (params.invitationStatus === EInvitationStatus.INVITED) {
+    return true;
+  }
+
+  return false;
 }

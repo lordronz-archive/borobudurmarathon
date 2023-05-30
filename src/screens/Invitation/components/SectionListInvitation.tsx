@@ -7,11 +7,12 @@ import {TouchableOpacity} from 'react-native';
 import EventCard from '../../../components/card/EventCard';
 import datetime from '../../../helpers/datetime';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
-import {getEventRegistrationStatus} from '../../../helpers/event';
+import {
+  getEventRegistrationStatus,
+  getInvitationStatus,
+} from '../../../helpers/event';
 import useInvitation from '../../../hooks/useInvitation';
 import {InvitationProperties} from '../../../types/invitation.type';
-import moment from 'moment';
-import {convertDateTimeToLocalTimezone} from '../../../helpers/datetimeTimezone';
 
 export default function SectionListInvitation() {
   const isFocused = useIsFocused();
@@ -28,6 +29,11 @@ export default function SectionListInvitation() {
   }, [isFocused]);
 
   const _renderItem = ({item}: {item: InvitationProperties}) => {
+    const invitationStatus = getInvitationStatus({
+      iregIsUsed: item.iregIsUsed,
+      iregExpired: item.iregExpired,
+    });
+
     return (
       <TouchableOpacity
         onPress={() =>
@@ -55,15 +61,9 @@ export default function SectionListInvitation() {
             item.linked?.iregEvnhId.evnhStartDate,
             item.linked?.iregEvnhId.evnhEndDate,
           )}
+          isInvitation={true}
           isFree={item.iregIsFree.toString() === '1'}
-          isExpired={
-            !!item.iregExpired &&
-            moment(convertDateTimeToLocalTimezone(item.iregExpired)).isAfter(
-              moment(new Date()),
-            )
-          }
-          isInvitation
-          isRegistered={+item.iregIsUsed === 1}
+          invitationStatus={invitationStatus}
         />
       </TouchableOpacity>
     );

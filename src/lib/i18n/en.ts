@@ -491,7 +491,7 @@ export default {
   },
   invitation: {
     list: 'Invites',
-    registered: 'Registered',
+    used: 'Used',
     invited: 'Invited',
     expired: 'Expired Invitation',
   },

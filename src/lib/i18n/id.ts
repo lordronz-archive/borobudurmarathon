@@ -495,7 +495,7 @@ export default {
   },
   invitation: {
     list: 'Daftar Undangan',
-    registered: 'Registered',
+    used: 'Digunakan',
     invited: 'Invited',
     expired: 'Expired Invitation',
   },

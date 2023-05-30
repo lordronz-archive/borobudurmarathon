@@ -17,7 +17,6 @@ import {
   Alert as NBAlert,
   Spinner,
   WarningOutlineIcon,
-  Badge,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {EventService} from '../../api/event.service';
@@ -30,7 +29,7 @@ import Section from '../../components/section/Section';
 import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {EventProperties, GetEventResponse} from '../../types/event.type';
+import {EEventStatus, GetEventResponse} from '../../types/event.type';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
@@ -55,6 +54,7 @@ import {
 } from '../../helpers/event';
 import useInvitation from '../../hooks/useInvitation';
 import {InvitationProperties} from '../../types/invitation.type';
+import EventStatusBadge from '../../components/card/EventStatusBadge';
 
 type Price = {
   id: string;
@@ -365,7 +365,7 @@ export default function DetailEvent() {
       return (
         !event?.access ||
         !!registeredEvent ||
-        status !== 'REGISTRATION' ||
+        status !== EEventStatus.REGISTRATION ||
         price.status === 'SOLDOUT' ||
         quotaStatus === 'SOLDOUT'
       );
@@ -429,54 +429,7 @@ export default function DetailEvent() {
                   evnhBallot: event?.data.evnhBallot,
                 })}
               </Text>
-              {status === 'EXPIRED' ? (
-                <Badge
-                  backgroundColor="gray.200"
-                  px="3"
-                  py="0.5"
-                  my="2"
-                  borderRadius="4"
-                  alignSelf="flex-start"
-                  _text={{
-                    color: 'gray.500',
-                    fontWeight: 'bold',
-                    fontSize: 'xs',
-                  }}>
-                  {t('event.expiredEvents')}
-                </Badge>
-              ) : status === 'UPCOMING' ? (
-                <Badge
-                  backgroundColor="gray.200"
-                  px="3"
-                  py="0.5"
-                  my="2"
-                  borderRadius="4"
-                  alignSelf="flex-start"
-                  _text={{
-                    color: 'gray.500',
-                    fontWeight: 'bold',
-                    fontSize: 'xs',
-                  }}>
-                  {t('event.upcomingEvents')}
-                </Badge>
-              ) : status === 'REGISTRATION_CLOSED' ? (
-                <Badge
-                  backgroundColor="gray.200"
-                  px="3"
-                  py="0.5"
-                  my="2"
-                  borderRadius="4"
-                  alignSelf="flex-start"
-                  _text={{
-                    color: 'gray.500',
-                    fontWeight: 'bold',
-                    fontSize: 'xs',
-                  }}>
-                  {t('event.registrationClosed')}
-                </Badge>
-              ) : (
-                false
-              )}
+              <EventStatusBadge eventStatus={status} />
             </HStack>
 
             <Text fontSize="xl" fontWeight={700} mb="2">
@@ -634,10 +587,7 @@ export default function DetailEvent() {
                   selectedCategoryId: selected.id,
                 });
               }}>
-              {t('continueWith') +
-                ' ' +
-                selected?.name +
-                (Number(event.data.evnhBallot || 0) === 1 ? ' ~' : '')}
+              {t('continueWith') + ' ' + selected?.name}
             </Button>
             {!isVerified && (
               <Text color="warning.500" textAlign="center">

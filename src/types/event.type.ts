@@ -487,3 +487,16 @@ export const PAYMENT_METHODS = {
 //         ) : (
 //           'Bank BNI Virtual Account'
 //         ),
+
+export enum EEventStatus {
+  'UPCOMING',
+  'REGISTRATION',
+  'REGISTRATION_CLOSED',
+  'EXPIRED',
+}
+
+export enum EInvitationStatus {
+  'INVITED',
+  'USED',
+  'EXPIRED',
+}

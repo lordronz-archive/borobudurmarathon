@@ -112,6 +112,8 @@ export default {
     backToLogin: 'Back to login',
     otpWhatsappDesc:
       'OTP will be sent through WhatsApp. Please install WhatsApp if it is not installed yet.',
+    invalidKtpInput: 'Invalid KTP Input',
+    invalidKtpInputDesc: 'No. KTP length must be equal to 16.',
   },
   registration: {
     registrationSuccess: 'Event Registration Success',

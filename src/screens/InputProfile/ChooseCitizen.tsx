@@ -1164,6 +1164,16 @@ export default function ChooseCitizenScreen({route}: Props) {
                     (profile.mbsdBloodType !== null ||
                       profile.mbsdBloodType !== undefined)
                   ) {
+                    if (
+                      citizen === 'WNI' &&
+                      profile.mbsdIDNumber.toString().length !== 16
+                    ) {
+                      Toast.show({
+                        title: t('auth.invalidKtpInput'),
+                        description: t('auth.invalidKtpInputDesc'),
+                      });
+                      return;
+                    }
                     const minimumAge = 10;
                     const inputDate = new Date(profile.mbsdBirthDate);
                     if (

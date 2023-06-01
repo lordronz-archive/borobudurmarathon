@@ -13,6 +13,7 @@ import {
 } from '../../../helpers/event';
 import useInvitation from '../../../hooks/useInvitation';
 import {InvitationProperties} from '../../../types/invitation.type';
+import {EInvitationStatus} from '../../../types/event.type';
 
 export default function SectionListInvitation() {
   const isFocused = useIsFocused();
@@ -40,7 +41,8 @@ export default function SectionListInvitation() {
           navigation.navigate('EventDetail', {
             id: Number(item.links.iregEvnhId),
           })
-        }>
+        }
+        disabled={invitationStatus !== EInvitationStatus.INVITED}>
         <EventCard
           title={item.linked?.iregEvnhId.evnhName || '-'}
           place={item.linked?.iregEvnhId.evnhPlace || '-'}

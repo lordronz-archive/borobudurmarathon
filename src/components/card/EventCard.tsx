@@ -1,4 +1,4 @@
-import {HStack, VStack, Text, Box, AspectRatio, Badge} from 'native-base';
+import {HStack, VStack, Text, Box, AspectRatio, Badge, Image, View} from 'native-base';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ImageSourcePropType} from 'react-native';
@@ -29,6 +29,13 @@ export default function CardEvent({
 }: CardEventProps) {
   const {t} = useTranslation();
 
+  const isExpired =
+    props.invitationStatus === EInvitationStatus.EXPIRED ||
+    status === EEventStatus.EXPIRED;
+  const textTitleColor = isExpired ? 'coolGray.500' : 'black';
+  const textLabelColor = isExpired ? 'coolGray.500' : 'coolGray.500';
+  const textContentColor = isExpired ? 'coolGray.800' : 'coolGray.800';
+
   return (
     <Box alignItems="flex-start" my={3} width="100%">
       <HStack
@@ -38,14 +45,14 @@ export default function CardEvent({
         }>
         <AspectRatio w="20%" ratio={1 / 1}>
           {/* <Image
-            source={image}
-            w="100%"
-            h="100%"
-            borderRadius={5}
-            fallbackSource={require('../../assets/images/no-image.png')}
-            loadingIndicatorSource={require('../../assets/images/no-image.png')}
-            alt={title}
-          /> */}
+          source={image}
+          w="100%"
+          h="100%"
+          borderRadius={5}
+          fallbackSource={require('../../assets/images/no-image.png')}
+          loadingIndicatorSource={require('../../assets/images/no-image.png')}
+          alt={title}
+        /> */}
           <FastImage
             defaultSource={require('../../assets/images/no-image.png')}
             style={{
@@ -69,6 +76,11 @@ export default function CardEvent({
             // }}
           />
         </AspectRatio>
+        {isExpired && (
+          <AspectRatio w="20%" ratio={1 / 1} position="absolute" opacity="0.6">
+            <View bgColor="coolGray.500" height="100%" width="100%" />
+          </AspectRatio>
+        )}
 
         <VStack pl={3} width="80%">
           <HStack space={1}>
@@ -100,26 +112,27 @@ export default function CardEvent({
             mt={status === EEventStatus.REGISTRATION ? 0 : 1}
             flex={1}
             fontWeight="600"
+            color={textTitleColor}
             fontFamily="Poppins-Medium">
             {title}
           </Text>
 
           <HStack space={1}>
             <VStack width="40%" flex={1}>
-              <Text fontSize="xs" color="coolGray.500">
+              <Text fontSize="xs" color={textLabelColor}>
                 {t('event.eventDate')}
               </Text>
-              <Text fontSize="xs" color="coolGray.800">
+              <Text fontSize="xs" color={textContentColor}>
                 {date}
               </Text>
             </VStack>
             <VStack width="50%" flex={1}>
-              <Text fontSize="xs" color="coolGray.500">
+              <Text fontSize="xs" color={textLabelColor}>
                 {t('event.place')}
               </Text>
               <Text
                 fontSize="xs"
-                color="coolGray.800"
+                color={textContentColor}
                 ellipsizeMode="tail"
                 numberOfLines={1}>
                 {place}

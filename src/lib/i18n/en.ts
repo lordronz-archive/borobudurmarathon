@@ -490,8 +490,8 @@ export default {
     description3: 'We still processing to validate.',
   },
   invitation: {
-    list: 'Invites',
-    used: 'Used',
+    list: 'Invited Events',
+    used: 'Registered',
     invited: 'Invited',
     expired: 'Expired Invitation',
   },

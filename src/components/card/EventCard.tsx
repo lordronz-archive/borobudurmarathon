@@ -1,4 +1,13 @@
-import {HStack, VStack, Text, Box, AspectRatio, Badge, Image, View} from 'native-base';
+import {
+  HStack,
+  VStack,
+  Text,
+  Box,
+  AspectRatio,
+  Badge,
+  Image,
+  View,
+} from 'native-base';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ImageSourcePropType} from 'react-native';
@@ -32,7 +41,7 @@ export default function CardEvent({
   const isExpired =
     props.invitationStatus === EInvitationStatus.EXPIRED ||
     status === EEventStatus.EXPIRED;
-  const textTitleColor = isExpired ? 'coolGray.500' : 'black';
+  const textTitleColor = isExpired ? '#3F4C5F' : 'black';
   const textLabelColor = isExpired ? 'coolGray.500' : 'coolGray.500';
   const textContentColor = isExpired ? 'coolGray.800' : 'coolGray.800';
 
@@ -43,7 +52,7 @@ export default function CardEvent({
         alignItems={
           status === EEventStatus.REGISTRATION ? 'center' : 'flex-start'
         }>
-        <AspectRatio w="20%" ratio={1 / 1}>
+        <AspectRatio w="20%" ratio={1 / 1} borderRadius={10} overflow="hidden">
           {/* <Image
           source={image}
           w="100%"
@@ -58,7 +67,8 @@ export default function CardEvent({
             style={{
               width: '100%',
               height: '100%',
-              borderRadius: 5,
+              borderRadius: 10,
+              overflow: 'hidden',
             }}
             source={
               image && (image as any).uri
@@ -77,7 +87,13 @@ export default function CardEvent({
           />
         </AspectRatio>
         {isExpired && (
-          <AspectRatio w="20%" ratio={1 / 1} position="absolute" opacity="0.6">
+          <AspectRatio
+            w="20%"
+            ratio={1 / 1}
+            position="absolute"
+            opacity="0.6"
+            borderRadius={10}
+            overflow="hidden">
             <View bgColor="coolGray.500" height="100%" width="100%" />
           </AspectRatio>
         )}

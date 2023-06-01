@@ -306,9 +306,9 @@ export default function DetailEvent() {
   );
 
   const isRegistered = registeredEvent ? true : false;
-  const isInvitation = evnInvitation ? true : false;
+  const hasInvitationForThisEvent = evnInvitation ? true : false;
 
-  const invitationStatus = isInvitation
+  const invitationStatus = hasInvitationForThisEvent
     ? getInvitationStatus({
         iregExpired: evnInvitation?.iregExpired,
         iregIsUsed: evnInvitation?.iregIsUsed,
@@ -527,7 +527,10 @@ export default function DetailEvent() {
                       benefits={price.benefits}
                       selected={selected && price.id === selected.id}
                       onSelect={() => setSelected(price)}
-                      hasActiveInvitation={isCanRegisterForCategory(price.id)}
+                      hasActiveInvitation={
+                        hasInvitationForThisEvent &&
+                        isCanRegisterForCategory(price.id)
+                      }
                       disabled={isDisabled(price)}
                       status={
                         quotaStatus === 'SOLDOUT' || price.status === 'SOLDOUT'

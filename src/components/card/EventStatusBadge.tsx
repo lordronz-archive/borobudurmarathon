@@ -19,8 +19,8 @@ export default function EventStatusBadge(props: Props) {
       textColor = '#A4660A';
     } else if (props.invitationStatus === EInvitationStatus.USED) {
       label = t('invitation.used');
-      bgColor = '#FFF8E4';
-      textColor = '#A4660A';
+      bgColor = '#E7F3FC';
+      textColor = '#3D52E6';
     } else if (props.invitationStatus === EInvitationStatus.EXPIRED) {
       label = t('invitation.expired');
       bgColor = 'gray.200';
@@ -52,7 +52,7 @@ export default function EventStatusBadge(props: Props) {
         alignSelf="flex-start"
         _text={{
           color: textColor,
-          fontWeight: 'bold',
+          fontWeight: 500,
           fontSize: 'xs',
         }}>
         {label}

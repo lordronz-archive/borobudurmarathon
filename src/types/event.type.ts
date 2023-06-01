@@ -161,7 +161,7 @@ interface Status {
 // EVENT
 export interface GetEventResponse {
   access?: boolean;
-  notif?: string;
+  notif?: string | null;
   categories?: CategoriesEntity[] | null;
   data: EventPropertiesDetail;
   fields?: EventFieldsEntity[] | null;
@@ -181,6 +181,8 @@ export interface GetEventResponse {
         eimgUrlImage: string; // 'https://steelytoe-files.s3.ap-southeast-1.amazonaws.com/2023/borobudur-2023/MAIN+EVENT+THUMBNAIL.jpg';
       }[]
     | null;
+
+  quota?: any;
 }
 export interface CategoriesEntity {
   evncHold: string;
@@ -197,16 +199,15 @@ export interface CategoriesEntity {
   evncVrReps?: null;
   evncVrStartDate?: null;
 
-  // baru ada
-  evncBenefit?: string;
-  evncDesc?: string;
+  evncBenefit?: string | null;
+  evncDesc?: string | null;
 }
 export interface EventPropertiesDetail {
   evnhDescription?: string;
   evnhEndDate: string;
   evnhId: string;
   evnhName: string;
-  evnhNote?: string;
+  evnhNote?: string | null;
   evnhPlace?: string;
   evnhQuotaConfirmation: string;
   evnhQuotaRegistration: string;
@@ -226,6 +227,8 @@ export interface EventPropertiesDetail {
   evnhCategory?: string;
   evnhSizeChart?: string;
   evnhFuture?: string;
+  evnhFeatured?: string;
+  evnhLinkWeb?: string | null;
 }
 export interface EventFieldsEntity {
   evhfEvnhId: string;
@@ -255,7 +258,7 @@ export interface PaymentsEntity {
   evptAccountOwner?: null;
   evptAmountFee: string;
   evptBank?: null;
-  evptCreatedTime: string;
+  evptCreatedTime?: string;
   evptEvnhId: string;
   evptId: string;
   evptIsEnabled: string;
@@ -263,8 +266,8 @@ export interface PaymentsEntity {
   evptLabel: string;
   evptMsptId: string;
   evptMsptName: string;
-  evptPercentFee: string;
-  evptUseFee: string;
+  evptPercentFee?: string;
+  evptUseFee?: string;
 }
 
 type IEventType = {

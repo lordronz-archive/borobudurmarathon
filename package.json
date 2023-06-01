@@ -1,6 +1,6 @@
 {
   "name": "borobudurmarathon",
-  "version": "3.5.5",
+  "version": "3.5.7",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

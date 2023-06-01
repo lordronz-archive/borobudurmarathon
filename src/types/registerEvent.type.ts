@@ -19,6 +19,7 @@ export type EvhfName =
   | 'evpaBIBName'
   | 'evpaJersey'
   | 'evpaWave'
+  | 'evpaCommunity'
   | 'evpaCommunityName'
   | 'evpaCovidVaksin'
   | 'evpaSudahVaksin'
@@ -36,7 +37,12 @@ export type EvhfName =
   | 'evpaMarathonRace'
   | 'evpaRekeningBankJateng'
   | 'evpaProvinces'
-  | 'evpaProvinsi';
+  | 'evpaProvinsi'
+  | 'evpaSourceURL'
+  | 'evpaFRrace'
+  | 'evpaFRtime'
+  | 'evpaFRcertificate'
+  | 'evpaFRlink';
 
 export type EvhfType =
   | 'Number'

@@ -159,8 +159,12 @@ export function isAvailableForRegister(params: {
       return true;
     }
 
-    console.info('params.categories.includes(params.iregEvncId)');
-    return params.categories.includes(params.iregEvncId);
+    const res = params.categories.includes(params.iregEvncId);
+    console.info(
+      'params.categories.includes(params.iregEvncId)',
+      JSON.stringify(res),
+    );
+    return res;
   }
 
   return false;

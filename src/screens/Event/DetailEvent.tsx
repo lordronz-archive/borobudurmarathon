@@ -29,7 +29,7 @@ import Section from '../../components/section/Section';
 import datetime from '../../helpers/datetime';
 import {getErrorMessage} from '../../helpers/errorHandler';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {GetEventResponse} from '../../types/event.type';
+import {EInvitationStatus, GetEventResponse} from '../../types/event.type';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
@@ -55,7 +55,7 @@ import {
   isAvailableForRegister,
 } from '../../helpers/event';
 import useInvitation from '../../hooks/useInvitation';
-import {InvitationProperties} from '../../types/invitation.type';
+import { InvitationProperties, IregEvnhID } from '../../types/invitation.type';
 import EventStatusBadge from '../../components/card/EventStatusBadge';
 
 type Price = {
@@ -307,6 +307,7 @@ export default function DetailEvent() {
 
   const isRegistered = registeredEvent ? true : false;
   const hasInvitationForThisEvent = evnInvitation ? true : false;
+  // const hasInvitationForThisEvent = true;
 
   const invitationStatus = hasInvitationForThisEvent
     ? getInvitationStatus({
@@ -314,7 +315,11 @@ export default function DetailEvent() {
         iregIsUsed: evnInvitation?.iregIsUsed,
       })
     : undefined;
+  // const invitationStatus = EInvitationStatus.INVITED;
   console.info('invitationStatus', invitationStatus);
+
+  // const IregEvncId = Number(evnInvitation?.links.iregEvncId);
+  const iregEvncId = 1377;
 
   const isCanRegisterForCategory = (evncId: string) =>
     isAvailableForRegister({
@@ -322,7 +327,7 @@ export default function DetailEvent() {
       access: event?.access,
       eventStatus: status,
       invitationStatus,
-      iregEvncId: Number(evnInvitation?.links.iregEvncId),
+      iregEvncId,
       categories: [Number(evncId)],
     });
 
@@ -332,7 +337,7 @@ export default function DetailEvent() {
     eventStatus: status,
     invitationStatus,
     categories: prices.map(prc => Number(prc.id)),
-    iregEvncId: Number(evnInvitation?.links.iregEvncId),
+    iregEvncId,
   });
 
   const isDisabled = (price: any) => {

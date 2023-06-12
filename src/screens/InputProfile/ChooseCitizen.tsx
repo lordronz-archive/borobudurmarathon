@@ -59,7 +59,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import CountryCodeInput from '../Profile/components/CountryCodeInput';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Config from 'react-native-config';
-import { detectLocationFromGoogleAutocomplete } from '../../helpers/detectLocation';
+import {detectLocationFromGoogleAutocomplete} from '../../helpers/detectLocation';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;

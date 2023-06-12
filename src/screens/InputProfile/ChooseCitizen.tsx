@@ -59,6 +59,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import CountryCodeInput from '../Profile/components/CountryCodeInput';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Config from 'react-native-config';
+import { detectLocationFromGoogleAutocomplete } from '../../helpers/detectLocation';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
@@ -969,20 +970,30 @@ export default function ChooseCitizenScreen({route}: Props) {
                           //       'political',
                           //     ]),
                           // )[0].short_name;
-                          console.log(data, details?.address_components);
-                          const displayCity =
-                            details?.address_components.filter(
-                              f =>
-                                JSON.stringify(f.types) ===
-                                  JSON.stringify(['locality', 'political']) ||
-                                JSON.stringify(f.types) ===
-                                  JSON.stringify([
-                                    'administrative_area_level_2',
-                                    'political',
-                                  ]) ||
-                                JSON.stringify(f.types) ===
-                                  JSON.stringify(['postal_town']),
-                            )[0].long_name;
+                          console.log(
+                            'GooglePlacesAutocomplete data',
+                            JSON.stringify(data),
+                          );
+                          console.log(
+                            'GooglePlacesAutocomplete details?.address_components',
+                            JSON.stringify(details?.address_components),
+                          );
+                          // const findDisplayCity =
+                          //   details?.address_components.filter(
+                          //     f =>
+                          //       JSON.stringify(f.types) ===
+                          //         JSON.stringify(['locality', 'political']) ||
+                          //       JSON.stringify(f.types) ===
+                          //         JSON.stringify([
+                          //           'administrative_area_level_2',
+                          //           'political',
+                          //         ]) ||
+                          //       JSON.stringify(f.types) ===
+                          //         JSON.stringify(['postal_town']),
+                          //   );
+
+                          const {description, city: displayCity} =
+                            detectLocationFromGoogleAutocomplete(data, details);
                           // const displayState =
                           //   details?.address_components.filter(
                           //     f =>
@@ -994,9 +1005,9 @@ export default function ChooseCitizenScreen({route}: Props) {
                           //   )[0].long_name;
                           setProfile(oldVal => ({
                             ...oldVal,
-                            mbsdAddress: data.description,
-                            mbsdRawAddress: data.description,
-                            mbsdCity: displayCity || '',
+                            mbsdAddress: description,
+                            mbsdRawAddress: description,
+                            mbsdCity: displayCity || description,
                           }));
                           console.log(profile.mbsdAddress);
                           console.log(displayCity);

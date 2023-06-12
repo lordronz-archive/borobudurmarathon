@@ -9,6 +9,7 @@ import {TransactionDetail} from '../types/transaction.type';
 import {GetTransactionsResponse} from '../types/transactions.type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {InvitationProperties} from '../types/invitation.type';
+import {getInvitationStatus} from '../helpers/event';
 
 function qs(obj: any, prefix: any) {
   const str: string[] = [];
@@ -335,14 +336,20 @@ const EventService = {
   },
   shouldShowNotification: async function (invitations: InvitationProperties[]) {
     try {
-      const res = await AsyncStorage.getItem('invitation-list');
-      if (res == null && invitations.length > 0) {
-        return true;
-      }
-      const inv = JSON.parse(res!) as InvitationProperties[];
-      const filteredInv = invitations.filter(
-        v => !inv.find(i => i.id === v.id),
+      const filteredInv = invitations.filter(item =>
+        getInvitationStatus({
+          iregExpired: item.iregExpired,
+          iregIsUsed: item.iregIsUsed,
+        }),
       );
+      // const res = await AsyncStorage.getItem('invitation-list');
+      // if (res == null && invitations.length > 0) {
+      //   return true;
+      // }
+      // const inv = JSON.parse(res!) as InvitationProperties[];
+      // const filteredInv = invitations.filter(
+      //   v => !inv.find(i => i.id === v.id),
+      // );
       return filteredInv.length > 0;
     } catch (error) {
       console.log('Error kah ? sepertinya tidak thrwing kemari', error);

@@ -14,6 +14,7 @@ import {ImageSourcePropType} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {EEventStatus, EInvitationStatus} from '../../types/event.type';
 import EventStatusBadge from './EventStatusBadge';
+import {Grayscale} from 'react-native-color-matrix-image-filters';
 
 type CardEventProps = {
   title: string;
@@ -62,41 +63,58 @@ export default function CardEvent({
           loadingIndicatorSource={require('../../assets/images/no-image.png')}
           alt={title}
         /> */}
-          <FastImage
-            defaultSource={require('../../assets/images/no-image.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: 10,
-              overflow: 'hidden',
-            }}
-            source={
-              image && (image as any).uri
-                ? {
-                    uri: (image as any).uri,
-                    priority: FastImage.priority.high,
-                  }
-                : require('../../assets/images/no-image.png')
-            }
-            resizeMode={FastImage.resizeMode.cover}
-            // onError={() => {
-            //   setUri(
-            //     props.images[Math.floor(Math.random() * props.images.length)],
-            //   );
-            // }}
-          />
+          {isExpired ? (
+            <Grayscale>
+              <FastImage
+                defaultSource={require('../../assets/images/no-image.png')}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 10,
+                  overflow: 'hidden',
+                }}
+                source={
+                  image && (image as any).uri
+                    ? {
+                        uri: (image as any).uri,
+                        priority: FastImage.priority.high,
+                      }
+                    : require('../../assets/images/no-image.png')
+                }
+                resizeMode={FastImage.resizeMode.cover}
+                // onError={() => {
+                //   setUri(
+                //     props.images[Math.floor(Math.random() * props.images.length)],
+                //   );
+                // }}
+              />
+            </Grayscale>
+          ) : (
+            <FastImage
+              defaultSource={require('../../assets/images/no-image.png')}
+              style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: 10,
+                overflow: 'hidden',
+              }}
+              source={
+                image && (image as any).uri
+                  ? {
+                      uri: (image as any).uri,
+                      priority: FastImage.priority.high,
+                    }
+                  : require('../../assets/images/no-image.png')
+              }
+              resizeMode={FastImage.resizeMode.cover}
+              // onError={() => {
+              //   setUri(
+              //     props.images[Math.floor(Math.random() * props.images.length)],
+              //   );
+              // }}
+            />
+          )}
         </AspectRatio>
-        {isExpired && (
-          <AspectRatio
-            w="20%"
-            ratio={1 / 1}
-            position="absolute"
-            opacity="0.6"
-            borderRadius={10}
-            overflow="hidden">
-            <View bgColor="coolGray.500" height="100%" width="100%" />
-          </AspectRatio>
-        )}
 
         <VStack pl={3} width="80%">
           <HStack space={1}>

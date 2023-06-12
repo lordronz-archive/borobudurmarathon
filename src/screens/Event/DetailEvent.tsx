@@ -304,6 +304,7 @@ export default function DetailEvent() {
     },
     (event?.categories || []).map(price => ({evncHold: price.evncHold})),
   );
+  console.info('quotaStatus', quotaStatus);
 
   const isRegistered = registeredEvent ? true : false;
   const hasInvitationForThisEvent = evnInvitation ? true : false;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InitialScreen from '../screens/Initial';
 import AuthScreen from '../screens/Auth';
@@ -15,7 +15,11 @@ import UpdateProfileScreen from '../screens/Profile/UpdateProfile';
 import PaymentScreen from '../screens/Payment';
 import EventRegisterScreen from '../screens/Event/Register';
 import DetailEvent from '../screens/Event/DetailEvent';
-import {EventFieldsEntity, GetEventResponse, PAYMENT_METHODS} from '../types/event.type';
+import {
+  EventFieldsEntity,
+  GetEventResponse,
+  PAYMENT_METHODS,
+} from '../types/event.type';
 import HowToPayScreen from '../screens/HowToPay';
 import LogoutScreen from '../screens/Profile/LogoutScreen';
 import ChangePhoneNumberScreen from '../screens/Profile/ChangePhoneNumber';
@@ -37,6 +41,7 @@ import ViewDetailRegistrationData from '../screens/Event/components/ViewDetailRe
 import ResetPasswordScreen from '../screens/Auth/ResetPassword';
 import ListInvitationScreen from '../screens/Invitation';
 import InvitedEventsScreen from '../screens/Event/InvitedEvents';
+import analytics from '@react-native-firebase/analytics';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -116,8 +121,27 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const routeNameRef: any = React.useRef();
+  const navigationRef: any = useNavigationContainerRef();
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer
+      linking={linking}
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.getCurrentRoute().name;
+      }}
+      onStateChange={async () => {
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName = navigationRef.getCurrentRoute().name;
+
+        if (previousRouteName !== currentRouteName) {
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+        routeNameRef.current = currentRouteName;
+      }}>
       <Stack.Navigator initialRouteName="Initial">
         <Stack.Screen
           name="Initial"

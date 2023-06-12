@@ -24,10 +24,6 @@ export default function useInvitation() {
   const [showNotification, setShowNotification] =
     useGlobalState('showNotification');
 
-  const setInvitationsStorage = () => {
-    resInvitations?.data && EventService.setInvitations(resInvitations?.data);
-  };
-
   const fetchList = () => {
     setIsLoading(true);
     return EventService.getInvitations()
@@ -79,6 +75,5 @@ export default function useInvitation() {
       resInvitations && resInvitations.data ? resInvitations.data : [],
     fetchList,
     showNotification,
-    setInvitationsStorage,
   };
 }

@@ -389,6 +389,8 @@ PODS:
     - glog
   - react-native-blob-util (0.17.1):
     - React-Core
+  - react-native-color-matrix-image-filters (6.0.3):
+    - React-Core
   - react-native-config (1.4.11):
     - react-native-config/App (= 1.4.11)
   - react-native-config/App (1.4.11):
@@ -481,7 +483,7 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBAnalytics (16.5.0):
+  - RNFBAnalytics (18.0.0):
     - Firebase/Analytics (= 10.3.0)
     - React-Core
     - RNFBApp
@@ -592,6 +594,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
+  - react-native-color-matrix-image-filters (from `../node_modules/react-native-color-matrix-image-filters`)
   - react-native-config (from `../node_modules/react-native-config`)
   - "react-native-cookies (from `../node_modules/@react-native-cookies/cookies`)"
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
@@ -713,6 +716,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-blob-util:
     :path: "../node_modules/react-native-blob-util"
+  react-native-color-matrix-image-filters:
+    :path: "../node_modules/react-native-color-matrix-image-filters"
   react-native-config:
     :path: "../node_modules/react-native-config"
   react-native-cookies:
@@ -839,6 +844,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
   react-native-blob-util: 4949dcc0dd5ee25fcb5abe0687f67fa3d5cdf05a
+  react-native-color-matrix-image-filters: c945260077dabac82d8e25af937c18fff4021707
   react-native-config: bcafda5b4c51491ee1b0e1d0c4e3905bc7b56c1b
   react-native-cookies: f54fcded06bb0cda05c11d86788020b43528a26c
   react-native-document-picker: a9bd26996d1b2e4f412dd186041714c79af381d0
@@ -862,7 +868,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNDateTimePicker: 0530a73a6f3a1a85814cbde0802736993b9e675e
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBAnalytics: ecfc88d832496f624d1bc9c84bc8d23b194994f2
+  RNFBAnalytics: ff8a1c73eba61dc8eb54c70e3e3718b01f57101e
   RNFBApp: 2b3e57f4eecd9cfe8a5dd2ea8ed27a87fbc6eada
   RNFBCrashlytics: 76c39e34a0c514d10971b914a3c97c3c76759ce5
   RNFBDynamicLinks: f5ce579405932828dd668d4217597e633f73d270

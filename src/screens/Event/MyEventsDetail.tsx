@@ -36,6 +36,7 @@ import {getTransactionStatus} from '../../helpers/transaction';
 import {convertDateTimeToLocalTimezone} from '../../helpers/datetimeTimezone';
 import {getEventTypeName} from '../../helpers/event';
 import Clipboard from '@react-native-clipboard/clipboard';
+import useReviewInApp from '../../hooks/useReviewInApp';
 
 export default function MyEventDetail() {
   const route = useRoute();
@@ -44,6 +45,7 @@ export default function MyEventDetail() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
+  const {initReviewInApp} = useReviewInApp();
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingEvent, setIsLoadingEvent] = useState<boolean>(false);
@@ -92,12 +94,14 @@ export default function MyEventDetail() {
         }
       }
 
+      let eventId;
       if (
         resDetailTransaction.data.linked &&
         resDetailTransaction.data.linked.trnsEventId &&
         resDetailTransaction.data.linked.trnsEventId[0].evnhId
       ) {
-        fetchEvent(resDetailTransaction.data.linked.trnsEventId[0].evnhId);
+        eventId = resDetailTransaction.data.linked.trnsEventId[0].evnhId;
+        fetchEvent(eventId);
       } else {
         Toast.show({
           description: 'Event id not found',
@@ -125,6 +129,10 @@ export default function MyEventDetail() {
           trnsExpiredTime: resDetailTransaction?.data?.data?.trnsExpiredTime,
         });
         setStatus(newStatus);
+
+        if (newStatus === 'Paid') {
+          initReviewInApp(eventId);
+        }
 
         // const eventId =
         //   resDetailTransaction?.data?.linked?.trnsEventId?.[0]?.evnhId;

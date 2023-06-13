@@ -91,8 +91,8 @@ export default function EventRegisterScreen() {
   const [fieldsData, setFieldsData] = React.useState<any>({});
 
   const userToFieldData: any = {
-    evpaName: null,
-      // user?.data && user?.data.length > 0 ? user?.data[0].zmemFullName : null,
+    evpaName:
+      user?.data && user?.data.length > 0 ? user?.data[0].zmemFullName : null,
     evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
     evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
     evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,

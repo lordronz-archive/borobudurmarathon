@@ -19,7 +19,7 @@ export default function MyEvents() {
       <Image
         borderRadius={8}
         source={require('../../assets/images/welcome-card-img.png')}
-        alt="Alternate Text"
+        alt=""
         top="0"
         right="0"
         position="absolute"

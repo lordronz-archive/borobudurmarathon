@@ -17,7 +17,6 @@ import {useTranslation} from 'react-i18next';
 import AppContainer from '../../layout/AppContainer';
 import TextInput from '../../components/form/TextInput';
 import Button from '../../components/buttons/Button';
-import IconVoucher from '../../assets/icons/IconVoucher';
 import VoucherCard from './components/VoucherCard';
 
 export default function VoucherScreen() {
@@ -30,7 +29,7 @@ export default function VoucherScreen() {
       <Image
         borderRadius={8}
         source={require('../../assets/images/welcome-card-img.png')}
-        alt="Alternate Text"
+        alt=""
         top="0"
         right="0"
         position="absolute"

@@ -203,8 +203,7 @@ export default function SectionListMyEvent() {
             trnsExpiredTime: transaction?.trnsExpiredTime,
           })}
           category={
-            (category?.evncName || '') +
-            (event.evnhBallot === 1 ? ' (BALLOT)' : '')
+            (category?.evncName || '') + (' (' + item.mregTypeDesc + ')')
           }
           transactionExpirationTime={cleanTransactionExpTime}
           isAvailable={false}

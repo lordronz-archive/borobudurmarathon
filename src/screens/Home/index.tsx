@@ -26,6 +26,7 @@ import AppContainer from '../../layout/AppContainer';
 import useInvitation from '../../hooks/useInvitation';
 import useEvent from '../../hooks/useEvent';
 import {t} from 'i18next';
+import useReviewInApp from '../../hooks/useReviewInApp';
 
 export default function HomeScreen() {
   const isFocused = useIsFocused();
@@ -38,16 +39,19 @@ export default function HomeScreen() {
     fetchList: fetchListInvitation,
   } = useInvitation();
   const {fetchList: fetchListEvent} = useEvent();
+  // const {initReviewInApp} = useReviewInApp();
 
   useEffect(() => {
     if (isFocused) {
-      fetchListInvitation();
+      // fetchListInvitation();
+      onRefresh();
     }
   }, [isFocused]);
 
   const onRefresh = () => {
     fetchListInvitation();
     fetchListEvent();
+    // initReviewInApp();
   };
 
   return (

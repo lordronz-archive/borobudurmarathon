@@ -314,6 +314,7 @@ export interface Datum {
   mregId: number;
   mregOrderId: string;
   mregType: 'MB' | 'IR' | string;
+  mregTypeDesc: string;
   // MB Ballot
   // IR Invitation
   mregStatus: number;

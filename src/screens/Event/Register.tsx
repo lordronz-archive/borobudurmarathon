@@ -10,12 +10,12 @@ import {
   HStack,
   WarningOutlineIcon,
 } from 'native-base';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {RootStackParamList} from '../../navigation/RootNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Header from '../../components/header/Header';
 import RegistrationForm from './components/RegistrationForm';
-import {EventFieldsEntity, EVENT_TYPES} from '../../types/event.type';
+import {EventFieldsEntity} from '../../types/event.type';
 import {EventService} from '../../api/event.service';
 import Congratulation from '../../components/modal/Congratulation';
 import EventRegistrationCard from '../../components/card/EventRegistrationCard';
@@ -27,10 +27,7 @@ import httpRequest from '../../helpers/httpRequest';
 import {DocumentPickerResponse} from 'react-native-document-picker';
 import ImageView from 'react-native-image-viewing';
 import {Platform, TouchableOpacity, View} from 'react-native';
-import {
-  parseStringToObject,
-  parseUnknownDataToArray,
-} from '../../helpers/parser';
+import {parseUnknownDataToArray} from '../../helpers/parser';
 import AppContainer from '../../layout/AppContainer';
 import {
   isSubField,
@@ -42,7 +39,7 @@ import {handleErrorMessage} from '../../helpers/apiErrors';
 import Button from '../../components/buttons/Button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {getTextBasedOnLanguage} from '../../helpers/text';
-import { getEventTypeName } from '../../helpers/event';
+import {getEventTypeName} from '../../helpers/event';
 
 type Price = {
   id: string;
@@ -93,6 +90,26 @@ export default function EventRegisterScreen() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [fieldsData, setFieldsData] = React.useState<any>({});
 
+  const userToFieldData: any = {
+    evpaName: null,
+      // user?.data && user?.data.length > 0 ? user?.data[0].zmemFullName : null,
+    evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
+    evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
+    evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
+    evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
+    evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+    evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+    evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
+    evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
+    evpaBirthDate: toAcceptableApiFormat(
+      user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
+    ),
+    evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
+    evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
+    evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
+    evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
+    evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
+  };
   const fields = useMemo<EventFieldsEntity[]>(() => {
     const fieldResult =
       params.event.fields && Array.isArray(params.event.fields)
@@ -281,29 +298,30 @@ export default function EventRegisterScreen() {
       payload = {...newPayload};
     } else {
       payload = {
+        ...userToFieldData,
         ...fieldsData,
         evpaEvnhId: params.event.data.evnhId,
         evpaEvncId: params.selectedCategoryId,
-        evpaName:
-          user?.data && user?.data.length > 0
-            ? user?.data[0].zmemFullName
-            : null,
-        evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
-        evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
-        evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
-        evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
-        evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
-        evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
-        evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
-        evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
-        evpaBirthDate: toAcceptableApiFormat(
-          user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
-        ),
-        evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
-        evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
-        evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
-        evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
-        evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
+        // evpaName:
+        //   user?.data && user?.data.length > 0
+        //     ? user?.data[0].zmemFullName
+        //     : null,
+        // evpaEmail: user?.linked.zmemAuusId[0].auusEmail,
+        // evpaPhone: user?.linked?.zmemAuusId?.[0]?.auusPhone,
+        // evpaAddress: user?.linked?.mbsdZmemId?.[0]?.mbsdAddress,
+        // evpaCity: user?.linked?.mbsdZmemId?.[0]?.mbsdCity,
+        // evpaProvinces: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+        // evpaProvinsi: user?.linked?.mbsdZmemId?.[0]?.mbsdProvinces,
+        // evpaNationality: user?.linked?.mbsdZmemId?.[0]?.mbsdNationality,
+        // evpaBirthPlace: user?.linked?.mbsdZmemId?.[0]?.mbsdBirthPlace,
+        // evpaBirthDate: toAcceptableApiFormat(
+        //   user?.linked.mbsdZmemId?.[0]?.mbsdBirthDate,
+        // ),
+        // evpaCountry: user?.linked.mbsdZmemId?.[0]?.mbsdCountry,
+        // evpaGender: user?.linked.mbsdZmemId?.[0]?.mbsdGender,
+        // evpaIDNumberType: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumberType,
+        // evpaIDNumber: user?.linked.mbsdZmemId?.[0]?.mbsdIDNumber,
+        // evpaBloodType: user?.linked.mbsdZmemId?.[0]?.mbsdBloodType,
       };
     }
 
@@ -431,9 +449,22 @@ export default function EventRegisterScreen() {
     'evpaGuardianEmail',
   ];
   const displayedFields = useMemo(() => {
-    const res = fields
+    let res = fields
       .filter(f => f.evhfName !== 'evpaEvnhId' && f.evhfName !== 'evpaEvncId')
-      .filter(f => !bannedField.includes(f.evhfName))
+      .filter(f => {
+        if (bannedField.includes(f.evhfName)) {
+          // check is data exist in user
+          if (
+            userToFieldData[f.evhfName] !== null &&
+            userToFieldData[f.evhfName] !== undefined
+          ) {
+            return false;
+          }
+          return true;
+        } else {
+          return true;
+        }
+      })
       .filter(f => showFields.includes(f.evhfName));
     if (
       getAge(
@@ -441,8 +472,9 @@ export default function EventRegisterScreen() {
         event?.data.evnhStartDate,
       ) >= 17
     ) {
-      return res.filter(f => !guardianFields.includes(f.evhfName));
+      res = res.filter(f => !guardianFields.includes(f.evhfName));
     }
+
     return res;
   }, [fields, bannedField, showFields, user]);
 

@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   VStack,
   Divider,
@@ -23,6 +23,7 @@ import {getApiErrors} from '../../helpers/apiErrors';
 export default function SearchLocationScreen() {
   const {setProfile} = useProfileStepper();
   const navigation = useNavigation();
+  const {params}: any = useRoute();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listLocation, setListLocation] = useState<any[]>([]);
@@ -127,13 +128,19 @@ export default function SearchLocationScreen() {
                   alignItems: 'center',
                 }}
                 onPress={() => {
-                  setProfile(oldVal => ({
-                    ...oldVal,
-                    mbsdCity: item.mlocRegency,
-                    mbsdProvinces: item.mlocProvince,
-                    mbsdAddress: item.mlocName,
-                    mbsdRawAddress: item.mlocName,
-                  }));
+                  if (params && params.onSelect) {
+                    params.onSelect({
+                      ...item,
+                    });
+                  } else {
+                    setProfile(oldVal => ({
+                      ...oldVal,
+                      mbsdCity: item.mlocRegency,
+                      mbsdProvinces: item.mlocProvince,
+                      mbsdAddress: item.mlocName,
+                      mbsdRawAddress: item.mlocName,
+                    }));
+                  }
                   navigation.goBack();
                 }}>
                 <IconLocation />

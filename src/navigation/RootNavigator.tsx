@@ -1,5 +1,8 @@
 import * as React from 'react';
-import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InitialScreen from '../screens/Initial';
 import AuthScreen from '../screens/Auth';
@@ -42,6 +45,7 @@ import ResetPasswordScreen from '../screens/Auth/ResetPassword';
 import ListInvitationScreen from '../screens/Invitation';
 import InvitedEventsScreen from '../screens/Event/InvitedEvents';
 import analytics from '@react-native-firebase/analytics';
+import UpdateLocationScreen from '../screens/InputProfile/UpdateLocation';
 
 export type RootStackParamList = {
   Initial: undefined;
@@ -80,11 +84,20 @@ export type RootStackParamList = {
   EmailVerificationWhenRegister?: {email?: string; onSuccess: () => void};
   Main: undefined | {screen: string};
   ChooseCitizen: undefined;
-  SearchLocation: undefined;
+  SearchLocation:
+    | undefined
+    | {
+        onSelect: (val: {
+          mlocRegency: string;
+          mlocProvince: string;
+          mlocName: string;
+        }) => void;
+      };
 
   EventDetail: {id: number};
 
   UpdateProfile: undefined;
+  UpdateLocation: undefined;
   Certificates: undefined;
   UpdatePhone: undefined;
   InvitedEvents: undefined;
@@ -250,6 +263,11 @@ function RootNavigator() {
         <Stack.Screen
           name="UpdateProfile"
           component={UpdateProfileScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UpdateLocation"
+          component={UpdateLocationScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

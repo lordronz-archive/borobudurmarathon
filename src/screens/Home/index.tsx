@@ -48,6 +48,20 @@ export default function HomeScreen() {
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    if (isFocused && user) {
+      const mbsdCountry = user?.linked.mbsdZmemId?.[0]?.mbsdCountry || '';
+      const mbsdProvinces = user?.linked.mbsdZmemId?.[0]?.mbsdProvinces || '';
+      // const mbsdProvinces = null;
+      const mbsdCity = user?.linked.mbsdZmemId?.[0]?.mbsdCity || '';
+      const mbsdAddress = user?.linked.mbsdZmemId?.[0]?.mbsdAddress || '';
+
+      if (!mbsdCountry || !mbsdProvinces || !mbsdCity || !mbsdAddress) {
+        navigation.navigate('UpdateLocation');
+      }
+    }
+  }, [isFocused, user]);
+
   const onRefresh = () => {
     fetchListInvitation();
     fetchListEvent();

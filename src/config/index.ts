@@ -214,6 +214,10 @@ export default {
           path: 'member_zone/foto/',
           method: 'POST',
         },
+        updateLocation: {
+          path: 'member_zone/update_location',
+          method: 'POST',
+        },
         /*
 					{
 						"data": {

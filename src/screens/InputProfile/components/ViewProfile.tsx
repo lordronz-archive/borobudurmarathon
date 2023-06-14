@@ -18,6 +18,9 @@ import {convertOption} from '../../../helpers/convertOption';
 import {showIDNumberTypeName} from '../../../assets/data/ktpPassport';
 import useInit from '../../../hooks/useInit';
 import {getFullNameFromData} from '../../../helpers/name';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../../navigation/RootNavigator';
 
 type Props = {
   fields?: string[];
@@ -26,12 +29,32 @@ type Props = {
 };
 
 export default function ViewProfile(props: Props = {fetchProfile: true}) {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {user, isVerified} = useAuthUser();
   const {getProfile, isLoadingProfile} = useInit();
 
   useEffect(() => {
     props.fetchProfile && getProfile();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      const mbsdCountry = user?.linked.mbsdZmemId?.[0]?.mbsdCountry || '';
+      const mbsdProvinces = user?.linked.mbsdZmemId?.[0]?.mbsdProvinces || '';
+      const mbsdCity = user?.linked.mbsdZmemId?.[0]?.mbsdCity || '';
+      const mbsdAddress = user?.linked.mbsdZmemId?.[0]?.mbsdAddress || '';
+
+      if (
+        !mbsdCountry ||
+        !mbsdProvinces ||
+        !mbsdCity ||
+        !mbsdAddress
+      ) {
+        navigation.navigate('UpdateLocation');
+      }
+    }
+  }, [user]);
 
   let sectionsDataProfile: {
     title: string;

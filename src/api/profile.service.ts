@@ -102,6 +102,25 @@ const ProfileService = {
       return Promise.reject(error);
     }
   },
+  updateLocation: async function (locationData: {
+    mdupCountry: string;
+    mdupProvinces: string;
+    mdupCity: string;
+    mdupAddress: string;
+  }) {
+    try {
+      return await httpRequest.post(
+        config.apiUrl.apis.member.updateLocation.path,
+        {
+          data: {
+            ...locationData,
+          },
+        },
+      );
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  },
 };
 
 export {ProfileService, ResponseError};

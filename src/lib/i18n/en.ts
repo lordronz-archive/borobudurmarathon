@@ -177,6 +177,8 @@ export default {
       'Your account is still in process to verification.',
     enterPob: 'Enter your place of birth',
     chooseGender: 'Choose Gender',
+    updateLocation: 'Update Address',
+    updateLocationDesc: 'Please update your address to continue.',
   },
   consent: {
     title: 'Data Confirmation',

@@ -6,6 +6,7 @@ import {
   Text,
   Toast,
   VStack,
+  WarningOutlineIcon,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Heading} from '../../components/text/Heading';
@@ -131,10 +132,10 @@ export default function UpdateLocationScreen() {
     <GestureHandlerRootView style={{backgroundColor: 'white', height: '100%'}}>
       <VStack px="4" flex="1">
         <VStack>
-          <VStack space="1" mt={'12px'}>
-            <Heading>Update Your Location</Heading>
+          <VStack space="1" mt={'20px'}>
+            <Heading>{t('profile.updateLocation')}</Heading>
             <Text fontWeight={400} color="#768499" fontSize={11}>
-              Please update your location to continue.
+              {t('profile.updateLocationDesc')}
             </Text>
           </VStack>
         </VStack>

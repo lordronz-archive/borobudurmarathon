@@ -179,6 +179,8 @@ export default {
     alertNotVerifiedMessage: 'Akun Anda masih dalam proses verifikasi.',
     chooseGender: 'Pilih Jenis Kelamin',
     enterPob: 'Masukkan tempat lahir anda',
+    updateLocation: 'Lengkapi Alamat',
+    updateLocationDesc: 'Silakan lengkapi alamat untuk melanjutkan.',
   },
   consent: {
     title: 'Konfirmasi Data',

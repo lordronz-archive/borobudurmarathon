@@ -95,7 +95,7 @@ export default function UpdateLocationScreen() {
         // });
       } else {
         setLocationData({
-          mdupCountry: mbsdCountry || 'Indonesia',
+          mdupCountry: 'Indonesia',
           mdupProvinces: mbsdProvinces,
           mdupCity: mbsdCity,
           mdupAddress: mbsdAddress || mbsdRawAddress,

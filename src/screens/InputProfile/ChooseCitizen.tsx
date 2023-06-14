@@ -867,10 +867,12 @@ export default function ChooseCitizenScreen({route}: Props) {
                   {citizen === 'WNA' && (
                     <>
                       <SelectInput
-                        items={countries.map(({en_short_name}) => ({
-                          label: en_short_name,
-                          value: en_short_name,
-                        }))}
+                        items={countries
+                          .filter(item => item.en_short_name !== 'Indonesia')
+                          .map(({en_short_name}) => ({
+                            label: en_short_name,
+                            value: en_short_name,
+                          }))}
                         value={profile.mbsdCountry}
                         placeholder={t('auth.placeholderCountry') || ''}
                         label={t('profile.country') || ''}

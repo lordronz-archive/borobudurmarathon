@@ -9,14 +9,26 @@ type IReviewInAppLog = {
 };
 
 export default function useReviewInApp() {
-  const initReviewInApp = async (eventId?: number) => {
+  const initReviewInApp = async (eventId?: number | number[]) => {
     const reviewLog = await getReviewLog();
 
     if (!InAppReview.isAvailable()) {
       return;
     }
 
-    if (eventId && reviewLog['event_' + eventId]) {
+    if (eventId && Array.isArray(eventId)) {
+      if (eventId.length > 0) {
+        const isAlreadyReview = eventId.find(
+          item => !!reviewLog['event_' + item],
+        );
+
+        if (isAlreadyReview) {
+          return;
+        }
+      } else {
+        return;
+      }
+    } else if (eventId && reviewLog['event_' + eventId]) {
       return;
     } else if (reviewLog.latest) {
       const now = new Date();

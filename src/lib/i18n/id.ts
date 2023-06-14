@@ -62,8 +62,7 @@ export default {
     phoneValidationTitle: 'Validasi Nomor Telefon',
     phoneValidationSubtitle: 'Kami perlu memvalidasi nomor telepon Anda',
     resendViaWhatsapp: 'Kirimkan Ulang Kode Verifikasi Via WhatsApp',
-    phoneValidation8DigitCode:
-      'Masukkan 6 digit kode yang kami kirim ke nomor ini',
+    phoneValidationCode: 'Masukkan 6 digit kode yang kami kirim ke nomor ini',
     dontHaveAccount: 'Belum memiliki akun?',
     haveAccount: 'Sudah memiliki akun?',
     register: 'Daftar',

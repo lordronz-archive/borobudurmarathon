@@ -12,6 +12,7 @@ import EmptyMessage from '../../../components/EmptyMessage';
 import Section from '../../../components/section/Section';
 import {handleErrorMessage} from '../../../helpers/apiErrors';
 import {getTransactionStatus} from '../../../helpers/transaction';
+import useReviewInApp from '../../../hooks/useReviewInApp';
 import {RootStackParamList} from '../../../navigation/RootNavigator';
 import {Datum, TransactionStatus} from '../../../types/event.type';
 import {
@@ -63,6 +64,7 @@ export default function SectionListMyEvent() {
     id: CategoryEnum | null;
     value: string;
   }>();
+  const {initReviewInApp} = useReviewInApp();
 
   const filteredData = useMemo(() => {
     return (
@@ -132,6 +134,15 @@ export default function SectionListMyEvent() {
         console.info('res transaction', JSON.stringify(res.data));
         if (res.data) {
           setResTransactions(res.data);
+
+          const filteredPaidTrx = res.data.linked.mregTrnsId.filter(
+            item => Number(item.trnsConfirmed) === 1,
+          );
+          if (filteredPaidTrx.length > 0) {
+            initReviewInApp(
+              filteredPaidTrx.map(item => Number(item.trnsEventId)),
+            );
+          }
         }
       })
       .catch(err => {

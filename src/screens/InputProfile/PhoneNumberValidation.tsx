@@ -59,14 +59,14 @@ export default function PhoneNumberValidationScreen({route}: Props) {
     };
   }, [seconds]);
 
-  const validatePhoneNumber = async () => {
+  const validatePhoneNumber = async (code?: string) => {
     setIsLoading(true);
     const payload = {
-      otpCode,
+      otpCode: code ? code : otpCode,
     };
     let valid = true;
 
-    if (!otpCode) {
+    if (!payload.otpCode) {
       setErrMessage('Enter the verification code');
       valid = false;
     }
@@ -153,8 +153,7 @@ export default function PhoneNumberValidationScreen({route}: Props) {
           </VStack>
           <Box mt={26} mb="3">
             <Text fontWeight={400} color="#1E1E1E" fontSize={12}>
-              {t('auth.phoneValidation8DigitCode')}{' '}
-              <Text bold>{phoneNumber}</Text>
+              {t('auth.phoneValidationCode')} <Text bold>{phoneNumber}</Text>
             </Text>
           </Box>
           <VStack space="2.5">
@@ -162,7 +161,12 @@ export default function PhoneNumberValidationScreen({route}: Props) {
               <TextInput
                 placeholder={t('auth.emailValidationPlaceholder') || ''}
                 label={t('auth.emailValidationLabel') || ''}
-                onChangeText={setOtpCode}
+                onChangeText={val => {
+                  setOtpCode(val);
+                  if (val && val.length === 6 && !isLoading) {
+                    validatePhoneNumber(val);
+                  }
+                }}
                 isInvalid={!isValid}
                 errorMessage={errMessage}
               />

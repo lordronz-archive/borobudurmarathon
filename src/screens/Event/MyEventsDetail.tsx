@@ -488,12 +488,17 @@ export default function MyEventDetail() {
                     alignItems={'center'}>
                     <VStack width="90%">
                       <Text fontWeight={500} color="#768499" fontSize={12}>
-                        {getEventTypeName({
-                          evnhType:
-                            detailTransaction?.linked?.trnsEventId?.[0]
-                              ?.evnhType,
-                          evnhBallot: isBallot ? 1 : 0,
-                        })}
+                        {detailTransaction?.linked?.mregTrnsId?.[0]
+                          ?.mregTypeDesc ||
+                          getEventTypeName({
+                            evnhType:
+                              detailTransaction?.linked?.trnsEventId?.[0]
+                                ?.evnhType,
+                            evnhBallot: isBallot ? 1 : 0,
+                            mregTypeDesc:
+                              detailTransaction?.linked?.mregTrnsId?.[0]
+                                ?.mregTypeDesc,
+                          })}
                       </Text>
                       <Text
                         fontWeight={500}

@@ -5,6 +5,7 @@ import {convertDateTimeToLocalTimezone} from './datetimeTimezone';
 export function getEventTypeName(params: {
   evnhType?: number | string;
   evnhBallot?: number | string;
+  mregTypeDesc?: string | null;
 }) {
   const evnhType = params.evnhType ? Number(params.evnhType) : 0;
   const evnhBallot = params.evnhBallot ? Number(params.evnhBallot) : 0;
@@ -17,7 +18,9 @@ export function getEventTypeName(params: {
     typeName = 'OTHER (' + evnhType + ')';
   }
 
-  if (evnhBallot) {
+  if (params.mregTypeDesc) {
+    typeName = typeName + ' - ' + params.mregTypeDesc;
+  } else if (evnhBallot) {
     typeName = typeName + ' - BALLOT';
   }
   return typeName;

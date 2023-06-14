@@ -1,20 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
-import {
-  Box,
-  HStack,
-  ScrollView,
-  Text,
-  Toast,
-  VStack,
-  WarningOutlineIcon,
-} from 'native-base';
+import {Box, HStack, ScrollView, Text, Toast, VStack} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Heading} from '../../components/text/Heading';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../navigation/RootNavigator';
-import {Alert, BackHandler} from 'react-native';
-import SelectInput from '../../components/form/SelectInput';
-import countries from '../../helpers/countries';
+import {Alert, BackHandler, TouchableOpacity} from 'react-native';
 import IconLocation from '../../assets/icons/IconLocation';
 import {useAuthUser} from '../../context/auth.context';
 import Button from '../../components/buttons/Button';
@@ -27,6 +17,8 @@ import {detectLocationFromGoogleAutocomplete} from '../../helpers/detectLocation
 import {ProfileService} from '../../api/profile.service';
 import useInit from '../../hooks/useInit';
 import LoadingBlock from '../../components/loading/LoadingBlock';
+import TextInput from '../../components/form/TextInput';
+import AlertMessage from '../../components/alert/AlertMessage';
 
 export const truncate = (input: string) => {
   if (input.length > 6) {
@@ -40,6 +32,15 @@ export default function UpdateLocationScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {getProfile} = useInit();
+
+  const [mode, setMode] = useState<'WNA_GOOGLEAUTOCOMPLETE' | 'WNA_RESULT'>(
+    'WNA_GOOGLEAUTOCOMPLETE',
+  );
+  const [formManualInput, setFormManualInput] = useState({
+    country: false,
+    province: false,
+    city: false,
+  });
 
   const [locationData, setLocationData] = useState<{
     mdupCountry: string;
@@ -85,16 +86,21 @@ export default function UpdateLocationScreen() {
       const mbsdAddress = user?.linked.mbsdZmemId?.[0]?.mbsdAddress || '';
       const mbsdRawAddress = user?.linked.mbsdZmemId?.[0]?.mbsdAddress || '';
 
-      setLocationData({
-        mdupCountry: mbsdCountry
-          ? mbsdCountry
-          : citizen === 'WNI'
-          ? 'Indonesia'
-          : 'Other Country',
-        mdupProvinces: mbsdProvinces,
-        mdupCity: mbsdCity,
-        mdupAddress: mbsdAddress || mbsdRawAddress,
-      });
+      if (citizen === 'WNA') {
+        // setLocationData({
+        //   mdupCountry: mbsdCountry ? mbsdCountry : 'Other Country',
+        //   mdupProvinces: mbsdProvinces,
+        //   mdupCity: mbsdCity,
+        //   mdupAddress: mbsdAddress || mbsdRawAddress,
+        // });
+      } else {
+        setLocationData({
+          mdupCountry: mbsdCountry || 'Indonesia',
+          mdupProvinces: mbsdProvinces,
+          mdupCity: mbsdCity,
+          mdupAddress: mbsdAddress || mbsdRawAddress,
+        });
+      }
     }
   }, [user]);
 
@@ -141,7 +147,17 @@ export default function UpdateLocationScreen() {
         </VStack>
         <ScrollView flex={1}>
           <VStack my="3" space="2">
-            {citizen === 'WNA' && (
+            <Text>
+              Your Citizen:{' '}
+              <Text bold>
+                {citizen === 'WNI'
+                  ? t('auth.selectCitizenCard')
+                  : t('auth.selectCitizenCardWna')}
+              </Text>
+            </Text>
+          </VStack>
+          <VStack my="3" space="2">
+            {/* {citizen === 'WNA' && (
               <SelectInput
                 items={countries.map(({en_short_name}) => ({
                   label: en_short_name,
@@ -157,7 +173,7 @@ export default function UpdateLocationScreen() {
                   }))
                 }
               />
-            )}
+            )} */}
             {citizen === 'WNI' ? (
               <Box
                 p={'16px'}
@@ -217,94 +233,242 @@ export default function UpdateLocationScreen() {
               </Box>
             ) : (
               <>
-                <GooglePlacesAutocomplete
-                  placeholder={t('auth.placeholderAddress') || ''}
-                  onPress={(data, details = null) => {
-                    // 'details' is provided when fetchDetails = true
-                    // const city = details?.address_components.filter(
-                    //   f =>
-                    //     JSON.stringify(f.types) ===
-                    //     JSON.stringify(['locality', 'political']),
-                    // )[0].short_name;
-                    // const state = details?.address_components.filter(
-                    //   f =>
-                    //     JSON.stringify(f.types) ===
-                    //     JSON.stringify([
-                    //       'administrative_area_level_1',
-                    //       'political',
-                    //     ]),
-                    // )[0].short_name;
-                    console.log(
-                      'GooglePlacesAutocomplete data',
-                      JSON.stringify(data),
-                    );
-                    console.log(
-                      'GooglePlacesAutocomplete details?.address_components',
-                      JSON.stringify(details?.address_components),
-                    );
-                    // const findDisplayCity =
-                    //   details?.address_components.filter(
-                    //     f =>
-                    //       JSON.stringify(f.types) ===
-                    //         JSON.stringify(['locality', 'political']) ||
-                    //       JSON.stringify(f.types) ===
-                    //         JSON.stringify([
-                    //           'administrative_area_level_2',
-                    //           'political',
-                    //         ]) ||
-                    //       JSON.stringify(f.types) ===
-                    //         JSON.stringify(['postal_town']),
-                    //   );
+                {mode === 'WNA_GOOGLEAUTOCOMPLETE' ? (
+                  <>
+                    <Text bold>Address</Text>
+                    <GooglePlacesAutocomplete
+                      placeholder={t('auth.placeholderAddress') || ''}
+                      onPress={(data, details = null) => {
+                        // 'details' is provided when fetchDetails = true
+                        // const city = details?.address_components.filter(
+                        //   f =>
+                        //     JSON.stringify(f.types) ===
+                        //     JSON.stringify(['locality', 'political']),
+                        // )[0].short_name;
+                        // const state = details?.address_components.filter(
+                        //   f =>
+                        //     JSON.stringify(f.types) ===
+                        //     JSON.stringify([
+                        //       'administrative_area_level_1',
+                        //       'political',
+                        //     ]),
+                        // )[0].short_name;
+                        console.log(
+                          'GooglePlacesAutocomplete data',
+                          JSON.stringify(data),
+                        );
+                        console.log(
+                          'GooglePlacesAutocomplete details?.address_components',
+                          JSON.stringify(details?.address_components),
+                        );
+                        // const findDisplayCity =
+                        //   details?.address_components.filter(
+                        //     f =>
+                        //       JSON.stringify(f.types) ===
+                        //         JSON.stringify(['locality', 'political']) ||
+                        //       JSON.stringify(f.types) ===
+                        //         JSON.stringify([
+                        //           'administrative_area_level_2',
+                        //           'political',
+                        //         ]) ||
+                        //       JSON.stringify(f.types) ===
+                        //         JSON.stringify(['postal_town']),
+                        //   );
 
-                    const {description, city: displayCity} =
-                      detectLocationFromGoogleAutocomplete(data, details);
-                    // const displayState =
-                    //   details?.address_components.filter(
-                    //     f =>
-                    //       JSON.stringify(f.types) ===
-                    //       JSON.stringify([
-                    //         'administrative_area_level_1',
-                    //         'political',
-                    //       ]),
-                    //   )[0].long_name;
-                    setLocationData(oldVal => ({
-                      ...oldVal,
-                      mdupAddress: description,
-                      mdupRawAddress: description,
-                      mdupCity: displayCity || description,
-                    }));
-                    console.log(description);
-                    console.log(displayCity);
-                  }}
-                  query={{
-                    key: Config.MAPS_API_KEY,
-                    language: 'en',
-                  }}
-                  fetchDetails
-                  styles={{
-                    textInput: {
-                      height: 50,
-                      color: '#5d5d5d',
-                      fontSize: 16,
-                      borderRadius: 6,
-                      borderColor: '#C5CDDB',
-                      borderWidth: 1,
-                    },
-                    predefinedPlacesDescription: {
-                      color: '#1faadb',
-                    },
-                  }}
-                  disableScroll={false}
-                  textInputProps={{
-                    onChangeText: val =>
-                      setLocationData(oldVal => ({
-                        ...oldVal,
-                        mdupAddress: val,
-                        mdupRawAddress: val,
-                        mdupCity: oldVal.mdupCity ?? '',
-                      })),
-                  }}
-                />
+                        const {
+                          country,
+                          province,
+                          description,
+                          city: displayCity,
+                        } = detectLocationFromGoogleAutocomplete(data, details);
+                        // const displayState =
+                        //   details?.address_components.filter(
+                        //     f =>
+                        //       JSON.stringify(f.types) ===
+                        //       JSON.stringify([
+                        //         'administrative_area_level_1',
+                        //         'political',
+                        //       ]),
+                        //   )[0].long_name;
+                        setLocationData(oldVal => ({
+                          ...oldVal,
+                          mdupAddress: description,
+                          mdupRawAddress: description,
+                          mdupCity: displayCity || '',
+                          mdupCountry: country || '',
+                          mdupProvinces: province || '',
+                        }));
+                        console.log(description);
+                        console.log(displayCity);
+                        setMode('WNA_RESULT');
+
+                        setFormManualInput({
+                          country: !country,
+                          province: !province,
+                          city: !displayCity,
+                        });
+                      }}
+                      query={{
+                        key: Config.MAPS_API_KEY,
+                        language: 'en',
+                      }}
+                      fetchDetails
+                      styles={{
+                        textInput: {
+                          height: 50,
+                          color: '#5d5d5d',
+                          fontSize: 16,
+                          borderRadius: 6,
+                          borderColor: '#C5CDDB',
+                          borderWidth: 1,
+                        },
+                        predefinedPlacesDescription: {
+                          color: '#1faadb',
+                        },
+                      }}
+                      disableScroll={false}
+                      textInputProps={{
+                        onChangeText: val =>
+                          setLocationData(oldVal => ({
+                            ...oldVal,
+                            mdupAddress: val,
+                            mdupRawAddress: val,
+                            mdupCity: oldVal.mdupCity ?? '',
+                          })),
+                      }}
+                    />
+                  </>
+                ) : (
+                  false
+                )}
+
+                {mode === 'WNA_RESULT' ? (
+                  <>
+                    <HStack justifyContent="space-between">
+                      <Text bold>Selected Address</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setMode('WNA_GOOGLEAUTOCOMPLETE');
+                          setLocationData({
+                            mdupCountry: '',
+                            mdupProvinces: '',
+                            mdupCity: '',
+                            mdupAddress: '',
+                          });
+                        }}>
+                        <Text color="orange.500">Change</Text>
+                      </TouchableOpacity>
+                    </HStack>
+                    <Text>
+                      Country:{' '}
+                      {locationData.mdupCountry ? (
+                        <Text color="gray.500">{locationData.mdupCountry}</Text>
+                      ) : (
+                        <Text color="red.500" italic>
+                          Not Set
+                        </Text>
+                      )}
+                    </Text>
+                    <Text>
+                      Province:{' '}
+                      {locationData.mdupProvinces ? (
+                        <Text color="gray.500">
+                          {locationData.mdupProvinces}
+                        </Text>
+                      ) : (
+                        <Text color="red.500" italic>
+                          Not Set
+                        </Text>
+                      )}
+                    </Text>
+                    <Text>
+                      City:{' '}
+                      {locationData.mdupCity ? (
+                        <Text color="gray.500">{locationData.mdupCity}</Text>
+                      ) : (
+                        <Text color="red.500" italic>
+                          Not Set
+                        </Text>
+                      )}
+                    </Text>
+                    <Text>
+                      Address:{' '}
+                      {locationData.mdupAddress ? (
+                        <Text color="gray.500">{locationData.mdupAddress}</Text>
+                      ) : (
+                        <Text color="red.500" italic>
+                          Not Set
+                        </Text>
+                      )}
+                    </Text>
+
+                    <Box h="10px" />
+
+                    {formManualInput.country ||
+                    formManualInput.province ||
+                    formManualInput.city ? (
+                      <AlertMessage message="Please input some data manually." />
+                    ) : (
+                      false
+                    )}
+                    {formManualInput.country && (
+                      <TextInput
+                        label={t('profile.country') || ''}
+                        placeholder={t('auth.placeholderInputCountry') || ''}
+                        onChangeText={val =>
+                          setLocationData({
+                            ...locationData,
+                            mdupCountry: val,
+                          })
+                        }
+                        value={locationData.mdupCountry}
+                      />
+                    )}
+                    {formManualInput.province && (
+                      <TextInput
+                        label={t('profile.province') || ''}
+                        placeholder={t('auth.placeholderInputProvince') || ''}
+                        onChangeText={val =>
+                          setLocationData({
+                            ...locationData,
+                            mdupProvinces: val,
+                          })
+                        }
+                        value={locationData.mdupProvinces}
+                      />
+                    )}
+                    {formManualInput.city && (
+                      <TextInput
+                        label={t('profile.city') || ''}
+                        placeholder={t('auth.placeholderInputCity') || ''}
+                        onChangeText={val =>
+                          setLocationData({
+                            ...locationData,
+                            mdupCity: val,
+                          })
+                        }
+                        value={locationData.mdupCity}
+                      />
+                    )}
+                    {(formManualInput.country ||
+                      formManualInput.province ||
+                      formManualInput.city) && (
+                      <TextInput
+                        label={t('profile.address') || ''}
+                        placeholder={t('auth.placeholderAddress') || ''}
+                        onChangeText={val =>
+                          setLocationData({
+                            ...locationData,
+                            mdupAddress: val,
+                          })
+                        }
+                        value={locationData.mdupAddress}
+                      />
+                    )}
+                  </>
+                ) : (
+                  false
+                )}
               </>
             )}
           </VStack>
@@ -319,7 +483,7 @@ export default function UpdateLocationScreen() {
             isLoading={isLoading}
             disabled={isDisabledButton()}
             bg={isDisabledButton() ? 'gray.400' : undefined}>
-            Save
+            {t('save')}
           </Button>
         </HStack>
       </VStack>

@@ -182,6 +182,8 @@ export default {
     chooseGender: 'Choose Gender',
     updateLocation: 'Update Address',
     updateLocationDesc: 'Please update your address to continue.',
+    yourCitizen: 'Your Citizen',
+    selectedAddress: 'Selected Address',
   },
   consent: {
     title: 'Data Confirmation',
@@ -381,6 +383,7 @@ export default {
   },
   certificates: 'Certificates',
   save: 'Save',
+  change: 'Change',
   next: 'Next',
   hi: 'Hi',
   time: {
@@ -430,6 +433,7 @@ export default {
     youAreNotRegistered: 'You are not registered. Please wait...',
     preparing: 'Preparing',
     success: 'Success',
+    inputDataManual: 'Please input some data manually.',
   },
   chooseOne: 'Choose one',
   stepTitle: {

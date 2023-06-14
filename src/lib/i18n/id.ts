@@ -183,6 +183,8 @@ export default {
     enterPob: 'Masukkan tempat lahir anda',
     updateLocation: 'Lengkapi Alamat',
     updateLocationDesc: 'Silakan lengkapi alamat untuk melanjutkan.',
+    yourCitizen: 'Kewarganegaraan',
+    selectedAddress: 'Alamat',
   },
   consent: {
     title: 'Konfirmasi Data',
@@ -382,6 +384,7 @@ export default {
   },
   certificates: 'Sertifikat',
   save: 'Simpan',
+  change: 'Ubah',
   next: 'Berikutnya',
   hi: 'Hai',
   time: {
@@ -431,6 +434,7 @@ export default {
     youAreNotRegistered: 'Belum terdaftar. Harap tunggu...',
     preparing: 'Menyiapkan',
     success: 'Berhasil',
+    inputDataManual: 'Masukkan beberapa data secara manual',
   },
   chooseOne: 'Pilih salah satu',
   stepTitle: {

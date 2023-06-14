@@ -148,7 +148,7 @@ export default function UpdateLocationScreen() {
         <ScrollView flex={1}>
           <VStack my="3" space="2">
             <Text>
-              Your Citizen:{' '}
+              {t('profile.yourCitizen')}:{' '}
               <Text bold>
                 {citizen === 'WNI'
                   ? t('auth.selectCitizenCard')
@@ -345,7 +345,7 @@ export default function UpdateLocationScreen() {
                 {mode === 'WNA_RESULT' ? (
                   <>
                     <HStack justifyContent="space-between">
-                      <Text bold>Selected Address</Text>
+                      <Text bold>{t('profile.selectedAddress')}</Text>
                       <TouchableOpacity
                         onPress={() => {
                           setMode('WNA_GOOGLEAUTOCOMPLETE');
@@ -356,11 +356,11 @@ export default function UpdateLocationScreen() {
                             mdupAddress: '',
                           });
                         }}>
-                        <Text color="orange.500">Change</Text>
+                        <Text color="orange.500">{t('change')}</Text>
                       </TouchableOpacity>
                     </HStack>
                     <Text>
-                      Country:{' '}
+                      {t('profile.country')}:{' '}
                       {locationData.mdupCountry ? (
                         <Text color="gray.500">{locationData.mdupCountry}</Text>
                       ) : (
@@ -370,7 +370,7 @@ export default function UpdateLocationScreen() {
                       )}
                     </Text>
                     <Text>
-                      Province:{' '}
+                      {t('profile.province')}:{' '}
                       {locationData.mdupProvinces ? (
                         <Text color="gray.500">
                           {locationData.mdupProvinces}
@@ -382,7 +382,7 @@ export default function UpdateLocationScreen() {
                       )}
                     </Text>
                     <Text>
-                      City:{' '}
+                      {t('profile.city')}:{' '}
                       {locationData.mdupCity ? (
                         <Text color="gray.500">{locationData.mdupCity}</Text>
                       ) : (
@@ -392,7 +392,7 @@ export default function UpdateLocationScreen() {
                       )}
                     </Text>
                     <Text>
-                      Address:{' '}
+                      {t('profile.address')}:{' '}
                       {locationData.mdupAddress ? (
                         <Text color="gray.500">{locationData.mdupAddress}</Text>
                       ) : (
@@ -407,7 +407,7 @@ export default function UpdateLocationScreen() {
                     {formManualInput.country ||
                     formManualInput.province ||
                     formManualInput.city ? (
-                      <AlertMessage message="Please input some data manually." />
+                      <AlertMessage message={t('message.inputDataManual')} />
                     ) : (
                       false
                     )}

@@ -51,8 +51,8 @@ export default function HomeScreen() {
   useEffect(() => {
     if (isFocused && user) {
       const mbsdCountry = user?.linked.mbsdZmemId?.[0]?.mbsdCountry || '';
-      // const mbsdProvinces = user?.linked.mbsdZmemId?.[0]?.mbsdProvinces || '';
-      const mbsdProvinces = null;
+      const mbsdProvinces = user?.linked.mbsdZmemId?.[0]?.mbsdProvinces || '';
+      // const mbsdProvinces = null;
       const mbsdCity = user?.linked.mbsdZmemId?.[0]?.mbsdCity || '';
       const mbsdAddress = user?.linked.mbsdZmemId?.[0]?.mbsdAddress || '';
 

@@ -145,7 +145,7 @@ export default function UpdateLocationScreen() {
             </Text>
           </VStack>
         </VStack>
-        <ScrollView flex={1}>
+        <ScrollView flex={1} keyboardShouldPersistTaps="always">
           <VStack my="3" space="2">
             <Text>
               {t('profile.yourCitizen')}:{' '}

@@ -139,6 +139,7 @@ export default function SearchLocationScreen() {
                       mbsdProvinces: item.mlocProvince,
                       mbsdAddress: item.mlocName,
                       mbsdRawAddress: item.mlocName,
+                      mbsdCountry: 'Indonesia',
                     }));
                   }
                   navigation.goBack();

@@ -619,7 +619,7 @@ export default function ChooseCitizenScreen({route}: Props) {
             </Text>
           </VStack>
         </VStack>
-        <ScrollView flex={1}>
+        <ScrollView flex={1} keyboardShouldPersistTaps="always">
           {step === 'choose-citizen' && (
             <VStack my="3" space="2">
               <TouchableOpacity

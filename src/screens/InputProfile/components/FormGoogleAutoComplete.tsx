@@ -53,6 +53,7 @@ export default function FormGoogleAutoComplete(props: Props) {
           {!props.hideLabel && <Text bold>{t('profile.address')}</Text>}
           <GooglePlacesAutocomplete
             placeholder={t('auth.placeholderAddress') || ''}
+            listViewDisplayed={false}
             onPress={(data, details = null) => {
               // 'details' is provided when fetchDetails = true
               // const city = details?.address_components.filter(
@@ -113,13 +114,14 @@ export default function FormGoogleAutoComplete(props: Props) {
               });
               console.log(description);
               console.log(displayCity);
-              setMode('WNA_RESULT');
 
               setFormManualInput({
                 country: !country,
                 province: !province,
                 city: !displayCity,
               });
+
+              setMode('WNA_RESULT');
             }}
             query={{
               key: Config.MAPS_API_KEY,
@@ -140,14 +142,15 @@ export default function FormGoogleAutoComplete(props: Props) {
               },
             }}
             disableScroll={false}
-            textInputProps={{
-              onChangeText: (val: any) =>
-                handleSetLocationData({
-                  ...locationData,
-                  mdupAddress: val,
-                  mdupCity: locationData.mdupCity ?? '',
-                }),
-            }}
+            // textInputProps={{
+            //   console.info('textInputProps');
+            //   onChangeText: (val: any) =>
+            //     handleSetLocationData({
+            //       ...locationData,
+            //       mdupAddress: val,
+            //       mdupCity: locationData.mdupCity ?? '',
+            //     }),
+            // }}
           />
         </>
       ) : (

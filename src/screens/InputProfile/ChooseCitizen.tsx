@@ -60,6 +60,7 @@ import CountryCodeInput from '../Profile/components/CountryCodeInput';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Config from 'react-native-config';
 import {detectLocationFromGoogleAutocomplete} from '../../helpers/detectLocation';
+import FormGoogleAutoComplete from './components/FormGoogleAutoComplete';
 
 const MAX_VALIDATION_TRY_PROCESSING = 5;
 const MIN_VALIDATION_TRY_INVALID = 3;
@@ -575,7 +576,13 @@ export default function ChooseCitizenScreen({route}: Props) {
           )
         );
       } else if (profileStep === 3) {
-        return !profile.mbsdAddress || !isAgreeTermsAndCondition;
+        return (
+          !profile.mbsdCountry ||
+          !profile.mbsdProvinces ||
+          !profile.mbsdCity ||
+          !profile.mbsdAddress ||
+          !isAgreeTermsAndCondition
+        );
       } else {
         return false;
       }
@@ -954,101 +961,123 @@ export default function ChooseCitizenScreen({route}: Props) {
                       </Button>
                     </Box>
                   ) : (
-                    <>
-                      <GooglePlacesAutocomplete
-                        placeholder={t('auth.placeholderAddress') || ''}
-                        onPress={(data, details = null) => {
-                          // 'details' is provided when fetchDetails = true
-                          // const city = details?.address_components.filter(
-                          //   f =>
-                          //     JSON.stringify(f.types) ===
-                          //     JSON.stringify(['locality', 'political']),
-                          // )[0].short_name;
-                          // const state = details?.address_components.filter(
-                          //   f =>
-                          //     JSON.stringify(f.types) ===
-                          //     JSON.stringify([
-                          //       'administrative_area_level_1',
-                          //       'political',
-                          //     ]),
-                          // )[0].short_name;
-                          console.log(
-                            'GooglePlacesAutocomplete data',
-                            JSON.stringify(data),
-                          );
-                          console.log(
-                            'GooglePlacesAutocomplete details?.address_components',
-                            JSON.stringify(details?.address_components),
-                          );
-                          // const findDisplayCity =
-                          //   details?.address_components.filter(
-                          //     f =>
-                          //       JSON.stringify(f.types) ===
-                          //         JSON.stringify(['locality', 'political']) ||
-                          //       JSON.stringify(f.types) ===
-                          //         JSON.stringify([
-                          //           'administrative_area_level_2',
-                          //           'political',
-                          //         ]) ||
-                          //       JSON.stringify(f.types) ===
-                          //         JSON.stringify(['postal_town']),
-                          //   );
+                    // <>
+                    //   <GooglePlacesAutocomplete
+                    //     placeholder={t('auth.placeholderAddress') || ''}
+                    //     onPress={(data, details = null) => {
+                    //       // 'details' is provided when fetchDetails = true
+                    //       // const city = details?.address_components.filter(
+                    //       //   f =>
+                    //       //     JSON.stringify(f.types) ===
+                    //       //     JSON.stringify(['locality', 'political']),
+                    //       // )[0].short_name;
+                    //       // const state = details?.address_components.filter(
+                    //       //   f =>
+                    //       //     JSON.stringify(f.types) ===
+                    //       //     JSON.stringify([
+                    //       //       'administrative_area_level_1',
+                    //       //       'political',
+                    //       //     ]),
+                    //       // )[0].short_name;
+                    //       console.log(
+                    //         'GooglePlacesAutocomplete data',
+                    //         JSON.stringify(data),
+                    //       );
+                    //       console.log(
+                    //         'GooglePlacesAutocomplete details?.address_components',
+                    //         JSON.stringify(details?.address_components),
+                    //       );
+                    //       // const findDisplayCity =
+                    //       //   details?.address_components.filter(
+                    //       //     f =>
+                    //       //       JSON.stringify(f.types) ===
+                    //       //         JSON.stringify(['locality', 'political']) ||
+                    //       //       JSON.stringify(f.types) ===
+                    //       //         JSON.stringify([
+                    //       //           'administrative_area_level_2',
+                    //       //           'political',
+                    //       //         ]) ||
+                    //       //       JSON.stringify(f.types) ===
+                    //       //         JSON.stringify(['postal_town']),
+                    //       //   );
 
-                          const {description, city: displayCity} =
-                            detectLocationFromGoogleAutocomplete(data, details);
-                          // const displayState =
-                          //   details?.address_components.filter(
-                          //     f =>
-                          //       JSON.stringify(f.types) ===
-                          //       JSON.stringify([
-                          //         'administrative_area_level_1',
-                          //         'political',
-                          //       ]),
-                          //   )[0].long_name;
-                          setProfile(oldVal => ({
-                            ...oldVal,
-                            mbsdAddress: description,
-                            mbsdRawAddress: description,
-                            mbsdCity: displayCity || description,
-                          }));
-                          console.log(profile.mbsdAddress);
-                          console.log(displayCity);
-                        }}
-                        query={{
-                          key: Config.MAPS_API_KEY,
-                          language: 'en',
-                        }}
-                        fetchDetails
-                        styles={{
-                          textInput: {
-                            height: 50,
-                            color: '#5d5d5d',
-                            fontSize: 16,
-                            borderRadius: 6,
-                            borderColor: '#C5CDDB',
-                            borderWidth: 1,
-                          },
-                          predefinedPlacesDescription: {
-                            color: '#1faadb',
-                          },
-                        }}
-                        disableScroll={false}
-                        textInputProps={{
-                          // InputComp: TextInput,
-                          // placeholder: t('auth.placeholderAddress') || '',
-                          // label: t('profile.address') || '',
-                          // value: profile.mbsdAddress,
-                          onChangeText: val =>
-                            setProfile(oldVal => ({
-                              ...oldVal,
-                              mbsdAddress: val,
-                              mbsdRawAddress: val,
-                              mbsdCity: oldVal.mbsdCity ?? '',
-                            })),
-                          // width: '100%',
-                        }}
-                      />
-                    </>
+                    //       const {
+                    //         description,
+                    //         city: displayCity,
+                    //         province,
+                    //         country,
+                    //       } = detectLocationFromGoogleAutocomplete(
+                    //         data,
+                    //         details,
+                    //       );
+                    //       // const displayState =
+                    //       //   details?.address_components.filter(
+                    //       //     f =>
+                    //       //       JSON.stringify(f.types) ===
+                    //       //       JSON.stringify([
+                    //       //         'administrative_area_level_1',
+                    //       //         'political',
+                    //       //       ]),
+                    //       //   )[0].long_name;
+                    //       setProfile(oldVal => ({
+                    //         ...oldVal,
+                    //         mbsdAddress: description,
+                    //         mbsdRawAddress: description,
+                    //         mbsdCity: displayCity || description,
+                    //         mbsdProvinces: province || '',
+                    //         mbsdCountry: country || '',
+                    //       }));
+                    //       console.log(profile.mbsdAddress);
+                    //       console.log(displayCity);
+                    //     }}
+                    //     query={{
+                    //       key: Config.MAPS_API_KEY,
+                    //       language: 'en',
+                    //     }}
+                    //     fetchDetails
+                    //     styles={{
+                    //       textInput: {
+                    //         height: 50,
+                    //         color: '#5d5d5d',
+                    //         fontSize: 16,
+                    //         borderRadius: 6,
+                    //         borderColor: '#C5CDDB',
+                    //         borderWidth: 1,
+                    //       },
+                    //       predefinedPlacesDescription: {
+                    //         color: '#1faadb',
+                    //       },
+                    //     }}
+                    //     disableScroll={false}
+                    //     textInputProps={{
+                    //       // InputComp: TextInput,
+                    //       // placeholder: t('auth.placeholderAddress') || '',
+                    //       // label: t('profile.address') || '',
+                    //       // value: profile.mbsdAddress,
+                    //       onChangeText: val =>
+                    //         setProfile(oldVal => ({
+                    //           ...oldVal,
+                    //           mbsdAddress: val,
+                    //           mbsdRawAddress: val,
+                    //           mbsdCity: oldVal.mbsdCity ?? '',
+                    //         })),
+                    //       // width: '100%',
+                    //     }}
+                    //   />
+                    // </>
+                    <FormGoogleAutoComplete
+                      hideLabel
+                      onChange={val => {
+                        setProfile(oldVal => ({
+                          ...oldVal,
+                          mbsdAddress: val.mdupAddress,
+                          mbsdRawAddress: val.mdupAddress,
+                          mbsdCity: val.mdupCity,
+                          mbsdProvinces: val.mdupProvinces,
+                          mbsdCountry: val.mdupCountry,
+                        }));
+                      }}
+                    />
                   )}
                 </VStack>
               )}

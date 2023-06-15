@@ -8,6 +8,7 @@ export default {
   inAppBrowser: true,
   isDev: Config.IS_DEV === 'TRUE',
   // isDev: true,
+  codePushVersion: 'v3.6.10 (318)',
   isShowDemoSettings: false,
   isShowFeatureCertificate: false,
   debug: true,

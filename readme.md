@@ -13,8 +13,8 @@
 
 
 ### IOS
-- appcenter codepush release-react -a bormar/My-Borobudur-Marathon-IOS -d Staging
-- appcenter codepush release-react -a bormar/My-Borobudur-Marathon-IOS -d Production
+- appcenter codepush release-react -a bormar/My-Borobudur-Marathon-IOS -d Staging -t 3.4.5
+- appcenter codepush release-react -a bormar/My-Borobudur-Marathon-IOS -d Production -t 3.4.5
 
 ## Get List Deployment Key
 - appcenter codepush deployment list -a bormar/My-Borobudur-Marathon -k

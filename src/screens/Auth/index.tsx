@@ -408,7 +408,8 @@ export default function AuthScreen() {
 
         <Center marginY={5}>
           <Text color="gray.500" fontSize="xs">
-            v{Config.APP_VERSION_NAME} (build: {Config.APP_VERSION_BUILD})
+            v{Config.APP_VERSION_NAME} (build: {Config.APP_VERSION_BUILD}){' '}
+            {config.codePushVersion ? ' ~ ' + config.codePushVersion : false}
           </Text>
 
           {config.isDev && (

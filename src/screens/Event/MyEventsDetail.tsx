@@ -11,7 +11,6 @@ import {
   Button,
   Toast,
   Badge,
-  Spinner,
 } from 'native-base';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';

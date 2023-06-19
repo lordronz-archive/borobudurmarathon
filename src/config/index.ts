@@ -8,7 +8,7 @@ export default {
   inAppBrowser: true,
   isDev: Config.IS_DEV === 'TRUE',
   // isDev: true,
-  // codePushVersion: 'v3.6.12 (320)',
+  // codePushVersion: 'v3.6.14 (322)',
   codePushVersion: null,
   // replaceRegistrationDate: true,
   replaceRegistrationDate: false,

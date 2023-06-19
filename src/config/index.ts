@@ -10,6 +10,8 @@ export default {
   // isDev: true,
   // codePushVersion: 'v3.6.12 (320)',
   codePushVersion: null,
+  // replaceRegistrationDate: true,
+  replaceRegistrationDate: false,
   isShowDemoSettings: false,
   isShowFeatureCertificate: false,
   debug: true,

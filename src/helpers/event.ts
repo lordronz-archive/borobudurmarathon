@@ -25,47 +25,54 @@ export function getEventTypeName(params: {
   }
   return typeName;
 }
+
 export function getEventRegistrationStatus(
   evnhRegistrationStart?: Date | string,
   evnhRegistrationEnd?: Date | string,
   evnhStartDate?: Date | string,
   evnhEndDate?: Date | string,
 ): EEventStatus {
+  console.info('evnhRegistrationStart', evnhRegistrationStart);
+  console.info('evnhRegistrationEnd', evnhRegistrationEnd);
+  console.info('evnhEndDate', evnhEndDate);
+  console.info('now', moment());
+
   if (evnhRegistrationStart) {
     evnhRegistrationStart = convertDateTimeToLocalTimezone(
       evnhRegistrationStart,
     );
-    const isUpcoming = moment(new Date()).isBefore(
-      moment(convertDateTimeToLocalTimezone(evnhRegistrationStart)),
-    );
+    console.info('--evnhRegistrationStart', evnhRegistrationStart);
+    const isUpcoming = moment().isBefore(evnhRegistrationStart);
 
     if (isUpcoming) {
+      console.info('UPCOMING');
       return EEventStatus.UPCOMING;
     }
   }
 
   if (evnhEndDate) {
     evnhEndDate = convertDateTimeToLocalTimezone(evnhEndDate);
-    const isExpired = moment(
-      convertDateTimeToLocalTimezone(evnhEndDate),
-    ).isBefore(moment(new Date()));
+    console.info('--evnhEndDate', evnhEndDate);
+    const isExpired = moment(evnhEndDate).isBefore(moment());
 
     if (isExpired) {
+      console.info('EXPIRED');
       return EEventStatus.EXPIRED;
     }
   }
 
   if (evnhRegistrationEnd) {
     evnhRegistrationEnd = convertDateTimeToLocalTimezone(evnhRegistrationEnd);
-    const isExpired = moment(
-      convertDateTimeToLocalTimezone(evnhRegistrationEnd),
-    ).isBefore(moment(new Date()));
+    console.info('--evnhRegistrationEnd', evnhRegistrationEnd);
+    const isClosed = moment(evnhRegistrationEnd).isBefore(moment());
 
-    if (isExpired) {
+    if (isClosed) {
+      console.info('REGISTRATION_CLOSED');
       return EEventStatus.REGISTRATION_CLOSED;
     }
   }
 
+  console.info('REGISTRATION');
   return EEventStatus.REGISTRATION;
 }
 

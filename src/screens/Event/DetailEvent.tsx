@@ -33,7 +33,7 @@ import {EInvitationStatus, GetEventResponse} from '../../types/event.type';
 import Button from '../../components/buttons/Button';
 import {buildShortDynamicLink} from '../../lib/deeplink/dynamicLink';
 import RNShare, {ShareOptions} from 'react-native-share';
-import {Alert, RefreshControl} from 'react-native';
+import {Alert, RefreshControl, TouchableOpacity} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {parseUnknownDataToArray} from '../../helpers/parser';
 import IconLocation from '../../assets/icons/IconLocation';
@@ -55,8 +55,14 @@ import {
   isAvailableForRegister,
 } from '../../helpers/event';
 import useInvitation from '../../hooks/useInvitation';
-import { InvitationProperties, IregEvnhID } from '../../types/invitation.type';
+import {InvitationProperties, IregEvnhID} from '../../types/invitation.type';
 import EventStatusBadge from '../../components/card/EventStatusBadge';
+import moment from 'moment';
+import config from '../../config';
+import TextInput from '../../components/form/TextInput';
+import Clipboard from '@react-native-clipboard/clipboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {convertDateTimeToLocalTimezone} from '../../helpers/datetimeTimezone';
 
 type Price = {
   id: string;
@@ -82,6 +88,8 @@ export default function DetailEvent() {
   const [selected, setSelected] = useState<Price>();
   const [isLoading, setIsLoading] = useState(false);
   const [evnInvitation, setEvnInvitation] = useState<InvitationProperties>();
+
+  const [replacementDate, setReplacementDate] = useState('');
   const {t} = useTranslation();
 
   // console.info('=============================================');
@@ -96,7 +104,12 @@ export default function DetailEvent() {
   // console.info('isBetween', moment(now).isBetween(start, end));
   // console.info('=============================================');
 
-  const informations: {icon: any; label: string; description: string}[] = [
+  const informations: {
+    icon: any;
+    label: string;
+    description: string;
+    subDescription?: string;
+  }[] = [
     {
       icon: <IconTag size="5" mt="0.5" color="gray.500" />,
       label: t('event.raceCategory'),
@@ -113,6 +126,12 @@ export default function DetailEvent() {
           'short',
           'short',
         ) + ' WIB',
+      subDescription: datetime.getDateTimeRangeString(
+        convertDateTimeToLocalTimezone(event?.data.evnhRegistrationStart),
+        convertDateTimeToLocalTimezone(event?.data.evnhRegistrationEnd),
+        'short',
+        'short',
+      ),
     },
     {
       icon: <IconRun size="5" mt="0.5" color="gray.500" />,
@@ -172,9 +191,19 @@ export default function DetailEvent() {
 
   const fetchDetail = async () => {
     setIsLoading(true);
+    const repDate = await getReplaceRegistrationDate();
+
     EventService.getEvent(params.id)
       .then(resEvent => {
         console.info('res get detail event', JSON.stringify(resEvent));
+        if (
+          config.replaceRegistrationDate &&
+          repDate &&
+          resEvent &&
+          resEvent.data
+        ) {
+          resEvent.data.evnhRegistrationEnd = repDate;
+        }
         setEvent(resEvent);
         const inv = invitations.find(
           v =>
@@ -403,12 +432,7 @@ export default function DetailEvent() {
 
           <Stack mx={4}>
             <HStack alignItems="center" justifyContent="space-between">
-              <Text
-                fontSize="sm"
-                color={'#768499'}
-                fontWeight={600}
-                my={2}
-                mr="2">
+              <Text fontSize="sm" color={'#768499'} fontWeight={600} mr="2">
                 {getEventTypeName({
                   evnhType: event?.data.evnhType,
                   evnhBallot: event?.data.evnhBallot,
@@ -438,6 +462,38 @@ export default function DetailEvent() {
               : require('../../assets/images/no-image.png')
           }
         /> */}
+
+          {event && config.replaceRegistrationDate ? (
+            <Stack background="warning.200" p={5}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (event && event.data) {
+                    Clipboard.setString(event.data.evnhRegistrationEnd);
+                    Toast.show({title: 'Copied successfully'});
+                  }
+                }}>
+                <Text>{event?.data?.evnhRegistrationEnd} - COPY</Text>
+              </TouchableOpacity>
+              <TextInput
+                label="Replace RegistrationEndDate"
+                onChangeText={val => {
+                  setReplacementDate(val);
+                }}
+              />
+              <Button
+                onPress={() => {
+                  setReplaceRegistrationDate(replacementDate);
+
+                  setTimeout(() => {
+                    fetchDetail();
+                  }, 1000);
+                }}>
+                Replace
+              </Button>
+            </Stack>
+          ) : (
+            false
+          )}
 
           {event?.banner && event?.banner.length > 0 ? (
             <BannerFull
@@ -506,6 +562,18 @@ export default function DetailEvent() {
                       <Text color="gray.500" italic>
                         ~ Not Set
                       </Text>
+                    )}
+                    {info.subDescription ? (
+                      <Text
+                        fontSize="sm"
+                        fontWeight={400}
+                        color="gray.500"
+                        mb="2"
+                        overflowX="auto">
+                        {info.subDescription}
+                      </Text>
+                    ) : (
+                      false
                     )}
                   </Stack>
                 </HStack>
@@ -645,4 +713,11 @@ export default function DetailEvent() {
       </VStack>
     </AppContainer>
   );
+}
+
+async function setReplaceRegistrationDate(val: string) {
+  AsyncStorage.setItem('REPLACE_REGISTRATION_END_DATE', val);
+}
+async function getReplaceRegistrationDate() {
+  return AsyncStorage.getItem('REPLACE_REGISTRATION_END_DATE');
 }

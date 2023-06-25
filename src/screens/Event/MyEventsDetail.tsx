@@ -11,6 +11,7 @@ import {
   Button,
   Toast,
   Badge,
+  Divider,
 } from 'native-base';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -323,21 +324,35 @@ export default function MyEventDetail() {
     }
   };
 
-  let isShowButtonToHandlePayment = false;
+  let isShowButtonBasedOnStatus = false;
+  if (['Waiting Payment', 'Payment Expired'].includes(status ?? '')) {
+    isShowButtonBasedOnStatus = true;
+  }
+
+  let isShowButtonBasedOnStatusPaymentSpecial = false;
   if (
-    isBallot &&
     ['Waiting Payment', 'Payment Expired', 'Registered'].includes(
       status ?? '',
     ) &&
     (resEvent?.payments_special || []).length > 0
   ) {
-    isShowButtonToHandlePayment = true;
-  } else if (
-    !isBallot &&
-    ['Waiting Payment', 'Payment Expired', 'Registered'].includes(status ?? '')
-  ) {
-    isShowButtonToHandlePayment = true;
+    isShowButtonBasedOnStatusPaymentSpecial = true;
   }
+  // if (
+  //   isBallot &&
+  //   ['Waiting Payment', 'Payment Expired', 'Registered'].includes(
+  //     status ?? '',
+  //   ) &&
+  //   ((resEvent?.payments_special || []).length > 0 ||
+  //     (resEvent?.payments || []).length > 0)
+  // ) {
+  //   isShowButtonBasedOnStatus = true;
+  // } else if (
+  //   !isBallot &&
+  //   ['Waiting Payment', 'Payment Expired', 'Registered'].includes(status ?? '')
+  // ) {
+  //   isShowButtonBasedOnStatus = true;
+  // }
 
   return (
     <AppContainer>
@@ -448,14 +463,15 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {isShowButtonToHandlePayment && (
+              {isShowButtonBasedOnStatus && (
                 <ButtonBasedOnStatus
                   eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
                   transactionId={params.transactionId}
                   status={status}
-                  paymentMethodsSpecial={
-                    resEvent?.payments_special || undefined
-                  }
+                  // paymentMethodsSpecial={
+                  //   resEvent?.payments_special || undefined
+                  // }
+                  isPaymentSpecial={false}
                   paymentMethods={resEvent?.payments || undefined}
                   activePayment={detailTransaction?.linked?.trihTrnsId?.find(
                     item => item.trihIsCurrent === 1,
@@ -466,6 +482,33 @@ export default function MyEventDetail() {
                   }
                   onPayNow={handlePayNow}
                 />
+              )}
+
+              {isShowButtonBasedOnStatusPaymentSpecial && (
+                <>
+                  <Divider mt={3} />
+                  <ButtonBasedOnStatus
+                    eventId={
+                      detailTransaction?.linked?.trnsEventId?.[0]?.evnhId
+                    }
+                    transactionId={params.transactionId}
+                    status={status}
+                    isPaymentSpecial={true}
+                    paymentMethodsSpecial={
+                      resEvent?.payments_special || undefined
+                    }
+                    // paymentMethods={resEvent?.payments || undefined}
+                    activePayment={detailTransaction?.linked?.trihTrnsId?.find(
+                      item => item.trihIsCurrent === 1,
+                    )}
+                    isBallot={isBallot}
+                    evpaEvncId={
+                      detailTransaction?.linked?.evrlTrnsId?.[0]?.evpaEvncId ||
+                      ''
+                    }
+                    onPayNow={handlePayNow}
+                  />
+                </>
               )}
 
               <Box
@@ -652,9 +695,9 @@ export default function MyEventDetail() {
               )}
 
               {/* <RowDetailRegistration
-                data={detailTransaction?.linked.evrlTrnsId?.[0] || {}}
-                evnhId={detailTransaction?.linked.trnsEventId?.[0]?.evnhId || 0}
-              /> */}
+              data={detailTransaction?.linked.evrlTrnsId?.[0] || {}}
+              evnhId={detailTransaction?.linked.trnsEventId?.[0]?.evnhId || 0}
+            /> */}
             </VStack>
             <HStack>
               <View flex={1} bg={'#EB1C23'} height={'6px'} />

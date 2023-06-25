@@ -29,6 +29,7 @@ type Props = {
   transactionId: string;
   eventId?: number;
   status?: TransactionStatus;
+  isPaymentSpecial?: boolean;
   paymentMethodsSpecial?: PaymentsSpecial[];
   paymentMethods?: PaymentsEntity[];
   activePayment?: TrihTrnsIdEntity;
@@ -80,16 +81,30 @@ export default function ButtonBasedOnStatus(props: Props) {
   };
 
   const getAvailablePaymentMethods = () => {
-    let list = [
-      ...(props.status === 'Waiting Payment' && !props.isBallot
-        ? props.paymentMethods || []
-        : []
-      ).filter(item => Number(item.evptIsPublic) === 1),
-      ...(props.status === 'Registered' && props.isBallot
-        ? props.paymentMethodsSpecial || []
-        : []
-      ).filter(item => Number(item.evptIsPublic) === 1),
-    ];
+    let list: (PaymentsSpecial | PaymentsEntity)[] = [];
+    if (
+      !props.isBallot &&
+      props.status === 'Waiting Payment' &&
+      props.paymentMethods &&
+      props.paymentMethods.length > 0
+    ) {
+      list = [...props.paymentMethods];
+    }
+
+    if (
+      props.isPaymentSpecial &&
+      props.paymentMethodsSpecial &&
+      props.paymentMethodsSpecial.length > 0
+    ) {
+      list = [...props.paymentMethodsSpecial];
+    }
+
+    list = list.filter(item => Number(item.evptIsPublic) === 1);
+
+    list = list.map(item => ({
+      ...item,
+      evptMsptName: item.evptMsptName + ' *',
+    }));
 
     list = list.filter(
       item => item.evptMsptName !== props.activePayment?.trihPaymentType,
@@ -196,10 +211,7 @@ export default function ButtonBasedOnStatus(props: Props) {
 
   console.info('propssss', props);
 
-  if (
-    props.status === 'Waiting Payment' ||
-    (props.status === 'Registered' && props.isBallot)
-  ) {
+  if (props.status === 'Waiting Payment' || props.isPaymentSpecial) {
     return (
       <>
         {props.activePayment && (
@@ -233,7 +245,8 @@ export default function ButtonBasedOnStatus(props: Props) {
               color={isLoading ? 'gray.600' : 'primary.900'}
               fontSize={14}
               textAlign={'center'}>
-              {t('payment.changePaymentMethod')}
+              {t('payment.changePaymentMethod') +
+                (props.isPaymentSpecial ? '*' : '')}
             </Text>
           </TouchableOpacity>
         ) : !props.activePayment ? (
@@ -246,10 +259,13 @@ export default function ButtonBasedOnStatus(props: Props) {
               color="white"
               fontSize={14}
               textAlign={'center'}>
-              {t('payment.choosePaymentMethod')}
+              {t('payment.choosePaymentMethod') +
+                (props.isPaymentSpecial ? '*' : '')}
             </Text>
           </Button>
-        ) : false}
+        ) : (
+          false
+        )}
 
         <Actionsheet
           isOpen={isShowModalChoosePaymentMethod}

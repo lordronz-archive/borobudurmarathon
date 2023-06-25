@@ -463,7 +463,7 @@ export default function MyEventDetail() {
                 </Box>
               )}
 
-              {isShowButtonBasedOnStatus && (
+              {isShowButtonBasedOnStatus ? (
                 <ButtonBasedOnStatus
                   eventId={detailTransaction?.linked?.trnsEventId?.[0]?.evnhId}
                   transactionId={params.transactionId}
@@ -482,9 +482,11 @@ export default function MyEventDetail() {
                   }
                   onPayNow={handlePayNow}
                 />
+              ) : (
+                false
               )}
 
-              {isShowButtonBasedOnStatusPaymentSpecial && (
+              {isShowButtonBasedOnStatusPaymentSpecial ? (
                 <>
                   <Divider mt={3} />
                   <ButtonBasedOnStatus
@@ -509,6 +511,8 @@ export default function MyEventDetail() {
                     onPayNow={handlePayNow}
                   />
                 </>
+              ) : (
+                false
               )}
 
               <Box

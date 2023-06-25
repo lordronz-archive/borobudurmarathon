@@ -53,8 +53,7 @@ export default function ButtonBasedOnStatus(props: Props) {
   const [tmpPayment, setTmpPayment] = useState<
     PaymentsEntity | PaymentsSpecial
   >();
-  const [paymentMethods, setPaymentMethods] = useState<
-    (PaymentsSpecial | PaymentsEntity)[]
+  const [paymentMethods, setPaymentMethods] = useState<(PaymentsSpecial | PaymentsEntity)[]
   >([]);
 
   useEffect(() => {
@@ -225,12 +224,16 @@ export default function ButtonBasedOnStatus(props: Props) {
               fontSize={14}
               textAlign={'center'}>
               {`${t('payment.payNowVia')} ${
-                (PAYMENT_METHODS as any)[props.activePayment?.trihPaymentType]
+                props.activePayment?.trihPaymentTypeName
+                  ? props.activePayment?.trihPaymentTypeName
+                  : (PAYMENT_METHODS as any)[
+                      props.activePayment?.trihPaymentType
+                    ]
                   ? (PAYMENT_METHODS as any)[
                       props.activePayment?.trihPaymentType
                     ].name
                   : props.activePayment?.trihPaymentTypeName
-              }`}
+              } ${props.isPaymentSpecial ? '*' : ''}`}
             </Text>
           </Button>
         )}

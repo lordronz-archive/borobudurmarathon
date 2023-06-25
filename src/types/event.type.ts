@@ -456,10 +456,10 @@ export const PAYMENT_METHODS = {
     // icon: require('../assets/images/logo-bank-jateng.png'),
   },
   snap_cc_bri: {
-    name: 'CC BRI',
+    name: 'Credit Card',
   },
   snap_cc: {
-    name: 'CC BNI',
+    name: 'Credit Card',
   },
   snap_alfamart: {
     name: 'Alfamart',

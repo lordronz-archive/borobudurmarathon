@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {EEventStatus, EInvitationStatus} from '../types/event.type';
+import {EEventStatus, EInvitationStatus, PAYMENT_METHODS} from '../types/event.type';
 import {convertDateTimeToLocalTimezone} from './datetimeTimezone';
 
 export function getEventTypeName(params: {
@@ -178,4 +178,24 @@ export function isAvailableForRegister(params: {
   }
 
   return false;
+}
+
+export function getPaymentMethodLabel(
+  trihPaymentType: string,
+  evptList: {
+    evptMsptName: string;
+    evptLabel: string;
+  }[],
+) {
+  console.info('evptList', JSON.stringify(evptList));
+  const findPaymentMethod = evptList.find(
+    item => item.evptMsptName === trihPaymentType,
+  );
+  if (findPaymentMethod) {
+    return findPaymentMethod.evptLabel;
+  }
+  if ((PAYMENT_METHODS as any)[trihPaymentType]) {
+    return (PAYMENT_METHODS as any)[trihPaymentType].name + '.';
+  }
+  return trihPaymentType + '~';
 }

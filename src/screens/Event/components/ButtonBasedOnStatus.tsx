@@ -23,6 +23,7 @@ import {
 import {EventService} from '../../../api/event.service';
 import {handleErrorMessage} from '../../../helpers/apiErrors';
 import {TrihTrnsIdEntity} from '../../../types/transaction.type';
+import { getPaymentMethodLabel } from '../../../helpers/event';
 const screenWidth = Dimensions.get('window').width;
 
 type Props = {
@@ -211,6 +212,17 @@ export default function ButtonBasedOnStatus(props: Props) {
   console.info('propssss', props);
 
   if (props.status === 'Waiting Payment' || props.isPaymentSpecial) {
+    const allPaymentMethods = [
+      ...(props.paymentMethods || []),
+      ...(props.paymentMethodsSpecial || []),
+    ].map(item => ({
+      evptMsptName: item.evptMsptName,
+      evptLabel: item.evptLabel,
+    }));
+    const paymentMethodLabel = getPaymentMethodLabel(
+      props.activePayment?.trihPaymentType || '',
+      allPaymentMethods,
+    );
     return (
       <>
         {props.activePayment && (
@@ -223,17 +235,9 @@ export default function ButtonBasedOnStatus(props: Props) {
               color="white"
               fontSize={14}
               textAlign={'center'}>
-              {`${t('payment.payNowVia')} ${
-                props.activePayment?.trihPaymentTypeName
-                  ? props.activePayment?.trihPaymentTypeName
-                  : (PAYMENT_METHODS as any)[
-                      props.activePayment?.trihPaymentType
-                    ]
-                  ? (PAYMENT_METHODS as any)[
-                      props.activePayment?.trihPaymentType
-                    ].name
-                  : props.activePayment?.trihPaymentTypeName
-              } ${props.isPaymentSpecial ? '*' : ''}`}
+              {`${t('payment.payNowVia')} ${paymentMethodLabel} ${
+                props.isPaymentSpecial ? '*' : ''
+              }`}
             </Text>
           </Button>
         )}

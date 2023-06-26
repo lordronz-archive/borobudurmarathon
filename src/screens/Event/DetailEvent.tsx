@@ -348,8 +348,8 @@ export default function DetailEvent() {
   // const invitationStatus = EInvitationStatus.INVITED;
   console.info('invitationStatus', invitationStatus);
 
-  // const IregEvncId = Number(evnInvitation?.links.iregEvncId);
-  const iregEvncId = 1377;
+  const iregEvncId = Number(evnInvitation?.links.iregEvncId);
+  // const iregEvncId = 1377;
 
   const isCanRegisterForCategory = (evncId: string) =>
     isAvailableForRegister({

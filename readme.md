@@ -20,7 +20,6 @@
 - appcenter codepush deployment list -a bormar/My-Borobudur-Marathon -k
 - appcenter codepush deployment list -a bormar/My-Borobudur-Marathon-IOS -k
 
-
 ## Range Expression	Who gets the update
 - 1.2.3	Only devices running the specific binary version 1.2.3 of your app
 - *	Any device configured to consume updates from your CodePush app
@@ -30,3 +29,13 @@
 - 1.2	Equivalent to >=1.2.0 <1.3.0
 - ~1.2.3	Equivalent to >=1.2.3 <1.3.0
 - ^1.2.3	Equivalent to >=1.2.3 <2.0.0
+
+# TEMPLATE PESAN
++ Fix issue cannot Choose Payment Method.
+
+v3.7.1 (324.C)
+After clicking "Install", please wait a few moments.
+Make sure you see this version on your "More" / “Info” page.
+—
+Setelah klik “Install”, harap tunggu beberapa saat.
+Pastikan Anda melihat versi ini di halaman “Info” / “More”.

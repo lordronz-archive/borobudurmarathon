@@ -34,8 +34,8 @@
 + Fix issue cannot Choose Payment Method.
 
 v3.7.1 (324.C)
-After clicking "Install", please wait a few moments.
+After clicking "Install" / "Continue", please wait a few moments.
 Make sure you see this version on your "More" / “Info” page.
 —
-Setelah klik “Install”, harap tunggu beberapa saat.
+Setelah klik "Install" / "Continue", harap tunggu beberapa saat.
 Pastikan Anda melihat versi ini di halaman “Info” / “More”.

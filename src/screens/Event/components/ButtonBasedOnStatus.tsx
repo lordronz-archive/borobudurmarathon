@@ -82,7 +82,7 @@ export default function ButtonBasedOnStatus(props: Props) {
   const getAvailablePaymentMethods = () => {
     let list: (PaymentsSpecial | PaymentsEntity)[] = [];
     if (
-      !props.isBallot &&
+      !props.isPaymentSpecial &&
       props.status === 'Waiting Payment' &&
       props.paymentMethods &&
       props.paymentMethods.length > 0

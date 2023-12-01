@@ -36,7 +36,7 @@
     "appcenter": "4.4.5",
     "appcenter-analytics": "4.4.5",
     "appcenter-crashes": "4.4.5",
-    "axios": "^1.2.2",
+    "axios": "^1.6.0",
     "compare-versions": "^6.0.0-rc.1",
     "deprecated-react-native-prop-types": "^4.0.0",
     "i18next": "^22.4.11",
